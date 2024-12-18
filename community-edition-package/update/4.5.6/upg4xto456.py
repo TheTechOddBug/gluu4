@@ -1891,37 +1891,48 @@ class GluuUpdater:
             return
 
         print("Updating Passport Configuration")
-        data = self.passportInstaller.dbUtils.dn_exists('ou=oxpassport,ou=configuration,o=gluu')
+        passport_config_dn = 'ou=oxpassport,ou=configuration,o=gluu'
 
-        if data and 'gluuPassportConfiguration' in data:
+        def get_passport_config():
+            data = self.passportInstaller.dbUtils.dn_exists(passport_config_dn)
             passport_config = data['gluuPassportConfiguration'][0] if isinstance(data['gluuPassportConfiguration'], list) else data['gluuPassportConfiguration']
-            js_data = json.loads(passport_config) if isinstance(passport_config, str) else passport_config
+            js_data = {}
+            if isinstance(passport_config, str):
+                js_data = json.loads(passport_config)
+            elif 'v' in passport_config:
+                js_data = json.loads(passport_config['v'][0])
+            else:
+                js_data = passport_config
 
-            if 'providers' in js_data:
+            return js_data
 
-                for provider in js_data['providers']:
+        js_data = get_passport_config()
 
-                    if provider.get('type') == 'openidconnect':
-                        print("Updating passport provider {}".format(provider.get('displayName')))
-                        data_changes = (('type', 'openid-client'), ('mapping','openid-client'), ('passportStrategyId', 'openid-client'))
-                        for k,v in data_changes:
-                            if k in provider:
-                                provider[k] = v
+        if js_data and 'providers' in js_data:
 
-                        for k in ('userInfoURL', 'tokenURL', 'authorizationURL'):
-                            if k in provider.get('options', {}):
-                                del provider['options'][k]
+            for provider in js_data['providers']:
 
-                        for ko,kn in (('clientID', 'client_id'), ('clientSecret', 'client_secret')):
-                            if ko in provider.get('options', {}):
-                                provider['options'][kn] = provider['options'].pop(ko)
+                if provider.get('type') == 'openidconnect':
+                    print("Updating passport provider {}".format(provider.get('displayName')))
+                    data_changes = (('type', 'openid-client'), ('mapping','openid-client'), ('passportStrategyId', 'openid-client'))
+                    for k,v in data_changes:
+                        if k in provider:
+                            provider[k] = v
 
-                        provider['options']['token_endpoint_auth_method'] = 'client_secret_post'
+                    for k in ('userInfoURL', 'tokenURL', 'authorizationURL'):
+                        if k in provider.get('options', {}):
+                            del provider['options'][k]
 
-                    elif provider.get('type') == 'saml' and provider.get('passportStrategyId') == 'passport-saml':
-                        provider['passportStrategyId'] = '@node-saml/passport-saml'
+                    for ko,kn in (('clientID', 'client_id'), ('clientSecret', 'client_secret')):
+                        if ko in provider.get('options', {}):
+                            provider['options'][kn] = provider['options'].pop(ko)
 
-            self.passportInstaller.dbUtils.set_configuration('gluuPassportConfiguration', json.dumps(js_data), dn='ou=oxpassport,ou=configuration,o=gluu')
+                    provider['options']['token_endpoint_auth_method'] = 'client_secret_post'
+
+                elif provider.get('type') == 'saml' and provider.get('passportStrategyId') == 'passport-saml':
+                    provider['passportStrategyId'] = '@node-saml/passport-saml'
+
+            self.passportInstaller.dbUtils.set_configuration('gluuPassportConfiguration', json.dumps(js_data), dn=passport_config_dn)
 
         backup_folder = self.passportInstaller.gluu_passport_base + '_' + self.backup_time
         print("Stopping passport server")
@@ -1961,10 +1972,8 @@ class GluuUpdater:
 
         self.upgrade_ldif(clients_ldif_fn)
 
-        passport_config_dn = 'ou=oxpassport,ou=configuration,o=gluu'
-        passport_db_data = self.passportInstaller.dbUtils.dn_exists(passport_config_dn)
-        if passport_db_data:
-            gluu_passport_configuration = json.loads(passport_db_data['gluuPassportConfiguration'][0])
+        gluu_passport_configuration = js_data = get_passport_config()
+        if gluu_passport_configuration:
             passport_rp_ii_client_id = gluu_passport_configuration.get('idpInitiated', {}).get('openidclient', {}).get('clientId')
             if passport_rp_ii_client_id != self.Config.passport_rp_ii_client_id:
                 gluu_passport_configuration['idpInitiated']['openidclient']['clientId'] = self.Config.passport_rp_ii_client_id
