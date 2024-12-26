@@ -28,4 +28,4 @@ Preferred installation method is using `pip3`:
 
 .. code-block:: sh
 
-    pip3 install -e git+https://github.com/GluuFederation/pygluu-containerlib@v2#egg=pygluu-containerlib
+    pip3 install -e git+https://github.com/GluuFederation/gluu4.git@4.5#egg=pygluu-containerlib&subdirectory=pygluu-containerlib
