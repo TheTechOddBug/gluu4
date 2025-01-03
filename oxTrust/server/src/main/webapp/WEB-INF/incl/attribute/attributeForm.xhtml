@@ -221,12 +221,6 @@
 							<f:validateLongRange minimum="1" maximum="10000" />
 						</h:inputText>
 					</ox:decorate>
-					<ox:decorate id="regex" label="#{msgs['attribute.regexPattern']}">
-						<h:inputText styleClass="form-control regexPatternField"
-							value="#{_attribute.attributeValidation.regexp}" size="40"
-							maxlength="4000" id="regexid"
-							disabled="#{not _attributeAction.canEdit()}" />
-					</ox:decorate>
 
 					<ox:decorate id="status" label="#{msgs['attribute.status']}">
 						<h:selectOneMenu styleClass="form-control rounded statusValue"
