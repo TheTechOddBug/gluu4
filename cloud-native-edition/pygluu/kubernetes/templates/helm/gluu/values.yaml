@@ -539,7 +539,7 @@ config:
     gluuScimProtectionMode: "OAUTH"
     # -- Boolean flag to enable/disable passport chart
     gluuPassportEnabled: false
-    # --  TEMP KEY TO BE REMOVED IN 4.4 which allows passport failure redirect url to be specified.
+    # --  Allows passport failure redirect url to be specified.
     gluuPassportFailureRedirectUrl: ""
     # -- Enable Casa flag .
     gluuCasaEnabled: false
