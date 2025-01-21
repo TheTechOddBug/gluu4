@@ -179,7 +179,7 @@ Copy the default file into a safe location in case you need it later, clear its 
     "skipRequestCompression": "true",
     "logo_img": "",
     "enable": "true",
-    "cert": "MIIDbDCCAlQCCQCuwqx2PNP....SEE.BELOW.......YsMw==",
+    "idpCert": "MIIDbDCCAlQCCQCuwqx2PNP....SEE.BELOW.......YsMw==",
     "reverseMapping": {
       "email": "email",
       "username": "urn:oid:0.9.2342.19200300.100.1.1",
