@@ -1,6 +1,7 @@
 package org.gluu.service.logger;
 
 import java.io.File;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.LogManager;
 
@@ -11,7 +12,15 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.core.Appender;
+import org.apache.logging.log4j.core.Layout;
 import org.apache.logging.log4j.core.LoggerContext;
+import org.apache.logging.log4j.core.appender.ConsoleAppender;
+import org.apache.logging.log4j.core.appender.RollingFileAppender;
+import org.apache.logging.log4j.core.config.AbstractConfiguration;
+import org.apache.logging.log4j.core.config.LoggerConfig;
+import org.apache.logging.log4j.core.layout.JsonLayout;
+import org.apache.logging.log4j.core.layout.PatternLayout;
 import org.gluu.model.types.LoggingLayoutType;
 import org.gluu.service.cdi.async.Asynchronous;
 import org.gluu.service.cdi.event.ConfigurationUpdate;
@@ -29,7 +38,11 @@ import org.slf4j.Logger;
  */
 public abstract class LoggerService {
 
-    private final static int DEFAULT_INTERVAL = 15; // 15 seconds
+    private static final JsonLayout DEFAULT_JSON_PATTERN_LAYOUT = JsonLayout.createDefaultLayout();
+
+	private static final PatternLayout DEFAULT_TEXT_PATTERN_LAYOUT = PatternLayout.newBuilder().withPattern("%d %-5p [%t] [%C{6}] (%F:%L) - %m%n").build();
+
+	private final static int DEFAULT_INTERVAL = 15; // 15 seconds
 
     @Inject
     private Logger log;
@@ -38,6 +51,7 @@ public abstract class LoggerService {
     private Event<TimerEvent> timerEvent;
 
     private Level prevLogLevel;
+	private LoggingLayoutType prevLogLoggingLayout;
 
     private AtomicBoolean isActive;
     
@@ -80,6 +94,7 @@ public abstract class LoggerService {
         try {
             updateLoggerConfiguration();
             this.prevLogLevel = getCurrentLogLevel();
+            this.prevLogLoggingLayout = getCurrentLoggingLayout();
         } catch (Throwable ex) {
             log.error("Exception happened while updating newly added logger configuration", ex);
         } finally {
@@ -90,15 +105,14 @@ public abstract class LoggerService {
     private void updateLoggerConfiguration() {
     	// Do periodic update to apply changes to new loggers as well
         String loggingLevel = getLoggingLevel();
-		if (StringHelper.isEmpty(loggingLevel) || StringUtils.isEmpty(this.getLoggingLayout())
-				|| StringHelper.equalsIgnoreCase("DEFAULT", loggingLevel)) {
+		if (isWrongLoggingConfig(loggingLevel)) {
 			return;
 		}
 
-        Level level = Level.toLevel(loggingLevel, Level.INFO);
-        LoggingLayoutType loggingLayout = LoggingLayoutType.getByValue(this.getLoggingLayout().toUpperCase());
+        Level level = getCurrentLogLevel();
+        LoggingLayoutType loggingLayout = getCurrentLoggingLayout();
 
-        updateAppendersAndLogLevel(loggingLayout, prevLogLevel, level);
+        updateAppendersAndLogLevel(prevLogLoggingLayout, loggingLayout, prevLogLevel, level);
     }
 
     public void updateLoggerSeverity(@Observes @ConfigurationUpdate Object appConfiguration) {
@@ -134,24 +148,23 @@ public abstract class LoggerService {
         resetLoggerConfigLocation();
 
         String loggingLevel = getLoggingLevel();
-		if (StringHelper.isEmpty(loggingLevel) || StringUtils.isEmpty(this.getLoggingLayout())
-				|| StringHelper.equalsIgnoreCase("DEFAULT", loggingLevel)) {
+		if (isWrongLoggingConfig(loggingLevel)) {
 			return;
 		}
 
-        Level level = Level.toLevel(loggingLevel, Level.INFO);
-        LoggingLayoutType loggingLayout = LoggingLayoutType.getByValue(this.getLoggingLayout().toUpperCase());
+        Level level = getCurrentLogLevel();
+        LoggingLayoutType loggingLayout = getCurrentLoggingLayout();
 
         log.info("Setting layout and loggers level to '{}`, `{}' after configuration update", loggingLayout, loggingLevel);
 
-        updateAppendersAndLogLevel(loggingLayout, prevLogLevel, level);
+        updateAppendersAndLogLevel(prevLogLoggingLayout, loggingLayout, prevLogLevel, level);
     }
 
     private void setDisableJdkLogger() {
     	if (isDisableJdkLogger()) {
-	        LogManager.getLogManager().reset();
 	        java.util.logging.Logger globalLogger = java.util.logging.Logger.getLogger(java.util.logging.Logger.GLOBAL_LOGGER_NAME);
-	        if (globalLogger != null) {
+	        if ((globalLogger != null) && (globalLogger.getLevel() != java.util.logging.Level.OFF)) {
+		        LogManager.getLogManager().reset();
 	            globalLogger.setLevel(java.util.logging.Level.OFF);
 	        }
     	}
@@ -171,8 +184,11 @@ public abstract class LoggerService {
         }
 
         LoggerContext loggerContext = LoggerContext.getContext(false);
-        loggerContext.setConfigLocation(log4jFile.toURI());
-        loggerContext.reconfigure();
+        if (loggerContext.getConfigLocation() != log4jFile.toURI()) {
+            log.info("Starting logger context reconfigure after setting path to external configuration: '{}'", log4jFile.toURI());
+	        loggerContext.setConfigLocation(log4jFile.toURI());
+	        loggerContext.reconfigure();
+        }
 
         return true;
     }
@@ -187,117 +203,148 @@ public abstract class LoggerService {
         loggerContext.reconfigure();
     }
 
-    private void updateAppendersAndLogLevel(LoggingLayoutType loggingLayout, Level prevLevel, Level newLevel) {
-        if (loggingLayout == LoggingLayoutType.TEXT) {
-        	if (newLevel != prevLevel) {
-	            final LoggerContext ctx = LoggerContext.getContext(false);
-	            ctx.getConfiguration().getRootLogger().setLevel(newLevel);
-	            ctx.reconfigure();
-        	}
+    private void updateAppendersAndLogLevel(LoggingLayoutType prevLoggingLayout, LoggingLayoutType loggingLayout, Level prevLevel, Level newLevel) {
+        final LoggerContext ctx = LoggerContext.getContext(false);
 
-        	LoggerContext loggerContext = LoggerContext.getContext(false);
-
-            int count = 0;
-            for (org.apache.logging.log4j.core.Logger logger : loggerContext.getLoggers()) {
-                String loggerName = logger.getName();
-                if (loggerName.startsWith("org.gluu")) {
-                    if (logger.getLevel() != newLevel) {
-                        count++;
-                        logger.setLevel(newLevel);
-                    }
-                }
-            }
-
-            if (count > 0) {
-                log.info("Updated log level of '{}' loggers to {}", count, newLevel.toString());
-            }
+        // Update logging layout if needed
+        if (prevLoggingLayout == loggingLayout) {
+        	log.info("Updating logging layout configuration from '{}' to '{}'", prevLoggingLayout, loggingLayout);
+	        updateLoggerLayout(loggingLayout, newLevel, ctx);
         }
-//    	boolean runLoggersUpdate = false;
-//    	int loggerConfigUpdates = 0;
-//    	int appenderConfigUpdates = 0;
-//        LoggerContext ctx = LoggerContext.getContext(false);
-//
-//        AbstractConfiguration config = (AbstractConfiguration) ctx.getConfiguration();
-//        for (Entry<String, LoggerConfig> loggerConfigEntry : config.getLoggers().entrySet()) {
-//        	LoggerConfig loggerConfig = loggerConfigEntry.getValue();
-//        	log.trace("Updating log configuration '{}'", loggerConfig.getName());
-//
-//			if (!loggerConfig.getLevel().equals(level)) {
-//				loggerConfig.setLevel(level);
-//	        	log.trace("Updating log level in configuration '{}' to '{}'", loggerConfig.getName(), level);
-//                runLoggersUpdate = true;
-//                loggerConfigUpdates++;
-//			}
-//
-//			for (Map.Entry<String, Appender> appenderEntry : loggerConfig.getAppenders().entrySet()) {
-//	        	Appender appender = appenderEntry.getValue();
-//	        	log.trace("Updating appender '{}'", appender.getName());
-//
-//	        	Layout<?> layout = appender.getLayout();
-//	            if (loggingLayout == LoggingLayoutType.TEXT) {
-//	            	layout = PatternLayout.newBuilder().withPattern("%d %-5p [%t] [%C{6}] (%F:%L) - %m%n").build();
-//	            } else if (loggingLayout == LoggingLayoutType.JSON) {
-//	            	layout = JsonLayout.createDefaultLayout();
-//	            }
-//
-//	        	if (appender instanceof RollingFileAppender) {
-//	                RollingFileAppender rollingFile = (RollingFileAppender) appender;
-//	                if (rollingFile.getLayout().getClass().isAssignableFrom(layout.getClass())) {
-//	                	continue;
-//	                }
-//	                RollingFileAppender newFileAppender = RollingFileAppender.newBuilder()
-//	                        .setLayout(layout)
-//	                        .withStrategy(rollingFile.getManager().getRolloverStrategy())
-//	                        .withPolicy(rollingFile.getTriggeringPolicy())
-//	                        .withFileName(rollingFile.getFileName())
-//	                        .withFilePattern(rollingFile.getFilePattern())
-//	                        .setName(rollingFile.getName())
-//	                        .build();
-//	                newFileAppender.start();
-//	                appender.stop();
-//	                loggerConfig.removeAppender(appenderEntry.getKey());
-//	                loggerConfig.addAppender(newFileAppender, null, null);
-//
-//	                runLoggersUpdate = true;
-//	                appenderConfigUpdates++;
-//	        	} else if (appender instanceof ConsoleAppender) {
-//	                ConsoleAppender consoleAppender = (ConsoleAppender) appender;
-//	                if (consoleAppender.getLayout().getClass().isAssignableFrom(layout.getClass())) {
-//	                	continue;
-//	                }
-//
-//	                ConsoleAppender newConsoleAppender = ConsoleAppender.newBuilder()
-//	                        .setLayout(layout)
-//	                        .setTarget(consoleAppender.getTarget())
-//	                        .setName(consoleAppender.getName())
-//	                        .build();
-//	                newConsoleAppender.start();
-//	                appender.stop();
-//	                loggerConfig.removeAppender(appenderEntry.getKey());
-//	                loggerConfig.addAppender(newConsoleAppender, null, null);
-//
-//	                runLoggersUpdate = true;
-//	                appenderConfigUpdates++;
-//	            }
-//	        }
-//        }
-//
-//        if (runLoggersUpdate) {
-//        	log.trace("Trigger loggers update after '{}' updates", loggerConfigUpdates + appenderConfigUpdates);
-//        	ctx.updateLoggers();
-//        }
+        
+        // Update root level if needed
+        Level rootLevel = ctx.getConfiguration().getRootLogger().getLevel();
+    	if ((newLevel != prevLevel) && (newLevel != rootLevel)) {
+        	log.info("Updating root level to '{}'", newLevel);
+            ctx.getConfiguration().getRootLogger().setLevel(newLevel);
+            ctx.reconfigure();
+    	}
+    	
+    	// Update active loggers
+        updateActiveLoggers(newLevel, ctx);
     }
+
+	private void updateActiveLoggers(Level newLevel, final LoggerContext ctx) {
+		int count = 0;
+		for (org.apache.logging.log4j.core.Logger logger : ctx.getLoggers()) {
+		    String loggerName = logger.getName();
+		    if (loggerName.startsWith("org.gluu")) {
+		        if (logger.getLevel() != newLevel) {
+		            count++;
+		            logger.setLevel(newLevel);
+		        }
+		    }
+		}
+
+		if (count > 0) {
+		    log.info("Updated log level of '{}' loggers to '{}'", count, newLevel.toString());
+		}
+	}
+
+    // We need to call this method only on loggingLayout update
+	private void updateLoggerLayout(LoggingLayoutType loggingLayout, Level newLevel, final LoggerContext ctx) {
+    	int loggerConfigUpdates = 0;
+    	int appenderConfigUpdates = 0;
+    	
+    	AbstractConfiguration config = (AbstractConfiguration) ctx.getConfiguration();
+        for (Map.Entry<String, LoggerConfig> loggerConfigEntry : config.getLoggers().entrySet()) {
+        	LoggerConfig loggerConfig = loggerConfigEntry.getValue();
+        	log.debug("Updating log configuration '{}'", loggerConfig.getName());
+
+			if (!loggerConfig.getLevel().equals(newLevel)) {
+				loggerConfig.setLevel(newLevel);
+	        	log.debug("Updating log level in configuration '{}' to '{}'", loggerConfig.getName(), newLevel);
+                loggerConfigUpdates++;
+			}
+
+			for (Map.Entry<String, Appender> appenderEntry : loggerConfig.getAppenders().entrySet()) {
+	        	Appender appender = appenderEntry.getValue();
+	        	log.debug("Updating appender '{}'", appender.getName());
+
+	        	Layout<?> layout = appender.getLayout();
+	            if (loggingLayout == LoggingLayoutType.TEXT) {
+	            	layout = DEFAULT_TEXT_PATTERN_LAYOUT;
+	            } else if (loggingLayout == LoggingLayoutType.JSON) {
+	            	layout = DEFAULT_JSON_PATTERN_LAYOUT;
+	            }
+
+	        	if (appender instanceof RollingFileAppender) {
+	                RollingFileAppender rollingFile = (RollingFileAppender) appender;
+	                if (rollingFile.getLayout().getClass().isAssignableFrom(layout.getClass())) {
+	                	// Skip logger which have required logger type
+	                	continue;
+	                }
+
+	                RollingFileAppender newFileAppender = RollingFileAppender.newBuilder()
+	                        .setLayout(layout)
+	                        .withStrategy(rollingFile.getManager().getRolloverStrategy())
+	                        .withPolicy(rollingFile.getTriggeringPolicy())
+	                        .withFileName(rollingFile.getFileName())
+	                        .withFilePattern(rollingFile.getFilePattern())
+	                        .setName(rollingFile.getName())
+	                        .build();
+	                newFileAppender.start();
+	                appender.stop();
+	                loggerConfig.removeAppender(appenderEntry.getKey());
+	                loggerConfig.addAppender(newFileAppender, newLevel, null);
+
+	                appenderConfigUpdates++;
+	        	} else if (appender instanceof ConsoleAppender) {
+	                ConsoleAppender consoleAppender = (ConsoleAppender) appender;
+	                if (consoleAppender.getLayout().getClass().isAssignableFrom(layout.getClass())) {
+	                	// Skip logger which have required logger type
+	                	continue;
+	                }
+
+	                ConsoleAppender newConsoleAppender = ConsoleAppender.newBuilder()
+	                        .setLayout(layout)
+	                        .setTarget(consoleAppender.getTarget())
+	                        .setName(consoleAppender.getName())
+	                        .build();
+	                newConsoleAppender.start();
+	                appender.stop();
+	                loggerConfig.removeAppender(appenderEntry.getKey());
+	                loggerConfig.addAppender(newConsoleAppender, newLevel, null);
+
+	                appenderConfigUpdates++;
+	            }
+	        }
+        }
+
+        if ((loggerConfigUpdates > 0) || (appenderConfigUpdates > 0)) {
+        	log.trace("Trigger loggers update after '{}' updates", loggerConfigUpdates + appenderConfigUpdates);
+        	ctx.updateLoggers();
+        }
+	}
+
+	private boolean isWrongLoggingConfig(String loggingLevel) {
+		return StringHelper.isEmpty(loggingLevel) || StringUtils.isEmpty(this.getLoggingLayout())
+				|| StringHelper.equalsIgnoreCase("DEFAULT", loggingLevel);
+	}
 
     private Level getCurrentLogLevel() {
         String loggingLevel = getLoggingLevel();
-		if (StringHelper.isEmpty(loggingLevel) || StringUtils.isEmpty(this.getLoggingLayout())
-				|| StringHelper.equalsIgnoreCase("DEFAULT", loggingLevel)) {
+		if (isWrongLoggingConfig(loggingLevel)) {
 			return Level.INFO;
 		}
 
         Level level = Level.toLevel(loggingLevel, Level.INFO);
         
         return level;
+    }
+
+    private LoggingLayoutType getCurrentLoggingLayout() {
+        String loggingLayout = getLoggingLayout();
+		if (isWrongLoggingConfig(loggingLayout)) {
+			return LoggingLayoutType.TEXT;
+		}
+
+        LoggingLayoutType loggingLayoutType = LoggingLayoutType.getByValue(loggingLayout.toUpperCase());
+        if (loggingLayoutType == null) {
+			return LoggingLayoutType.TEXT;
+        }
+        
+        return loggingLayoutType;
     }
 
     public abstract boolean isDisableJdkLogger();
