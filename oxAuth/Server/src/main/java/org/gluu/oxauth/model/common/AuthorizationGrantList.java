@@ -204,7 +204,6 @@ public class AuthorizationGrantList implements IAuthorizationGrantList {
         try {
             final List<TokenLdap> entries = new ArrayList<TokenLdap>();
             entries.addAll(grantService.getGrantsOfClient(clientId));
-            entries.addAll(grantService.getCacheClientTokensEntries(clientId));
 
             for (TokenLdap t : entries) {
                 final AuthorizationGrant grant = asGrant(t);
