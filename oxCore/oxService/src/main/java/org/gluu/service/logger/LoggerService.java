@@ -138,8 +138,7 @@ public abstract class LoggerService {
         this.useExternalConfiguration = setExternalLoggerConfig(); 
         if (this.useExternalConfiguration) {
             // Use external logging configuration
-        	this.useExternalConfiguration = true;
-            log.info("Using ewxternal logging configuration. Layout type and log level update were disabled");
+            log.info("Using external logging configuration. Layout type and log level update were disabled");
         	return;
         }
         
@@ -311,8 +310,8 @@ public abstract class LoggerService {
 	                        .build();
 	                newFileAppender.start();
 	                removeAppenders.add(appender);
-	                loggerConfig.removeAppender(appenderEntry.getKey());
 	                loggerConfig.addAppender(newFileAppender, newLevel, null);
+	                loggerConfig.removeAppender(appenderEntry.getKey());
 
 	                appenderConfigUpdates++;
 	        	} else if (appender instanceof ConsoleAppender) {
@@ -332,8 +331,8 @@ public abstract class LoggerService {
 	                        .build();
 	                newConsoleAppender.start();
 	                removeAppenders.add(appender);
-	                loggerConfig.removeAppender(appenderEntry.getKey());
 	                loggerConfig.addAppender(newConsoleAppender, newLevel, null);
+	                loggerConfig.removeAppender(appenderEntry.getKey());
 
 	                appenderConfigUpdates++;
 	            }
