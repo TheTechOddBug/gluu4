@@ -1,6 +1,8 @@
 package org.gluu.service.logger;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.LogManager;
@@ -266,6 +268,7 @@ public abstract class LoggerService {
     	int loggerConfigUpdates = 0;
     	int appenderConfigUpdates = 0;
     	
+    	List<Appender> removeAppenders = new ArrayList<>();
     	AbstractConfiguration config = (AbstractConfiguration) ctx.getConfiguration();
         for (Map.Entry<String, LoggerConfig> loggerConfigEntry : config.getLoggers().entrySet()) {
         	LoggerConfig loggerConfig = loggerConfigEntry.getValue();
@@ -291,7 +294,7 @@ public abstract class LoggerService {
 	        	if (appender instanceof RollingFileAppender) {
 	                RollingFileAppender rollingFile = (RollingFileAppender) appender;
 	                if (rollingFile.getLayout().getClass().isAssignableFrom(layout.getClass())) {
-		                log.debug("Skippig appender update '{}'", appender.getName());
+		                log.debug("Skipping appender update '{}'", appender.getName());
 	                	// Skip logger which have required logger type
 	                	continue;
 	                }
@@ -307,7 +310,7 @@ public abstract class LoggerService {
 	                        .setName(rollingFile.getName())
 	                        .build();
 	                newFileAppender.start();
-	                appender.stop();
+	                removeAppenders.add(appender);
 	                loggerConfig.removeAppender(appenderEntry.getKey());
 	                loggerConfig.addAppender(newFileAppender, newLevel, null);
 
@@ -315,7 +318,7 @@ public abstract class LoggerService {
 	        	} else if (appender instanceof ConsoleAppender) {
 	                ConsoleAppender consoleAppender = (ConsoleAppender) appender;
 	                if (consoleAppender.getLayout().getClass().isAssignableFrom(layout.getClass())) {
-		                log.debug("Skippig appender update '{}'", appender.getName());
+		                log.debug("Skipping appender update '{}'", appender.getName());
 	                	// Skip logger which have required logger type
 	                	continue;
 	                }
@@ -328,7 +331,7 @@ public abstract class LoggerService {
 	                        .setName(consoleAppender.getName())
 	                        .build();
 	                newConsoleAppender.start();
-	                appender.stop();
+	                removeAppenders.add(appender);
 	                loggerConfig.removeAppender(appenderEntry.getKey());
 	                loggerConfig.addAppender(newConsoleAppender, newLevel, null);
 
@@ -339,7 +342,14 @@ public abstract class LoggerService {
 
         if ((loggerConfigUpdates > 0) || (appenderConfigUpdates > 0)) {
         	log.trace("Trigger loggers update after '{}' updates", loggerConfigUpdates + appenderConfigUpdates);
-        	ctx.updateLoggers();
+            
+            // Stop old appenders after adding new appenders to avoid lose messages
+        	log.trace("Removind old '{}' appenders", removeAppenders.size());
+            for (Appender appendr : removeAppenders) {
+            	appendr.stop();
+            }
+
+            ctx.updateLoggers(config);
         }
 	}
 
