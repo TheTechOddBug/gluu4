@@ -71,6 +71,7 @@ public abstract class LoggerService {
         final int interval = DEFAULT_INTERVAL;
         
         this.prevLogLevel = getCurrentLogLevel();
+        this.prevLogLoggingLayout = getCurrentLoggingLayout();
 
         timerEvent.fire(new TimerEvent(new TimerSchedule(delay, interval), new LoggerUpdateEvent(),
                 Scheduled.Literal.INSTANCE));
@@ -102,19 +103,7 @@ public abstract class LoggerService {
         }
     }
 
-    private void updateLoggerConfiguration() {
-    	// Do periodic update to apply changes to new loggers as well
-        String loggingLevel = getLoggingLevel();
-		if (isWrongLoggingConfig(loggingLevel)) {
-			return;
-		}
-
-        Level level = getCurrentLogLevel();
-        LoggingLayoutType loggingLayout = getCurrentLoggingLayout();
-
-        updateAppendersAndLogLevel(prevLogLoggingLayout, loggingLayout, prevLogLevel, level);
-    }
-
+    @Asynchronous
     public void updateLoggerSeverity(@Observes @ConfigurationUpdate Object appConfiguration) {
         if (this.isActive.get()) {
             return;
@@ -139,31 +128,41 @@ public abstract class LoggerService {
     }
 
     private void updateLoggerSeverityImpl() {
+        log.info("Starting logging configuration update after configuration change");
+
+        //resetLoggerConfigLocation();
+
         setDisableJdkLogger();
 
         if (setExternalLoggerConfig()) {
         	return;
         }
+        
+        updateLoggerConfiguration();
+    }
 
-        resetLoggerConfigLocation();
-
+    private void updateLoggerConfiguration() {
+    	// Do periodic update to apply changes to new loggers as well
         String loggingLevel = getLoggingLevel();
 		if (isWrongLoggingConfig(loggingLevel)) {
+	        log.warn("Log level is invalid in logging configuration");
 			return;
 		}
 
         Level level = getCurrentLogLevel();
         LoggingLayoutType loggingLayout = getCurrentLoggingLayout();
 
-        log.info("Setting layout and loggers level to '{}`, `{}' after configuration update", loggingLayout, loggingLevel);
+        log.info("Setting layout and loggers level to '{}`, `{}' after logging configuration update", loggingLayout, loggingLevel);
 
         updateAppendersAndLogLevel(prevLogLoggingLayout, loggingLayout, prevLogLevel, level);
     }
 
     private void setDisableJdkLogger() {
     	if (isDisableJdkLogger()) {
+            log.info("Starting JDK loggers update");
 	        java.util.logging.Logger globalLogger = java.util.logging.Logger.getLogger(java.util.logging.Logger.GLOBAL_LOGGER_NAME);
 	        if ((globalLogger != null) && (globalLogger.getLevel() != java.util.logging.Level.OFF)) {
+	            log.info("Disabling JDK loggers");
 		        LogManager.getLogManager().reset();
 	            globalLogger.setLevel(java.util.logging.Level.OFF);
 	        }
@@ -188,6 +187,8 @@ public abstract class LoggerService {
             log.info("Starting logger context reconfigure after setting path to external configuration: '{}'", log4jFile.toURI());
 	        loggerContext.setConfigLocation(log4jFile.toURI());
 	        loggerContext.reconfigure();
+        } else { 
+        	log.debug("Logger context reconfigure is not required. Logconfiguration path is the same");
         }
 
         return true;
@@ -237,7 +238,7 @@ public abstract class LoggerService {
 		}
 
 		if (count > 0) {
-		    log.info("Updated log level of '{}' loggers to '{}'", count, newLevel.toString());
+		    log.info("Updated '{}' loggers to level '{}'", count, newLevel.toString());
 		}
 	}
 
@@ -249,7 +250,7 @@ public abstract class LoggerService {
     	AbstractConfiguration config = (AbstractConfiguration) ctx.getConfiguration();
         for (Map.Entry<String, LoggerConfig> loggerConfigEntry : config.getLoggers().entrySet()) {
         	LoggerConfig loggerConfig = loggerConfigEntry.getValue();
-        	log.debug("Updating log configuration '{}'", loggerConfig.getName());
+        	log.debug("Analyzing log configuration '{}'", loggerConfig.getName());
 
 			if (!loggerConfig.getLevel().equals(newLevel)) {
 				loggerConfig.setLevel(newLevel);
@@ -259,7 +260,7 @@ public abstract class LoggerService {
 
 			for (Map.Entry<String, Appender> appenderEntry : loggerConfig.getAppenders().entrySet()) {
 	        	Appender appender = appenderEntry.getValue();
-	        	log.debug("Updating appender '{}'", appender.getName());
+	        	log.debug("Analyzing appender '{}'", appender.getName());
 
 	        	Layout<?> layout = appender.getLayout();
 	            if (loggingLayout == LoggingLayoutType.TEXT) {
@@ -271,9 +272,12 @@ public abstract class LoggerService {
 	        	if (appender instanceof RollingFileAppender) {
 	                RollingFileAppender rollingFile = (RollingFileAppender) appender;
 	                if (rollingFile.getLayout().getClass().isAssignableFrom(layout.getClass())) {
+		                log.debug("Skippig appender update '{}'", appender.getName());
 	                	// Skip logger which have required logger type
 	                	continue;
 	                }
+
+	                log.debug("Updating appender '{}'", appender.getName());
 
 	                RollingFileAppender newFileAppender = RollingFileAppender.newBuilder()
 	                        .setLayout(layout)
@@ -292,9 +296,12 @@ public abstract class LoggerService {
 	        	} else if (appender instanceof ConsoleAppender) {
 	                ConsoleAppender consoleAppender = (ConsoleAppender) appender;
 	                if (consoleAppender.getLayout().getClass().isAssignableFrom(layout.getClass())) {
+		                log.debug("Skippig appender update '{}'", appender.getName());
 	                	// Skip logger which have required logger type
 	                	continue;
 	                }
+
+	                log.debug("Updating appender '{}'", appender.getName());
 
 	                ConsoleAppender newConsoleAppender = ConsoleAppender.newBuilder()
 	                        .setLayout(layout)
