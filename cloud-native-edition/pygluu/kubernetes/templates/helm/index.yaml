@@ -36,7 +36,128 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.5.6
-    created: "2024-12-09T10:16:45.967184+03:00"
+    created: "2025-01-24T14:33:59.243982+03:00"
+    dependencies:
+    - condition: global.config.enabled
+      name: config
+      repository: ""
+      version: 1.8.41
+    - condition: global.opendj.enabled
+      name: opendj
+      repository: ""
+      version: 1.8.41
+    - condition: global.jackrabbit.enabled
+      name: jackrabbit
+      repository: ""
+      version: 1.8.41
+    - condition: global.oxauth.enabled
+      name: oxauth
+      repository: ""
+      version: 1.8.41
+    - condition: global.fido2.enabled
+      name: fido2
+      repository: ""
+      version: 1.8.41
+    - condition: global.scim.enabled
+      name: scim
+      repository: ""
+      version: 1.8.41
+    - condition: global.oxtrust.enabled
+      name: oxtrust
+      repository: ""
+      version: 1.8.41
+    - condition: global.nginx-ingress.enabled
+      name: nginx-ingress
+      repository: ""
+      version: 1.8.41
+    - condition: global.oxshibboleth.enabled
+      name: oxshibboleth
+      repository: ""
+      version: 1.8.41
+    - condition: config.configmap.gluuPassportEnabled
+      name: oxpassport
+      repository: ""
+      version: 1.8.41
+    - condition: config.configmap.gluuCasaEnabled
+      name: casa
+      repository: ""
+      version: 1.8.41
+    - condition: global.oxauth-key-rotation.enabled
+      name: oxauth-key-rotation
+      repository: ""
+      version: 1.8.41
+    - condition: global.cr-rotate.enabled
+      name: cr-rotate
+      repository: ""
+      version: 1.8.41
+    - condition: global.oxd-server.enabled
+      name: oxd-server
+      repository: ""
+      version: 1.8.41
+    - condition: global.persistence.enabled
+      name: persistence
+      repository: ""
+      version: 1.8.41
+    - condition: global.istio.ingress
+      name: gluu-istio-ingress
+      repository: ""
+      version: 1.8.41
+    - condition: global.alb.ingress
+      name: gluu-alb-ingress
+      repository: ""
+      version: 1.8.41
+    description: Gluu Access and Identity Mangement
+    digest: e81efb9d532eb706f36d3a2c24524c76eb4df9f378b2fd920abb099c69431856
+    home: https://www.gluu.org
+    icon: https://gluu.org/docs/gluu-server/favicon.ico
+    kubeVersion: '>=v1.22.0-0'
+    maintainers:
+    - email: support@gluu.org
+      name: moabu
+    name: gluu
+    sources:
+    - https://gluu.org/docs/gluu-server
+    - https://github.com/GluuFederation/cloud-native-edition
+    - https://github.com/GluuFederation/gluu4/tree/4.5/cloud-native-edition
+    urls:
+    - gluu-1.8.41.tgz
+    version: 1.8.41
+  - annotations:
+      artifacthub.io/changes: |
+        - Gluu 4.5.6 official chart release
+      artifacthub.io/images: |
+        - name: casa
+          image: gluufederation/casa:4.5.6_dev
+        - name: fido2
+          image: gluufederation/fido2:4.5.6_dev
+        - name: scim
+          image: gluufederation/scim:4.5.6_dev
+        - name: configuration-manager
+          image: gluufederation/config-init:4.5.6_dev
+        - name: cr-rotate
+          image: gluufederation/cr-rotate:4.5.6_dev
+        - name: certmanager
+          image: gluufederation/certmanager:4.5.6_dev
+        - name: opendj
+          image: gluufederation/opendj:4.5.6_dev
+        - name: jackrabbit
+          image: gluufederation/jackrabbit:4.5.6_dev
+        - name: oxauth
+          image: gluufederation/oxauth:4.5.6_dev
+        - name: oxd-server
+          image: gluufederation/oxd-server:4.5.6_dev
+        - name: oxpassport
+          image: gluufederation/oxpassport:4.5.6_dev
+        - name: oxshibboleth
+          image: gluufederation/oxshibboleth:4.5.6_dev
+        - name: persistence
+          image: gluufederation/persistence:4.5.6_dev
+        - name: oxtrust
+          image: gluufederation/oxtrust:4.5.6_dev
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 4.5.6
+    created: "2025-01-24T14:33:59.236247+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -157,7 +278,7 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.5.5
-    created: "2024-12-09T10:16:45.959229+03:00"
+    created: "2025-01-24T14:33:59.228117+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -277,7 +398,7 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.5.5
-    created: "2024-12-09T10:16:45.950925+03:00"
+    created: "2025-01-24T14:33:59.220306+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -397,7 +518,7 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.5.4
-    created: "2024-12-09T10:16:45.942835+03:00"
+    created: "2025-01-24T14:33:59.212443+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -517,7 +638,7 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.5.4
-    created: "2024-12-09T10:16:45.934965+03:00"
+    created: "2025-01-24T14:33:59.204062+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -637,7 +758,7 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.5.4
-    created: "2024-12-09T10:16:45.92753+03:00"
+    created: "2025-01-24T14:33:59.196625+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -757,7 +878,7 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.5.4
-    created: "2024-12-09T10:16:45.919082+03:00"
+    created: "2025-01-24T14:33:59.188169+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -877,7 +998,7 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.5.3
-    created: "2024-12-09T10:16:45.911517+03:00"
+    created: "2025-01-24T14:33:59.179324+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -997,7 +1118,7 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.5.3
-    created: "2024-12-09T10:16:45.903315+03:00"
+    created: "2025-01-24T14:33:59.171286+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -1117,7 +1238,7 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.5.3
-    created: "2024-12-09T10:16:45.895161+03:00"
+    created: "2025-01-24T14:33:59.163032+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -1237,7 +1358,7 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.5.3
-    created: "2024-12-09T10:16:45.886671+03:00"
+    created: "2025-01-24T14:33:59.155244+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -1357,7 +1478,7 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.5.3
-    created: "2024-12-09T10:16:45.871433+03:00"
+    created: "2025-01-24T14:33:59.139795+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -1477,7 +1598,7 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.5.3
-    created: "2024-12-09T10:16:45.863152+03:00"
+    created: "2025-01-24T14:33:59.132164+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -1597,7 +1718,7 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.5.2
-    created: "2024-12-09T10:16:45.853811+03:00"
+    created: "2025-01-24T14:33:59.120562+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -1717,7 +1838,7 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.5.2
-    created: "2024-12-09T10:16:45.845269+03:00"
+    created: "2025-01-24T14:33:59.112639+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -1837,7 +1958,7 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.5.2
-    created: "2024-12-09T10:16:45.83757+03:00"
+    created: "2025-01-24T14:33:59.104512+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -1957,7 +2078,7 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.5.2
-    created: "2024-12-09T10:16:45.829952+03:00"
+    created: "2025-01-24T14:33:59.097158+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -2078,7 +2199,7 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.5.1
-    created: "2024-12-09T10:16:45.822198+03:00"
+    created: "2025-01-24T14:33:59.086491+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -2199,7 +2320,7 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.5.1
-    created: "2024-12-09T10:16:45.814625+03:00"
+    created: "2025-01-24T14:33:59.078247+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -2320,7 +2441,7 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.5.1
-    created: "2024-12-09T10:16:45.806627+03:00"
+    created: "2025-01-24T14:33:59.070565+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -2441,7 +2562,7 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.5.1
-    created: "2024-12-09T10:16:45.798784+03:00"
+    created: "2025-01-24T14:33:59.06286+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -2562,7 +2683,7 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.5.1
-    created: "2024-12-09T10:16:45.782931+03:00"
+    created: "2025-01-24T14:33:59.04737+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -2683,7 +2804,7 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.5.1
-    created: "2024-12-09T10:16:45.774795+03:00"
+    created: "2025-01-24T14:33:59.039214+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -2804,7 +2925,7 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.5.1
-    created: "2024-12-09T10:16:45.766869+03:00"
+    created: "2025-01-24T14:33:59.031294+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -2925,7 +3046,7 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.5.0
-    created: "2024-12-09T10:16:45.758684+03:00"
+    created: "2025-01-24T14:33:59.02388+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -3046,7 +3167,7 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.5.0
-    created: "2024-12-09T10:16:45.751125+03:00"
+    created: "2025-01-24T14:33:59.012189+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -3167,7 +3288,7 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.5.0
-    created: "2024-12-09T10:16:45.743778+03:00"
+    created: "2025-01-24T14:33:59.003995+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -3288,7 +3409,7 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.5.0
-    created: "2024-12-09T10:16:45.735716+03:00"
+    created: "2025-01-24T14:33:58.995+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -3409,7 +3530,7 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.5.0
-    created: "2024-12-09T10:16:45.72678+03:00"
+    created: "2025-01-24T14:33:58.986679+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -3530,7 +3651,7 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.5.0
-    created: "2024-12-09T10:16:45.719435+03:00"
+    created: "2025-01-24T14:33:58.978393+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -3652,7 +3773,7 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.5.0
-    created: "2024-12-09T10:16:45.711937+03:00"
+    created: "2025-01-24T14:33:58.971265+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -3774,7 +3895,7 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.5.0
-    created: "2024-12-09T10:16:46.004583+03:00"
+    created: "2025-01-24T14:33:59.281083+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -3896,7 +4017,7 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.5.0
-    created: "2024-12-09T10:16:45.997188+03:00"
+    created: "2025-01-24T14:33:59.273469+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -4018,7 +4139,7 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.5.0
-    created: "2024-12-09T10:16:45.989736+03:00"
+    created: "2025-01-24T14:33:59.266095+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -4138,7 +4259,7 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.5.0
-    created: "2024-12-09T10:16:45.982296+03:00"
+    created: "2025-01-24T14:33:59.258942+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -4258,7 +4379,7 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.5.0
-    created: "2024-12-09T10:16:45.974934+03:00"
+    created: "2025-01-24T14:33:59.251148+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -4378,7 +4499,7 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.5.0
-    created: "2024-12-09T10:16:45.879237+03:00"
+    created: "2025-01-24T14:33:59.147672+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -4498,7 +4619,7 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.5.0
-    created: "2024-12-09T10:16:45.790858+03:00"
+    created: "2025-01-24T14:33:59.055279+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -4618,7 +4739,7 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.5.0
-    created: "2024-12-09T10:16:45.70436+03:00"
+    created: "2025-01-24T14:33:58.963581+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -4738,7 +4859,7 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.5.0
-    created: "2024-12-09T10:16:45.696349+03:00"
+    created: "2025-01-24T14:33:58.955245+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -4860,7 +4981,7 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.4.2
-    created: "2024-12-09T10:16:45.636031+03:00"
+    created: "2025-01-24T14:33:58.894182+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -4982,7 +5103,7 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.4.2
-    created: "2024-12-09T10:16:45.627842+03:00"
+    created: "2025-01-24T14:33:58.88576+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -5104,7 +5225,7 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.4.2
-    created: "2024-12-09T10:16:45.620148+03:00"
+    created: "2025-01-24T14:33:58.877561+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -5226,7 +5347,7 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.4.2
-    created: "2024-12-09T10:16:45.61278+03:00"
+    created: "2025-01-24T14:33:58.869919+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -5348,7 +5469,7 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.4.2
-    created: "2024-12-09T10:16:45.605197+03:00"
+    created: "2025-01-24T14:33:58.862213+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -5470,7 +5591,7 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.4.2
-    created: "2024-12-09T10:16:45.688628+03:00"
+    created: "2025-01-24T14:33:58.94796+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -5590,7 +5711,7 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.4.2
-    created: "2024-12-09T10:16:45.68102+03:00"
+    created: "2025-01-24T14:33:58.940322+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -5710,7 +5831,7 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.4.1
-    created: "2024-12-09T10:16:45.673202+03:00"
+    created: "2025-01-24T14:33:58.933004+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -5830,7 +5951,7 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.4.1
-    created: "2024-12-09T10:16:45.66626+03:00"
+    created: "2025-01-24T14:33:58.92492+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -5950,7 +6071,7 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.4.1
-    created: "2024-12-09T10:16:45.65855+03:00"
+    created: "2025-01-24T14:33:58.91711+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -6070,7 +6191,7 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.4.1
-    created: "2024-12-09T10:16:45.650846+03:00"
+    created: "2025-01-24T14:33:58.909124+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -6190,7 +6311,7 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.4.1
-    created: "2024-12-09T10:16:45.643159+03:00"
+    created: "2025-01-24T14:33:58.901551+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -6310,7 +6431,7 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.4.0
-    created: "2024-12-09T10:16:45.597114+03:00"
+    created: "2025-01-24T14:33:58.854011+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -6430,7 +6551,7 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.4.0
-    created: "2024-12-09T10:16:45.589659+03:00"
+    created: "2025-01-24T14:33:58.845984+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -6550,7 +6671,7 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.3.1
-    created: "2024-12-09T10:16:45.575928+03:00"
+    created: "2025-01-24T14:33:58.831699+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -6670,7 +6791,7 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.3.1
-    created: "2024-12-09T10:16:45.568336+03:00"
+    created: "2025-01-24T14:33:58.823805+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -6790,7 +6911,7 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.3.1
-    created: "2024-12-09T10:16:45.560248+03:00"
+    created: "2025-01-24T14:33:58.815299+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -6910,7 +7031,7 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.3.1
-    created: "2024-12-09T10:16:45.553276+03:00"
+    created: "2025-01-24T14:33:58.807082+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -7030,7 +7151,7 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.3.1
-    created: "2024-12-09T10:16:45.546058+03:00"
+    created: "2025-01-24T14:33:58.799573+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -7150,7 +7271,7 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.3.0
-    created: "2024-12-09T10:16:45.538615+03:00"
+    created: "2025-01-24T14:33:58.791538+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -7270,7 +7391,7 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.3.0
-    created: "2024-12-09T10:16:45.531023+03:00"
+    created: "2025-01-24T14:33:58.783804+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -7390,7 +7511,7 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.3.0
-    created: "2024-12-09T10:16:45.523899+03:00"
+    created: "2025-01-24T14:33:58.776664+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -7510,7 +7631,7 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.3.0
-    created: "2024-12-09T10:16:45.516117+03:00"
+    created: "2025-01-24T14:33:58.768389+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -7630,7 +7751,7 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.3.0
-    created: "2024-12-09T10:16:45.581834+03:00"
+    created: "2025-01-24T14:33:58.837972+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -7754,7 +7875,7 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.2.3
-    created: "2024-12-09T10:16:45.505465+03:00"
+    created: "2025-01-24T14:33:58.757817+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -7877,7 +7998,7 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.2.3
-    created: "2024-12-09T10:16:45.497123+03:00"
+    created: "2025-01-24T14:33:58.747755+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -8000,7 +8121,7 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.2.3
-    created: "2024-12-09T10:16:45.491433+03:00"
+    created: "2025-01-24T14:33:58.743705+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -8123,7 +8244,7 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.2.3
-    created: "2024-12-09T10:16:45.509269+03:00"
+    created: "2025-01-24T14:33:58.761759+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -8246,7 +8367,7 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.2.3
-    created: "2024-12-09T10:16:45.500973+03:00"
+    created: "2025-01-24T14:33:58.752114+03:00"
     dependencies:
     - condition: global.config.enabled
       name: config
@@ -8333,7 +8454,7 @@ entries:
   ldap-backup:
   - apiVersion: v2
     appVersion: 4.3.0
-    created: "2024-12-09T10:16:46.005676+03:00"
+    created: "2025-01-24T14:33:59.282197+03:00"
     description: A backup strategy for LDAP
     digest: f00564718757bd0d53f1f3dbaa9399327695eb883000f5d6ade7690bb8a2d371
     home: https://gluu.org/docs/gluu-server
@@ -8356,7 +8477,7 @@ entries:
     version: 1.6.11
   - apiVersion: v2
     appVersion: 4.3.0
-    created: "2024-12-09T10:16:46.006053+03:00"
+    created: "2025-01-24T14:33:59.282637+03:00"
     description: A backup strategy for LDAP
     digest: 2fd5f9c62784f0bc6c4b30e5b90abb5edeca1a6cb865e414a3e87a42b115b647
     home: https://gluu.org/docs/gluu-server
@@ -8379,7 +8500,7 @@ entries:
     version: 1.6.9
   - apiVersion: v2
     appVersion: 4.2.3
-    created: "2024-12-09T10:16:46.005216+03:00"
+    created: "2025-01-24T14:33:59.281463+03:00"
     description: A backup strategy for LDAP
     digest: 838ca4b13bb22686f6ff7da98abc523878d64a105ec27cb85da5489d208bf8dc
     home: https://www.gluu.org
@@ -8395,4 +8516,4 @@ entries:
     urls:
     - ldap-backup-1.5.9.tgz
     version: 1.5.9
-generated: "2024-12-09T10:16:45.486756+03:00"
+generated: "2025-01-24T14:33:58.734801+03:00"
