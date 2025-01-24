@@ -54,6 +54,8 @@ public abstract class LoggerService {
 	private LoggingLayoutType prevLogLoggingLayout;
 
     private AtomicBoolean isActive;
+
+	private boolean useExternalConfiguration = false;
     
     @PostConstruct
     public void create() {
@@ -93,7 +95,7 @@ public abstract class LoggerService {
         }
 
         try {
-            updateLoggerConfiguration();
+            updateLoggerConfiguration(true);
             this.prevLogLevel = getCurrentLogLevel();
             this.prevLogLoggingLayout = getCurrentLoggingLayout();
         } catch (Throwable ex) {
@@ -114,7 +116,9 @@ public abstract class LoggerService {
         }
 
         try {
-            updateLoggerSeverityImpl();
+        	updateApplicationConfiguration();
+            this.prevLogLevel = getCurrentLogLevel();
+            this.prevLogLoggingLayout = getCurrentLoggingLayout();
         } catch (Throwable ex) {
             log.error("Exception happened while updating logger configuration after base configuration update", ex);
         } finally {
@@ -122,29 +126,38 @@ public abstract class LoggerService {
         }
     }
 
-    public void updateLoggerSeverity() {
-    	// Full log4j2 configuration reload
-    	updateLoggerSeverityImpl();
-    }
-
-    private void updateLoggerSeverityImpl() {
+    private void updateApplicationConfiguration() {
         log.info("Starting logging configuration update after configuration change");
 
-        //resetLoggerConfigLocation();
-
+        // Disable JDK loggers
         setDisableJdkLogger();
 
-        if (setExternalLoggerConfig()) {
+        boolean prevUseExternalConfiguration = this.useExternalConfiguration;
+        this.useExternalConfiguration = setExternalLoggerConfig(); 
+        if (this.useExternalConfiguration) {
+            // Use external logging configuration
+        	this.useExternalConfiguration = true;
+            log.info("Using ewxternal logging configuration. Layout type and log level update were disabled");
         	return;
         }
         
-        updateLoggerConfiguration();
+        // Reset to default logging configuration
+        if (prevUseExternalConfiguration) {
+	        log.info("Replacing logging configuration with default one. Layout type and log level update were enabled");
+	        resetLoggerConfigLocation();
+        }
+        
+        // Call periodic logging configuration update
+        updateLoggerConfiguration(false);
     }
 
-    private void updateLoggerConfiguration() {
+    private void updateLoggerConfiguration(boolean isLoggerUpdateEvent) {
+    	if (this.useExternalConfiguration) {
+	        log.trace("Usign external logging configuration");
+    	}
+    	
     	// Do periodic update to apply changes to new loggers as well
-        String loggingLevel = getLoggingLevel();
-		if (isWrongLoggingConfig(loggingLevel)) {
+		if (checkLoggingConfig()) {
 	        log.warn("Log level is invalid in logging configuration");
 			return;
 		}
@@ -152,7 +165,9 @@ public abstract class LoggerService {
         Level level = getCurrentLogLevel();
         LoggingLayoutType loggingLayout = getCurrentLoggingLayout();
 
-        log.info("Setting layout and loggers level to '{}`, `{}' after logging configuration update", loggingLayout, loggingLevel);
+        String msgPattern = isLoggerUpdateEvent ? "Starting layout and loggers level periodic update. Layout: '{}`, level: `{}' " :
+        	"Starting layout and loggers level after configuration update. Layout: '{}`, level: `{}' ";
+    	log.info(msgPattern, loggingLayout, level);
 
         updateAppendersAndLogLevel(prevLogLoggingLayout, loggingLayout, prevLogLevel, level);
     }
@@ -171,14 +186,15 @@ public abstract class LoggerService {
 
     private boolean setExternalLoggerConfig() {
         String externalLoggerConfiguration = getExternalLoggerConfiguration();
-        log.info("External log configuration: {}", externalLoggerConfiguration);
         if (StringUtils.isEmpty(externalLoggerConfiguration)) {
+            log.trace("External log configuration is not provided");
             return false;
         }
 
+        log.info("External log configuration: {}", externalLoggerConfiguration);
         File log4jFile = new File(externalLoggerConfiguration);
         if (!log4jFile.exists()) {
-            log.info("External log configuration does not exist.");
+            log.info("External log configuration file '{}' does not exist.", log4jFile.getAbsolutePath());
             return false;
         }
 
@@ -200,26 +216,30 @@ public abstract class LoggerService {
         LoggerContext loggerContext = LoggerContext.getContext(false);
         if (loggerContext.getConfigLocation() != null) {
             loggerContext.setConfigLocation(null);
+            loggerContext.reconfigure();
         }
-        loggerContext.reconfigure();
     }
 
-    private void updateAppendersAndLogLevel(LoggingLayoutType prevLoggingLayout, LoggingLayoutType loggingLayout, Level prevLevel, Level newLevel) {
+    private void updateAppendersAndLogLevel(LoggingLayoutType prevLoggingLayout, LoggingLayoutType newLoggingLayout, Level prevLevel, Level newLevel) {
         final LoggerContext ctx = LoggerContext.getContext(false);
 
-        // Update logging layout if needed
-        if (prevLoggingLayout == loggingLayout) {
-        	log.info("Updating logging layout configuration from '{}' to '{}'", prevLoggingLayout, loggingLayout);
-	        updateLoggerLayout(loggingLayout, newLevel, ctx);
-        }
-        
         // Update root level if needed
         Level rootLevel = ctx.getConfiguration().getRootLogger().getLevel();
     	if ((newLevel != prevLevel) && (newLevel != rootLevel)) {
         	log.info("Updating root level to '{}'", newLevel);
             ctx.getConfiguration().getRootLogger().setLevel(newLevel);
-            ctx.reconfigure();
+            ctx.updateLoggers();
     	}
+
+        // Update logger configurations and appenders on layout or level change
+        if ((prevLoggingLayout != newLoggingLayout) || (prevLevel != newLevel)) {
+        	if (prevLoggingLayout == null) {
+            	log.info("Setting logging layout to specified in configuration '{}'", newLoggingLayout);
+        	} else {
+            	log.info("Updating logging layout configuration from '{}' to '{}' and loggin level from '{}' to '{}'", prevLoggingLayout, newLoggingLayout, prevLevel, newLevel);
+        	}
+	        updateLoggerConfig(newLoggingLayout, newLevel, ctx);
+        }
     	
     	// Update active loggers
         updateActiveLoggers(newLevel, ctx);
@@ -242,8 +262,7 @@ public abstract class LoggerService {
 		}
 	}
 
-    // We need to call this method only on loggingLayout update
-	private void updateLoggerLayout(LoggingLayoutType loggingLayout, Level newLevel, final LoggerContext ctx) {
+	private void updateLoggerConfig(LoggingLayoutType loggingLayout, Level newLevel, final LoggerContext ctx) {
     	int loggerConfigUpdates = 0;
     	int appenderConfigUpdates = 0;
     	
@@ -324,28 +343,28 @@ public abstract class LoggerService {
         }
 	}
 
-	private boolean isWrongLoggingConfig(String loggingLevel) {
-		return StringHelper.isEmpty(loggingLevel) || StringUtils.isEmpty(this.getLoggingLayout())
-				|| StringHelper.equalsIgnoreCase("DEFAULT", loggingLevel);
+	private boolean checkLoggingConfig() {
+		return StringHelper.isEmpty(getLoggingLevel()) || StringUtils.isEmpty(this.getLoggingLayout())
+				|| StringHelper.equalsIgnoreCase("DEFAULT", getLoggingLevel());
 	}
 
     private Level getCurrentLogLevel() {
-        String loggingLevel = getLoggingLevel();
-		if (isWrongLoggingConfig(loggingLevel)) {
+		if (checkLoggingConfig()) {
 			return Level.INFO;
 		}
 
+        String loggingLevel = getLoggingLevel();
         Level level = Level.toLevel(loggingLevel, Level.INFO);
         
         return level;
     }
 
     private LoggingLayoutType getCurrentLoggingLayout() {
-        String loggingLayout = getLoggingLayout();
-		if (isWrongLoggingConfig(loggingLayout)) {
+		if (checkLoggingConfig()) {
 			return LoggingLayoutType.TEXT;
 		}
 
+        String loggingLayout = getLoggingLayout();
         LoggingLayoutType loggingLayoutType = LoggingLayoutType.getByValue(loggingLayout.toUpperCase());
         if (loggingLayoutType == null) {
 			return LoggingLayoutType.TEXT;
@@ -357,9 +376,9 @@ public abstract class LoggerService {
     public abstract boolean isDisableJdkLogger();
 
     public abstract String getLoggingLevel();
-    
-    public abstract String getExternalLoggerConfiguration();
 
     public abstract String getLoggingLayout();
+    
+    public abstract String getExternalLoggerConfiguration();
 
 }
