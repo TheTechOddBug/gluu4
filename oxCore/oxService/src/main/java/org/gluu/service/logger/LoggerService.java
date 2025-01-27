@@ -1,9 +1,9 @@
 package org.gluu.service.logger;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.LogManager;
 
@@ -44,7 +44,7 @@ public abstract class LoggerService {
 
 	private static final PatternLayout DEFAULT_TEXT_PATTERN_LAYOUT = PatternLayout.newBuilder().withPattern("%d %-5p [%t] [%C{6}] (%F:%L) - %m%n").build();
 
-	private final static int DEFAULT_INTERVAL = 15; // 15 seconds
+	private final static int DEFAULT_INTERVAL = 1; // 15 seconds
 
     @Inject
     private Logger log;
@@ -154,7 +154,7 @@ public abstract class LoggerService {
 
     private void updateLoggerConfiguration(boolean isLoggerUpdateEvent) {
     	if (this.useExternalConfiguration) {
-	        log.trace("Usign external logging configuration");
+	        log.trace("Using external logging configuration");
     	}
     	
     	// Do periodic update to apply changes to new loggers as well
@@ -166,9 +166,9 @@ public abstract class LoggerService {
         Level level = getCurrentLogLevel();
         LoggingLayoutType loggingLayout = getCurrentLoggingLayout();
 
-        String msgPattern = isLoggerUpdateEvent ? "Starting layout and loggers level periodic update. Layout: '{}`, level: `{}' " :
+        String msgPattern = isLoggerUpdateEvent ? "Starting layout and loggers level periodic update. Layout: '{}`, level: `{}'. Previous Layout: '{}`, level: `{}'" :
         	"Starting layout and loggers level after configuration update. Layout: '{}`, level: `{}' ";
-    	log.info(msgPattern, loggingLayout, level);
+    	log.info(msgPattern, loggingLayout, level, prevLogLoggingLayout, prevLogLevel);
 
         updateAppendersAndLogLevel(prevLogLoggingLayout, loggingLayout, prevLogLevel, level);
     }
@@ -266,8 +266,8 @@ public abstract class LoggerService {
 	private void updateLoggerConfig(LoggingLayoutType loggingLayout, Level newLevel, final LoggerContext ctx) {
     	int loggerConfigUpdates = 0;
     	int appenderConfigUpdates = 0;
-    	
-    	List<Appender> removeAppenders = new ArrayList<>();
+
+    	Map<String, String> updates = new HashMap<>();
     	AbstractConfiguration config = (AbstractConfiguration) ctx.getConfiguration();
         for (Map.Entry<String, LoggerConfig> loggerConfigEntry : config.getLoggers().entrySet()) {
         	LoggerConfig loggerConfig = loggerConfigEntry.getValue();
@@ -298,8 +298,6 @@ public abstract class LoggerService {
 	                	continue;
 	                }
 
-	                log.debug("Updating appender '{}'", appender.getName());
-
 	                RollingFileAppender newFileAppender = RollingFileAppender.newBuilder()
 	                        .setLayout(layout)
 	                        .withStrategy(rollingFile.getManager().getRolloverStrategy())
@@ -309,20 +307,20 @@ public abstract class LoggerService {
 	                        .setName(rollingFile.getName())
 	                        .build();
 	                newFileAppender.start();
-	                removeAppenders.add(appender);
-	                loggerConfig.addAppender(newFileAppender, newLevel, null);
+	                appender.stop();
 	                loggerConfig.removeAppender(appenderEntry.getKey());
+	                loggerConfig.addAppender(newFileAppender, newLevel, null);
 
+	                updates.put(appender.getName(), layout.getClass().getName());
 	                appenderConfigUpdates++;
 	        	} else if (appender instanceof ConsoleAppender) {
 	                ConsoleAppender consoleAppender = (ConsoleAppender) appender;
 	                if (consoleAppender.getLayout().getClass().isAssignableFrom(layout.getClass())) {
-		                log.debug("Skipping appender update '{}'", appender.getName());
+	                	log.debug("Skipping appender update '{}'", appender.getName());
 	                	// Skip logger which have required logger type
 	                	continue;
 	                }
 
-	                log.debug("Updating appender '{}'", appender.getName());
 
 	                ConsoleAppender newConsoleAppender = ConsoleAppender.newBuilder()
 	                        .setLayout(layout)
@@ -330,10 +328,11 @@ public abstract class LoggerService {
 	                        .setName(consoleAppender.getName())
 	                        .build();
 	                newConsoleAppender.start();
-	                removeAppenders.add(appender);
-	                loggerConfig.addAppender(newConsoleAppender, newLevel, null);
+	                appender.stop();
 	                loggerConfig.removeAppender(appenderEntry.getKey());
+	                loggerConfig.addAppender(newConsoleAppender, newLevel, null);
 
+	                updates.put(appender.getName(), layout.getClass().getName());
 	                appenderConfigUpdates++;
 	            }
 	        }
@@ -341,14 +340,12 @@ public abstract class LoggerService {
 
         if ((loggerConfigUpdates > 0) || (appenderConfigUpdates > 0)) {
         	log.trace("Trigger loggers update after '{}' updates", loggerConfigUpdates + appenderConfigUpdates);
-            
-            // Stop old appenders after adding new appenders to avoid lose messages
-        	log.trace("Removind old '{}' appenders", removeAppenders.size());
-            for (Appender appendr : removeAppenders) {
-            	appendr.stop();
-            }
-
-            ctx.updateLoggers(config);
+        	//ctx.updateLoggers();
+        	ctx.updateLoggers();
+        	
+        	for (Entry<String, String> entry : updates.entrySet()) {
+                log.debug("Updated appender '{}'. New layout: '{}'", entry.getKey(), entry.getValue());
+        	}
         }
 	}
 
