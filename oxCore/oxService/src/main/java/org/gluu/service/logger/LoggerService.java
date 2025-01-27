@@ -44,7 +44,7 @@ public abstract class LoggerService {
 
 	private static final PatternLayout DEFAULT_TEXT_PATTERN_LAYOUT = PatternLayout.newBuilder().withPattern("%d %-5p [%t] [%C{6}] (%F:%L) - %m%n").build();
 
-	private final static int DEFAULT_INTERVAL = 1; // 15 seconds
+	private final static int DEFAULT_INTERVAL = 15; // 15 seconds
 
     @Inject
     private Logger log;
