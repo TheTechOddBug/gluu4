@@ -15,6 +15,7 @@ metadata:
 {{ toYaml .Values.additionalAnnotations | indent 4 }}
 {{- end }}
 data:
+  GLUU_SQL_DB_SCHEMA: {{ .Values.configmap.cnSqlDbSchema | quote }}
   GLUU_SQL_DB_DIALECT: {{ .Values.configmap.cnSqlDbDialect }}
   GLUU_SQL_DB_HOST: {{ .Values.configmap.cnSqlDbHost }}
   GLUU_SQL_DB_PORT: {{ .Values.configmap.cnSqlDbPort | quote }}
