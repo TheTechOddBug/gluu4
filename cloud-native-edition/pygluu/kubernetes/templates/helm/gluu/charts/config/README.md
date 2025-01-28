@@ -47,6 +47,7 @@ Kubernetes: `>=v1.22.0-0`
 | configmap.cnSqlDbHost | string | `"my-release-mysql.default.svc.cluster.local"` | SQL database host uri. |
 | configmap.cnSqlDbName | string | `"gluu"` | SQL database username. |
 | configmap.cnSqlDbPort | int | `3306` | SQL database port. |
+| configmap.cnSqlDbSchema | string | `""` | Schema name used by SQL database (default to empty-string; if using MySQL, the schema name will be resolved as the database name, whereas in PostgreSQL the schema name will be resolved as `"public"`). |
 | configmap.cnSqlDbTimezone | string | `"UTC"` | SQL database timezone. |
 | configmap.cnSqlDbUser | string | `"gluu"` | SQL database username. |
 | configmap.cnSqlPasswordFile | string | `"/etc/gluu/conf/sql_password"` | SQL password file holding password from config.configmap.cnSqldbUserPassword . |
