@@ -51,9 +51,9 @@
     - Backup existing `oxauth.war` and `identity.war`
         - oxauth.war location: /opt/gluu/jetty/oxauth/webapps/
         - identity.war location: /opt/gluu/jetty/identity/webapps/
-    - Download oxauth 4.5.y from [this](https://jenkins.gluu.org/maven/org/gluu/)
-    - Download identity 4.5.y from same location
-    - You can grab other artifacts like `oxShibboleth` or `oxd` etc here as well. 
+    - Download oxauth 4.5.y from [here](https://jenkins.gluu.org/maven/org/gluu/)
+    - Download identity 4.5.y from [here](https://jenkins.gluu.org/maven/org/gluu/)
+    - You may download other artifacts like `oxShibboleth` or `oxd` [here](https://jenkins.gluu.org/maven/org/gluu/)
     - Rename newly downloaded artifacts to `oxauth.war` and `identity.war` respectively.
     - Stop identity service: `service identity stop`
     - Stop oxauth service: `service oxauth stop`
@@ -63,6 +63,7 @@
     - Now put newly downloaded `oxuath.war` and `identity.war` into proper location ( /opt/gluu/jetty/oxauth/webapps/ and /opt/gluu/jetty/identity/webapps/ )
     - Start oxauth and identity service
     - Test
+    
 === "Cloud Native Edition"
  
     ## Overview
