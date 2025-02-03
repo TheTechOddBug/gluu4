@@ -53,13 +53,8 @@ import org.gluu.oxtrust.action.TrustContactsAction;
 import org.gluu.oxtrust.api.saml.SAMLTrustRelationshipShort;
 import org.gluu.oxtrust.api.server.util.ApiConstants;
 import org.gluu.oxtrust.api.server.util.ApiScopeConstants;
-import org.gluu.oxtrust.service.TrustService;
+import org.gluu.oxtrust.service.*;
 import org.gluu.oxtrust.service.filter.ProtectedApi;
-import org.gluu.oxtrust.service.ClientService;
-import org.gluu.oxtrust.service.ConfigurationService;
-import org.gluu.oxtrust.service.MetadataValidationTimer;
-import org.gluu.oxtrust.service.Shibboleth3ConfService;
-import org.gluu.oxtrust.service.SvnSyncTimer;
 import org.gluu.oxtrust.model.GluuConfiguration;
 import org.gluu.oxtrust.model.GluuCustomAttribute;
 import org.gluu.oxtrust.model.GluuMetadataSourceType;
@@ -122,6 +117,9 @@ public class TrustRelationshipWebService extends BaseWebResource {
 
     @Inject
     private Shibboleth3ConfService shibboleth3ConfService;
+
+    @Inject
+    private AttributeService attributeService;
     
     ObjectMapper objectMapper;
     
@@ -575,7 +573,7 @@ public class TrustRelationshipWebService extends BaseWebResource {
      * @param certificate - need for FILE type TR, optional for GENERATE type TR
      * @return 
      */
-    private String saveTR(GluuSAMLTrustRelationship trustRelationship) {
+    private String saveTR(GluuSAMLTrustRelationship trustRelationship) throws Exception {
         String inum;
         boolean update = false;
         synchronized (svnSyncTimer) {
@@ -662,7 +660,11 @@ public class TrustRelationshipWebService extends BaseWebResource {
                 break;
             }
 
-            updateReleasedAttributes(trustRelationship);
+            String updateAttribute = updateReleasedAttributes(trustRelationship);
+            if(!updateAttribute.equalsIgnoreCase("Success")){
+                return updateAttribute;
+            }
+
 
             // We call it from TR validation timer
             if (trustRelationship.getSpMetaDataSourceType().equals(GluuMetadataSourceType.MANUAL)
@@ -975,50 +977,19 @@ public class TrustRelationshipWebService extends BaseWebResource {
         return trustRelationshipsShort;
     }
     
-    private void updateReleasedAttributes(GluuSAMLTrustRelationship trustRelationship) {
+    private String updateReleasedAttributes(GluuSAMLTrustRelationship trustRelationship)  {
         List<String> releasedAttributes = new ArrayList<String>();
-        String mailMsgPlain = "";
-        String mailMsgHtml = "";
-        for (GluuCustomAttribute customAttribute : trustRelationship.getReleasedCustomAttributes()) {
-            if (customAttribute.isNew()) {
-               /* rendererParameters.setParameter("attributeName", customAttribute.getName());
-                rendererParameters.setParameter("attributeDisplayName", customAttribute.getMetadata().getDisplayName());
-                rendererParameters.setParameter("attributeValue", customAttribute.getValue());
-
-                mailMsgPlain += facesMessages.evalResourceAsString("#{msgs['mail.trust.released.attribute.plain']}");
-                mailMsgHtml += facesMessages.evalResourceAsString("#{msgs['mail.trust.released.attribute.html']}");
-                rendererParameters.reset();*/
-
-                customAttribute.setNew(false);
-            }
-            releasedAttributes.add(customAttribute.getMetadata().getDn());
-        }
-
-        // send email notification
-        if (!StringUtils.isEmpty(mailMsgPlain)) {
-            try {
-                GluuConfiguration configuration = configurationService.getConfiguration();
-                if (ArrayHelper.isEmpty(configuration.getContactEmail()) || configuration.getContactEmail()[0].isEmpty())
-                	logger.warn("Failed to send the 'Attributes released' notification email: unconfigured contact email");
-                else if (configuration.getSmtpConfiguration() == null
-                        || StringHelper.isEmpty(configuration.getSmtpConfiguration().getHost()))
-                	logger.warn("Failed to send the 'Attributes released' notification email: unconfigured SMTP server");
-                else {
-                    /*String subj = facesMessages.evalResourceAsString("#{msgs['mail.trust.released.subject']}");
-                    rendererParameters.setParameter("trustRelationshipName", trustRelationship.getDisplayName());
-                    rendererParameters.setParameter("trustRelationshipInum", trustRelationship.getInum());
-                    String preMsgPlain = facesMessages
-                            .evalResourceAsString("#{msgs['mail.trust.released.name.plain']}");
-                    String preMsgHtml = facesMessages.evalResourceAsString("#{msgs['mail.trust.released.name.html']}");
-                    boolean result = mailService.sendMail(configuration.getContactEmail()[0], null, subj,
-                            preMsgPlain + mailMsgPlain, preMsgHtml + mailMsgHtml);
-
-                    if (!result) {
-                    	logger.error("Failed to send the notification email");
-                    }*/
+        if((trustRelationship.getReleasedAttributes() != null) && !trustRelationship.getReleasedAttributes().isEmpty()) {
+            for (String attribute : trustRelationship.getReleasedAttributes()) {
+                GluuAttribute gluuAttribute = null;
+                try {
+                    gluuAttribute = attributeService.getAttributeByDn(attribute);
+                } catch (Exception e) {
+                    logger.debug("Invalid Attribute Dn : {} ", attribute);
+                    return "Trust Relationship Operation failed due to invalid attribute : " + attribute;
                 }
-            } catch (Exception ex) {
-            	logger.error("Failed to send the notification email: ", ex);
+                if (gluuAttribute != null)
+                    releasedAttributes.add(attribute);
             }
         }
 
@@ -1027,6 +998,8 @@ public class TrustRelationshipWebService extends BaseWebResource {
         } else {
             trustRelationship.setReleasedAttributes(null);
         }
+
+        return "Success";
     }
     
     
