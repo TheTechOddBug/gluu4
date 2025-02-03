@@ -979,16 +979,18 @@ public class TrustRelationshipWebService extends BaseWebResource {
     
     private String updateReleasedAttributes(GluuSAMLTrustRelationship trustRelationship)  {
         List<String> releasedAttributes = new ArrayList<String>();
-        for (String attribute : trustRelationship.getReleasedAttributes()) {
-            GluuAttribute gluuAttribute  = null;
-            try {
-                gluuAttribute = attributeService.getAttributeByDn(attribute);
-            } catch (Exception e) {
-                logger.debug("Invalid Attribute Dn : {} ",attribute);
-                return "Trust Relationship Operation failed due to invalid attribute : "+ attribute;
+        if((trustRelationship.getReleasedAttributes() != null) && !trustRelationship.getReleasedAttributes().isEmpty()) {
+            for (String attribute : trustRelationship.getReleasedAttributes()) {
+                GluuAttribute gluuAttribute = null;
+                try {
+                    gluuAttribute = attributeService.getAttributeByDn(attribute);
+                } catch (Exception e) {
+                    logger.debug("Invalid Attribute Dn : {} ", attribute);
+                    return "Trust Relationship Operation failed due to invalid attribute : " + attribute;
+                }
+                if (gluuAttribute != null)
+                    releasedAttributes.add(attribute);
             }
-            if(gluuAttribute != null)
-                releasedAttributes.add(attribute);
         }
 
         if (!releasedAttributes.isEmpty()) {
