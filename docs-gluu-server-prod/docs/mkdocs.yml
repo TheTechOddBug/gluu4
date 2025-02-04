@@ -7,8 +7,8 @@ copyright: Copyright &copy; 2022, Gluu, Inc.
 
 # Repository
 docs_dir: source
-repo_name: GluuFederation/docs-gluu-server-prod
-repo_url: https://github.com/GluuFederation/docs-gluu-server-prod/
+repo_name: GitHub
+repo_url: https://github.com/GluuFederation/gluu4/tree/4.5/docs-gluu-server-prod/
 edit_uri: edit/4.5/docs/source
 
 # Configuration
