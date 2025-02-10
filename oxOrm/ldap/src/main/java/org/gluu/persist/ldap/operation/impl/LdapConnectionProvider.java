@@ -42,7 +42,7 @@ public class LdapConnectionProvider {
     private static final int DEFAULT_SUPPORTED_LDAP_VERSION = 2;
     private static final String DEFAULT_SUBSCHEMA_SUBENTRY = "cn=schema";
 
-    private static final String[] SSL_PROTOCOLS = {"TLSv1.2", "TLSv1.1", "TLSv1", "SSLv3"};
+    private static final String[] SSL_PROTOCOLS = {"TLSv1.2", "TLSv1.3", "TLSv1.1", "TLSv1", "SSLv3"};
 
     private LDAPConnectionPool connectionPool;
     private ResultCode creationResultCode;
@@ -156,6 +156,8 @@ public class LdapConnectionProvider {
 	            }
             }
 
+            SSLUtil.setDefaultSSLProtocol(SSL_PROTOCOLS[0]);
+            SSLUtil.setEnabledSSLProtocols(Arrays.asList(SSL_PROTOCOLS));
             failoverSet = new FailoverServerSet(this.addresses, this.ports, sslUtil.createSSLSocketFactory(SSL_PROTOCOLS[0]), connectionOptions);
         } else {
             failoverSet = new FailoverServerSet(this.addresses, this.ports, connectionOptions);
