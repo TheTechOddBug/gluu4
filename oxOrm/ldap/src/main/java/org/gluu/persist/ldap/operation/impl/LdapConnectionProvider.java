@@ -137,6 +137,9 @@ public class LdapConnectionProvider {
 
         this.useSSL = Boolean.valueOf(props.getProperty("useSSL")).booleanValue();
 
+        SSLUtil.setDefaultSSLProtocol(SSL_PROTOCOLS[0]);
+        SSLUtil.setEnabledSSLProtocols(Arrays.asList(SSL_PROTOCOLS));
+
         SSLUtil sslUtil = null;
         FailoverServerSet failoverSet;
         if (this.useSSL) {
@@ -156,8 +159,6 @@ public class LdapConnectionProvider {
 	            }
             }
 
-            SSLUtil.setDefaultSSLProtocol(SSL_PROTOCOLS[0]);
-            SSLUtil.setEnabledSSLProtocols(Arrays.asList(SSL_PROTOCOLS));
             failoverSet = new FailoverServerSet(this.addresses, this.ports, sslUtil.createSSLSocketFactory(SSL_PROTOCOLS[0]), connectionOptions);
         } else {
             failoverSet = new FailoverServerSet(this.addresses, this.ports, connectionOptions);
