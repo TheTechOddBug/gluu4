@@ -28,7 +28,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
-@Path(ApiConstants.BASE_API_URL+ApiConstants.RADIUS_CLIENTS)
+@Path(ApiConstants.BASE_API_URL + ApiConstants.RADIUS_CLIENTS)
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @ApplicationScoped
