@@ -33,7 +33,7 @@ public final class ApiScopeConstants {
 	public static final String SCOPE_METRICCONFIG_WRITE = "https://gluu.org/auth/oxtrust.metricconfig.write";
 	public static final String SCOPE_OXAUTHCONFIGURATION_READ = "https://gluu.org/auth/oxtrust.oxauthconfiguration.read";
 	public static final String SCOPE_OXAUTHCONFIGURATION_WRITE = "https://gluu.org/auth/oxtrust.oxauthconfiguration.write";
-	public static final String SCOPE_OXAUTH_JSONS_ETTING_READ = "https://gluu.org/auth/oxtrust.OxauthjsonSetting.read";
+	public static final String SCOPE_OXAUTH_JSONS_ETTING_READ = "https://gluu.org/auth/oxtrust.oxauthjsonSetting.read";
 	public static final String SCOPE_OXAUTH_JSON_SETTING_WRITE = "https://gluu.org/auth/oxtrust.oxauthjsonSetting.write";
 	public static final String SCOPE_OXTRUST_CONFIGURATION_READ = "https://gluu.org/auth/oxtrust.oxtrustconfiguration.read";
 	public static final String SCOPE_OXTRUST_CONFIGURATION_WRITE = "https://gluu.org/auth/oxtrust.oxtrustconfiguration.write";

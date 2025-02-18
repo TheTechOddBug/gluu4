@@ -27,7 +27,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
-@Path(ApiConstants.CONFIGURATION + ApiConstants.RPT)
+@Path(ApiConstants.BASE_API_URL + ApiConstants.BASE_API_URL + ApiConstants.CONFIGURATION + ApiConstants.RPT)
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @ApplicationScoped

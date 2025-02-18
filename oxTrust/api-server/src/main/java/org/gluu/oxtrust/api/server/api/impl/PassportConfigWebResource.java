@@ -28,7 +28,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
-@Path(ApiConstants.CONFIGURATION + ApiConstants.PASSPORT)
+@Path(ApiConstants.BASE_API_URL + ApiConstants.CONFIGURATION + ApiConstants.PASSPORT)
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @ApplicationScoped
