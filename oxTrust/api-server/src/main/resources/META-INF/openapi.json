@@ -13,7 +13,7 @@
       "name" : "Gluu Support License",
       "url" : "https://gluu.org/"
     },
-    "version" : "4.5.3"
+    "version" : "4.5.4"
   },
   "paths" : {
     "/configuration/api" : {
@@ -173,61 +173,11 @@
         }
       }
     },
-    "/api/v1/attributes/inactive" : {
+    "/api/v1/attributes/attribute/{inum}" : {
       "get" : {
-        "summary" : "Get all inactive attributes",
-        "description" : "Gets all inative attributes",
-        "operationId" : "getAllInactiveAttributes",
-        "responses" : {
-          "200" : {
-            "description" : "success",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "type" : "string"
-                }
-              }
-            }
-          },
-          "500" : {
-            "description" : "Server error"
-          }
-        },
-        "security" : [ {
-          "oauth2" : [ "https://gluu.org/auth/oxtrust.attribute.read" ]
-        } ]
-      }
-    },
-    "/api/v1/attributes/active" : {
-      "get" : {
-        "summary" : "Get all active attributes",
-        "description" : "Gets all the active gluu attributes",
-        "operationId" : "getAllActiveAttributes",
-        "responses" : {
-          "200" : {
-            "description" : "success",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "type" : "string"
-                }
-              }
-            }
-          },
-          "500" : {
-            "description" : "Server error"
-          }
-        },
-        "security" : [ {
-          "oauth2" : [ "https://gluu.org/auth/oxtrust.attribute.read" ]
-        } ]
-      }
-    },
-    "/api/v1/attributes/{inum}" : {
-      "delete" : {
-        "summary" : "Delete gluu attribute",
-        "description" : "Deletes a gluu attribute",
-        "operationId" : "deleteAttribute",
+        "summary" : "Get attribute by inum",
+        "description" : "Get an attribute by inum",
+        "operationId" : "getAttributeByInum",
         "parameters" : [ {
           "name" : "inum",
           "in" : "path",
@@ -238,17 +188,21 @@
         } ],
         "responses" : {
           "200" : {
-            "description" : "success"
-          },
-          "404" : {
-            "description" : "Not found"
+            "description" : "success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/GluuAttribute"
+                }
+              }
+            }
           },
           "500" : {
             "description" : "Server error"
           }
         },
         "security" : [ {
-          "oauth2" : [ "https://gluu.org/auth/oxtrust.attribute.write" ]
+          "oauth2" : [ "https://gluu.org/auth/oxtrust.attribute.read" ]
         } ]
       }
     },
@@ -293,11 +247,11 @@
         } ]
       }
     },
-    "/api/v1/attributes/attribute/{inum}" : {
-      "get" : {
-        "summary" : "Get attribute by inum",
-        "description" : "Get an attribute by inum",
-        "operationId" : "getAttributeByInum",
+    "/api/v1/attributes/{inum}" : {
+      "delete" : {
+        "summary" : "Delete gluu attribute",
+        "description" : "Deletes a gluu attribute",
+        "operationId" : "deleteAttribute",
         "parameters" : [ {
           "name" : "inum",
           "in" : "path",
@@ -308,11 +262,57 @@
         } ],
         "responses" : {
           "200" : {
+            "description" : "success"
+          },
+          "404" : {
+            "description" : "Not found"
+          },
+          "500" : {
+            "description" : "Server error"
+          }
+        },
+        "security" : [ {
+          "oauth2" : [ "https://gluu.org/auth/oxtrust.attribute.write" ]
+        } ]
+      }
+    },
+    "/api/v1/attributes/active" : {
+      "get" : {
+        "summary" : "Get all active attributes",
+        "description" : "Gets all the active gluu attributes",
+        "operationId" : "getAllActiveAttributes",
+        "responses" : {
+          "200" : {
             "description" : "success",
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/GluuAttribute"
+                  "type" : "string"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Server error"
+          }
+        },
+        "security" : [ {
+          "oauth2" : [ "https://gluu.org/auth/oxtrust.attribute.read" ]
+        } ]
+      }
+    },
+    "/api/v1/attributes/inactive" : {
+      "get" : {
+        "summary" : "Get all inactive attributes",
+        "description" : "Gets all inative attributes",
+        "operationId" : "getAllInactiveAttributes",
+        "responses" : {
+          "200" : {
+            "description" : "success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
                 }
               }
             }
@@ -694,47 +694,6 @@
         } ]
       }
     },
-    "/api/v1/clients/search" : {
-      "get" : {
-        "summary" : "Search OIDC clients",
-        "description" : "Search OIDC clients",
-        "operationId" : "searchClients",
-        "parameters" : [ {
-          "name" : "pattern",
-          "in" : "query",
-          "required" : true,
-          "schema" : {
-            "type" : "string"
-          }
-        }, {
-          "name" : "size",
-          "in" : "query",
-          "schema" : {
-            "type" : "integer",
-            "format" : "int32",
-            "default" : 1
-          }
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "Success",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "type" : "string"
-                }
-              }
-            }
-          },
-          "500" : {
-            "description" : "Server error"
-          }
-        },
-        "security" : [ {
-          "oauth2" : [ "https://gluu.org/auth/oxtrust.client.read" ]
-        } ]
-      }
-    },
     "/api/v1/clients/{inum}" : {
       "get" : {
         "summary" : "Get OIDC client",
@@ -854,6 +813,47 @@
         }
       }
     },
+    "/api/v1/clients/search" : {
+      "get" : {
+        "summary" : "Search OIDC clients",
+        "description" : "Search OIDC clients",
+        "operationId" : "searchClients",
+        "parameters" : [ {
+          "name" : "pattern",
+          "in" : "query",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "size",
+          "in" : "query",
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 1
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Server error"
+          }
+        },
+        "security" : [ {
+          "oauth2" : [ "https://gluu.org/auth/oxtrust.client.read" ]
+        } ]
+      }
+    },
     "/api/v1/configuration" : {
       "get" : {
         "summary" : "Get gluu configuration",
@@ -876,6 +876,39 @@
         },
         "security" : [ {
           "oauth2" : [ "https://gluu.org/auth/oxtrust.configuration.read" ]
+        } ]
+      }
+    },
+    "/api/v1/configuration/scripts/type/{type}" : {
+      "get" : {
+        "summary" : "Get person auth scripts",
+        "description" : "Get person authentications scripts",
+        "operationId" : "listCustomScriptsByType",
+        "parameters" : [ {
+          "name" : "type",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Server error"
+          }
+        },
+        "security" : [ {
+          "oauth2" : [ "https://gluu.org/auth/oxtrust.customscript.read" ]
         } ]
       }
     },
@@ -931,39 +964,6 @@
             "description" : "Server error"
           }
         }
-      }
-    },
-    "/api/v1/configuration/scripts/type/{type}" : {
-      "get" : {
-        "summary" : "Get person auth scripts",
-        "description" : "Get person authentications scripts",
-        "operationId" : "listCustomScriptsByType",
-        "parameters" : [ {
-          "name" : "type",
-          "in" : "path",
-          "required" : true,
-          "schema" : {
-            "type" : "string"
-          }
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "Success",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "type" : "string"
-                }
-              }
-            }
-          },
-          "500" : {
-            "description" : "Server error"
-          }
-        },
-        "security" : [ {
-          "oauth2" : [ "https://gluu.org/auth/oxtrust.customscript.read" ]
-        } ]
       }
     },
     "/api/v1/configuration/scripts" : {
@@ -1189,6 +1189,44 @@
         }
       }
     },
+    "/api/v1/groups/search" : {
+      "get" : {
+        "summary" : "Search groups",
+        "description" : "Search groups",
+        "operationId" : "searchGroups",
+        "parameters" : [ {
+          "name" : "pattern",
+          "in" : "query",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "size",
+          "in" : "query",
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 1
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Server error"
+          }
+        }
+      }
+    },
     "/api/v1/groups/{inum}/members" : {
       "get" : {
         "summary" : "Get group members",
@@ -1305,44 +1343,6 @@
         }
       }
     },
-    "/api/v1/groups/search" : {
-      "get" : {
-        "summary" : "Search groups",
-        "description" : "Search groups",
-        "operationId" : "searchGroups",
-        "parameters" : [ {
-          "name" : "pattern",
-          "in" : "query",
-          "required" : true,
-          "schema" : {
-            "type" : "string"
-          }
-        }, {
-          "name" : "size",
-          "in" : "query",
-          "schema" : {
-            "type" : "integer",
-            "format" : "int32",
-            "default" : 1
-          }
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "Success",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "type" : "string"
-                }
-              }
-            }
-          },
-          "500" : {
-            "description" : "Server error"
-          }
-        }
-      }
-    },
     "/configuration/idp" : {
       "get" : {
         "summary" : "Retrieve idp configuration",
@@ -1390,6 +1390,34 @@
           },
           "500" : {
             "description" : "Server error"
+          }
+        }
+      }
+    },
+    "/api/v1/configuration/ldap/status" : {
+      "post" : {
+        "summary" : "Check status of a configuration",
+        "description" : "Check the status of a configuration",
+        "operationId" : "getLdapConfigurationStatus",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/LdapConnectionData"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ConnectionStatusDTO"
+                }
+              }
+            }
           }
         }
       }
@@ -1488,34 +1516,6 @@
               "application/json" : {
                 "schema" : {
                   "type" : "string"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/configuration/ldap/status" : {
-      "post" : {
-        "summary" : "Check status of a configuration",
-        "description" : "Check the status of a configuration",
-        "operationId" : "getLdapConfigurationStatus",
-        "requestBody" : {
-          "content" : {
-            "application/json" : {
-              "schema" : {
-                "$ref" : "#/components/schemas/LdapConnectionData"
-              }
-            }
-          }
-        },
-        "responses" : {
-          "200" : {
-            "description" : "Success",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ConnectionStatusDTO"
                 }
               }
             }
@@ -2452,57 +2452,6 @@
         }
       }
     },
-    "/api/v1/scopes/{inum}" : {
-      "get" : {
-        "summary" : "Get openid scope",
-        "description" : "Get a specific openid connect scope",
-        "operationId" : "getScopeByInum",
-        "parameters" : [ {
-          "name" : "inum",
-          "in" : "path",
-          "required" : true,
-          "schema" : {
-            "type" : "string"
-          }
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "Success",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/Scope"
-                }
-              }
-            }
-          },
-          "500" : {
-            "description" : "Server error"
-          }
-        }
-      },
-      "delete" : {
-        "summary" : "Delete openid connect scope",
-        "description" : "Delete an openidconnect scope",
-        "operationId" : "deleteScope",
-        "parameters" : [ {
-          "name" : "inum",
-          "in" : "path",
-          "required" : true,
-          "schema" : {
-            "type" : "string"
-          }
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "Success"
-          },
-          "500" : {
-            "description" : "Server error"
-          }
-        }
-      }
-    },
     "/api/v1/scopes/search" : {
       "get" : {
         "summary" : "Search openid connect scopes",
@@ -2570,6 +2519,57 @@
         }
       }
     },
+    "/api/v1/scopes/{inum}" : {
+      "get" : {
+        "summary" : "Get openid scope",
+        "description" : "Get a specific openid connect scope",
+        "operationId" : "getScopeByInum",
+        "parameters" : [ {
+          "name" : "inum",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Scope"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Server error"
+          }
+        }
+      },
+      "delete" : {
+        "summary" : "Delete openid connect scope",
+        "description" : "Delete an openidconnect scope",
+        "operationId" : "deleteScope",
+        "parameters" : [ {
+          "name" : "inum",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success"
+          },
+          "500" : {
+            "description" : "Server error"
+          }
+        }
+      }
+    },
     "/api/v1/sectoridentifiers/search" : {
       "get" : {
         "summary" : "Search sector identifiers",
@@ -2597,6 +2597,36 @@
               "application/json" : {
                 "schema" : {
                   "type" : "string"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Server error"
+          }
+        }
+      }
+    },
+    "/api/v1/sectoridentifiers/sector/{id}" : {
+      "get" : {
+        "summary" : "Get sector identifier",
+        "description" : "Get a sector identifier",
+        "operationId" : "getSectorIdentifierById",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/OxAuthSectorIdentifier"
                 }
               }
             }
@@ -2710,36 +2740,6 @@
         }
       }
     },
-    "/api/v1/sectoridentifiers/sector/{id}" : {
-      "get" : {
-        "summary" : "Get sector identifier",
-        "description" : "Get a sector identifier",
-        "operationId" : "getSectorIdentifierById",
-        "parameters" : [ {
-          "name" : "id",
-          "in" : "path",
-          "required" : true,
-          "schema" : {
-            "type" : "string"
-          }
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "Success",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/OxAuthSectorIdentifier"
-                }
-              }
-            }
-          },
-          "500" : {
-            "description" : "Server error"
-          }
-        }
-      }
-    },
     "/api/v1/configuration/status" : {
       "get" : {
         "summary" : "Get server status",
@@ -2752,28 +2752,6 @@
               "application/json" : {
                 "schema" : {
                   "$ref" : "#/components/schemas/GluuServerStatus"
-                }
-              }
-            }
-          },
-          "500" : {
-            "description" : "Server error"
-          }
-        }
-      }
-    },
-    "/api/v1/configuration/smtp/test" : {
-      "get" : {
-        "summary" : "Test smtp configuration",
-        "description" : "Test smtp configuration",
-        "operationId" : "testSmtpConfiguration",
-        "responses" : {
-          "200" : {
-            "description" : "success",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/SmtpConfiguration"
                 }
               }
             }
@@ -2831,6 +2809,28 @@
           },
           "404" : {
             "description" : "Not found"
+          },
+          "500" : {
+            "description" : "Server error"
+          }
+        }
+      }
+    },
+    "/api/v1/configuration/smtp/test" : {
+      "get" : {
+        "summary" : "Test smtp configuration",
+        "description" : "Test smtp configuration",
+        "operationId" : "testSmtpConfiguration",
+        "responses" : {
+          "200" : {
+            "description" : "success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/SmtpConfiguration"
+                }
+              }
+            }
           },
           "500" : {
             "description" : "Server error"
@@ -3065,6 +3065,26 @@
         }
       }
     },
+    "/api/v1/saml/tr/generate_inum_for_new_trust_relationship" : {
+      "get" : {
+        "operationId" : "generateInumForNewTrustRelationship",
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "text/plain" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Server error"
+          }
+        }
+      }
+    },
     "/api/v1/saml/tr/set_metadata/{inum}" : {
       "post" : {
         "operationId" : "setMetadata",
@@ -3123,9 +3143,9 @@
         }
       }
     },
-    "/api/v1/saml/tr/list_deconstructed_trust_relationships/{inum}" : {
+    "/api/v1/saml/tr/get_contacts/{inum}" : {
       "get" : {
-        "operationId" : "listDeconstructedTrustRelationships",
+        "operationId" : "getContacts",
         "parameters" : [ {
           "name" : "inum",
           "in" : "path",
@@ -3134,26 +3154,6 @@
             "type" : "string"
           }
         } ],
-        "responses" : {
-          "200" : {
-            "description" : "OK",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "type" : "string"
-                }
-              }
-            }
-          },
-          "500" : {
-            "description" : "Server error"
-          }
-        }
-      }
-    },
-    "/api/v1/saml/tr/generate_inum_for_new_trust_relationship" : {
-      "get" : {
-        "operationId" : "generateInumForNewTrustRelationship",
         "responses" : {
           "200" : {
             "description" : "OK",
@@ -3196,6 +3196,77 @@
         "responses" : {
           "200" : {
             "description" : "OK"
+          },
+          "500" : {
+            "description" : "Server error"
+          }
+        }
+      }
+    },
+    "/api/v1/saml/tr/list_deconstructed_trust_relationships/{inum}" : {
+      "get" : {
+        "operationId" : "listDeconstructedTrustRelationships",
+        "parameters" : [ {
+          "name" : "inum",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Server error"
+          }
+        }
+      }
+    },
+    "/api/v1/saml/tr/generate_configuration_files" : {
+      "put" : {
+        "summary" : "generate configuration files",
+        "description" : "Generate configuration files for Shibboleth IDP",
+        "operationId" : "generateConfigurationFiles",
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          },
+          "500" : {
+            "description" : "Server error"
+          }
+        }
+      }
+    },
+    "/api/v1/saml/tr/list_all_other_federations/{inum}" : {
+      "get" : {
+        "operationId" : "listAllOtherFederations",
+        "parameters" : [ {
+          "name" : "inum",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
           },
           "500" : {
             "description" : "Server error"
@@ -3266,32 +3337,9 @@
         }
       }
     },
-    "/api/v1/saml/tr/generate_configuration_files" : {
-      "put" : {
-        "summary" : "generate configuration files",
-        "description" : "Generate configuration files for Shibboleth IDP",
-        "operationId" : "generateConfigurationFiles",
-        "responses" : {
-          "200" : {
-            "description" : "OK"
-          },
-          "500" : {
-            "description" : "Server error"
-          }
-        }
-      }
-    },
-    "/api/v1/saml/tr/list_all_other_federations/{inum}" : {
+    "/api/v1/saml/tr/list_all_active_trust_relationships" : {
       "get" : {
-        "operationId" : "listAllOtherFederations",
-        "parameters" : [ {
-          "name" : "inum",
-          "in" : "path",
-          "required" : true,
-          "schema" : {
-            "type" : "string"
-          }
-        } ],
+        "operationId" : "listAllActiveTrustRelationships",
         "responses" : {
           "200" : {
             "description" : "OK",
@@ -3309,9 +3357,9 @@
         }
       }
     },
-    "/api/v1/saml/tr/list_all_active_trust_relationships" : {
+    "/api/v1/saml/tr/list_all_federations" : {
       "get" : {
-        "operationId" : "listAllActiveTrustRelationships",
+        "operationId" : "listAllFederations",
         "responses" : {
           "200" : {
             "description" : "OK",
@@ -3360,54 +3408,6 @@
         }
       }
     },
-    "/api/v1/saml/tr/get_contacts/{inum}" : {
-      "get" : {
-        "operationId" : "getContacts",
-        "parameters" : [ {
-          "name" : "inum",
-          "in" : "path",
-          "required" : true,
-          "schema" : {
-            "type" : "string"
-          }
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "OK",
-            "content" : {
-              "text/plain" : {
-                "schema" : {
-                  "type" : "string"
-                }
-              }
-            }
-          },
-          "500" : {
-            "description" : "Server error"
-          }
-        }
-      }
-    },
-    "/api/v1/saml/tr/list_all_federations" : {
-      "get" : {
-        "operationId" : "listAllFederations",
-        "responses" : {
-          "200" : {
-            "description" : "OK",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "type" : "string"
-                }
-              }
-            }
-          },
-          "500" : {
-            "description" : "Server error"
-          }
-        }
-      }
-    },
     "/api/v1/saml/tr/set_contacts/{inum}" : {
       "post" : {
         "summary" : "set contacts for TrustRelationship",
@@ -3433,6 +3433,60 @@
         "responses" : {
           "200" : {
             "description" : "OK"
+          },
+          "500" : {
+            "description" : "Server error"
+          }
+        }
+      }
+    },
+    "/api/v1/inbound-saml/trusted-idp" : {
+      "get" : {
+        "summary" : "Retrieve all trusted-idps",
+        "description" : "Retrieve all trusted-idps",
+        "operationId" : "gluuTrustedIdps",
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Server error"
+          }
+        }
+      },
+      "post" : {
+        "summary" : "Add TrustedIDP",
+        "description" : "Add an TrustedIDP",
+        "operationId" : "createGluuTrustedIdp",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/TrustedIDPApi"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "201" : {
+            "description" : "Success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/TrustedIDPApi"
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "Trust Relation already exists"
           },
           "500" : {
             "description" : "Server error"
@@ -3527,60 +3581,6 @@
         "responses" : {
           "200" : {
             "description" : "Success"
-          },
-          "500" : {
-            "description" : "Server error"
-          }
-        }
-      }
-    },
-    "/api/v1/inbound-saml/trusted-idp" : {
-      "get" : {
-        "summary" : "Retrieve all trusted-idps",
-        "description" : "Retrieve all trusted-idps",
-        "operationId" : "gluuTrustedIdps",
-        "responses" : {
-          "200" : {
-            "description" : "Success",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "type" : "string"
-                }
-              }
-            }
-          },
-          "500" : {
-            "description" : "Server error"
-          }
-        }
-      },
-      "post" : {
-        "summary" : "Add TrustedIDP",
-        "description" : "Add an TrustedIDP",
-        "operationId" : "createGluuTrustedIdp",
-        "requestBody" : {
-          "content" : {
-            "application/json" : {
-              "schema" : {
-                "$ref" : "#/components/schemas/TrustedIDPApi"
-              }
-            }
-          }
-        },
-        "responses" : {
-          "201" : {
-            "description" : "Success",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/TrustedIDPApi"
-                }
-              }
-            }
-          },
-          "403" : {
-            "description" : "Trust Relation already exists"
           },
           "500" : {
             "description" : "Server error"
@@ -3765,6 +3765,29 @@
         }
       }
     },
+    "/api/v1/uma/resources/{id}/clients" : {
+      "get" : {
+        "summary" : "Get clients of UMA resources",
+        "description" : "Get clients of uma resource",
+        "operationId" : "getUmaResourceClients",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "default" : {
+            "description" : "default response",
+            "content" : {
+              "application/json" : { }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/uma/resources/{id}/scopes" : {
       "get" : {
         "summary" : "Get UMA resource scopes",
@@ -3788,11 +3811,49 @@
         }
       }
     },
-    "/api/v1/uma/resources/{id}/clients" : {
+    "/api/v1/uma/resources/search" : {
       "get" : {
-        "summary" : "Get clients of UMA resources",
-        "description" : "Get clients of uma resource",
-        "operationId" : "getUmaResourceClients",
+        "summary" : "Search UMA resources",
+        "description" : "Search uma resources",
+        "operationId" : "searchUmaResources",
+        "parameters" : [ {
+          "name" : "pattern",
+          "in" : "query",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "size",
+          "in" : "query",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Server error"
+          }
+        }
+      }
+    },
+    "/api/v1/uma/resources/{id}" : {
+      "get" : {
+        "summary" : "Get UMA resource by id",
+        "description" : "Get a uma resource by id",
+        "operationId" : "getUmaResourceById",
         "parameters" : [ {
           "name" : "id",
           "in" : "path",
@@ -3802,11 +3863,39 @@
           }
         } ],
         "responses" : {
-          "default" : {
-            "description" : "default response",
+          "200" : {
+            "description" : "Success",
             "content" : {
-              "application/json" : { }
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/UmaResource"
+                }
+              }
             }
+          },
+          "500" : {
+            "description" : "Server error"
+          }
+        }
+      },
+      "delete" : {
+        "summary" : "Delete UMA resource",
+        "description" : "Delete a uma resource",
+        "operationId" : "deleteUmaResource",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success"
+          },
+          "500" : {
+            "description" : "Server error"
           }
         }
       }
@@ -3881,95 +3970,6 @@
               "application/json" : {
                 "schema" : {
                   "$ref" : "#/components/schemas/UmaResource"
-                }
-              }
-            }
-          },
-          "500" : {
-            "description" : "Server error"
-          }
-        }
-      }
-    },
-    "/api/v1/uma/resources/{id}" : {
-      "get" : {
-        "summary" : "Get UMA resource by id",
-        "description" : "Get a uma resource by id",
-        "operationId" : "getUmaResourceById",
-        "parameters" : [ {
-          "name" : "id",
-          "in" : "path",
-          "required" : true,
-          "schema" : {
-            "type" : "string"
-          }
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "Success",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/UmaResource"
-                }
-              }
-            }
-          },
-          "500" : {
-            "description" : "Server error"
-          }
-        }
-      },
-      "delete" : {
-        "summary" : "Delete UMA resource",
-        "description" : "Delete a uma resource",
-        "operationId" : "deleteUmaResource",
-        "parameters" : [ {
-          "name" : "id",
-          "in" : "path",
-          "required" : true,
-          "schema" : {
-            "type" : "string"
-          }
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "Success"
-          },
-          "500" : {
-            "description" : "Server error"
-          }
-        }
-      }
-    },
-    "/api/v1/uma/resources/search" : {
-      "get" : {
-        "summary" : "Search UMA resources",
-        "description" : "Search uma resources",
-        "operationId" : "searchUmaResources",
-        "parameters" : [ {
-          "name" : "pattern",
-          "in" : "query",
-          "required" : true,
-          "schema" : {
-            "type" : "string"
-          }
-        }, {
-          "name" : "size",
-          "in" : "query",
-          "required" : true,
-          "schema" : {
-            "type" : "integer",
-            "format" : "int32"
-          }
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "Success",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "type" : "string"
                 }
               }
             }
@@ -4141,69 +4141,6 @@
         }
       }
     },
-    "/api/v1/radius/clients/{inum}" : {
-      "get" : {
-        "summary" : "Get radius client by inum",
-        "description" : "Get radius client by inum",
-        "operationId" : "getRadiusClient",
-        "parameters" : [ {
-          "name" : "inum",
-          "in" : "path",
-          "required" : true,
-          "schema" : {
-            "type" : "string"
-          }
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "Success",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/RadiusClient"
-                }
-              }
-            }
-          },
-          "403" : {
-            "description" : "Gluu Radius is not installed"
-          },
-          "404" : {
-            "description" : "Radius client not found"
-          },
-          "500" : {
-            "description" : "Internal server error"
-          }
-        }
-      },
-      "delete" : {
-        "summary" : "Delete radius client",
-        "description" : "Deletes a radius client",
-        "operationId" : "deleteRadiusClient",
-        "parameters" : [ {
-          "name" : "inum",
-          "in" : "path",
-          "required" : true,
-          "schema" : {
-            "type" : "string"
-          }
-        } ],
-        "responses" : {
-          "204" : {
-            "description" : "Success"
-          },
-          "403" : {
-            "description" : "Gluu Radius is not installed"
-          },
-          "404" : {
-            "description" : "Radius client not found"
-          },
-          "500" : {
-            "description" : "Internal server error"
-          }
-        }
-      }
-    },
     "/api/v1/radius/clients" : {
       "get" : {
         "summary" : "Get all radius clients",
@@ -4295,6 +4232,69 @@
           },
           "403" : {
             "description" : "Gluu Radius is not installed"
+          },
+          "500" : {
+            "description" : "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/radius/clients/{inum}" : {
+      "get" : {
+        "summary" : "Get radius client by inum",
+        "description" : "Get radius client by inum",
+        "operationId" : "getRadiusClient",
+        "parameters" : [ {
+          "name" : "inum",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/RadiusClient"
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "Gluu Radius is not installed"
+          },
+          "404" : {
+            "description" : "Radius client not found"
+          },
+          "500" : {
+            "description" : "Internal server error"
+          }
+        }
+      },
+      "delete" : {
+        "summary" : "Delete radius client",
+        "description" : "Deletes a radius client",
+        "operationId" : "deleteRadiusClient",
+        "parameters" : [ {
+          "name" : "inum",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "Success"
+          },
+          "403" : {
+            "description" : "Gluu Radius is not installed"
+          },
+          "404" : {
+            "description" : "Radius client not found"
           },
           "500" : {
             "description" : "Internal server error"
@@ -4514,22 +4514,22 @@
           "gluuTooltip" : {
             "type" : "string"
           },
-          "adminCanEdit" : {
+          "userCanView" : {
             "type" : "boolean"
           },
           "userCanEdit" : {
             "type" : "boolean"
           },
-          "userCanAccess" : {
+          "adminCanView" : {
+            "type" : "boolean"
+          },
+          "adminCanEdit" : {
             "type" : "boolean"
           },
           "adminCanAccess" : {
             "type" : "boolean"
           },
-          "adminCanView" : {
-            "type" : "boolean"
-          },
-          "userCanView" : {
+          "userCanAccess" : {
             "type" : "boolean"
           },
           "whitePagesCanView" : {
@@ -5723,7 +5723,7 @@
           },
           "scriptType" : {
             "type" : "string",
-            "enum" : [ "person_authentication", "introspection", "resource_owner_password_credentials", "application_session", "cache_refresh", "update_user", "user_registration", "client_registration", "id_generator", "uma_rpt_policy", "uma_rpt_claims", "uma_claims_gathering", "consent_gathering", "dynamic_scope", "spontaneous_scope", "end_session", "post_authn", "scim", "ciba_end_user_notification", "revoke_token", "persistence_extension", "idp", "update_token" ]
+            "enum" : [ "person_authentication", "authorization_challenge", "introspection", "resource_owner_password_credentials", "application_session", "cache_refresh", "update_user", "user_registration", "client_registration", "id_generator", "uma_rpt_policy", "uma_rpt_claims", "uma_claims_gathering", "consent_gathering", "dynamic_scope", "spontaneous_scope", "end_session", "post_authn", "scim", "ciba_end_user_notification", "revoke_token", "persistence_extension", "idp", "update_token", "fido2_extension" ]
           },
           "programmingLanguage" : {
             "type" : "string",
@@ -5767,12 +5767,12 @@
           "internal" : {
             "type" : "boolean"
           },
-          "locationPath" : {
-            "type" : "string"
-          },
           "locationType" : {
             "type" : "string",
             "enum" : [ "ldap", "file" ]
+          },
+          "locationPath" : {
+            "type" : "string"
           },
           "baseDn" : {
             "type" : "string"
@@ -5922,6 +5922,34 @@
           }
         }
       },
+      "ConnectionStatusDTO" : {
+        "type" : "object",
+        "properties" : {
+          "up" : {
+            "type" : "boolean"
+          }
+        }
+      },
+      "LdapConnectionData" : {
+        "type" : "object",
+        "properties" : {
+          "bindDN" : {
+            "type" : "string"
+          },
+          "bindPassword" : {
+            "type" : "string"
+          },
+          "servers" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "useSSL" : {
+            "type" : "boolean"
+          }
+        }
+      },
       "LdapConfigurationDTO" : {
         "type" : "object",
         "properties" : {
@@ -5975,34 +6003,6 @@
           }
         }
       },
-      "ConnectionStatusDTO" : {
-        "type" : "object",
-        "properties" : {
-          "up" : {
-            "type" : "boolean"
-          }
-        }
-      },
-      "LdapConnectionData" : {
-        "type" : "object",
-        "properties" : {
-          "bindDN" : {
-            "type" : "string"
-          },
-          "bindPassword" : {
-            "type" : "string"
-          },
-          "servers" : {
-            "type" : "array",
-            "items" : {
-              "type" : "string"
-            }
-          },
-          "useSSL" : {
-            "type" : "boolean"
-          }
-        }
-      },
       "MetricConfig" : {
         "type" : "object",
         "properties" : {
@@ -6020,6 +6020,7 @@
         }
       },
       "AuthenticationFilter" : {
+        "required" : [ "baseDn", "filter" ],
         "type" : "object",
         "properties" : {
           "filter" : {
@@ -6029,10 +6030,16 @@
             "type" : "boolean"
           },
           "bindPasswordAttribute" : {
-            "type" : "string"
+            "type" : "string",
+            "xml" : {
+              "name" : "bind-password-attribute"
+            }
           },
           "baseDn" : {
-            "type" : "string"
+            "type" : "string",
+            "xml" : {
+              "name" : "base-dn"
+            }
           }
         }
       },
@@ -6056,20 +6063,62 @@
           }
         }
       },
+      "CIBAEndUserNotificationConfig" : {
+        "type" : "object",
+        "properties" : {
+          "apiKey" : {
+            "type" : "string"
+          },
+          "authDomain" : {
+            "type" : "string"
+          },
+          "databaseURL" : {
+            "type" : "string"
+          },
+          "projectId" : {
+            "type" : "string"
+          },
+          "storageBucket" : {
+            "type" : "string"
+          },
+          "messagingSenderId" : {
+            "type" : "string"
+          },
+          "appId" : {
+            "type" : "string"
+          },
+          "notificationUrl" : {
+            "type" : "string"
+          },
+          "notificationKey" : {
+            "type" : "string"
+          },
+          "publicVapidKey" : {
+            "type" : "string"
+          }
+        }
+      },
       "ClientAuthenticationFilter" : {
+        "required" : [ "baseDn", "filter" ],
         "type" : "object",
         "properties" : {
           "filter" : {
             "type" : "string"
           },
           "bind" : {
-            "type" : "string"
+            "type" : "boolean"
           },
           "bindPasswordAttribute" : {
-            "type" : "string"
+            "type" : "string",
+            "xml" : {
+              "name" : "bind-password-attribute"
+            }
           },
           "baseDn" : {
-            "type" : "string"
+            "type" : "string",
+            "xml" : {
+              "name" : "base-dn"
+            }
           }
         }
       },
@@ -6078,6 +6127,9 @@
         "properties" : {
           "filterName" : {
             "type" : "string"
+          },
+          "corsEnabled" : {
+            "type" : "boolean"
           },
           "corsAllowedOrigins" : {
             "type" : "string"
@@ -6102,40 +6154,6 @@
             "format" : "int32"
           },
           "corsRequestDecorate" : {
-            "type" : "boolean"
-          }
-        }
-      },
-      "Fido2Configuration" : {
-        "type" : "object",
-        "properties" : {
-          "authenticatorCertsFolder" : {
-            "type" : "string"
-          },
-          "mdsCertsFolder" : {
-            "type" : "string"
-          },
-          "mdsTocsFolder" : {
-            "type" : "string"
-          },
-          "serverMetadataFolder" : {
-            "type" : "string"
-          },
-          "checkU2fAttestations" : {
-            "type" : "boolean"
-          },
-          "userAutoEnrollment" : {
-            "type" : "boolean"
-          },
-          "unfinishedRequestExpiration" : {
-            "type" : "integer",
-            "format" : "int32"
-          },
-          "authenticationHistoryExpiration" : {
-            "type" : "integer",
-            "format" : "int32"
-          },
-          "disableFido2" : {
             "type" : "boolean"
           }
         }
@@ -6188,43 +6206,117 @@
           "introspectionEndpoint" : {
             "type" : "string"
           },
+          "deviceAuthzEndpoint" : {
+            "type" : "string"
+          },
+          "discoveryCacheLifetimeInMinutes" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "sectorIdentifierCacheLifetimeInMinutes" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "sessionAsJwt" : {
+            "type" : "boolean"
+          },
+          "forceRopcInAuthorizationEndpoint" : {
+            "type" : "boolean"
+          },
           "umaConfigurationEndpoint" : {
             "type" : "string"
           },
-          "sectorIdentifierEndpoint" : {
+          "umaRptAsJwt" : {
+            "type" : "boolean"
+          },
+          "umaRptLifetime" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "umaTicketLifetime" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "umaPctLifetime" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "umaResourceLifetime" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "umaAddScopesAutomatically" : {
+            "type" : "boolean"
+          },
+          "umaValidateClaimToken" : {
+            "type" : "boolean"
+          },
+          "umaGrantAccessIfNoPolicies" : {
+            "type" : "boolean"
+          },
+          "umaRestrictResourceToAssociatedClient" : {
+            "type" : "boolean"
+          },
+          "statEnabled" : {
+            "type" : "boolean"
+          },
+          "statAuthorizationScope" : {
             "type" : "string"
           },
-          "oxElevenGenerateKeyEndpoint" : {
+          "statTimerIntervalInSeconds" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "statWebServiceIntervalLimitInSeconds" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "authorizationChallengeDefaultAcr" : {
             "type" : "string"
           },
-          "oxElevenSignEndpoint" : {
-            "type" : "string"
+          "authorizationChallengeShouldGenerateSession" : {
+            "type" : "boolean"
           },
-          "oxElevenVerifySignatureEndpoint" : {
-            "type" : "string"
+          "authorizationChallengeSessionLifetimeInSeconds" : {
+            "type" : "integer",
+            "format" : "int32"
           },
-          "oxElevenDeleteKeyEndpoint" : {
-            "type" : "string"
+          "allowSpontaneousScopes" : {
+            "type" : "boolean"
           },
-          "oxElevenJwksEndpoint" : {
-            "type" : "string"
+          "spontaneousScopeLifetime" : {
+            "type" : "integer",
+            "format" : "int32"
           },
           "openidSubAttribute" : {
             "type" : "string"
           },
           "responseTypesSupported" : {
+            "uniqueItems" : true,
             "type" : "array",
             "items" : {
+              "uniqueItems" : true,
               "type" : "array",
               "items" : {
-                "type" : "string"
+                "type" : "string",
+                "enum" : [ "code", "token", "id_token" ]
               }
             }
           },
-          "grantTypesSupported" : {
+          "responseModesSupported" : {
+            "uniqueItems" : true,
             "type" : "array",
             "items" : {
-              "type" : "string"
+              "type" : "string",
+              "enum" : [ "query", "fragment", "form_post" ]
+            }
+          },
+          "grantTypesSupported" : {
+            "uniqueItems" : true,
+            "type" : "array",
+            "items" : {
+              "type" : "string",
+              "enum" : [ "none", "authorization_code", "implicit", "password", "client_credentials", "refresh_token", "urn:ietf:params:oauth:grant-type:uma-ticket", "urn:openid:params:grant-type:ciba", "urn:ietf:params:oauth:grant-type:device_code" ]
             }
           },
           "subjectTypesSupported" : {
@@ -6320,6 +6412,12 @@
               "type" : "string"
             }
           },
+          "jwksAlgorithmsSupported" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          },
           "serviceDocumentation" : {
             "type" : "string"
           },
@@ -6341,12 +6439,6 @@
               "type" : "string"
             }
           },
-          "dynamicGrantTypeDefault" : {
-            "type" : "array",
-            "items" : {
-              "type" : "string"
-            }
-          },
           "claimsParameterSupported" : {
             "type" : "boolean"
           },
@@ -6356,14 +6448,17 @@
           "requestUriParameterSupported" : {
             "type" : "boolean"
           },
+          "requestUriHashVerificationEnabled" : {
+            "type" : "boolean"
+          },
           "requireRequestUriRegistration" : {
             "type" : "boolean"
           },
-          "allowPostLogoutRedirectWithoutValidation" : {
-            "type" : "boolean"
-          },
-          "introspectionAccessTokenMustHaveUmaProtectionScope" : {
-            "type" : "boolean"
+          "requestUriBlockList" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
           },
           "opPolicyUri" : {
             "type" : "string"
@@ -6387,44 +6482,11 @@
             "type" : "integer",
             "format" : "int32"
           },
-          "umaResourceLifetime" : {
-            "type" : "integer",
-            "format" : "int32"
-          },
-          "sessionAsJwt" : {
-            "type" : "boolean"
-          },
-          "umaRptLifetime" : {
-            "type" : "integer",
-            "format" : "int32"
-          },
-          "umaTicketLifetime" : {
-            "type" : "integer",
-            "format" : "int32"
-          },
-          "umaPctLifetime" : {
-            "type" : "integer",
-            "format" : "int32"
-          },
-          "umaAddScopesAutomatically" : {
-            "type" : "boolean"
-          },
-          "umaValidateClaimToken" : {
-            "type" : "boolean"
-          },
-          "umaGrantAccessIfNoPolicies" : {
-            "type" : "boolean"
-          },
-          "umaRestrictResourceToAssociatedClient" : {
-            "type" : "boolean"
-          },
-          "umaKeepClientDuringResourceSetRegistration" : {
-            "type" : "boolean"
-          },
-          "umaRptAsJwt" : {
-            "type" : "boolean"
-          },
           "cleanServiceInterval" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "cleanServiceBatchChunkSize" : {
             "type" : "integer",
             "format" : "int32"
           },
@@ -6439,9 +6501,6 @@
             "type" : "string"
           },
           "oxOpenIdConnectVersion" : {
-            "type" : "string"
-          },
-          "organizationInum" : {
             "type" : "string"
           },
           "oxId" : {
@@ -6466,6 +6525,18 @@
           "dynamicRegistrationScopesParamEnabled" : {
             "type" : "boolean"
           },
+          "dynamicRegistrationDisableFallbackScopesAssigning" : {
+            "type" : "boolean"
+          },
+          "dynamicRegistrationPasswordGrantTypeEnabled" : {
+            "type" : "boolean"
+          },
+          "dynamicRegistrationAllowedPasswordGrantScopes" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          },
           "dynamicRegistrationCustomObjectClass" : {
             "type" : "string"
           },
@@ -6481,13 +6552,45 @@
           "persistRefreshTokenInLdap" : {
             "type" : "boolean"
           },
-          "authenticationFiltersEnabled" : {
+          "allowPostLogoutRedirectWithoutValidation" : {
             "type" : "boolean"
           },
           "invalidateSessionCookiesAfterAuthorizationFlow" : {
             "type" : "boolean"
           },
+          "returnClientSecretOnRead" : {
+            "type" : "boolean"
+          },
+          "rejectJwtWithNoneAlg" : {
+            "type" : "boolean"
+          },
+          "expirationNotificatorEnabled" : {
+            "type" : "boolean"
+          },
+          "useNestedJwtDuringEncryption" : {
+            "type" : "boolean"
+          },
+          "expirationNotificatorMapSizeLimit" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "expirationNotificatorIntervalInSeconds" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "useCacheForAllImplicitFlowObjects" : {
+            "type" : "boolean"
+          },
+          "authenticationFiltersEnabled" : {
+            "type" : "boolean"
+          },
           "clientAuthenticationFiltersEnabled" : {
+            "type" : "boolean"
+          },
+          "clientRegDefaultToCodeFlowWithRefresh" : {
+            "type" : "boolean"
+          },
+          "grantTypesAndResponseTypesAutofixEnabled" : {
             "type" : "boolean"
           },
           "authenticationFilters" : {
@@ -6502,8 +6605,11 @@
               "$ref" : "#/components/schemas/ClientAuthenticationFilter"
             }
           },
-          "configurationInum" : {
-            "type" : "string"
+          "corsConfigurationFilters" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/CorsConfigurationFilter"
+            }
           },
           "sessionIdUnusedLifetime" : {
             "type" : "integer",
@@ -6513,19 +6619,43 @@
             "type" : "integer",
             "format" : "int32"
           },
-          "sessionIdEnabled" : {
+          "sessionIdPersistOnPromptNone" : {
             "type" : "boolean"
           },
-          "sessionIdPersistOnPromptNone" : {
+          "sessionIdRequestParameterEnabled" : {
+            "type" : "boolean"
+          },
+          "changeSessionIdOnAuthentication" : {
+            "type" : "boolean"
+          },
+          "sessionIdPersistInCache" : {
             "type" : "boolean"
           },
           "sessionIdLifetime" : {
             "type" : "integer",
             "format" : "int32"
           },
+          "serverSessionIdLifetime" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
           "configurationUpdateInterval" : {
             "type" : "integer",
             "format" : "int32"
+          },
+          "logNotFoundEntityAsError" : {
+            "type" : "boolean"
+          },
+          "enableClientGrantTypeUpdate" : {
+            "type" : "boolean"
+          },
+          "dynamicGrantTypeDefault" : {
+            "uniqueItems" : true,
+            "type" : "array",
+            "items" : {
+              "type" : "string",
+              "enum" : [ "none", "authorization_code", "implicit", "password", "client_credentials", "refresh_token", "urn:ietf:params:oauth:grant-type:uma-ticket", "urn:openid:params:grant-type:ciba", "urn:ietf:params:oauth:grant-type:device_code" ]
+            }
           },
           "cssLocation" : {
             "type" : "string"
@@ -6544,6 +6674,9 @@
             "type" : "integer",
             "format" : "int32"
           },
+          "metricReporterEnabled" : {
+            "type" : "boolean"
+          },
           "pairwiseIdType" : {
             "type" : "string"
           },
@@ -6556,8 +6689,12 @@
           "shareSubjectIdBetweenClientsWithSameSectorId" : {
             "type" : "boolean"
           },
+          "subjectIdentifierBasedOnWholeUriBackwardCompatibility" : {
+            "type" : "boolean"
+          },
           "webKeysStorage" : {
-            "type" : "string"
+            "type" : "string",
+            "enum" : [ "keystore", "pkcs11" ]
           },
           "dnName" : {
             "type" : "string"
@@ -6568,7 +6705,63 @@
           "keyStoreSecret" : {
             "type" : "string"
           },
+          "keySelectionStrategy" : {
+            "type" : "string",
+            "enum" : [ "OLDER", "NEWER", "FIRST" ]
+          },
+          "keyAlgsAllowedForGeneration" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "oxElevenTestModeToken" : {
+            "type" : "string"
+          },
+          "oxElevenGenerateKeyEndpoint" : {
+            "type" : "string"
+          },
+          "oxElevenSignEndpoint" : {
+            "type" : "string"
+          },
+          "oxElevenVerifySignatureEndpoint" : {
+            "type" : "string"
+          },
+          "oxElevenDeleteKeyEndpoint" : {
+            "type" : "string"
+          },
+          "introspectionAccessTokenMustHaveUmaProtectionScope" : {
+            "type" : "boolean"
+          },
+          "introspectionSkipAuthorization" : {
+            "type" : "boolean"
+          },
+          "introspectionRestrictBasicAuthnToOwnTokens" : {
+            "type" : "boolean"
+          },
           "endSessionWithAccessToken" : {
+            "type" : "boolean"
+          },
+          "cookieDomain" : {
+            "type" : "string"
+          },
+          "enabledOAuthAuditLogging" : {
+            "type" : "boolean"
+          },
+          "jmsBrokerURISet" : {
+            "uniqueItems" : true,
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "jmsUserName" : {
+            "type" : "string"
+          },
+          "jmsPassword" : {
+            "type" : "string"
+          },
+          "allowWildcardRedirectUri" : {
             "type" : "boolean"
           },
           "clientWhiteList" : {
@@ -6592,20 +6785,17 @@
           "frontChannelLogoutSessionSupported" : {
             "type" : "boolean"
           },
+          "loggingLevel" : {
+            "type" : "string"
+          },
+          "loggingLayout" : {
+            "type" : "string"
+          },
           "updateUserLastLogonTime" : {
             "type" : "boolean"
           },
           "updateClientAccessTime" : {
             "type" : "boolean"
-          },
-          "enableClientGrantTypeUpdate" : {
-            "type" : "boolean"
-          },
-          "corsConfigurationFilters" : {
-            "type" : "array",
-            "items" : {
-              "$ref" : "#/components/schemas/CorsConfigurationFilter"
-            }
           },
           "logClientIdOnClientAuthentication" : {
             "type" : "boolean"
@@ -6613,19 +6803,11 @@
           "logClientNameOnClientAuthentication" : {
             "type" : "boolean"
           },
-          "httpLoggingEnabled" : {
+          "disableJdkLogger" : {
             "type" : "boolean"
           },
-          "httpLoggingExludePaths" : {
-            "type" : "array",
-            "items" : {
-              "type" : "object"
-            }
-          },
-          "externalLoggerConfiguration" : {
-            "type" : "string"
-          },
           "authorizationRequestCustomAllowedParameters" : {
+            "uniqueItems" : true,
             "type" : "array",
             "items" : {
               "type" : "string"
@@ -6637,26 +6819,164 @@
           "openidScopeBackwardCompatibility" : {
             "type" : "boolean"
           },
-          "useCacheForAllImplicitFlowObjects" : {
-            "type" : "boolean"
-          },
           "disableU2fEndpoint" : {
             "type" : "boolean"
+          },
+          "useLocalCache" : {
+            "type" : "boolean"
+          },
+          "fapiCompatibility" : {
+            "type" : "boolean"
+          },
+          "forceIdTokenHintPrecense" : {
+            "type" : "boolean"
+          },
+          "rejectEndSessionIfIdTokenExpired" : {
+            "type" : "boolean"
+          },
+          "allowEndSessionWithUnmatchedSid" : {
+            "type" : "boolean"
+          },
+          "forceOfflineAccessScopeToEnableRefreshToken" : {
+            "type" : "boolean"
+          },
+          "errorReasonEnabled" : {
+            "type" : "boolean"
+          },
+          "removeRefreshTokensForClientOnLogout" : {
+            "type" : "boolean"
+          },
+          "skipRefreshTokenDuringRefreshing" : {
+            "type" : "boolean"
+          },
+          "refreshTokenExtendLifetimeOnRotation" : {
+            "type" : "boolean"
+          },
+          "checkUserPresenceOnRefreshToken" : {
+            "type" : "boolean"
+          },
+          "consentGatheringScriptBackwardCompatibility" : {
+            "type" : "boolean"
+          },
+          "introspectionScriptBackwardCompatibility" : {
+            "type" : "boolean"
+          },
+          "introspectionResponseScopesBackwardCompatibility" : {
+            "type" : "boolean"
+          },
+          "clientAuthorizationBackwardCompatibility" : {
+            "type" : "boolean"
+          },
+          "softwareStatementValidationType" : {
+            "type" : "string"
+          },
+          "softwareStatementValidationClaimName" : {
+            "type" : "string"
           },
           "authenticationProtectionConfiguration" : {
             "$ref" : "#/components/schemas/AuthenticationProtectionConfiguration"
           },
-          "fido2Configuration" : {
-            "$ref" : "#/components/schemas/Fido2Configuration"
-          },
-          "loggingLevel" : {
-            "type" : "string"
-          },
           "errorHandlingMethod" : {
+            "type" : "string",
+            "enum" : [ "internal", "remote" ]
+          },
+          "keepAuthenticatorAttributesOnAcrChange" : {
+            "type" : "boolean"
+          },
+          "disableAuthnForMaxAgeZero" : {
+            "type" : "boolean"
+          },
+          "deviceAuthzRequestExpiresIn" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "deviceAuthzTokenPollInterval" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "deviceAuthzResponseTypeToProcessAuthz" : {
             "type" : "string"
           },
-          "cookieDomain" : {
+          "backchannelClientId" : {
             "type" : "string"
+          },
+          "backchannelRedirectUri" : {
+            "type" : "string"
+          },
+          "backchannelAuthenticationEndpoint" : {
+            "type" : "string"
+          },
+          "backchannelDeviceRegistrationEndpoint" : {
+            "type" : "string"
+          },
+          "backchannelTokenDeliveryModesSupported" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "backchannelAuthenticationRequestSigningAlgValuesSupported" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "backchannelUserCodeParameterSupported" : {
+            "type" : "boolean"
+          },
+          "backchannelBindingMessagePattern" : {
+            "type" : "string"
+          },
+          "backchannelAuthenticationResponseExpiresIn" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "backchannelAuthenticationResponseInterval" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "backchannelLoginHintClaims" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "cibaEndUserNotificationConfig" : {
+            "$ref" : "#/components/schemas/CIBAEndUserNotificationConfig"
+          },
+          "backchannelRequestsProcessorJobIntervalSec" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "backchannelRequestsProcessorJobChunkSize" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "cibaGrantLifeExtraTimeSec" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "cibaMaxExpirationTimeAllowedSec" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "cibaEnabled" : {
+            "type" : "boolean"
+          },
+          "return200OnClientRegistration" : {
+            "type" : "boolean"
+          },
+          "dateFormatterPatterns" : {
+            "type" : "object",
+            "additionalProperties" : {
+              "type" : "string"
+            }
+          },
+          "allowBlankValuesInDiscoveryResponse" : {
+            "type" : "boolean"
+          },
+          "skipAuthenticationFilterOptionsMethod" : {
+            "type" : "boolean"
           }
         }
       },
@@ -6984,6 +7304,9 @@
           "oxTrustProtectionMode" : {
             "type" : "string",
             "enum" : [ "OAUTH", "TEST", "UMA" ]
+          },
+          "auditConfigLogsLocation" : {
+            "type" : "string"
           },
           "ScimProperties" : {
             "$ref" : "#/components/schemas/ScimProperties"
@@ -7551,28 +7874,28 @@
             "type" : "string",
             "enum" : [ "disabled", "enabled", "false", "true", "inactive", "active" ]
           },
-          "multiValued" : {
-            "type" : "boolean"
-          },
           "new" : {
             "type" : "boolean"
           },
-          "adminCanEdit" : {
+          "multiValued" : {
+            "type" : "boolean"
+          },
+          "userCanView" : {
             "type" : "boolean"
           },
           "userCanEdit" : {
             "type" : "boolean"
           },
-          "userCanAccess" : {
+          "adminCanView" : {
+            "type" : "boolean"
+          },
+          "adminCanEdit" : {
             "type" : "boolean"
           },
           "adminCanAccess" : {
             "type" : "boolean"
           },
-          "adminCanView" : {
-            "type" : "boolean"
-          },
-          "userCanView" : {
+          "userCanAccess" : {
             "type" : "boolean"
           },
           "stringValues" : {
@@ -7701,6 +8024,10 @@
             "pattern" : "^$|(^(https?|http)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|])",
             "type" : "string"
           },
+          "spLogoutRedirectUrl" : {
+            "pattern" : "^$|(^(https?|http)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|])",
+            "type" : "string"
+          },
           "validationLog" : {
             "type" : "array",
             "items" : {
@@ -7720,6 +8047,12 @@
           "certificate" : {
             "type" : "string"
           },
+          "federation" : {
+            "type" : "boolean"
+          },
+          "entityId" : {
+            "type" : "string"
+          },
           "uniqueGluuEntityId" : {
             "uniqueItems" : true,
             "type" : "array",
@@ -7728,10 +8061,7 @@
               "type" : "string"
             }
           },
-          "entityId" : {
-            "type" : "string"
-          },
-          "federation" : {
+          "mdqFederation" : {
             "type" : "boolean"
           },
           "researchBundle" : {
@@ -7740,8 +8070,17 @@
           "specificRelyingPartyConfig" : {
             "type" : "boolean"
           },
+          "mdqMetadataSourceType" : {
+            "type" : "boolean"
+          },
+          "fileMetadataSourceType" : {
+            "type" : "boolean"
+          },
           "containerFederation" : {
             "$ref" : "#/components/schemas/GluuSAMLTrustRelationship"
+          },
+          "uriMetadataSourceType" : {
+            "type" : "boolean"
           },
           "baseDn" : {
             "type" : "string"
@@ -7849,6 +8188,23 @@
           }
         }
       },
+      "TrustContact" : {
+        "type" : "object",
+        "properties" : {
+          "name" : {
+            "type" : "string"
+          },
+          "phone" : {
+            "type" : "string"
+          },
+          "mail" : {
+            "type" : "string"
+          },
+          "title" : {
+            "type" : "string"
+          }
+        }
+      },
       "SAMLTrustRelationshipShort" : {
         "type" : "object",
         "properties" : {
@@ -7870,23 +8226,6 @@
             "items" : {
               "type" : "string"
             }
-          }
-        }
-      },
-      "TrustContact" : {
-        "type" : "object",
-        "properties" : {
-          "name" : {
-            "type" : "string"
-          },
-          "phone" : {
-            "type" : "string"
-          },
-          "mail" : {
-            "type" : "string"
-          },
-          "title" : {
-            "type" : "string"
           }
         }
       },
