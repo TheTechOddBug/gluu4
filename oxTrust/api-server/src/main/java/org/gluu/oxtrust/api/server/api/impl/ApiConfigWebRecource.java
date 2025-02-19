@@ -30,7 +30,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
-@Path(ApiConstants.CONFIGURATION + ApiConstants.API)
+@Path(ApiConstants.BASE_API_URL + ApiConstants.CONFIGURATION + ApiConstants.API)
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @ApplicationScoped
