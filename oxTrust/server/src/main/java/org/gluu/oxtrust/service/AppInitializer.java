@@ -237,7 +237,7 @@ public class AppInitializer {
 		eventApplicationInitialized.select(ApplicationInitialized.Literal.APPLICATION)
 				.fire(new ApplicationInitializedEvent());
 		
-		this.createAuthorizationService();
+		this.initAuthorizationServiceEntries();
 	}
 
 	protected void initSchedulerService() {
@@ -251,10 +251,7 @@ public class AppInitializer {
 		}
 	}
 	
-	@Produces
-    @ApplicationScoped
-    @Named("authorizationService")
-    private void createAuthorizationService() {
+    private void initAuthorizationServiceEntries() {
         log.info(
                 "=============  AppInitializer::createAuthorizationService() - configurationFactory.getApiProtectionType():{} ",
                 configurationFactory.getAppConfiguration().getOxTrustProtectionMode());
