@@ -43,6 +43,7 @@ setup(
         "google-cloud-spanner>=3.3.0",
         "boto3>=1.26.21",
         "google-cloud-secret-manager>=2.2.0",
+        "click",
     ],
     classifiers=[
         "Intended Audience :: Developers",
@@ -58,4 +59,9 @@ setup(
     ],
     include_package_data=True,
     python_requires=">=3.8.0",
+    entry_points={
+        "console_scripts": [
+            "pygluu-containerlib = pygluu.containerlib.cli:cli",
+        ],
+    },
 )
