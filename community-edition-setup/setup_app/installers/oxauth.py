@@ -39,10 +39,10 @@ class OxauthInstaller(JettyInstaller):
 
 
     def install(self):
-        self.logIt("Copying oxauth.war into jetty webapps folder...")
         self.profile_templates(self.templates_folder)
         self.installJettyService(self.jetty_app_configuration[self.service_name], True)
         jettyServiceWebapps = os.path.join(self.jetty_base, self.service_name, 'webapps')
+        self.logIt("Copying oxauth.war into jetty webapps folder...")
         self.copyFile(self.source_files[0][0], jettyServiceWebapps)
         self.enable()
 

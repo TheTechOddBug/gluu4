@@ -44,6 +44,8 @@ parser.add_argument('--dist-server-base', help="Download server", default='https
 parser.add_argument('-profile', help="Setup profile", choices=['CE', 'DISA-STIG'], default='CE')
 parser.add_argument('--setup-branch', help="Gluu CE setup github branch", default="4.5")
 parser.add_argument('-c', help="Don't download files that exists on disk", action='store_true')
+parser.add_argument('-app-info', help="Use specified app info file instead of downloading form github")
+
 
 argsp = parser.parse_args()
 
@@ -56,10 +58,14 @@ maven_o = urlparse(maven_base)
 maven_root = maven_o._replace(path='').geturl()
 
 githup_raw_base_url = f'https://raw.githubusercontent.com/GluuFederation/gluu4/refs/heads/{argsp.setup_branch}/'
-app_info_url = os.path.join(githup_raw_base_url, 'community-edition-setup/app_info.json')
-print("Retreiving application info", app_info_url)
-with request.urlopen(app_info_url) as response:
-    app_versions = json.loads(response.read())
+
+if argsp.app_info:
+    app_versions = json.load(open(argsp.app_info))
+else:
+    app_info_url = os.path.join(githup_raw_base_url, 'community-edition-setup/app_info.json')
+    print("Retreiving application info", app_info_url)
+    with request.urlopen(app_info_url) as response:
+        app_versions = json.loads(response.read())
 
 app_versions['SETUP_BRANCH'] = argsp.setup_branch
 
@@ -388,6 +394,11 @@ if not argsp.u:
     download('https://files.pythonhosted.org/packages/7a/46/8b58d6b8244ff613ecb983b9428d1168dd0b014a34e13fb19737b9ba1fc1/cryptography-39.0.0-cp36-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl', os.path.join(app_dir, 'cryptography.whl'))
     download('https://github.com/jpadilla/pyjwt/archive/refs/tags/2.4.0.zip', os.path.join(app_dir, 'pyjwt.zip'))
 
+
+    # delete these downloads when jetty package includes them
+    download('https://ox.gluu.org/icrby8xcvbcv/maven/jetty-ee8-cdi-12.0.16-config.jar', os.path.join(app_dir, 'jetty-ee8-cdi-12.0.16-config.jar'))
+    download('https://ox.gluu.org/icrby8xcvbcv/maven/jetty-ee8-cdi-12.0.16.jar', os.path.join(app_dir, 'jetty-ee8-cdi-12.0.16.jar'))
+    #########################################################
 
 shutil.copy(os.path.join(gluu_app_dir, 'facter'), '/usr/bin')
 os.chmod('/usr/bin/facter', 33261)

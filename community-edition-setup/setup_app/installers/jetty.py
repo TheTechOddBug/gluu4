@@ -34,15 +34,15 @@ class JettyInstaller(BaseInstaller, SetupUtils):
             'jetty' : {
                 'name' : 'jetty',
                 'files' : [
-                    {
-                        'path' : os.path.join(self.jetty_home, 'etc/webdefault.xml'),
-                        'replace' : [
-                            {
-                                'pattern' : r'(\<param-name\>dirAllowed<\/param-name\>)(\s*)(\<param-value\>)true(\<\/param-value\>)',
-                                'update' : r'\1\2\3false\4'
-                            }
-                        ]
-                    },
+                    #{
+                    #    'path' : os.path.join(self.jetty_home, 'etc/webdefault.xml'),
+                    #    'replace' : [
+                    #        {
+                    #            'pattern' : r'(\<param-name\>dirAllowed<\/param-name\>)(\s*)(\<param-value\>)true(\<\/param-value\>)',
+                    #            'update' : r'\1\2\3false\4'
+                    #        }
+                    #    ]
+                    #},
                     {
                         'path' : os.path.join(self.jetty_home, 'etc/jetty.xml'),
                         'replace' : [
@@ -80,10 +80,32 @@ class JettyInstaller(BaseInstaller, SetupUtils):
 
         jettyDestinationPath = max(glob.glob(os.path.join(jetty_dist, '{}-*'.format(self.jetty_dist_string))))
 
+
         self.run([paths.cmd_ln, '-sf', jettyDestinationPath, self.jetty_home])
         self.run([paths.cmd_chmod, '-R', "755", "%s/bin/" % jettyDestinationPath])
 
         self.applyChangesInFiles(self.app_custom_changes['jetty'])
+
+
+        # extroct/copy ee8-cdi modules. Remove these after jetty package includes them
+        base.extract_subdir(
+            os.path.join(Config.distAppFolder, 'jetty-ee8-cdi-12.0.16-config.jar'),
+            "modules",
+            os.path.join(self.jetty_home, 'modules'),
+            par_dir=''
+            )
+        base.extract_subdir(
+            os.path.join(Config.distAppFolder, 'jetty-ee8-cdi-12.0.16-config.jar'),
+            "etc",
+            os.path.join(self.jetty_home, 'etc'),
+            par_dir=''
+            )
+        self.copyFile(
+            os.path.join(Config.distAppFolder, 'jetty-ee8-cdi-12.0.16.jar'),
+            os.path.join(self.jetty_home, 'lib')
+            )
+        ###########################################################################
+
 
         self.run([paths.cmd_chown, '-R', Config.user_group, jetty_dist])
         self.run([paths.cmd_chown, '-R', Config.user_group, jettyDestinationPath])
@@ -143,11 +165,6 @@ class JettyInstaller(BaseInstaller, SetupUtils):
         jettyServiceBase = os.path.join(self.jetty_base, serviceName)
         jettyModules = serviceConfiguration['jetty']['modules']
         jettyModulesList = [m.strip() for m in jettyModules.split(',')]
-        if self.jetty_dist_string == 'jetty-home':
-            if 'cdi-decorate' not in jettyModulesList:
-                jettyModulesList.append('cdi-decorate')
-            jettyModules = ','.join(jettyModulesList)
-
  
         # we need this, because this method may be called externally
         jetty_archive, jetty_dist = self.get_jetty_info()
@@ -175,11 +192,13 @@ class JettyInstaller(BaseInstaller, SetupUtils):
                 self.run([paths.cmd_mkdir, '-p', "%s/custom/static" % jettyServiceBase])
                 self.run([paths.cmd_mkdir, '-p', "%s/custom/libs" % jettyServiceBase])
 
+        self.run([paths.cmd_mkdir, '-p', os.path.join(jettyServiceBase, 'webapps')])
+
         self.logIt("Preparing %s service base configuration" % serviceName)
         jettyEnv = os.environ.copy()
         jettyEnv['PATH'] = '%s/bin:' % Config.jre_home + jettyEnv['PATH']
 
-        self.run([Config.cmd_java, '-jar', '%s/start.jar' % self.jetty_home, 'jetty.home=%s' % self.jetty_home, 'jetty.base=%s' % jettyServiceBase, '--add-to-start=%s' % jettyModules], None, jettyEnv)
+        self.run([Config.cmd_java, '-jar', '%s/start.jar' % self.jetty_home, 'jetty.home=%s' % self.jetty_home, 'jetty.base=%s' % jettyServiceBase, '--add-modules=%s' % jettyModules], None, jettyEnv)
 
         # make variables of this class accesible from Config
         self.update_rendering_dict()
@@ -380,7 +399,7 @@ class JettyInstaller(BaseInstaller, SetupUtils):
         
         with open(xml_fn, 'wb') as f:
             f.write(b'<?xml version="1.0"  encoding="ISO-8859-1"?>\n')
-            f.write(b'<!DOCTYPE Configure PUBLIC "-//Jetty//Configure//EN" "http://www.eclipse.org/jetty/configure_9_0.dtd">\n')
+            f.write(b'<!DOCTYPE Configure PUBLIC "-//Jetty//Configure//EN" "http://www.eclipse.org/jetty/configure_10_0.dtd">\n')
             f.write(ET.tostring(root, method='xml'))
 
 
