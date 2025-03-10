@@ -3,6 +3,7 @@ import glob
 import re
 import shutil
 import zipfile
+import tempfile
 import xml.etree.ElementTree as ET
 
 from setup_app import paths
@@ -273,6 +274,33 @@ class JettyInstaller(BaseInstaller, SetupUtils):
         else:
             self.configure_extra_libs(target_war_fn)
 
+        self.update_jetty_env(self.source_files[0][0])
+        jettyServiceWebapps = os.path.join(self.jetty_base, self.service_name, 'webapps')
+        self.logIt(f"Copying {self.source_files[0][0]} into {jettyServiceWebapps}")
+        self.copyFile(self.source_files[0][0], jettyServiceWebapps)
+
+
+    def update_jetty_env(self, war_fn):
+        cur_dir = os.getcwd()
+        env_src_fn = 'WEB-INF/jetty-env.xml'
+
+        with tempfile.TemporaryDirectory() as tmpdirname:
+            os.chdir(tmpdirname)
+            os.mkdir('WEB-INF')
+            jetty_env_fn = base.extract_file(f'{war_fn}', env_src_fn, 'WEB-INF')
+            xml_content = self.readFile(jetty_env_fn)
+            src_txt = 'org.eclipse.jetty.webapp.WebAppContext'
+            tgt_txt = 'org.eclipse.jetty.ee8.webapp.WebAppContext'
+
+            if src_txt in xml_content:
+                self.logIt(f"Updating {env_src_fn} in {war_fn}")
+                xml_content = xml_content.replace(src_txt, tgt_txt)
+                self.writeFile(env_src_fn, xml_content, backup=False)
+                cmd = f'{Config.cmd_jar} uf {war_fn} {env_src_fn}'
+                self.logIt("Executing", cmd)
+                os.system(cmd)
+
+        os.chdir(cur_dir)
 
     def set_jetty_param(self, jettyServiceName, jetty_param, jetty_val, inifile='start.ini'):
 

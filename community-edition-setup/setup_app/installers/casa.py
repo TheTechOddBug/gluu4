@@ -41,11 +41,7 @@ class CasaInstaller(JettyInstaller):
             self.run([paths.cmd_mkdir , '-p', self.pylib_folder])
 
         self.run([paths.cmd_chmod , 'g+w', self.pylib_folder])
-        self.logIt("Copying casa.war into jetty webapps folder...")
         self.installJettyService(self.jetty_app_configuration['casa'])
-
-        jettyServiceWebapps = os.path.join(self.casa_jetty_dir, 'webapps')
-        self.copyFile(self.source_files[0][0], jettyServiceWebapps)
 
         jettyServiceOxAuthCustomLibsPath = os.path.join(self.jetty_base,
                                                         "oxauth", 

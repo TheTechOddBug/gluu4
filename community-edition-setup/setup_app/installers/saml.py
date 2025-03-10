@@ -115,10 +115,6 @@ class SamlInstaller(JettyInstaller):
             self.renderTemplateInOut(self.idp3_metadata, self.staticIDP3FolderMetadata, self.idp3MetadataFolder)
 
         self.installJettyService(self.jetty_app_configuration[self.service_name], True)
-        jettyServiceWebapps = os.path.join(self.jetty_base, self.service_name,  'webapps')
-        self.copyFile(self.source_files[0][0], jettyServiceWebapps)
-        # Prepare libraries needed to for command line IDP3 utilities
-
         self.install_saml_libraries()
 
 

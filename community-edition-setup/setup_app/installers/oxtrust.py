@@ -52,7 +52,6 @@ class OxtrustInstaller(JettyInstaller):
 
 
     def install(self):
-        self.logIt("Copying identity.war into jetty webapps folder...")
 
         self.installJettyService(self.jetty_app_configuration[self.service_name], True)
 
