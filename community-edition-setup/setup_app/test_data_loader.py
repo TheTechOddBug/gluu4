@@ -373,7 +373,7 @@ class TestDataLoader(BaseInstaller, SetupUtils):
         self.create_test_client_keystore()
 
         # Disable token binding module
-        if base.os_name in ('ubuntu18', 'ubuntu20'):
+        if base.os_name in ('ubuntu18', 'ubuntu20', 'ubuntu22', 'ubuntu24'):
             self.run(['a2dismod', 'mod_token_binding'])
             self.restart('apache2')
 
