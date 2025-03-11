@@ -56,7 +56,7 @@
       "ratio": 0.1
     },
     "jetty": {
-      "modules": "server,deploy,resources,http,http-forwarded,console-capture,jsp"
+      "modules": "server,ee8-deploy,resources,http,http-forwarded,console-capture,ee8-jsp"
     },
     "installed": false,
     "name": "casa"
@@ -82,7 +82,7 @@
       "ratio": 0.1
     },
     "jetty": {
-      "modules": "server,ee8-deploy,resources,http,http-forwarded,console-capture,ee8-cdi-decorate,ee8-jsp,websocket"
+      "modules": "server,ee8-deploy,resources,http,http-forwarded,console-capture,ee8-cdi-decorate,ee8-jsp,ee8-websocket-javax"
     },
     "installed": false,
     "name": "scim"

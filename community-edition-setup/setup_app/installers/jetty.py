@@ -239,6 +239,11 @@ class JettyInstaller(BaseInstaller, SetupUtils):
 
         self.run([paths.cmd_chown, '-R', '{}:{}'.format(Config.templateRenderingDict['service_user'], Config.gluu_group), jettyServiceBase])
 
+        self.update_jetty_env(self.source_files[0][0])
+        jettyServiceWebapps = os.path.join(self.jetty_base, self.service_name, 'webapps')
+        self.logIt(f"Copying {self.source_files[0][0]} into {jettyServiceWebapps}")
+        self.copyFile(self.source_files[0][0], jettyServiceWebapps)
+
         if Config.profile == SetupProfiles.DISA_STIG:
             additional_rules = []
             if serviceName == base.current_app.OxtrustInstaller.service_name:
@@ -248,11 +253,6 @@ class JettyInstaller(BaseInstaller, SetupUtils):
 
         else:
             self.configure_extra_libs(target_war_fn)
-
-        self.update_jetty_env(self.source_files[0][0])
-        jettyServiceWebapps = os.path.join(self.jetty_base, self.service_name, 'webapps')
-        self.logIt(f"Copying {self.source_files[0][0]} into {jettyServiceWebapps}")
-        self.copyFile(self.source_files[0][0], jettyServiceWebapps)
 
 
     def update_jetty_env(self, war_fn):
