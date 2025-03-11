@@ -46,7 +46,7 @@ class Config:
     def determine_version(self):
         oxauth_info = get_war_info(os.path.join(self.distGluuFolder, 'oxauth.war'))
         self.oxVersion = oxauth_info['version']
-        self.currentGluuVersion = re.search('([\d.]+)', oxauth_info['version']).group().strip('.')
+        self.currentGluuVersion = re.search(r'([\d.]+)', oxauth_info['version']).group().strip('.')
         self.githubBranchName = oxauth_info['branch']
 
     @classmethod

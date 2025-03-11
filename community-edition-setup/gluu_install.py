@@ -208,7 +208,7 @@ jetty_dist_string = 'jetty-distribution'
 if hasattr(argsp, 'jetty_version'):
     app_versions['JETTY_VERSION'] = argsp.jetty_version
 
-result = re.findall('(\d*).', app_versions['JETTY_VERSION'])
+result = re.findall(r'(\d*).', app_versions['JETTY_VERSION'])
 
 if result and result[0] and result[0].isdigit() and int(result[0]) > 9:
     jetty_dist_string = 'jetty-home'
@@ -459,7 +459,7 @@ else:
     if argsp.profile == 'DISA-STIG':
         war_zip = zipfile.ZipFile(oxauth_war_fn, "r")
         for fn in war_zip.namelist():
-            if re.search('bc-fips-(.*?).jar$', fn) or re.search('bcpkix-fips-(.*?).jar$', fn):
+            if re.search(r'bc-fips-(.*?).jar$', fn) or re.search(r'bcpkix-fips-(.*?).jar$', fn):
                 file_name = os.path.basename(fn)
                 target_fn = os.path.join(app_dir, file_name)
                 print("Extracting", fn, "to", target_fn)

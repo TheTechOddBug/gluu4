@@ -116,7 +116,7 @@ class JettyInstaller(BaseInstaller, SetupUtils):
         jetty_archive = max(jetty_archive_list)
 
         jetty_archive_fn = os.path.basename(jetty_archive)
-        jetty_regex = re.search('{}-(\d*\.\d*)'.format(self.jetty_dist_string), jetty_archive_fn)
+        jetty_regex = re.search(r'{}-(\d*\.\d*)'.format(self.jetty_dist_string), jetty_archive_fn)
         if not jetty_regex:
             self.logIt("Can't determine Jetty version", True, True)
 
@@ -233,16 +233,12 @@ class JettyInstaller(BaseInstaller, SetupUtils):
 
         self.render_unit_file(serviceName)
 
-        jetty_service_webapps = os.path.join(jettyServiceBase, 'webapps')
-        target_war_fn = os.path.join(jetty_service_webapps, os.path.basename(self.source_files[0][0]))
-        self.copyFile(self.source_files[0][0], jetty_service_webapps)
-
         self.run([paths.cmd_chown, '-R', '{}:{}'.format(Config.templateRenderingDict['service_user'], Config.gluu_group), jettyServiceBase])
 
         self.update_jetty_env(self.source_files[0][0])
-        jettyServiceWebapps = os.path.join(self.jetty_base, self.service_name, 'webapps')
-        self.logIt(f"Copying {self.source_files[0][0]} into {jettyServiceWebapps}")
-        self.copyFile(self.source_files[0][0], jettyServiceWebapps)
+        jetty_service_webapps = os.path.join(self.jetty_base, self.service_name, 'webapps')
+        self.logIt(f"Copying {self.source_files[0][0]} into {jetty_service_webapps}")
+        self.copyFile(self.source_files[0][0], jetty_service_webapps)
 
         if Config.profile == SetupProfiles.DISA_STIG:
             additional_rules = []
@@ -252,6 +248,7 @@ class JettyInstaller(BaseInstaller, SetupUtils):
             self.fapolicyd_access(Config.templateRenderingDict['service_user'], jettyServiceBase, additional_rules)
 
         else:
+            target_war_fn = os.path.join(jetty_service_webapps, os.path.basename(self.source_files[0][0]))
             self.configure_extra_libs(target_war_fn)
 
 
@@ -406,7 +403,7 @@ class JettyInstaller(BaseInstaller, SetupUtils):
 
 
     def configure_extra_libs(self, target_war_fn):
-        version_rec = re.compile('-(\d+)?\.')
+        version_rec = re.compile(r'-(\d+)?\.')
 
         builtin_libs = []
         war_zip = zipfile.ZipFile(target_war_fn)

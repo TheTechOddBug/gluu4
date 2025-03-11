@@ -291,7 +291,7 @@ class CollectProperties(SetupUtils, BaseInstaller):
                 usedRatio += jetty_services[service]['memory']['ratio']
                 if service == 'oxauth':
                     service_prop = base.read_properties_file(service_default_fn)
-                    m = re.search('-Xmx(\d*)m', service_prop['JAVA_OPTIONS'])
+                    m = re.search(r'-Xmx(\d*)m', service_prop['JAVA_OPTIONS'])
                     oxauth_max_heap_mem = int(m.groups()[0])
 
         if oxauth_max_heap_mem:

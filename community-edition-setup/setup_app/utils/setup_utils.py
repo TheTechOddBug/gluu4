@@ -207,10 +207,6 @@ class SetupUtils(Crypto64):
 
         return "\n".join(lines)
 
-    def replaceInText(self, text, pattern, update):
-        rePattern = re.compile(pattern,  flags=re.DOTALL | re.M)
-        return rePattern.sub(update, text)
-
 
     def copyFile(self, inFile, destFolder, backup=True):
         if os.path.isfile(inFile):
@@ -316,7 +312,7 @@ class SetupUtils(Crypto64):
         return re.match('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,})$', email, re.IGNORECASE)
 
     def checkPassword(self, pwd):
-        return re.search('^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*\W)[a-zA-Z0-9\S]{6,}$', pwd)
+        return re.search(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*\W)[a-zA-Z0-9\S]{6,}$', pwd)
 
     def ldap_encode(self, password):
         salt = os.urandom(4)
