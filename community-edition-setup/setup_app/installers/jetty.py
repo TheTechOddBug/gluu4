@@ -31,32 +31,6 @@ class JettyInstaller(BaseInstaller, SetupUtils):
         self.jetty_user_home = '/home/jetty'
         self.jetty_user_home_lib = os.path.join(self.jetty_user_home, 'lib')
 
-        self.app_custom_changes = {
-            'jetty' : {
-                'name' : 'jetty',
-                'files' : [
-                    #{
-                    #    'path' : os.path.join(self.jetty_home, 'etc/webdefault.xml'),
-                    #    'replace' : [
-                    #        {
-                    #            'pattern' : r'(\<param-name\>dirAllowed<\/param-name\>)(\s*)(\<param-value\>)true(\<\/param-value\>)',
-                    #            'update' : r'\1\2\3false\4'
-                    #        }
-                    #    ]
-                    #},
-                    {
-                        'path' : os.path.join(self.jetty_home, 'etc/jetty.xml'),
-                        'replace' : [
-                            {
-                                'pattern' : '<New id="DefaultHandler" class="org.eclipse.jetty.server.handler.DefaultHandler"/>',
-                                'update' : '<New id="DefaultHandler" class="org.eclipse.jetty.server.handler.DefaultHandler">\n\t\t\t\t <Set name="showContexts">false</Set>\n\t\t\t </New>'
-                            }
-                        ]
-                    }
-                ]
-            }
-        }
-
 
     def install(self):
 
@@ -81,11 +55,8 @@ class JettyInstaller(BaseInstaller, SetupUtils):
 
         jettyDestinationPath = max(glob.glob(os.path.join(jetty_dist, '{}-*'.format(self.jetty_dist_string))))
 
-
         self.run([paths.cmd_ln, '-sf', jettyDestinationPath, self.jetty_home])
         self.run([paths.cmd_chmod, '-R', "755", "%s/bin/" % jettyDestinationPath])
-
-        self.applyChangesInFiles(self.app_custom_changes['jetty'])
 
 
         # extroct/copy ee8-cdi modules. Remove these after jetty package includes them
@@ -130,6 +101,7 @@ class JettyInstaller(BaseInstaller, SetupUtils):
         self.copyFile("%s/system/initd/jetty.sh" % Config.staticFolder, "%s/bin/jetty.sh" % self.jetty_home)
         self.run([paths.cmd_chown, '-R', Config.user_group, "%s/bin/jetty.sh" % self.jetty_home])
         self.run([paths.cmd_chmod, '-R', '755', "%s/bin/jetty.sh" % self.jetty_home])
+
 
     def get_jetty_info(self):
         self.jetty_dist_string = 'jetty-home'
@@ -254,6 +226,9 @@ class JettyInstaller(BaseInstaller, SetupUtils):
         inifile = 'http.ini' if self.jetty_dist_string == 'jetty-home' else 'start.ini'
         self.set_jetty_param(serviceName, 'jetty.httpConfig.sendServerVersion', 'false', inifile=inifile)
 
+        # disable showContext
+        self.set_jetty_param(serviceName, 'jetty.server.default.showContexts', 'false', inifile='server.ini')
+
         self.run([paths.cmd_chown, '{}:{}'.format(Config.templateRenderingDict['service_user'], Config.gluu_group), os.path.join(Config.osDefault, serviceName)])
 
         self.render_unit_file(serviceName)
@@ -287,24 +262,26 @@ class JettyInstaller(BaseInstaller, SetupUtils):
         with tempfile.TemporaryDirectory() as tmpdirname:
             os.chdir(tmpdirname)
             os.mkdir('WEB-INF')
-            jetty_env_fn = base.extract_file(f'{war_fn}', env_src_fn, 'WEB-INF')
-            xml_content = self.readFile(jetty_env_fn)
-            src_txt = 'org.eclipse.jetty.webapp.WebAppContext'
-            tgt_txt = 'org.eclipse.jetty.ee8.webapp.WebAppContext'
+            jetty_env_fn = base.extract_file(war_fn, env_src_fn, 'WEB-INF')
 
-            if src_txt in xml_content:
-                self.logIt(f"Updating {env_src_fn} in {war_fn}")
-                xml_content = xml_content.replace(src_txt, tgt_txt)
-                self.writeFile(env_src_fn, xml_content, backup=False)
-                cmd = f'{Config.cmd_jar} uf {war_fn} {env_src_fn}'
-                self.logIt("Executing", cmd)
-                os.system(cmd)
+            if jetty_env_fn:
+                xml_content = self.readFile(jetty_env_fn)
+                src_txt = 'org.eclipse.jetty.webapp.WebAppContext'
+                tgt_txt = 'org.eclipse.jetty.ee8.webapp.WebAppContext'
+
+                if src_txt in xml_content:
+                    self.logIt(f"Updating {env_src_fn} in {war_fn}")
+                    xml_content = xml_content.replace(src_txt, tgt_txt)
+                    self.writeFile(env_src_fn, xml_content, backup=False)
+                    cmd = f'{Config.cmd_jar} uf {war_fn} {env_src_fn}'
+                    self.logIt("Executing", cmd)
+                    os.system(cmd)
 
         os.chdir(cur_dir)
 
     def set_jetty_param(self, jettyServiceName, jetty_param, jetty_val, inifile='start.ini'):
 
-        self.logIt("Setting jetty parameter {0}={1} for service {2}".format(jetty_param, jetty_val, jettyServiceName))
+        self.logIt("Setting jetty parameter {0}={1} for service {2} in {3}".format(jetty_param, jetty_val, jettyServiceName, inifile))
 
         path_list = [self.jetty_base, jettyServiceName, inifile]
         if inifile != 'start.ini':
@@ -314,13 +291,10 @@ class JettyInstaller(BaseInstaller, SetupUtils):
         if os.path.exists(service_fn):
             start_ini = self.readFile(service_fn)
             start_ini_list = start_ini.splitlines()
-            param_ln = jetty_param + '=' + jetty_val
+            param_ln = jetty_param + '=' + jetty_val + '\n'
 
             for i, l in enumerate(start_ini_list[:]):
-                if jetty_param in l and l[0]=='#':
-                    start_ini_list[i] = param_ln 
-                    break
-                elif l.strip().startswith(jetty_param):
+                if jetty_param in l:
                     start_ini_list[i] = param_ln
                     break
             else:

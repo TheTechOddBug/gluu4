@@ -33,7 +33,7 @@
       "ratio": 0.2
     },
     "jetty": {
-      "modules": "server,deploy,annotations,resources,http,http-forwarded,threadpool,console-capture,jsp"
+      "modules": "server,ee8-deploy,ee8-annotations,resources,http,http-forwarded,threadpool,console-capture,ee8-jsp"
     },
     "installed": false,
     "name": "idp"
@@ -69,7 +69,7 @@
       "ratio": 0.1
     },
     "jetty": {
-      "modules": "server,deploy,resources,http,http-forwarded,threadpool,console-capture,jsp"
+      "modules": "server,ee8-deploy,resources,http,http-forwarded,threadpool,console-capture,ee8-cdi-decorate,ee8-jsp"
     },
     "installed": false,
     "name": "fido2"
@@ -82,7 +82,7 @@
       "ratio": 0.1
     },
     "jetty": {
-      "modules": "server,deploy,resources,http,http-forwarded,console-capture,jsp,websocket"
+      "modules": "server,ee8-deploy,resources,http,http-forwarded,console-capture,ee8-cdi-decorate,ee8-jsp,websocket"
     },
     "installed": false,
     "name": "scim"
