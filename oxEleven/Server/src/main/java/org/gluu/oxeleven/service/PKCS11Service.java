@@ -6,10 +6,8 @@
 
 package org.gluu.oxeleven.service;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
@@ -45,6 +43,7 @@ import java.security.spec.ECPoint;
 import java.security.spec.ECPublicKeySpec;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.InvalidParameterSpecException;
+import java.security.spec.RSAPublicKeySpec;
 import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
@@ -55,7 +54,6 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.enterprise.inject.Vetoed;
 import javax.security.auth.x500.X500Principal;
 
-import org.apache.logging.log4j.core.util.FileUtils;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.x509.X509V3CertificateGenerator;
 import org.gluu.oxeleven.model.JwksRequestParam;
@@ -67,8 +65,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Strings;
-
-import java.security.spec.RSAPublicKeySpec;
 
 /**
  * @author Javier Rojas Blum
