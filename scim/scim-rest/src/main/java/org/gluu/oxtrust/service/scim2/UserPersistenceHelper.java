@@ -12,6 +12,7 @@ import org.gluu.oxtrust.service.IGroupService;
 import org.gluu.oxtrust.service.IPersonService;
 import org.gluu.oxtrust.util.ServiceUtil;
 import org.gluu.model.GluuAttribute;
+import org.gluu.persist.exception.operation.SearchException;
 import org.gluu.persist.ldap.impl.LdapEntryManagerFactory;
 import org.gluu.persist.PersistenceEntryManager;
 import org.slf4j.Logger;
@@ -66,13 +67,17 @@ public class UserPersistenceHelper {
         persistenceEntryManager.persist(person);
     }
 
-    public ScimCustomPerson getPersonByInum(String inum) {
+    public ScimCustomPerson getPersonByInum(String inum) throws Exception {
 
         ScimCustomPerson person = null;
         try {
             person = persistenceEntryManager.find(ScimCustomPerson.class, personService.getDnForPerson(inum));
         } catch (Exception e) {
-            log.warn("Failed to find Person by Inum {}", inum);
+            if (!SearchException.class.isInstance(e.getCause())) {
+                log.error(e.getMessage(), e.getCause());
+                throw e;
+            }
+            log.debug("Failed to find Person by Inum {}", inum);
         }
         return person;
 

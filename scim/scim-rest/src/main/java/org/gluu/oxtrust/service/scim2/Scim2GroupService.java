@@ -101,7 +101,7 @@ public class Scim2GroupService implements Serializable {
     }
     
 	private void transferAttributesToGroup(GroupResource res, GluuGroup group,
-            boolean skipMembersValidation, boolean fillMembersDisplay, String usersUrl) {
+            boolean skipMembersValidation, boolean fillMembersDisplay, String usersUrl) throws Exception {
 
 		// externalId (so oxTrustExternalId) not part of LDAP schema
 		group.setAttribute("oxTrustMetaCreated", res.getMeta().getCreated());

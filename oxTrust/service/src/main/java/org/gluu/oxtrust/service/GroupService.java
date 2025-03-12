@@ -22,7 +22,7 @@ import org.gluu.oxtrust.service.external.ExternalIdGeneratorService;
 import org.gluu.oxtrust.util.OxTrustConstants;
 import org.gluu.persist.PersistenceEntryManager;
 import org.gluu.persist.exception.EntryPersistenceException;
-import org.gluu.persist.exception.operation.DuplicateEntryException;
+import org.gluu.persist.exception.operation.*;
 import org.gluu.persist.model.SearchScope;
 import org.gluu.persist.model.base.SimpleBranch;
 import org.gluu.search.filter.Filter;
@@ -156,19 +156,17 @@ public class GroupService implements Serializable, IGroupService {
 		return isMemberOrOwner;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.gluu.oxtrust.ldap.service.IGroupService#getGroupByInum(java.lang.String)
-	 */
 	@Override
-	public GluuGroup getGroupByInum(String inum) {
+	public GluuGroup getGroupByInum(String inum) throws Exception {
 		GluuGroup result = null;
 		try {
 			result = persistenceEntryManager.find(GluuGroup.class, getDnForGroup(inum));
 		} catch (Exception e) {
-			log.error("Failed to find group by Inum " + inum, e);
+            if (!SearchException.class.isInstance(e.getCause())) {
+                log.error(e.getMessage(), e.getCause());
+                throw e;
+            }
+            log.debug("Failed to find group by Inum {}", inum);
 		}
 		return result;
 

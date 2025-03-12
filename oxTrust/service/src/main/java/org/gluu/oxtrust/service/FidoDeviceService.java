@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import org.apache.commons.lang.StringUtils;
 import org.gluu.oxtrust.model.fido.GluuCustomFidoDevice;
 import org.gluu.persist.PersistenceEntryManager;
+import org.gluu.persist.exception.operation.SearchException;
 import org.gluu.search.filter.Filter;
 import org.slf4j.Logger;
 
@@ -46,7 +47,7 @@ public class FidoDeviceService implements IFidoDeviceService, Serializable {
 	}
 
 	@Override
-	public GluuCustomFidoDevice getGluuCustomFidoDeviceById(String userId, String id) {
+	public GluuCustomFidoDevice getGluuCustomFidoDeviceById(String userId, String id) throws Exception {
 		GluuCustomFidoDevice gluuCustomFidoDevice = null;
 
 		try {
@@ -58,7 +59,11 @@ public class FidoDeviceService implements IFidoDeviceService, Serializable {
 				gluuCustomFidoDevice = ldapEntryManager.findEntries(dn, GluuCustomFidoDevice.class, filter).get(0);
 			}
 		} catch (Exception e) {
-			log.error("Failed to find device by id " + id, e);
+            if (!SearchException.class.isInstance(e.getCause())) {
+                log.error(e.getMessage(), e.getCause());
+                throw e;
+            }
+            log.debug("Failed to find device by id {}", id);
 		}
 
 		return gluuCustomFidoDevice;
