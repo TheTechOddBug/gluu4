@@ -13,14 +13,14 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.min-version>3.0.3</maven.min-version>
 
-		<resteasy.version>4.7.9.Final</resteasy.version>
+		<resteasy.version>5.0.9.Final</resteasy.version>
 
 		<httpcore.version>4.4.15</httpcore.version>
-		<httpclient.version>4.5.13</httpclient.version>
+		<httpclient.version>4.5.14</httpclient.version>
 
 		<weld.version>3.1.9.Final</weld.version>
 		<servlet.version>5.0.0</servlet.version>
-		<jetty-server.version>10.0.16</jetty-server.version>
+		<jetty-server.version>12.0.17</jetty-server.version>
 		<richfaces.version>4.5.19-gluu.Final</richfaces.version>
 
 		<jsf-api.version>2.2.20</jsf-api.version>
@@ -29,8 +29,8 @@
 		<uel-impl.version>2.2.1-b05</uel-impl.version>
 
 		<jackson.bom.version>2.13.4.20221013</jackson.bom.version>
-		<jackson.version>2.13.4</jackson.version>
-		<jackson.databind.version>2.13.4.2</jackson.databind.version>
+		<jackson.version>2.18.3</jackson.version>
+		<jackson.databind.version>2.18.3</jackson.databind.version>
 		<json.version>20231013</json.version>
 
 		<log4j.version>2.19.0</log4j.version>
