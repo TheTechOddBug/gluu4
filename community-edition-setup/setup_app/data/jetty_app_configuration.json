@@ -7,7 +7,7 @@
       "ratio": 0.2
     },
     "jetty": {
-      "modules": "server,deploy,annotations,resources,http,http-forwarded,threadpool,console-capture,jsp,websocket"
+      "modules": "server,resources,http,http-forwarded,threadpool,console-capture,ee8-deploy,ee8-annotations,ee8-jsp,ee8-websocket-javax,ee8-cdi-decorate"
     },
     "installed": false,
     "name": "oxauth"
@@ -20,7 +20,7 @@
       "ratio": 0.2
     },
     "jetty": {
-      "modules": "server,deploy,annotations,resources,http,http-forwarded,threadpool,console-capture,jsp,websocket"
+      "modules": "server,resources,http,http-forwarded,threadpool,console-capture,ee8-deploy,ee8-annotations,ee8-jsp,ee8-websocket-javax,ee8-cdi-decorate"
     },
     "installed": false,
     "name": "identity"
@@ -33,7 +33,7 @@
       "ratio": 0.2
     },
     "jetty": {
-      "modules": "server,deploy,annotations,resources,http,http-forwarded,threadpool,console-capture,jsp"
+      "modules": "server,ee8-deploy,ee8-annotations,resources,http,http-forwarded,threadpool,console-capture,ee8-jsp"
     },
     "installed": false,
     "name": "idp"
@@ -56,7 +56,7 @@
       "ratio": 0.1
     },
     "jetty": {
-      "modules": "server,deploy,resources,http,http-forwarded,console-capture,jsp"
+      "modules": "server,ee8-deploy,resources,http,http-forwarded,console-capture,ee8-jsp,ee8-cdi-decorate"
     },
     "installed": false,
     "name": "casa"
@@ -69,7 +69,7 @@
       "ratio": 0.1
     },
     "jetty": {
-      "modules": "server,deploy,resources,http,http-forwarded,threadpool,console-capture,jsp"
+      "modules": "server,ee8-deploy,resources,http,http-forwarded,threadpool,console-capture,ee8-cdi-decorate,ee8-jsp"
     },
     "installed": false,
     "name": "fido2"
@@ -82,7 +82,7 @@
       "ratio": 0.1
     },
     "jetty": {
-      "modules": "server,deploy,resources,http,http-forwarded,console-capture,jsp,websocket"
+      "modules": "server,ee8-deploy,resources,http,http-forwarded,console-capture,ee8-cdi-decorate,ee8-jsp,ee8-websocket-javax"
     },
     "installed": false,
     "name": "scim"

@@ -23,7 +23,7 @@ class Crypto64:
         s = s.strip() + ','
 
         for k in ('emailAddress', 'CN', 'O', 'L', 'ST', 'C'):
-            rex = re.search('{}=(.*?),'.format(k), s)
+            rex = re.search(r'{}=(.*?),'.format(k), s)
             retDict[k] = rex.groups()[0] if rex else ''
 
         return retDict

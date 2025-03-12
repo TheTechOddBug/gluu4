@@ -44,6 +44,8 @@ parser.add_argument('--dist-server-base', help="Download server", default='https
 parser.add_argument('-profile', help="Setup profile", choices=['CE', 'DISA-STIG'], default='CE')
 parser.add_argument('--setup-branch', help="Gluu CE setup github branch", default="4.5")
 parser.add_argument('-c', help="Don't download files that exists on disk", action='store_true')
+parser.add_argument('-app-info', help="Use specified app info file instead of downloading form github")
+
 
 argsp = parser.parse_args()
 
@@ -56,10 +58,14 @@ maven_o = urlparse(maven_base)
 maven_root = maven_o._replace(path='').geturl()
 
 githup_raw_base_url = f'https://raw.githubusercontent.com/GluuFederation/gluu4/refs/heads/{argsp.setup_branch}/'
-app_info_url = os.path.join(githup_raw_base_url, 'community-edition-setup/app_info.json')
-print("Retreiving application info", app_info_url)
-with request.urlopen(app_info_url) as response:
-    app_versions = json.loads(response.read())
+
+if argsp.app_info:
+    app_versions = json.load(open(argsp.app_info))
+else:
+    app_info_url = os.path.join(githup_raw_base_url, 'community-edition-setup/app_info.json')
+    print("Retreiving application info", app_info_url)
+    with request.urlopen(app_info_url) as response:
+        app_versions = json.loads(response.read())
 
 app_versions['SETUP_BRANCH'] = argsp.setup_branch
 
@@ -202,7 +208,7 @@ jetty_dist_string = 'jetty-distribution'
 if hasattr(argsp, 'jetty_version'):
     app_versions['JETTY_VERSION'] = argsp.jetty_version
 
-result = re.findall('(\d*).', app_versions['JETTY_VERSION'])
+result = re.findall(r'(\d*).', app_versions['JETTY_VERSION'])
 
 if result and result[0] and result[0].isdigit() and int(result[0]) > 9:
     jetty_dist_string = 'jetty-home'
@@ -389,6 +395,11 @@ if not argsp.u:
     download('https://github.com/jpadilla/pyjwt/archive/refs/tags/2.4.0.zip', os.path.join(app_dir, 'pyjwt.zip'))
 
 
+    # delete these downloads when jetty package includes them
+    download('https://ox.gluu.org/icrby8xcvbcv/maven/jetty-ee8-cdi-12.0.16-config.jar', os.path.join(app_dir, 'jetty-ee8-cdi-12.0.16-config.jar'))
+    download('https://ox.gluu.org/icrby8xcvbcv/maven/jetty-ee8-cdi-12.0.16.jar', os.path.join(app_dir, 'jetty-ee8-cdi-12.0.16.jar'))
+    #########################################################
+
 shutil.copy(os.path.join(gluu_app_dir, 'facter'), '/usr/bin')
 os.chmod('/usr/bin/facter', 33261)
 if not os.path.exists(certs_dir):
@@ -448,7 +459,7 @@ else:
     if argsp.profile == 'DISA-STIG':
         war_zip = zipfile.ZipFile(oxauth_war_fn, "r")
         for fn in war_zip.namelist():
-            if re.search('bc-fips-(.*?).jar$', fn) or re.search('bcpkix-fips-(.*?).jar$', fn):
+            if re.search(r'bc-fips-(.*?).jar$', fn) or re.search(r'bcpkix-fips-(.*?).jar$', fn):
                 file_name = os.path.basename(fn)
                 target_fn = os.path.join(app_dir, file_name)
                 print("Extracting", fn, "to", target_fn)
