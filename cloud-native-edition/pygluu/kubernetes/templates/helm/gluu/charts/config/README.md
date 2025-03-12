@@ -1,6 +1,6 @@
 # config
 
-![Version: 1.8.40](https://img.shields.io/badge/Version-1.8.40-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.5.7](https://img.shields.io/badge/AppVersion-4.5.7-informational?style=flat-square)
+![version: 1.8.45](https://img.shields.io/badge/Version-1.8.44-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.5.8](https://img.shields.io/badge/AppVersion-4.5.8-informational?style=flat-square)
 
 Configuration parameters for setup and initial configuration secret and config layers used by Gluu services.
 
@@ -47,6 +47,7 @@ Kubernetes: `>=v1.22.0-0`
 | configmap.cnSqlDbHost | string | `"my-release-mysql.default.svc.cluster.local"` | SQL database host uri. |
 | configmap.cnSqlDbName | string | `"gluu"` | SQL database username. |
 | configmap.cnSqlDbPort | int | `3306` | SQL database port. |
+| configmap.cnSqlDbSchema | string | `""` | Schema name used by SQL database (default to empty-string; if using MySQL, the schema name will be resolved as the database name, whereas in PostgreSQL the schema name will be resolved as `"public"`). |
 | configmap.cnSqlDbTimezone | string | `"UTC"` | SQL database timezone. |
 | configmap.cnSqlDbUser | string | `"gluu"` | SQL database username. |
 | configmap.cnSqlPasswordFile | string | `"/etc/gluu/conf/sql_password"` | SQL password file holding password from config.configmap.cnSqldbUserPassword . |
@@ -88,7 +89,7 @@ Kubernetes: `>=v1.22.0-0`
 | configmap.gluuOxtrustBackend | string | `"oxtrust:8080"` | oxTrust internal address. Leave as default. |
 | configmap.gluuOxtrustConfigGeneration | bool | `true` | Whether to generate oxShibboleth configuration or not (default to true). |
 | configmap.gluuPassportEnabled | bool | `false` | Boolean flag to enable/disable passport chart |
-| configmap.gluuPassportFailureRedirectUrl | string | `""` | TEMP KEY TO BE REMOVED IN 4.4 which allows passport failure redirect url to be specified. |
+| configmap.gluuPassportFailureRedirectUrl | string | `""` | Allows passport failure redirect url to be specified. |
 | configmap.gluuPersistenceLdapMapping | string | `"default"` | Specify data that should be saved in LDAP (one of default, user, cache, site, token, or session; default to default). Note this environment only takes effect when `global.gluuPersistenceType`  is set to `hybrid`. |
 | configmap.gluuRedisSentinelGroup | string | `""` | Redis Sentinel Group. Often set when `config.configmap.gluuRedisType` is set to `SENTINEL`. Can be used when  `config.configmap.gluuCacheType` is set to `REDIS`. |
 | configmap.gluuRedisSslTruststore | string | `""` | Redis SSL truststore. Optional. Can be used when  `config.configmap.gluuCacheType` is set to `REDIS`. |
@@ -107,7 +108,7 @@ Kubernetes: `>=v1.22.0-0`
 | email | string | `"support@gluu.com"` | Email address of the administrator usually. Used for certificate creation. |
 | image.pullSecrets | list | `[]` | Image Pull Secrets |
 | image.repository | string | `"gluufederation/config-init"` | Image  to use for deploying. |
-| image.tag | string | `"4.5.7_dev"` | Image  tag to use for deploying. |
+| image.tag | string | `"4.5.9_dev"` | Image  tag to use for deploying. |
 | ldapPass | string | `"P@ssw0rd"` | LDAP admin password if OpennDJ is used for persistence. |
 | lifecycle | object | `{}` |  |
 | migration | object | `{"enabled":false,"migrationDataFormat":"ldif","migrationDir":"/ce-migration"}` | CE to CN Migration section |

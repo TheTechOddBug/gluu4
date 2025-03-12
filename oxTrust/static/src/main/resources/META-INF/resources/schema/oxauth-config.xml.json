@@ -1846,6 +1846,22 @@
             "id": "allowWildcardRedirectUri",
             "description": "Specifies whether to allow wildcard in redirect URI or not.",
             "type": "boolean"
+        },"return200OnClientRegistration": {
+            "id": "return200OnClientRegistration",
+            "description": "Specifies client registration.",
+            "type": "boolean"
+        },"dateFormatterPatterns": {
+            "id": "dateFormatterPatterns",
+            "description": "dateFormatterPatterns",
+            "type": "object",
+            "properties": {
+                "birthdate": {
+                    "id": "birthdate",
+                    "description": "birthdate",
+                    "type": "string",
+                    "minLength": 1
+                }
+            }
         }
     },
     "required": [

@@ -1,0 +1,228 @@
+# Changelog
+
+Here you can see an overview of changes between each release.
+
+## Version 2.18.3
+
+Released on August 23rd, 2023.
+
+* Fixed unwanted secrets pulled from google secrets manager (https://github.com/GluuFederation/pygluu-containerlib/issues/53).
+
+## Version 2.18.2
+
+Released on July 20th, 2023.
+
+* Fixed missing timeout option in CouchbaseClient (https://github.com/GluuFederation/pygluu-containerlib/issues/52).
+
+## Version 2.18.1
+
+Released on June 26th, 2023.
+
+* Fixed parsing MySQL server version (https://github.com/GluuFederation/pygluu-containerlib/issues/51).
+
+## Version 2.18.0
+
+Released on February 24th, 2023.
+
+* Fixed AWS secret insufficient size (https://github.com/GluuFederation/pygluu-containerlib/issues/45).
+* Added Google secret integration.
+
+## Version 2.17.0
+
+Released on January 17th, 2023.
+
+* Fixed missing methods of AWS config/secret classes (https://github.com/GluuFederation/pygluu-containerlib/issues/37)
+* Added method to get/set all configs/secrets (https://github.com/GluuFederation/pygluu-containerlib/issues/39)
+
+## Version 2.16.0
+
+Released on December 5th, 2022.
+
+* Added support for AWS Secrets Manager configuration.
+
+## Version 2.15.0
+
+Released on December 2nd, 2022.
+
+* Added support for PostgreSQL persistence.
+
+## Version 2.14.0
+
+Released on August 9th, 2022.
+
+* Set Python 3.7 onwards as supported versions.
+* Fixed docstrings reported by `pydocstyle`.
+* Upgraded `backoff` version to v2.1.2 at minimum.
+* Replaced hardcoded Couchbase truststore password in favor of random string.
+
+## Version 2.13.0
+
+Released on June 8th, 2022.
+
+* Added `doc_id_from_dn` and `id_from_dn` functions to resolve document ID from DN string.
+
+## Version 2.12.1
+
+Released on June 7th, 2022.
+
+* Fixed unsupported operand type error when running `wait_for_*` functions (https://github.com/GluuFederation/pygluu-containerlib/issues/33).
+
+## Version 2.12.0
+
+Released on May 24th, 2022.
+
+* Refactored `pygluu.containerlib.persistence.sql` module.
+* Added new method `SQLClient.get_server_version` to get version info as a tuple.
+
+## Version 2.11.0
+
+Released on April 12th, 2022.
+
+* Added option to specify validity length (in days) for generated certificate (https://github.com/GluuFederation/docker-certmanager/issues/29).
+
+## Version 2.10.0
+
+Released on February 23rd, 2022.
+
+* Improved table mapping for SQL persistence client.
+* Improved table mapping for Spanner persistence client.
+
+## Version 2.9.1
+
+Released on January 15th, 2022.
+
+* Fixed incorrect timestamp when file extracted from TAR archive (https://github.com/GluuFederation/pygluu-containerlib/issues/32).
+
+## Version 2.9.0
+
+Released on June 25th, 2021.
+
+* Added support for SQL persistence.
+* Added support for Spanner persistence.
+
+## Version 2.8.0
+
+Released on April 6th, 2021.
+
+* Added support for unencrypted connection to LDAP server (https://github.com/GluuFederation/pygluu-containerlib/issues/23).
+* Added new environment variable `GLUU_LDAP_USE_SSL` (default to `true`).
+
+## Version 2.7.0
+
+Released on March 10th, 2021.
+
+* Added new environment variable `GLUU_OXD_SERVER_VERIFY` (default to `False`).
+* Removed support for TLSv1 and TLSv1.1 protocols.
+* Added feature to switch Couchbase ports based on enabled/disabled trustore for Couchbase connection.
+* Added support for keep-alive config for Couchbase connection (https://github.com/GluuFederation/pygluu-containerlib/issues/25).
+
+## Version 2.6.0
+
+Released on January 27th, 2021.
+
+* Added support to disable truststore file for Couchbase connection (https://github.com/GluuFederation/pygluu-containerlib/issues/22).
+* Changed call to deprecated `ssl.PROTOCOL_SSLv23` in favor of `ssl.PROTOCOL_TLS`.
+
+## Version 2.5.0
+
+Released on January 13th, 2021.
+
+* Changed call to deprecated ``hvac`` auth method.
+* Added feature to generate SSL cert and key with SAN.
+
+## Version 2.4.3
+
+Released on December 11th, 2020.
+
+* Added support to execute command in Pod's main container (https://github.com/GluuFederation/pygluu-containerlib/issues/19).
+* Added support for Couchbase prefix (https://github.com/GluuFederation/pygluu-containerlib/issues/20).
+
+## Version 2.4.2
+
+Released on November 12th, 2020.
+
+* Fixed remote execution in Kubernetes (https://github.com/GluuFederation/pygluu-containerlib/issues/18).
+
+## Version 2.4.1
+
+Released on November 3rd, 2020.
+
+* Added feature to suppress Couchbase cert verification through environment variable (enabled by default).
+* Changed the scope of pod list API (https://github.com/GluuFederation/pygluu-containerlib/issues/17).
+
+## Version 2.4.0
+
+Released on October 29th, 2020.
+
+* Added support for Couchbase cluster certificate verification (disabled by default).
+* Added support for generating safe N1QL query.
+* Removed `pyDes` wrapper in favor of `cryptography` (https://github.com/GluuFederation/pygluu-containerlib/issues/16).
+
+## Version 2.3.0
+
+Released on September 22nd, 2020.
+
+* Added support for Couchbase superuser access (https://github.com/GluuFederation/pygluu-containerlib/issues/15).
+
+## Version 2.2.0
+
+Released on August 30th, 2020.
+
+* Added validators for persistence type and ldap mapping (https://github.com/GluuFederation/pygluu-containerlib/issues/14).
+
+## Version 2.1.2
+
+Released on August 13th, 2020.
+
+* Fixed incorrect RClone config due to special chars and whitespaces in user and/or password value. Reference: https://github.com/GluuFederation/pygluu-containerlib/issues/13.
+
+## Version 2.1.1
+
+Released on August 9th, 2020.
+
+* Fix `rclone.conf` where username is always hardcoded. Reference: https://github.com/GluuFederation/pygluu-containerlib/issues/12.
+
+## Version 2.1.0
+
+Released on August 7th, 2020.
+
+* Added new LDAP mapping `session`.
+* Added new Couchbase bucket mapping `gluu_session`.
+* Added lazy-loaded Couchbase REST and N1QL API clients.
+
+## Version 2.0.1
+
+Released on July 30th, 2020.
+
+* Fixed uploading/downloading files with certain extensions using RClone wrapper. Reference: https://github.com/GluuFederation/pygluu-containerlib/issues/11.
+
+## Version 2.0.0
+
+Released on July 18th, 2020.
+
+* Support for Python 3.6 and above.
+* Dropped support for Python 2.
+* Added meta clients to interact with Docker and Kubernetes API.
+* Added support for cryptography library as a drop-in replacement for pyDes.
+* Deprecated pyDes-based encode/decode text utilities (preserved as backward-compat only).
+* Added RClone client to interact with Jackrabbit WebDAV.
+* Added support for Gluu Server v4.2.
+* Added internal docs based on sphinx.
+
+## Version 1.1.0
+
+Released on May 11th, 2020.
+
+* Removed unused Couchbase config and/or secret.
+* Added environment variables for Couchbase connection timeout, connection max wait, and scan consistency.
+
+## Version 1.0.0
+
+Released on November 20th, 2019.
+
+* Support for Python 2.
+* Partial support for Python 3 through `six` helpers.
+* Helpers to interact with config backends (supports Consul and k8s configmaps).
+* Helpers to interact with secret backends (supports Vault and k8s secrets).
+* Helpers to interact with persistence backends (LDAP and Couchbase server).
+* Various common helpers to deal with text, encoding/decoding, etc.

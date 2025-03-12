@@ -43,6 +43,26 @@
     ```
     
     The script extracts contents to `/opt/upd/4.5.0/dist`, and writes latest setup files to `/install/community_edition_setup_4.5.0`
+
+    ## Minor update    
+
+    If you want to perform a minor update from 4.5.x to 4.5.y, here is the procedure: 
+
+    - Backup existing `oxauth.war` and `identity.war`
+        - oxauth.war location: /opt/gluu/jetty/oxauth/webapps/
+        - identity.war location: /opt/gluu/jetty/identity/webapps/
+    - Download oxauth 4.5.y from [here](https://jenkins.gluu.org/maven/org/gluu/)
+    - Download identity 4.5.y from [here](https://jenkins.gluu.org/maven/org/gluu/)
+    - You may download other artifacts like `oxShibboleth` or `oxd` [here](https://jenkins.gluu.org/maven/org/gluu/)
+    - Rename newly downloaded artifacts to `oxauth.war` and `identity.war` respectively.
+    - Stop identity service: `service identity stop`
+    - Stop oxauth service: `service oxauth stop`
+    - Check if there are any jetty's temp directories available inside `/opt/jetty-x.x/temp/`
+        - If you find `jetty-localhost-8082-identity.war` there, remove that/those directories from this temp directory
+    - Same goes for `jetty-localhost-8081-oxauth.war`, remove them.
+    - Now put newly downloaded `oxuath.war` and `identity.war` into proper location ( /opt/gluu/jetty/oxauth/webapps/ and /opt/gluu/jetty/identity/webapps/ )
+    - Start oxauth and identity service
+    - Test
     
 === "Cloud Native Edition"
  

@@ -28,6 +28,8 @@ city: Austin
 # -- Salt. Used for encoding/decoding sensitive data. If omitted or set to empty string, the value will be self-generated. Otherwise, a 24 alphanumeric characters are allowed as its value.
 salt: ""
 configmap:
+  # -- Schema name used by SQL database (default to empty-string; if using MySQL, the schema name will be resolved as the database name, whereas in PostgreSQL the schema name will be resolved as `"public"`).
+  cnSqlDbSchema: ""
   # -- SQL database dialect. `mysql` or `pgsql`
   cnSqlDbDialect: mysql
   # -- SQL database host uri.
@@ -170,7 +172,7 @@ configmap:
   gluuScimProtectionMode: "OAUTH"
   # -- Boolean flag to enable/disable passport chart
   gluuPassportEnabled: false
-  # --  TEMP KEY TO BE REMOVED IN 4.4 which allows passport failure redirect url to be specified.
+  # --  Allows passport failure redirect url to be specified.
   gluuPassportFailureRedirectUrl: ""
   # -- Enable Casa flag .
   gluuCasaEnabled: false
@@ -180,7 +182,7 @@ image:
   # -- Image  to use for deploying.
   repository: gluufederation/config-init
   # -- Image  tag to use for deploying.
-  tag: 4.5.7_dev
+  tag: 4.5.9_dev
   # -- Image Pull Secrets
   pullSecrets: [ ]
 # -- Configure any additional volumes that need to be attached to the pod

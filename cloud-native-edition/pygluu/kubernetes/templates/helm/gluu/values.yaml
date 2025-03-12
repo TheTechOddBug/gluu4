@@ -74,7 +74,7 @@ global:
       # -- Image  to use for deploying.
       repository: gluufederation/upgrade
       # -- Image  tag to use for deploying.
-      tag: 4.5.7_dev
+      tag: 4.5.9_dev
     # -- Source version currently running. This is normally one minor version down.
     # The step should only be one minor version per upgrade
     sourceVersion: "4.5"
@@ -395,6 +395,8 @@ config:
   # -- Salt. Used for encoding/decoding sensitive data. If omitted or set to empty string, the value will be self-generated. Otherwise, a 24 alphanumeric characters are allowed as its value.
   salt: ""
   configmap:
+    # -- Schema name used by SQL database (default to empty-string; if using MySQL, the schema name will be resolved as the database name, whereas in PostgreSQL the schema name will be resolved as `"public"`).
+    cnSqlDbSchema: ""
     # -- SQL database dialect. `mysql` or `pgsql`
     cnSqlDbDialect: mysql
     # -- SQL database host uri.
@@ -539,7 +541,7 @@ config:
     gluuScimProtectionMode: "OAUTH"
     # -- Boolean flag to enable/disable passport chart
     gluuPassportEnabled: false
-    # --  TEMP KEY TO BE REMOVED IN 4.4 which allows passport failure redirect url to be specified.
+    # --  Allows passport failure redirect url to be specified.
     gluuPassportFailureRedirectUrl: ""
     # -- Enable Casa flag .
     gluuCasaEnabled: false
@@ -549,7 +551,7 @@ config:
     # -- Image  to use for deploying.
     repository: gluufederation/config-init
     # -- Image  tag to use for deploying.
-    tag: 4.5.7_dev
+    tag: 4.5.9_dev
     # -- Image Pull Secrets
     pullSecrets: [ ]
   # -- Configure any additional volumes that need to be attached to the pod
@@ -784,7 +786,7 @@ jackrabbit:
     # -- Image  to use for deploying.
     repository: gluufederation/jackrabbit
      # -- Image  tag to use for deploying.
-    tag: 4.5.7_dev
+    tag: 4.5.9_dev
     # -- Image Pull Secrets
     pullSecrets: [ ]
   # -- Service replica number.
@@ -915,7 +917,7 @@ opendj:
     # -- Image  to use for deploying.
     repository: gluufederation/opendj
     # -- Image  tag to use for deploying.
-    tag: 4.5.7_dev
+    tag: 4.5.9_dev
     # -- Image Pull Secrets
     pullSecrets: [ ]
   persistence:
@@ -1029,7 +1031,7 @@ persistence:
     # -- Image  to use for deploying.
     repository: gluufederation/persistence
     # -- Image  tag to use for deploying.
-    tag: 4.5.7_dev
+    tag: 4.5.9_dev
     # -- Image Pull Secrets
     pullSecrets: [ ]
   # -- Resource specs.
@@ -1120,7 +1122,7 @@ oxauth:
     # -- Image  to use for deploying.
     repository: gluufederation/oxauth
     # -- Image  tag to use for deploying.
-    tag: 4.5.7_dev
+    tag: 4.5.9_dev
     # -- Image Pull Secrets
     pullSecrets: [ ]
   # -- Service replica number.
@@ -1239,7 +1241,7 @@ oxtrust:
     # -- Image  to use for deploying.
     repository: gluufederation/oxtrust
     # -- Image  tag to use for deploying.
-    tag: 4.5.7_dev
+    tag: 4.5.9_dev
     # -- Image Pull Secrets
     pullSecrets: [ ]
   # -- Service replica number.
@@ -1360,7 +1362,7 @@ fido2:
     # -- Image  to use for deploying.
     repository: gluufederation/fido2
     # -- Image  tag to use for deploying.
-    tag: 4.5.7_dev
+    tag: 4.5.9_dev
     # -- Image Pull Secrets
     pullSecrets: [ ]
   # -- Service replica number.
@@ -1478,7 +1480,7 @@ scim:
     # -- Image  to use for deploying.
     repository: gluufederation/scim
     # -- Image  tag to use for deploying.
-    tag: 4.5.7_dev
+    tag: 4.5.9_dev
     # -- Image Pull Secrets
     pullSecrets: [ ]
   # -- Service replica number.
@@ -1595,7 +1597,7 @@ oxd-server:
     # -- Image  to use for deploying.
     repository: gluufederation/oxd-server
     # -- Image  tag to use for deploying.
-    tag: 4.5.7_dev
+    tag: 4.5.9_dev
     # -- Image Pull Secrets
     pullSecrets: [ ]
   # -- Service replica number.
@@ -1710,7 +1712,7 @@ casa:
     # -- Image  to use for deploying.
     repository: gluufederation/casa
     # -- Image  tag to use for deploying.
-    tag: 4.5.7_dev
+    tag: 4.5.9_dev
     # -- Image Pull Secrets
     pullSecrets: [ ]
   # -- Service replica number.
@@ -1829,7 +1831,7 @@ oxpassport:
     # -- Image  to use for deploying.
     repository: gluufederation/oxpassport
     # -- Image  tag to use for deploying.
-    tag: 4.5.7_dev
+    tag: 4.5.9_dev
     # -- Image Pull Secrets
     pullSecrets: [ ]
   # -- Service replica number
@@ -1951,7 +1953,7 @@ oxshibboleth:
     # -- Image  to use for deploying.
     repository: gluufederation/oxshibboleth
     # -- Image  tag to use for deploying.
-    tag: 4.5.7_dev
+    tag: 4.5.9_dev
     # -- Image Pull Secrets
     pullSecrets: [ ]
   # -- Service replica number.
@@ -2044,7 +2046,7 @@ cr-rotate:
     # -- Image  to use for deploying.
     repository: gluufederation/cr-rotate
     # -- Image  tag to use for deploying.
-    tag: 4.5.7_dev
+    tag: 4.5.9_dev
     # -- Image Pull Secrets
     pullSecrets: [ ]
   # -- Resource specs.
@@ -2108,7 +2110,7 @@ oxauth-key-rotation:
     # -- Image  to use for deploying.
     repository: gluufederation/certmanager
     # -- Image  tag to use for deploying.
-    tag: 4.5.7_dev
+    tag: 4.5.9_dev
     # -- Image Pull Secrets
     pullSecrets: [ ]
   # -- Auth server key rotation job schedule. It accepts any Cron syntax supported by Kubernetes. If empty, the schedule will run based on keysLife value.

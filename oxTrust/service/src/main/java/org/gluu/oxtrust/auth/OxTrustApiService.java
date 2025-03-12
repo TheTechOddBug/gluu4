@@ -12,7 +12,7 @@ import org.gluu.oxtrust.auth.uma.ApiUmaProtectionService;
 import org.slf4j.Logger;
 
 @ApplicationScoped
-@BindingUrls({ "/api/v1" })
+@BindingUrls({ "/api" })
 public class OxTrustApiService implements GluuRestService {
     
     @Inject

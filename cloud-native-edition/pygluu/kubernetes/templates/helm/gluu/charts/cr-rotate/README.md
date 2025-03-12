@@ -1,6 +1,6 @@
 # cr-rotate
 
-![Version: 1.8.40](https://img.shields.io/badge/Version-1.8.40-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.5.7](https://img.shields.io/badge/AppVersion-4.5.7-informational?style=flat-square)
+![version: 1.8.45](https://img.shields.io/badge/Version-1.8.44-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.5.8](https://img.shields.io/badge/AppVersion-4.5.8-informational?style=flat-square)
 
 CacheRefreshRotation is a special container to monitor cache refresh on oxTrust containers. This may become depreciated in 5.0.
 
@@ -34,7 +34,7 @@ Kubernetes: `>=v1.22.0-0`
 | image.pullPolicy | string | `"IfNotPresent"` | Image pullPolicy to use for deploying. |
 | image.pullSecrets | list | `[]` | Image Pull Secrets |
 | image.repository | string | `"gluufederation/cr-rotate"` | Image  to use for deploying. |
-| image.tag | string | `"4.5.7_dev"` | Image  tag to use for deploying. |
+| image.tag | string | `"4.5.9_dev"` | Image  tag to use for deploying. |
 | lifecycle | object | `{}` |  |
 | nameOverride | string | `""` |  |
 | nodeSelector | object | `{}` |  |

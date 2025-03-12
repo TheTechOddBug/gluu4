@@ -66,6 +66,9 @@
 
 						</ul>
 						<div class="tab-content">
+							<input type="text" id="searchProp" placeholder="Search for properties.."/>
+							<input id="clickMe" style="display:none; margin-top: 5px;"
+								   class="btn btn-primary" type="button" value="search" onclick="scrolltoProperty();" />
 							<!-- System Configuration -->
 							<div class="tab-pane active" id="oxtrust-config">
 								<h:panelGrid border="0" cellpadding="0" cellspacing="0"
@@ -276,6 +279,37 @@
 														'show');
 											}
 										});
+
+						var i = 0;
+						var max = 0;
+						var oldSearch = "";
+						function scrolltoProperty() {
+							var e = document.getElementById("searchProp");
+							var activeElement = $('div.active');
+
+							if(e.value.length > 2){
+								if (e.value != "") {
+									var elem = activeElement[0].querySelectorAll("[data-schemaid*=" + e.value + " i]");
+
+									if (elem[i] != undefined) {
+
+										if (oldSearch == e.value) {
+											elem[i].scrollIntoView();
+										} else {
+											i = 0;
+											elem[i].scrollIntoView();
+										}
+									i = i + 1;
+									oldSearch = e.value;
+									} else {
+										e.scrollIntoView();
+										i=0;
+									}
+								}
+							}else{
+								alert("Please enter more than 3 letters.");
+							}
+						}
 					</script>
 
 				</div>

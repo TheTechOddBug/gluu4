@@ -1019,7 +1019,7 @@ public class AuthorizeRestWebServiceImpl implements AuthorizeRestWebService {
 
         SessionId persistenceSessionId = sessionIdService.getSessionId(sessionId);
         if (persistenceSessionId == null) {
-            log.error("Failed to load session from LDAP by session_id: '{}'", sessionId);
+            log.debug("Failed to load session from LDAP by session_id: '{}'", sessionId);
             return true;
         }
 

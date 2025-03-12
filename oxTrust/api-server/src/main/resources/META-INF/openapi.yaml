@@ -11,9 +11,9 @@ info:
   license:
     name: Gluu Support License
     url: https://gluu.org/
-  version: 4.5.3
+  version: 4.5.4
 paths:
-  /configuration/api:
+  /api/v1/configuration/api:
     get:
       summary: Retrieve api configuration
       description: Retrieve api configuration
@@ -48,6 +48,58 @@ paths:
                 $ref: '#/components/schemas/ApiConfig'
         500:
           description: Server error
+  /api/v1/attributes/attribute/{inum}:
+    get:
+      summary: Get attribute by inum
+      description: Get an attribute by inum
+      operationId: getAttributeByInum
+      parameters:
+      - name: inum
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GluuAttribute'
+        500:
+          description: Server error
+      security:
+      - oauth2:
+        - https://gluu.org/auth/oxtrust.attribute.read
+  /api/v1/attributes/search:
+    get:
+      summary: Search attributes
+      description: Perform an attribute search
+      operationId: searchAttributes
+      parameters:
+      - name: pattern
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: size
+        in: query
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      responses:
+        200:
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GluuAttribute'
+        500:
+          description: Server error
+      security:
+      - oauth2:
+        - https://gluu.org/auth/oxtrust.attribute.read
   /api/v1/attributes:
     get:
       summary: Get all attributes
@@ -116,6 +168,27 @@ paths:
           description: default response
           content:
             application/json: {}
+  /api/v1/attributes/{inum}:
+    delete:
+      summary: Delete gluu attribute
+      description: Deletes a gluu attribute
+      operationId: deleteAttribute
+      parameters:
+      - name: inum
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: success
+        404:
+          description: Not found
+        500:
+          description: Server error
+      security:
+      - oauth2:
+        - https://gluu.org/auth/oxtrust.attribute.write
   /api/v1/attributes/inactive:
     get:
       summary: Get all inactive attributes
@@ -145,79 +218,6 @@ paths:
             application/json:
               schema:
                 type: string
-        500:
-          description: Server error
-      security:
-      - oauth2:
-        - https://gluu.org/auth/oxtrust.attribute.read
-  /api/v1/attributes/{inum}:
-    delete:
-      summary: Delete gluu attribute
-      description: Deletes a gluu attribute
-      operationId: deleteAttribute
-      parameters:
-      - name: inum
-        in: path
-        required: true
-        schema:
-          type: string
-      responses:
-        200:
-          description: success
-        404:
-          description: Not found
-        500:
-          description: Server error
-      security:
-      - oauth2:
-        - https://gluu.org/auth/oxtrust.attribute.write
-  /api/v1/attributes/search:
-    get:
-      summary: Search attributes
-      description: Perform an attribute search
-      operationId: searchAttributes
-      parameters:
-      - name: pattern
-        in: query
-        required: true
-        schema:
-          type: string
-      - name: size
-        in: query
-        schema:
-          type: integer
-          format: int32
-          default: 1
-      responses:
-        200:
-          description: success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/GluuAttribute'
-        500:
-          description: Server error
-      security:
-      - oauth2:
-        - https://gluu.org/auth/oxtrust.attribute.read
-  /api/v1/attributes/attribute/{inum}:
-    get:
-      summary: Get attribute by inum
-      description: Get an attribute by inum
-      operationId: getAttributeByInum
-      parameters:
-      - name: inum
-        in: path
-        required: true
-        schema:
-          type: string
-      responses:
-        200:
-          description: success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/GluuAttribute'
         500:
           description: Server error
       security:
@@ -261,7 +261,7 @@ paths:
       security:
       - oauth2:
         - https://gluu.org/auth/oxtrust.authenticationmethod.write
-  /configuration/captcha:
+  /api/v1/configuration/captcha:
     get:
       summary: Retrieve captcha configuration
       description: Retrieve captcha configuration
@@ -417,61 +417,6 @@ paths:
           description: default response
           content:
             application/json: {}
-  /api/v1/clients/{inum}/scopes/{sinum}:
-    post:
-      summary: Add OIDC client scopes
-      description: Add scopes to OIDC client
-      operationId: addScopeToClient
-      parameters:
-      - name: inum
-        in: path
-        required: true
-        schema:
-          type: string
-      - name: sinum
-        in: path
-        required: true
-        schema:
-          type: string
-      responses:
-        200:
-          description: Success
-          content:
-            application/json:
-              schema:
-                type: string
-        500:
-          description: Server error
-      security:
-      - oauth2:
-        - https://gluu.org/auth/oxtrust.client.write
-    delete:
-      summary: Remove OIDC client scope
-      description: Remove an existing scope from client
-      operationId: removeScopeToClient
-      parameters:
-      - name: inum
-        in: path
-        required: true
-        schema:
-          type: string
-      - name: sinum
-        in: path
-        required: true
-        schema:
-          type: string
-      responses:
-        200:
-          description: Success
-          content:
-            application/json:
-              schema:
-                type: string
-        500:
-          description: Server error
-      security:
-      - oauth2:
-        - https://gluu.org/auth/oxtrust.client.write
   /api/v1/clients/search:
     get:
       summary: Search OIDC clients
@@ -584,6 +529,61 @@ paths:
           description: default response
           content:
             application/json: {}
+  /api/v1/clients/{inum}/scopes/{sinum}:
+    post:
+      summary: Add OIDC client scopes
+      description: Add scopes to OIDC client
+      operationId: addScopeToClient
+      parameters:
+      - name: inum
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: sinum
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+        500:
+          description: Server error
+      security:
+      - oauth2:
+        - https://gluu.org/auth/oxtrust.client.write
+    delete:
+      summary: Remove OIDC client scope
+      description: Remove an existing scope from client
+      operationId: removeScopeToClient
+      parameters:
+      - name: inum
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: sinum
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+        500:
+          description: Server error
+      security:
+      - oauth2:
+        - https://gluu.org/auth/oxtrust.client.write
   /api/v1/configuration:
     get:
       summary: Get gluu configuration
@@ -601,6 +601,59 @@ paths:
       security:
       - oauth2:
         - https://gluu.org/auth/oxtrust.configuration.read
+  /api/v1/configuration/scripts:
+    get:
+      summary: Get all custom scripts
+      description: Get all custom scripts
+      operationId: listCustomScripts
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+        500:
+          description: Server error
+      security:
+      - oauth2:
+        - https://gluu.org/auth/oxtrust.customscript.read
+    put:
+      summary: Update custom script
+      description: Update custom script
+      operationId: updateCustomScript
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomScript'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomScript'
+        500:
+          description: Server error
+    post:
+      summary: Add new custom script
+      description: Add new custom script
+      operationId: createCustomScript
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomScript'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomScript'
+        500:
+          description: Server error
   /api/v1/configuration/scripts/{inum}:
     get:
       summary: Get scripts by inum
@@ -662,59 +715,6 @@ paths:
       security:
       - oauth2:
         - https://gluu.org/auth/oxtrust.customscript.read
-  /api/v1/configuration/scripts:
-    get:
-      summary: Get all custom scripts
-      description: Get all custom scripts
-      operationId: listCustomScripts
-      responses:
-        200:
-          description: Success
-          content:
-            application/json:
-              schema:
-                type: string
-        500:
-          description: Server error
-      security:
-      - oauth2:
-        - https://gluu.org/auth/oxtrust.customscript.read
-    put:
-      summary: Update custom script
-      description: Update custom script
-      operationId: updateCustomScript
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CustomScript'
-      responses:
-        200:
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomScript'
-        500:
-          description: Server error
-    post:
-      summary: Add new custom script
-      description: Add new custom script
-      operationId: createCustomScript
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CustomScript'
-      responses:
-        200:
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomScript'
-        500:
-          description: Server error
   /api/v1/groups:
     get:
       summary: Get groups
@@ -772,76 +772,6 @@ paths:
                 $ref: '#/components/schemas/GluuGroupApi'
         500:
           description: Server error
-  /api/v1/groups/{inum}:
-    get:
-      summary: Get group by inum
-      description: Get a group by inum
-      operationId: getGroupByInum
-      parameters:
-      - name: inum
-        in: path
-        required: true
-        schema:
-          type: string
-      responses:
-        200:
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/GluuGroupApi'
-        500:
-          description: Server error
-    delete:
-      summary: Delete group
-      description: Delete a group
-      operationId: deleteGroup
-      parameters:
-      - name: inum
-        in: path
-        required: true
-        schema:
-          type: string
-      responses:
-        200:
-          description: Success
-        500:
-          description: Server error
-  /api/v1/groups/{inum}/members:
-    get:
-      summary: Get group members
-      description: Get a group members
-      operationId: getGroupMembers
-      parameters:
-      - name: inum
-        in: path
-        required: true
-        schema:
-          type: string
-      responses:
-        200:
-          description: Success
-          content:
-            application/json:
-              schema:
-                type: string
-        500:
-          description: Server error
-    delete:
-      summary: Delete group member
-      description: Delete group member
-      operationId: deleteGroupMembers
-      parameters:
-      - name: inum
-        in: path
-        required: true
-        schema:
-          type: string
-      responses:
-        default:
-          description: default response
-          content:
-            application/json: {}
   /api/v1/groups/{inum}/members/{minum}:
     post:
       summary: Add group member
@@ -887,6 +817,41 @@ paths:
           description: Success
         500:
           description: Server error
+  /api/v1/groups/{inum}/members:
+    get:
+      summary: Get group members
+      description: Get a group members
+      operationId: getGroupMembers
+      parameters:
+      - name: inum
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+        500:
+          description: Server error
+    delete:
+      summary: Delete group member
+      description: Delete group member
+      operationId: deleteGroupMembers
+      parameters:
+      - name: inum
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
   /api/v1/groups/search:
     get:
       summary: Search groups
@@ -913,7 +878,42 @@ paths:
                 type: string
         500:
           description: Server error
-  /configuration/idp:
+  /api/v1/groups/{inum}:
+    get:
+      summary: Get group by inum
+      description: Get a group by inum
+      operationId: getGroupByInum
+      parameters:
+      - name: inum
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GluuGroupApi'
+        500:
+          description: Server error
+    delete:
+      summary: Delete group
+      description: Delete a group
+      operationId: deleteGroup
+      parameters:
+      - name: inum
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: Success
+        500:
+          description: Server error
+  /api/v1/configuration/idp:
     get:
       summary: Retrieve idp configuration
       description: Retrieve idp configuration
@@ -945,6 +945,59 @@ paths:
                 $ref: '#/components/schemas/IdpConfig'
         500:
           description: Server error
+  /api/v1/configuration/ldap/status:
+    post:
+      summary: Check status of a configuration
+      description: Check the status of a configuration
+      operationId: getLdapConfigurationStatus
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LdapConnectionData'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConnectionStatusDTO'
+  /api/v1/configuration/ldap/{name}/status:
+    get:
+      summary: Check the status of an existing configuration
+      description: Check the status of an existing configuration
+      operationId: getLdapConfigurationStatusByName
+      parameters:
+      - name: name
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConnectionStatusDTO'
+  /api/v1/configuration/ldap/{name}:
+    delete:
+      summary: Delete an existing configuration
+      description: Delete an existing configuration
+      operationId: deleteLdapConfigurationByName
+      parameters:
+      - name: name
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
   /api/v1/configuration/ldap:
     get:
       summary: Get existing configuration
@@ -991,60 +1044,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/LdapConfigurationDTO'
-  /api/v1/configuration/ldap/{name}:
-    delete:
-      summary: Delete an existing configuration
-      description: Delete an existing configuration
-      operationId: deleteLdapConfigurationByName
-      parameters:
-      - name: name
-        in: path
-        required: true
-        schema:
-          type: string
-      responses:
-        200:
-          description: Success
-          content:
-            application/json:
-              schema:
-                type: string
-  /api/v1/configuration/ldap/status:
-    post:
-      summary: Check status of a configuration
-      description: Check the status of a configuration
-      operationId: getLdapConfigurationStatus
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/LdapConnectionData'
-      responses:
-        200:
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ConnectionStatusDTO'
-  /api/v1/configuration/ldap/{name}/status:
-    get:
-      summary: Check the status of an existing configuration
-      description: Check the status of an existing configuration
-      operationId: getLdapConfigurationStatusByName
-      parameters:
-      - name: name
-        in: path
-        required: true
-        schema:
-          type: string
-      responses:
-        200:
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ConnectionStatusDTO'
-  /configuration/metric:
+  /api/v1/configuration/metric:
     get:
       summary: Retrieve metric configuration
       description: Retrieve metric configuration
@@ -1076,7 +1076,7 @@ paths:
                 $ref: '#/components/schemas/MetricConfig'
         500:
           description: Server error
-  /configuration/oxauth:
+  /api/v1/configuration/oxauth:
     get:
       summary: Retrieve oxauth configuration
       description: Retrieve oxauth configuration
@@ -1142,7 +1142,7 @@ paths:
           description: Not found
         500:
           description: Server error
-  /configuration/oxtrust:
+  /api/v1/configuration/oxtrust:
     get:
       summary: Retrieve oxtrust configuration
       description: Retrieve oxtrust configuration
@@ -1274,7 +1274,7 @@ paths:
                 type: string
         500:
           description: Server error
-  /configuration/passport:
+  /api/v1/configuration/passport:
     get:
       summary: Retrieve passport configuration
       description: Retrieve passport configuration
@@ -1503,7 +1503,7 @@ paths:
                 type: string
         500:
           description: Server error
-  /configuration/rpt:
+  /api/v1/api/v1/configuration/rpt:
     get:
       summary: Retrieve rpt configuration
       description: Retrieve rpt configuration
@@ -1535,7 +1535,7 @@ paths:
                 $ref: '#/components/schemas/RptConfig'
         500:
           description: Server error
-  /configuration/scim:
+  /api/v1/configuration/scim:
     get:
       summary: Retrieve scim configuration
       description: Retrieve scim configuration
@@ -1652,31 +1652,6 @@ paths:
           description: Success
         500:
           description: Server error
-  /api/v1/scopes/search:
-    get:
-      summary: Search openid connect scopes
-      description: Search openid connect scopes
-      operationId: searchScope
-      parameters:
-      - name: pattern
-        in: query
-        schema:
-          type: string
-      - name: size
-        in: query
-        schema:
-          type: integer
-          format: int32
-          default: 10
-      responses:
-        200:
-          description: Success
-          content:
-            application/json:
-              schema:
-                type: string
-        500:
-          description: Server error
   /api/v1/scopes/{inum}/claims:
     get:
       summary: Get scope claims
@@ -1697,11 +1672,11 @@ paths:
                 type: string
         500:
           description: Server error
-  /api/v1/sectoridentifiers/search:
+  /api/v1/scopes/search:
     get:
-      summary: Search sector identifiers
-      description: Search sectors identifiers
-      operationId: searchSectorIdentifier
+      summary: Search openid connect scopes
+      description: Search openid connect scopes
+      operationId: searchScope
       parameters:
       - name: pattern
         in: query
@@ -1772,6 +1747,31 @@ paths:
                 $ref: '#/components/schemas/OxAuthSectorIdentifier'
         500:
           description: Server error
+  /api/v1/sectoridentifiers/search:
+    get:
+      summary: Search sector identifiers
+      description: Search sectors identifiers
+      operationId: searchSectorIdentifier
+      parameters:
+      - name: pattern
+        in: query
+        schema:
+          type: string
+      - name: size
+        in: query
+        schema:
+          type: integer
+          format: int32
+          default: 10
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+        500:
+          description: Server error
   /api/v1/sectoridentifiers/{inum}:
     delete:
       summary: Delete sector identifier
@@ -1822,20 +1822,6 @@ paths:
                 $ref: '#/components/schemas/GluuServerStatus'
         500:
           description: Server error
-  /api/v1/configuration/smtp/test:
-    get:
-      summary: Test smtp configuration
-      description: Test smtp configuration
-      operationId: testSmtpConfiguration
-      responses:
-        200:
-          description: success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SmtpConfiguration'
-        500:
-          description: Server error
   /api/v1/configuration/smtp:
     get:
       summary: Get smtp configuration
@@ -1870,7 +1856,21 @@ paths:
           description: Not found
         500:
           description: Server error
-  /configuration/system:
+  /api/v1/configuration/smtp/test:
+    get:
+      summary: Test smtp configuration
+      description: Test smtp configuration
+      operationId: testSmtpConfiguration
+      responses:
+        200:
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SmtpConfiguration'
+        500:
+          description: Server error
+  /api/v1/configuration/system:
     get:
       summary: Retrieve system configuration
       description: Retrieve system configuration
@@ -2082,6 +2082,60 @@ paths:
                 type: string
         500:
           description: Server error
+  /api/v1/saml/tr/set_metadata_url/{inum}:
+    post:
+      operationId: setMetadataURL
+      parameters:
+      - name: inum
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          text/plain:
+            schema:
+              type: string
+        required: true
+      responses:
+        200:
+          description: OK
+        500:
+          description: Server error
+  /api/v1/saml/tr/list_all_federations:
+    get:
+      operationId: listAllFederations
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
+        500:
+          description: Server error
+  /api/v1/saml/tr/set_contacts/{inum}:
+    post:
+      summary: set contacts for TrustRelationship
+      description: Find TrustRelationship by inum and set contacts. Contacts parameter
+        is List<TrustContact>
+      operationId: setContacts
+      parameters:
+      - name: inum
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+      responses:
+        200:
+          description: OK
+        500:
+          description: Server error
   /api/v1/saml/tr/set_certificate/{inum}:
     post:
       summary: set certificate for TrustRelationship
@@ -2103,43 +2157,20 @@ paths:
           description: OK
         500:
           description: Server error
-  /api/v1/saml/tr/list_all_saml_trust_relationships:
+  /api/v1/saml/tr/get_contacts/{inum}:
     get:
-      operationId: listAllSAMLTrustRelationships
+      operationId: getContacts
       parameters:
-      - name: size_limit
-        in: query
-        schema:
-          type: integer
-          format: int32
-      responses:
-        200:
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: string
-        500:
-          description: Server error
-  /api/v1/saml/tr/search_trust_relationships:
-    get:
-      operationId: searchTrustRelationships
-      parameters:
-      - name: pattern
-        in: query
+      - name: inum
+        in: path
         required: true
         schema:
           type: string
-      - name: size_limit
-        in: query
-        schema:
-          type: integer
-          format: int32
       responses:
         200:
           description: OK
           content:
-            application/json:
+            text/plain:
               schema:
                 type: string
         500:
@@ -2184,47 +2215,15 @@ paths:
                 type: string
         500:
           description: Server error
-  /api/v1/saml/tr/set_metadata_url/{inum}:
-    post:
-      operationId: setMetadataURL
-      parameters:
-      - name: inum
-        in: path
-        required: true
-        schema:
-          type: string
-      requestBody:
-        content:
-          text/plain:
-            schema:
-              type: string
-        required: true
-      responses:
-        200:
-          description: OK
-        500:
-          description: Server error
-  /api/v1/saml/tr/get_contacts/{inum}:
+  /api/v1/saml/tr/list_all_saml_trust_relationships:
     get:
-      operationId: getContacts
+      operationId: listAllSAMLTrustRelationships
       parameters:
-      - name: inum
-        in: path
-        required: true
+      - name: size_limit
+        in: query
         schema:
-          type: string
-      responses:
-        200:
-          description: OK
-          content:
-            text/plain:
-              schema:
-                type: string
-        500:
-          description: Server error
-  /api/v1/saml/tr/list_all_federations:
-    get:
-      operationId: listAllFederations
+          type: integer
+          format: int32
       responses:
         200:
           description: OK
@@ -2234,26 +2233,27 @@ paths:
                 type: string
         500:
           description: Server error
-  /api/v1/saml/tr/set_contacts/{inum}:
-    post:
-      summary: set contacts for TrustRelationship
-      description: Find TrustRelationship by inum and set contacts. Contacts parameter
-        is List<TrustContact>
-      operationId: setContacts
+  /api/v1/saml/tr/search_trust_relationships:
+    get:
+      operationId: searchTrustRelationships
       parameters:
-      - name: inum
-        in: path
+      - name: pattern
+        in: query
         required: true
         schema:
           type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: string
+      - name: size_limit
+        in: query
+        schema:
+          type: integer
+          format: int32
       responses:
         200:
           description: OK
+          content:
+            application/json:
+              schema:
+                type: string
         500:
           description: Server error
   /api/v1/inbound-saml/trusted-idp/{remoteIdpHost}:
@@ -2424,6 +2424,38 @@ paths:
                 $ref: '#/components/schemas/UmaResource'
         500:
           description: Server error
+  /api/v1/uma/resources/{id}/clients:
+    get:
+      summary: Get clients of UMA resources
+      description: Get clients of uma resource
+      operationId: getUmaResourceClients
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+  /api/v1/uma/resources/{id}/scopes:
+    get:
+      summary: Get UMA resource scopes
+      description: Get scopes of uma resource
+      operationId: getUmaResourceScopes
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
   /api/v1/uma/resources/{id}/scopes/{inum}:
     post:
       summary: Add UMA resource scope
@@ -2473,38 +2505,32 @@ paths:
                 $ref: '#/components/schemas/UmaResource'
         500:
           description: Server error
-  /api/v1/uma/resources/{id}/scopes:
+  /api/v1/uma/resources/search:
     get:
-      summary: Get UMA resource scopes
-      description: Get scopes of uma resource
-      operationId: getUmaResourceScopes
+      summary: Search UMA resources
+      description: Search uma resources
+      operationId: searchUmaResources
       parameters:
-      - name: id
-        in: path
+      - name: pattern
+        in: query
         required: true
         schema:
           type: string
-      responses:
-        default:
-          description: default response
-          content:
-            application/json: {}
-  /api/v1/uma/resources/{id}/clients:
-    get:
-      summary: Get clients of UMA resources
-      description: Get clients of uma resource
-      operationId: getUmaResourceClients
-      parameters:
-      - name: id
-        in: path
+      - name: size
+        in: query
         required: true
         schema:
-          type: string
+          type: integer
+          format: int32
       responses:
-        default:
-          description: default response
+        200:
+          description: Success
           content:
-            application/json: {}
+            application/json:
+              schema:
+                type: string
+        500:
+          description: Server error
   /api/v1/uma/resources:
     get:
       summary: Get UMA resources
@@ -2590,67 +2616,6 @@ paths:
           description: Success
         500:
           description: Server error
-  /api/v1/uma/resources/search:
-    get:
-      summary: Search UMA resources
-      description: Search uma resources
-      operationId: searchUmaResources
-      parameters:
-      - name: pattern
-        in: query
-        required: true
-        schema:
-          type: string
-      - name: size
-        in: query
-        required: true
-        schema:
-          type: integer
-          format: int32
-      responses:
-        200:
-          description: Success
-          content:
-            application/json:
-              schema:
-                type: string
-        500:
-          description: Server error
-  /api/v1/uma/scopes/{inum}:
-    get:
-      summary: Get UMA scope by inum
-      description: Get a uma scope by inum
-      operationId: getUmaScopeByInum
-      parameters:
-      - name: inum
-        in: path
-        required: true
-        schema:
-          type: string
-      responses:
-        200:
-          description: success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Scope'
-        500:
-          description: Server error
-    delete:
-      summary: Delete UMA scope
-      description: Delete a uma scope
-      operationId: deleteUmaScope
-      parameters:
-      - name: inum
-        in: path
-        required: true
-        schema:
-          type: string
-      responses:
-        200:
-          description: success
-        500:
-          description: Server error
   /api/v1/uma/scopes:
     get:
       summary: Get UMA scopes
@@ -2721,11 +2686,11 @@ paths:
                 type: string
         500:
           description: Server error
-  /api/v1/radius/clients/{inum}:
+  /api/v1/uma/scopes/{inum}:
     get:
-      summary: Get radius client by inum
-      description: Get radius client by inum
-      operationId: getRadiusClient
+      summary: Get UMA scope by inum
+      description: Get a uma scope by inum
+      operationId: getUmaScopeByInum
       parameters:
       - name: inum
         in: path
@@ -2734,21 +2699,17 @@ paths:
           type: string
       responses:
         200:
-          description: Success
+          description: success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RadiusClient'
-        403:
-          description: Gluu Radius is not installed
-        404:
-          description: Radius client not found
+                $ref: '#/components/schemas/Scope'
         500:
-          description: Internal server error
+          description: Server error
     delete:
-      summary: Delete radius client
-      description: Deletes a radius client
-      operationId: deleteRadiusClient
+      summary: Delete UMA scope
+      description: Delete a uma scope
+      operationId: deleteUmaScope
       parameters:
       - name: inum
         in: path
@@ -2756,14 +2717,10 @@ paths:
         schema:
           type: string
       responses:
-        204:
-          description: Success
-        403:
-          description: Gluu Radius is not installed
-        404:
-          description: Radius client not found
+        200:
+          description: success
         500:
-          description: Internal server error
+          description: Server error
   /api/v1/radius/clients:
     get:
       summary: Get all radius clients
@@ -2824,6 +2781,49 @@ paths:
           description: Malformed request. Missing parameter
         403:
           description: Gluu Radius is not installed
+        500:
+          description: Internal server error
+  /api/v1/radius/clients/{inum}:
+    get:
+      summary: Get radius client by inum
+      description: Get radius client by inum
+      operationId: getRadiusClient
+      parameters:
+      - name: inum
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RadiusClient'
+        403:
+          description: Gluu Radius is not installed
+        404:
+          description: Radius client not found
+        500:
+          description: Internal server error
+    delete:
+      summary: Delete radius client
+      description: Deletes a radius client
+      operationId: deleteRadiusClient
+      parameters:
+      - name: inum
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        204:
+          description: Success
+        403:
+          description: Gluu Radius is not installed
+        404:
+          description: Radius client not found
         500:
           description: Internal server error
   /api/v1/radius/settings:
@@ -2998,19 +2998,19 @@ components:
           $ref: '#/components/schemas/AttributeValidation'
         gluuTooltip:
           type: string
-        adminCanEdit:
-          type: boolean
-        userCanEdit:
-          type: boolean
         userCanAccess:
           type: boolean
         adminCanAccess:
           type: boolean
+        whitePagesCanView:
+          type: boolean
+        adminCanEdit:
+          type: boolean
         adminCanView:
           type: boolean
-        userCanView:
+        userCanEdit:
           type: boolean
-        whitePagesCanView:
+        userCanView:
           type: boolean
         baseDn:
           type: string
@@ -3978,6 +3978,7 @@ components:
           type: string
           enum:
           - person_authentication
+          - authorization_challenge
           - introspection
           - resource_owner_password_credentials
           - application_session
@@ -4000,6 +4001,7 @@ components:
           - persistence_extension
           - idp
           - update_token
+          - fido2_extension
         programmingLanguage:
           type: string
           enum:
@@ -4143,6 +4145,24 @@ components:
           type: string
         shibboleth3FederationRootDir:
           type: string
+    ConnectionStatusDTO:
+      type: object
+      properties:
+        up:
+          type: boolean
+    LdapConnectionData:
+      type: object
+      properties:
+        bindDN:
+          type: string
+        bindPassword:
+          type: string
+        servers:
+          type: array
+          items:
+            type: string
+        useSSL:
+          type: boolean
     LdapConfigurationDTO:
       type: object
       properties:
@@ -4180,24 +4200,6 @@ components:
         level:
           type: integer
           format: int32
-    ConnectionStatusDTO:
-      type: object
-      properties:
-        up:
-          type: boolean
-    LdapConnectionData:
-      type: object
-      properties:
-        bindDN:
-          type: string
-        bindPassword:
-          type: string
-        servers:
-          type: array
-          items:
-            type: string
-        useSSL:
-          type: boolean
     MetricConfig:
       type: object
       properties:
@@ -4210,6 +4212,9 @@ components:
         metricReporterEnabled:
           type: boolean
     AuthenticationFilter:
+      required:
+      - baseDn
+      - filter
       type: object
       properties:
         filter:
@@ -4218,8 +4223,12 @@ components:
           type: boolean
         bindPasswordAttribute:
           type: string
+          xml:
+            name: bind-password-attribute
         baseDn:
           type: string
+          xml:
+            name: base-dn
     AuthenticationProtectionConfiguration:
       type: object
       properties:
@@ -4234,22 +4243,54 @@ components:
           format: int32
         bruteForceProtectionEnabled:
           type: boolean
+    CIBAEndUserNotificationConfig:
+      type: object
+      properties:
+        apiKey:
+          type: string
+        authDomain:
+          type: string
+        databaseURL:
+          type: string
+        projectId:
+          type: string
+        storageBucket:
+          type: string
+        messagingSenderId:
+          type: string
+        appId:
+          type: string
+        notificationUrl:
+          type: string
+        notificationKey:
+          type: string
+        publicVapidKey:
+          type: string
     ClientAuthenticationFilter:
+      required:
+      - baseDn
+      - filter
       type: object
       properties:
         filter:
           type: string
         bind:
-          type: string
+          type: boolean
         bindPasswordAttribute:
           type: string
+          xml:
+            name: bind-password-attribute
         baseDn:
           type: string
+          xml:
+            name: base-dn
     CorsConfigurationFilter:
       type: object
       properties:
         filterName:
           type: string
+        corsEnabled:
+          type: boolean
         corsAllowedOrigins:
           type: string
         corsAllowedMethods:
@@ -4266,29 +4307,6 @@ components:
           type: integer
           format: int32
         corsRequestDecorate:
-          type: boolean
-    Fido2Configuration:
-      type: object
-      properties:
-        authenticatorCertsFolder:
-          type: string
-        mdsCertsFolder:
-          type: string
-        mdsTocsFolder:
-          type: string
-        serverMetadataFolder:
-          type: string
-        checkU2fAttestations:
-          type: boolean
-        userAutoEnrollment:
-          type: boolean
-        unfinishedRequestExpiration:
-          type: integer
-          format: int32
-        authenticationHistoryExpiration:
-          type: integer
-          format: int32
-        disableFido2:
           type: boolean
     OxAuthJsonConfiguration:
       type: object
@@ -4323,32 +4341,102 @@ components:
           type: string
         introspectionEndpoint:
           type: string
+        deviceAuthzEndpoint:
+          type: string
+        discoveryCacheLifetimeInMinutes:
+          type: integer
+          format: int32
+        sectorIdentifierCacheLifetimeInMinutes:
+          type: integer
+          format: int32
+        sessionAsJwt:
+          type: boolean
+        forceRopcInAuthorizationEndpoint:
+          type: boolean
         umaConfigurationEndpoint:
           type: string
-        sectorIdentifierEndpoint:
+        umaRptAsJwt:
+          type: boolean
+        umaRptLifetime:
+          type: integer
+          format: int32
+        umaTicketLifetime:
+          type: integer
+          format: int32
+        umaPctLifetime:
+          type: integer
+          format: int32
+        umaResourceLifetime:
+          type: integer
+          format: int32
+        umaAddScopesAutomatically:
+          type: boolean
+        umaValidateClaimToken:
+          type: boolean
+        umaGrantAccessIfNoPolicies:
+          type: boolean
+        umaRestrictResourceToAssociatedClient:
+          type: boolean
+        statEnabled:
+          type: boolean
+        statAuthorizationScope:
           type: string
-        oxElevenGenerateKeyEndpoint:
+        statTimerIntervalInSeconds:
+          type: integer
+          format: int32
+        statWebServiceIntervalLimitInSeconds:
+          type: integer
+          format: int32
+        authorizationChallengeDefaultAcr:
           type: string
-        oxElevenSignEndpoint:
-          type: string
-        oxElevenVerifySignatureEndpoint:
-          type: string
-        oxElevenDeleteKeyEndpoint:
-          type: string
-        oxElevenJwksEndpoint:
-          type: string
+        authorizationChallengeShouldGenerateSession:
+          type: boolean
+        authorizationChallengeSessionLifetimeInSeconds:
+          type: integer
+          format: int32
+        allowSpontaneousScopes:
+          type: boolean
+        spontaneousScopeLifetime:
+          type: integer
+          format: int32
         openidSubAttribute:
           type: string
         responseTypesSupported:
+          uniqueItems: true
           type: array
           items:
+            uniqueItems: true
             type: array
             items:
               type: string
-        grantTypesSupported:
+              enum:
+              - code
+              - token
+              - id_token
+        responseModesSupported:
+          uniqueItems: true
           type: array
           items:
             type: string
+            enum:
+            - query
+            - fragment
+            - form_post
+        grantTypesSupported:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+            enum:
+            - none
+            - authorization_code
+            - implicit
+            - password
+            - client_credentials
+            - refresh_token
+            - urn:ietf:params:oauth:grant-type:uma-ticket
+            - urn:openid:params:grant-type:ciba
+            - urn:ietf:params:oauth:grant-type:device_code
         subjectTypesSupported:
           type: array
           items:
@@ -4411,6 +4499,10 @@ components:
           type: array
           items:
             type: string
+        jwksAlgorithmsSupported:
+          type: array
+          items:
+            type: string
         serviceDocumentation:
           type: string
         claimsLocalesSupported:
@@ -4425,22 +4517,20 @@ components:
           type: array
           items:
             type: string
-        dynamicGrantTypeDefault:
-          type: array
-          items:
-            type: string
         claimsParameterSupported:
           type: boolean
         requestParameterSupported:
           type: boolean
         requestUriParameterSupported:
           type: boolean
+        requestUriHashVerificationEnabled:
+          type: boolean
         requireRequestUriRegistration:
           type: boolean
-        allowPostLogoutRedirectWithoutValidation:
-          type: boolean
-        introspectionAccessTokenMustHaveUmaProtectionScope:
-          type: boolean
+        requestUriBlockList:
+          type: array
+          items:
+            type: string
         opPolicyUri:
           type: string
         opTosUri:
@@ -4457,33 +4547,10 @@ components:
         accessTokenLifetime:
           type: integer
           format: int32
-        umaResourceLifetime:
-          type: integer
-          format: int32
-        sessionAsJwt:
-          type: boolean
-        umaRptLifetime:
-          type: integer
-          format: int32
-        umaTicketLifetime:
-          type: integer
-          format: int32
-        umaPctLifetime:
-          type: integer
-          format: int32
-        umaAddScopesAutomatically:
-          type: boolean
-        umaValidateClaimToken:
-          type: boolean
-        umaGrantAccessIfNoPolicies:
-          type: boolean
-        umaRestrictResourceToAssociatedClient:
-          type: boolean
-        umaKeepClientDuringResourceSetRegistration:
-          type: boolean
-        umaRptAsJwt:
-          type: boolean
         cleanServiceInterval:
+          type: integer
+          format: int32
+        cleanServiceBatchChunkSize:
           type: integer
           format: int32
         keyRegenerationEnabled:
@@ -4494,8 +4561,6 @@ components:
         defaultSignatureAlgorithm:
           type: string
         oxOpenIdConnectVersion:
-          type: string
-        organizationInum:
           type: string
         oxId:
           type: string
@@ -4512,6 +4577,14 @@ components:
           type: boolean
         dynamicRegistrationScopesParamEnabled:
           type: boolean
+        dynamicRegistrationDisableFallbackScopesAssigning:
+          type: boolean
+        dynamicRegistrationPasswordGrantTypeEnabled:
+          type: boolean
+        dynamicRegistrationAllowedPasswordGrantScopes:
+          type: array
+          items:
+            type: string
         dynamicRegistrationCustomObjectClass:
           type: string
         personCustomObjectClassList:
@@ -4522,11 +4595,33 @@ components:
           type: boolean
         persistRefreshTokenInLdap:
           type: boolean
-        authenticationFiltersEnabled:
+        allowPostLogoutRedirectWithoutValidation:
           type: boolean
         invalidateSessionCookiesAfterAuthorizationFlow:
           type: boolean
+        returnClientSecretOnRead:
+          type: boolean
+        rejectJwtWithNoneAlg:
+          type: boolean
+        expirationNotificatorEnabled:
+          type: boolean
+        useNestedJwtDuringEncryption:
+          type: boolean
+        expirationNotificatorMapSizeLimit:
+          type: integer
+          format: int32
+        expirationNotificatorIntervalInSeconds:
+          type: integer
+          format: int32
+        useCacheForAllImplicitFlowObjects:
+          type: boolean
+        authenticationFiltersEnabled:
+          type: boolean
         clientAuthenticationFiltersEnabled:
+          type: boolean
+        clientRegDefaultToCodeFlowWithRefresh:
+          type: boolean
+        grantTypesAndResponseTypesAutofixEnabled:
           type: boolean
         authenticationFilters:
           type: array
@@ -4536,24 +4631,52 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ClientAuthenticationFilter'
-        configurationInum:
-          type: string
+        corsConfigurationFilters:
+          type: array
+          items:
+            $ref: '#/components/schemas/CorsConfigurationFilter'
         sessionIdUnusedLifetime:
           type: integer
           format: int32
         sessionIdUnauthenticatedUnusedLifetime:
           type: integer
           format: int32
-        sessionIdEnabled:
-          type: boolean
         sessionIdPersistOnPromptNone:
           type: boolean
+        sessionIdRequestParameterEnabled:
+          type: boolean
+        changeSessionIdOnAuthentication:
+          type: boolean
+        sessionIdPersistInCache:
+          type: boolean
         sessionIdLifetime:
+          type: integer
+          format: int32
+        serverSessionIdLifetime:
           type: integer
           format: int32
         configurationUpdateInterval:
           type: integer
           format: int32
+        logNotFoundEntityAsError:
+          type: boolean
+        enableClientGrantTypeUpdate:
+          type: boolean
+        dynamicGrantTypeDefault:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+            enum:
+            - none
+            - authorization_code
+            - implicit
+            - password
+            - client_credentials
+            - refresh_token
+            - urn:ietf:params:oauth:grant-type:uma-ticket
+            - urn:openid:params:grant-type:ciba
+            - urn:ietf:params:oauth:grant-type:device_code
         cssLocation:
           type: string
         jsLocation:
@@ -4566,6 +4689,8 @@ components:
         metricReporterKeepDataDays:
           type: integer
           format: int32
+        metricReporterEnabled:
+          type: boolean
         pairwiseIdType:
           type: string
         pairwiseCalculationKey:
@@ -4574,15 +4699,61 @@ components:
           type: string
         shareSubjectIdBetweenClientsWithSameSectorId:
           type: boolean
+        subjectIdentifierBasedOnWholeUriBackwardCompatibility:
+          type: boolean
         webKeysStorage:
           type: string
+          enum:
+          - keystore
+          - pkcs11
         dnName:
           type: string
         keyStoreFile:
           type: string
         keyStoreSecret:
           type: string
+        keySelectionStrategy:
+          type: string
+          enum:
+          - OLDER
+          - NEWER
+          - FIRST
+        keyAlgsAllowedForGeneration:
+          type: array
+          items:
+            type: string
+        oxElevenTestModeToken:
+          type: string
+        oxElevenGenerateKeyEndpoint:
+          type: string
+        oxElevenSignEndpoint:
+          type: string
+        oxElevenVerifySignatureEndpoint:
+          type: string
+        oxElevenDeleteKeyEndpoint:
+          type: string
+        introspectionAccessTokenMustHaveUmaProtectionScope:
+          type: boolean
+        introspectionSkipAuthorization:
+          type: boolean
+        introspectionRestrictBasicAuthnToOwnTokens:
+          type: boolean
         endSessionWithAccessToken:
+          type: boolean
+        cookieDomain:
+          type: string
+        enabledOAuthAuditLogging:
+          type: boolean
+        jmsBrokerURISet:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+        jmsUserName:
+          type: string
+        jmsPassword:
+          type: string
+        allowWildcardRedirectUri:
           type: boolean
         clientWhiteList:
           type: array
@@ -4598,29 +4769,22 @@ components:
           type: boolean
         frontChannelLogoutSessionSupported:
           type: boolean
+        loggingLevel:
+          type: string
+        loggingLayout:
+          type: string
         updateUserLastLogonTime:
           type: boolean
         updateClientAccessTime:
           type: boolean
-        enableClientGrantTypeUpdate:
-          type: boolean
-        corsConfigurationFilters:
-          type: array
-          items:
-            $ref: '#/components/schemas/CorsConfigurationFilter'
         logClientIdOnClientAuthentication:
           type: boolean
         logClientNameOnClientAuthentication:
           type: boolean
-        httpLoggingEnabled:
+        disableJdkLogger:
           type: boolean
-        httpLoggingExludePaths:
-          type: array
-          items:
-            type: object
-        externalLoggerConfiguration:
-          type: string
         authorizationRequestCustomAllowedParameters:
+          uniqueItems: true
           type: array
           items:
             type: string
@@ -4628,20 +4792,117 @@ components:
           type: boolean
         openidScopeBackwardCompatibility:
           type: boolean
-        useCacheForAllImplicitFlowObjects:
-          type: boolean
         disableU2fEndpoint:
           type: boolean
+        useLocalCache:
+          type: boolean
+        fapiCompatibility:
+          type: boolean
+        forceIdTokenHintPrecense:
+          type: boolean
+        rejectEndSessionIfIdTokenExpired:
+          type: boolean
+        allowEndSessionWithUnmatchedSid:
+          type: boolean
+        forceOfflineAccessScopeToEnableRefreshToken:
+          type: boolean
+        errorReasonEnabled:
+          type: boolean
+        removeRefreshTokensForClientOnLogout:
+          type: boolean
+        skipRefreshTokenDuringRefreshing:
+          type: boolean
+        refreshTokenExtendLifetimeOnRotation:
+          type: boolean
+        checkUserPresenceOnRefreshToken:
+          type: boolean
+        consentGatheringScriptBackwardCompatibility:
+          type: boolean
+        introspectionScriptBackwardCompatibility:
+          type: boolean
+        introspectionResponseScopesBackwardCompatibility:
+          type: boolean
+        clientAuthorizationBackwardCompatibility:
+          type: boolean
+        softwareStatementValidationType:
+          type: string
+        softwareStatementValidationClaimName:
+          type: string
         authenticationProtectionConfiguration:
           $ref: '#/components/schemas/AuthenticationProtectionConfiguration'
-        fido2Configuration:
-          $ref: '#/components/schemas/Fido2Configuration'
-        loggingLevel:
-          type: string
         errorHandlingMethod:
           type: string
-        cookieDomain:
+          enum:
+          - internal
+          - remote
+        keepAuthenticatorAttributesOnAcrChange:
+          type: boolean
+        disableAuthnForMaxAgeZero:
+          type: boolean
+        deviceAuthzRequestExpiresIn:
+          type: integer
+          format: int32
+        deviceAuthzTokenPollInterval:
+          type: integer
+          format: int32
+        deviceAuthzResponseTypeToProcessAuthz:
           type: string
+        backchannelClientId:
+          type: string
+        backchannelRedirectUri:
+          type: string
+        backchannelAuthenticationEndpoint:
+          type: string
+        backchannelDeviceRegistrationEndpoint:
+          type: string
+        backchannelTokenDeliveryModesSupported:
+          type: array
+          items:
+            type: string
+        backchannelAuthenticationRequestSigningAlgValuesSupported:
+          type: array
+          items:
+            type: string
+        backchannelUserCodeParameterSupported:
+          type: boolean
+        backchannelBindingMessagePattern:
+          type: string
+        backchannelAuthenticationResponseExpiresIn:
+          type: integer
+          format: int32
+        backchannelAuthenticationResponseInterval:
+          type: integer
+          format: int32
+        backchannelLoginHintClaims:
+          type: array
+          items:
+            type: string
+        cibaEndUserNotificationConfig:
+          $ref: '#/components/schemas/CIBAEndUserNotificationConfig'
+        backchannelRequestsProcessorJobIntervalSec:
+          type: integer
+          format: int32
+        backchannelRequestsProcessorJobChunkSize:
+          type: integer
+          format: int32
+        cibaGrantLifeExtraTimeSec:
+          type: integer
+          format: int32
+        cibaMaxExpirationTimeAllowedSec:
+          type: integer
+          format: int32
+        cibaEnabled:
+          type: boolean
+        return200OnClientRegistration:
+          type: boolean
+        dateFormatterPatterns:
+          type: object
+          additionalProperties:
+            type: string
+        allowBlankValuesInDiscoveryResponse:
+          type: boolean
+        skipAuthenticationFilterOptionsMethod:
+          type: boolean
     AppConfiguration:
       type: object
       properties:
@@ -4866,6 +5127,8 @@ components:
           - OAUTH
           - TEST
           - UMA
+        auditConfigLogsLocation:
+          type: string
         ScimProperties:
           $ref: '#/components/schemas/ScimProperties'
     LocaleSupported:
@@ -5265,21 +5528,9 @@ components:
           - "true"
           - inactive
           - active
-        multiValued:
-          type: boolean
         new:
           type: boolean
-        adminCanEdit:
-          type: boolean
-        userCanEdit:
-          type: boolean
-        userCanAccess:
-          type: boolean
-        adminCanAccess:
-          type: boolean
-        adminCanView:
-          type: boolean
-        userCanView:
+        multiValued:
           type: boolean
         stringValues:
           type: array
@@ -5287,6 +5538,18 @@ components:
             type: string
         stringValue:
           type: string
+        userCanAccess:
+          type: boolean
+        adminCanAccess:
+          type: boolean
+        adminCanEdit:
+          type: boolean
+        adminCanView:
+          type: boolean
+        userCanEdit:
+          type: boolean
+        userCanView:
+          type: boolean
     GluuSAMLTrustRelationship:
       required:
       - description
@@ -5384,6 +5647,9 @@ components:
         spLogoutURL:
           pattern: ^$|(^(https?|http)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|])
           type: string
+        spLogoutRedirectUrl:
+          pattern: ^$|(^(https?|http)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|])
+          type: string
         validationLog:
           type: array
           items:
@@ -5399,22 +5665,30 @@ components:
           type: string
         certificate:
           type: string
+        researchBundle:
+          type: boolean
+        mdqFederation:
+          type: boolean
+        entityId:
+          type: string
+        federation:
+          type: boolean
         uniqueGluuEntityId:
           uniqueItems: true
           type: array
           writeOnly: true
           items:
             type: string
-        entityId:
-          type: string
-        federation:
+        uriMetadataSourceType:
           type: boolean
-        researchBundle:
+        mdqMetadataSourceType:
           type: boolean
         specificRelyingPartyConfig:
           type: boolean
         containerFederation:
           $ref: '#/components/schemas/GluuSAMLTrustRelationship'
+        fileMetadataSourceType:
+          type: boolean
         baseDn:
           type: string
       writeOnly: true

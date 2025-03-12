@@ -48,7 +48,7 @@ Follow these steps to integrate an external IDP for inbound SAML:
 
 1. It's not required to check `Request For Email` or `Email linking` unless implementing [custom flow behavior](./passport.md#altering-flow-behavior)
 
-As mentioned earlier in the [introduction to inbound identity](./passport.md#supported-providers), Passport reuses [Passport.js](http://www.passportjs.org/) strategies to integrate a variety of identity provider "flavors". For IDPs, the [passport-saml](https://github.com/bergie/passport-saml/) strategy is used. This strategy is highly customizable via [configuration parameters](https://github.com/bergie/passport-saml/#config-parameter-details), which are specified in the "Provider options" panel.
+As mentioned earlier in the [introduction to inbound identity](./passport.md#supported-providers), Passport reuses [Passport.js](http://www.passportjs.org/) strategies to integrate a variety of identity provider "flavors". For IDPs, the [@node-saml/passport-saml](https://github.com/bergie/passport-saml/) strategy is used. This strategy is highly customizable via [configuration parameters](https://github.com/bergie/passport-saml/#config-parameter-details), which are specified in the "Provider options" panel.
 
 By default, only a small set of parameters for a working setup are shown in the options panel:
 
@@ -56,20 +56,20 @@ By default, only a small set of parameters for a working setup are shown in the 
 - `identifierFormat`: Identifier format to request from IDP
 - `authnRequestBinding`: SAML binding for requesting authentication, only `HTTP-POST` or `HTTP-Redirect` are supported. If not provided, the default is `HTTP-Redirect`
 - `issuer`: `entityID` of Passport as SP (eg. `urn:test:example`). You can use different values or the same across different added IDPs
-- `cert`: The IDP's public PEM-encoded X.509 certificate used to validate incoming SAML responses. Include only the body of the certificate: suppress the `BEGIN CERTIFICATE` and `END CERTIFICATE` lines, any whitespace, and all line breaking characters (new line/carriage return).
+- `idpCert`: The IDP's public PEM-encoded X.509 certificate used to validate incoming SAML responses. Include only the body of the certificate: suppress the `BEGIN CERTIFICATE` and `END CERTIFICATE` lines, any whitespace, and all line breaking characters (new line/carriage return).
 
 !!! Note 
-    Regarding the value of `cert`, if you are using Shibboleth bundled in a Gluu Server instance, visit `https://<remote-gluu-host>/idp/shibboleth` and see the contents of XML tag `KeyDescriptor` where `use="signing"` inside `IDPSSODescriptor` tag.
+    Regarding the value of `idpCert`, if you are using Shibboleth bundled in a Gluu Server instance, visit `https://<remote-gluu-host>/idp/shibboleth` and see the contents of XML tag `KeyDescriptor` where `use="signing"` inside `IDPSSODescriptor` tag.
 
 ![saml_provider](../img/user-authn/passport/saml_provider.png)
 
 #### Supply extra properties if needed
 
-Add other properties you might consider relevant. For details on this topic you can check `passport-saml` repo [documentation](https://github.com/bergie/passport-saml/#config-parameter-details). If not specified, the following properties will be added by default:
+Add other properties you might consider relevant. For details on this topic you can check `@node-saml/passport-saml` repo [documentation](https://github.com/bergie/passport-saml/#config-parameter-details). If not specified, the following properties will be added by default:
 
 |Property|Value|Description|
 |-|-|-|
-|validateInResponseTo|true|More info [here](https://github.com/bergie/passport-saml/#config-parameter-details)|
+|validateInResponseTo|`never`|More info [here](https://github.com/bergie/passport-saml/#config-parameter-details)|
 |requestIdExpirationPeriodMs|3600000|More info [here](https://github.com/bergie/passport-saml/#config-parameter-details)|
 |decryptionPvk|Contents of /etc/certs/passport-sp.key|Private key that will be used to attempt to decrypt any encrypted assertions received|
 |decryptionCert|Contents of /etc/certs/passport-sp.crt|Public certificate matching `decryptionPvk`|
@@ -80,7 +80,7 @@ In case you are interested in signing the authentication requests, you can suppl
 
 #### Cache Provider configuration
 
-When `validateInResponseTo` is set to `true`, a simple in-memory cache is used to store the IDs of the SAML requests sent by Passport. Then the `InResponseTo` of SAML responses are validated against the cache. Check [here](https://github.com/bergie/passport-saml/#cache-provider) to learn more. 
+When `validateInResponseTo` is set to `always`, a simple in-memory cache is used to store the IDs of the SAML requests sent by Passport. Then the `InResponseTo` of SAML responses are validated against the cache. Check [here](https://github.com/bergie/passport-saml/#cache-provider) to learn more. 
 
 This cache can lead to validation errors in the case of a Gluu cluster setup if no sticky sessions are in place for passport. To account for this scenario, we provide means so that a Redis or memcached can be used for this purposes. In most cases, a clustered Gluu installation already leverages a memcached or Redis cache, so we can reuse it here. 
 
