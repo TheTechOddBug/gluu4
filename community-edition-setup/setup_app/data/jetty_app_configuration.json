@@ -56,7 +56,7 @@
       "ratio": 0.1
     },
     "jetty": {
-      "modules": "server,ee8-deploy,resources,http,http-forwarded,console-capture,ee8-jsp"
+      "modules": "server,ee8-deploy,resources,http,http-forwarded,console-capture,ee8-jsp,ee8-cdi-decorate"
     },
     "installed": false,
     "name": "casa"
