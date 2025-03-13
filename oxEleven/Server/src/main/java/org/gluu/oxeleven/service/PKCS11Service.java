@@ -89,23 +89,17 @@ public class PKCS11Service implements Serializable {
 
     public void init(String pin, Map<String, String> pkcs11Config) throws KeyStoreException, CertificateException, NoSuchAlgorithmException, IOException {
     	this.provider = createProvider(pkcs11Config);
+        Security.addProvider(provider);
         
         this.pin = pin.toCharArray();
 
-        Provider installedProvider = Security.getProvider(provider.getName());
+        Provider installedProvider = Security.getProvider(BouncyCastleProvider.PROVIDER_NAME);
         if (installedProvider == null) {
-            Security.addProvider(provider);
-        } else {
-            provider = installedProvider;
+            Security.addProvider(new BouncyCastleProvider());
         }
 
         keyStore = KeyStore.getInstance("PKCS11", provider);
         keyStore.load(null, this.pin);
-
-        installedProvider = Security.getProvider(BouncyCastleProvider.PROVIDER_NAME);
-        if (installedProvider == null) {
-            Security.addProvider(new BouncyCastleProvider());
-        }
     }
 
 	private Provider createProvider(Map<String, String> pkcs11Config) {
