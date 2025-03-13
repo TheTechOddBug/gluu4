@@ -5,7 +5,6 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>uma-rs-resteasy</artifactId>
     <packaging>jar</packaging>
-    <version>4.5.9-SNAPSHOT</version>
     <name>UMA RS Resteasy</name>
     <url>https://www.gluu.org</url>
 

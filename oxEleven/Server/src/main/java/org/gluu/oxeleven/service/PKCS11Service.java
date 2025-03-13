@@ -6,12 +6,12 @@
 
 package org.gluu.oxeleven.service;
 
-import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
+import java.nio.file.Files;
 import java.security.AlgorithmParameters;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -25,6 +25,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.Provider;
+import java.security.ProviderException;
 import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.security.Security;
@@ -42,6 +43,7 @@ import java.security.spec.ECPoint;
 import java.security.spec.ECPublicKeySpec;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.InvalidParameterSpecException;
+import java.security.spec.RSAPublicKeySpec;
 import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
@@ -64,9 +66,6 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Strings;
 
-import sun.security.pkcs11.SunPKCS11;
-import sun.security.rsa.RSAPublicKeyImpl;
-
 /**
  * @author Javier Rojas Blum
  * @author Yuriy Movchan
@@ -80,6 +79,7 @@ public class PKCS11Service implements Serializable {
 	private Logger log = LoggerFactory.getLogger(PKCS11Service.class);
 
     public static final String UTF8_STRING_ENCODING = "UTF-8";
+    private static final String SUN_PKCS11_PROVIDER = "SunPKCS11";
 
     private Provider provider;
     private KeyStore keyStore;
@@ -88,39 +88,56 @@ public class PKCS11Service implements Serializable {
     public PKCS11Service() {}
 
     public void init(String pin, Map<String, String> pkcs11Config) throws KeyStoreException, CertificateException, NoSuchAlgorithmException, IOException {
+    	this.provider = createProvider(pkcs11Config);
+        Security.addProvider(provider);
+        
         this.pin = pin.toCharArray();
-        this.provider = new SunPKCS11(getTokenCfg(pkcs11Config));
 
-        Provider installedProvider = Security.getProvider(provider.getName());
+        Provider installedProvider = Security.getProvider(BouncyCastleProvider.PROVIDER_NAME);
         if (installedProvider == null) {
-            Security.addProvider(provider);
-        } else {
-            provider = installedProvider;
+            Security.addProvider(new BouncyCastleProvider());
         }
 
         keyStore = KeyStore.getInstance("PKCS11", provider);
         keyStore.load(null, this.pin);
-
-        installedProvider = Security.getProvider(BouncyCastleProvider.PROVIDER_NAME);
-        if (installedProvider == null) {
-            Security.addProvider(new BouncyCastleProvider());
-        }
     }
 
-    private static InputStream getTokenCfg(Map<String, String> pkcs11Config) {
-        StringBuilder sb = new StringBuilder();
+	private Provider createProvider(Map<String, String> pkcs11Config) {
+		try {
+			Provider provider = Security.getProvider(SUN_PKCS11_PROVIDER);
+			if (provider == null) {
+				throw new ProviderException("PKCS11 provider not available");
+			}
+			return provider.configure(writeTempFile(serializeConfiguration(pkcs11Config)));
+		} catch (IOException e) {
+			throw new ProviderException("Cannot configure PKCS11 provider", e);
+		}
+	}
 
-        for (Map.Entry<String, String> entry : pkcs11Config.entrySet()) {
-            String key = entry.getKey();
-            String value = entry.getValue();
+	private String serializeConfiguration(Map<String, String> pkcs11Config) {
+		StringBuilder sb = new StringBuilder();
 
-            sb.append(key).append("=").append(value).append("\n");
-        }
+		for (Map.Entry<String, String> entry : pkcs11Config.entrySet()) {
+			String key = entry.getKey();
+			String value = entry.getValue();
 
-        String cfg = sb.toString();
+			sb.append(key).append("=").append(value).append("\n");
+		}
 
-        return new ByteArrayInputStream(cfg.getBytes());
-    }
+		return sb.toString();
+	}
+
+	@SuppressWarnings("unused")
+	private String serializeConfiguration(String name, String nativeLibraryPath, Integer slotId) {
+		String newLine = System.getProperty("line.separator");
+		StringBuilder config = new StringBuilder().append("name = ").append(name).append(newLine).append("library = ")
+				.append(nativeLibraryPath).append(newLine);
+		if (slotId != null) {
+			config.append("slot = ").append(slotId).append(newLine);
+		}
+		return config.toString();
+	}
+
 
     public String generateKey(String dnName, SignatureAlgorithm signatureAlgorithm, Long expirationTime)
             throws NoSuchAlgorithmException, InvalidAlgorithmParameterException, CertificateException,
@@ -234,9 +251,9 @@ public class PKCS11Service implements Serializable {
                 SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.fromName(key.getAlg());
                 if (signatureAlgorithm != null) {
                     if (signatureAlgorithm.getFamily().equals(SignatureAlgorithmFamily.RSA)) {
-                        publicKey = new RSAPublicKeyImpl(
-                                new BigInteger(1, Base64Util.base64UrlDecode(key.getN())),
-                                new BigInteger(1, Base64Util.base64UrlDecode(key.getE())));
+                        publicKey = convertUncompressedPointToRSAKey(
+                                Base64Util.base64UrlDecode(key.getN()),
+                                Base64Util.base64UrlDecode(key.getE()));
                     } else if (signatureAlgorithm.getFamily().equals(SignatureAlgorithmFamily.EC)) {
                         AlgorithmParameters parameters = AlgorithmParameters.getInstance(SignatureAlgorithmFamily.EC);
                         parameters.init(new ECGenParameterSpec(signatureAlgorithm.getCurve().getAlias()));
@@ -255,6 +272,14 @@ public class PKCS11Service implements Serializable {
         return publicKey;
     }
 
+    private PublicKey convertUncompressedPointToRSAKey(byte[] rsaKey_n, byte[] rsaKey_e) throws NoSuchAlgorithmException, InvalidKeySpecException {
+        BigInteger n = new BigInteger(1, rsaKey_n);
+        BigInteger e = new BigInteger(1, rsaKey_e);
+        RSAPublicKeySpec publicKeySpec = new RSAPublicKeySpec(n, e);
+        final KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+        return keyFactory.generatePublic(publicKeySpec);
+    }
+    
     public PublicKey getPublicKey(String alias) {
         PublicKey publicKey = null;
 
@@ -322,6 +347,13 @@ public class PKCS11Service implements Serializable {
         return chain;
     }
 
+
+	private String writeTempFile(String contents) throws IOException {
+		File file = File.createTempFile("pkcs11-conf", null);
+		file.deleteOnExit();
+		Files.writeString(file.toPath(), contents);
+		return file.getAbsolutePath();
+	}
 
     /*public X509Certificate generateV3Certificate(KeyPair keyPair, String issuer, SignatureAlgorithm signatureAlgorithm, Long expirationTime) throws CertIOException, OperatorCreationException, CertificateException {
         PrivateKey privateKey = keyPair.getPrivate();
