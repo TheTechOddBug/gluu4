@@ -52,8 +52,9 @@ public interface IGroupService {
 	 * @param inum
 	 *            Group Inum
 	 * @return Group
+	 * @throws Exception 
 	 */
-	public abstract GluuGroup getGroupByInum(String inum);
+	public abstract GluuGroup getGroupByInum(String inum) throws Exception;
 
 	/**
 	 * Build DN string for group
