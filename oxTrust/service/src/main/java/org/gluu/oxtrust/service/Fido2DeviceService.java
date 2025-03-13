@@ -13,6 +13,7 @@ import org.gluu.oxtrust.model.GluuFido2Device;
 import org.gluu.oxtrust.util.OxTrustConstants;
 import org.gluu.persist.PersistenceEntryManager;
 import org.gluu.persist.exception.EntryPersistenceException;
+import org.gluu.persist.exception.operation.SearchException;
 import org.gluu.search.filter.Filter;
 import org.gluu.util.StringHelper;
 import org.slf4j.Logger;
@@ -65,7 +66,7 @@ public class Fido2DeviceService implements Serializable {
 		}
 	}
 
-	public GluuFido2Device getFido2DeviceById(String userId, String id) {
+	public GluuFido2Device getFido2DeviceById(String userId, String id) throws Exception {
 		GluuFido2Device f2d = null;
 		try {
 			String dn = getDnForFido2Device(id, userId);
@@ -76,7 +77,11 @@ public class Fido2DeviceService implements Serializable {
 				f2d = ldapEntryManager.findEntries(dn, GluuFido2Device.class, filter).get(0);
 			}
 		} catch (Exception e) {
-			log.error("Failed to find Fido 2 device with id " + id, e);
+            if (!SearchException.class.isInstance(e.getCause())) {
+                log.error(e.getMessage(), e.getCause());
+                throw e;
+            }
+            log.debug("Failed to find Fido 2 device with id {}", id);
 		}
 		return f2d;
 
