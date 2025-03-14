@@ -1073,7 +1073,7 @@ public class UpdatePersonAction implements Serializable {
 		return obj;
 	}
 
-	public void fetchFidoRecord(String id) {
+	public void fetchFidoRecord(String id) throws Exception {
 		this.fidoDevice = fidoDeviceService.getGluuCustomFidoDeviceById(this.person.getInum(), id);
 		if (this.fidoDevice.getDeviceData() != null) {
 			this.deviceDetail = getDeviceata(this.fidoDevice.getDeviceData());
