@@ -61,19 +61,19 @@ class JettyInstaller(BaseInstaller, SetupUtils):
 
         # extroct/copy ee8-cdi modules. Remove these after jetty package includes them
         base.extract_subdir(
-            os.path.join(Config.distAppFolder, 'jetty-ee8-cdi-12.0.16-config.jar'),
+            os.path.join(Config.distAppFolder, 'jetty-ee8-cdi-12.0.17-config.jar'),
             "modules",
             os.path.join(self.jetty_home, 'modules'),
             par_dir=''
             )
         base.extract_subdir(
-            os.path.join(Config.distAppFolder, 'jetty-ee8-cdi-12.0.16-config.jar'),
+            os.path.join(Config.distAppFolder, 'jetty-ee8-cdi-12.0.17-config.jar'),
             "etc",
             os.path.join(self.jetty_home, 'etc'),
             par_dir=''
             )
         self.copyFile(
-            os.path.join(Config.distAppFolder, 'jetty-ee8-cdi-12.0.16.jar'),
+            os.path.join(Config.distAppFolder, 'jetty-ee8-cdi-12.0.17.jar'),
             os.path.join(self.jetty_home, 'lib')
             )
         ###########################################################################
