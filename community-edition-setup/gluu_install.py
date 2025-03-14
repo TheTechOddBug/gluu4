@@ -396,8 +396,8 @@ if not argsp.u:
 
 
     # delete these downloads when jetty package includes them
-    download('https://ox.gluu.org/icrby8xcvbcv/maven/jetty-ee8-cdi-12.0.16-config.jar', os.path.join(app_dir, 'jetty-ee8-cdi-12.0.16-config.jar'))
-    download('https://ox.gluu.org/icrby8xcvbcv/maven/jetty-ee8-cdi-12.0.16.jar', os.path.join(app_dir, 'jetty-ee8-cdi-12.0.16.jar'))
+    download('https://ox.gluu.org/icrby8xcvbcv/maven/jetty-ee8-cdi-12.0.16-config.jar', os.path.join(app_dir, 'jetty-ee8-cdi-12.0.17-config.jar'))
+    download('https://ox.gluu.org/icrby8xcvbcv/maven/jetty-ee8-cdi-12.0.16.jar', os.path.join(app_dir, 'jetty-ee8-cdi-12.0.17.jar'))
     #########################################################
 
 shutil.copy(os.path.join(gluu_app_dir, 'facter'), '/usr/bin')
