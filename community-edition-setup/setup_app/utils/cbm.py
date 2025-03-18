@@ -4,6 +4,8 @@ import urllib3
 import logging
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+requests.adapters.DEFAULT_RETRIES = 3
+
 from requests.auth import HTTPBasicAuth
 from setup_app.utils.base import logIt
 
@@ -37,7 +39,7 @@ class CBM:
         api = os.path.join(self.api_root, endpoint)
         logging.info('getting %s', endpoint)
         try:
-            result = requests.get(api, auth=self.auth, verify=False)
+            result = requests.get(api, auth=self.auth, verify=False, timeout=2)
         except Exception as e:
             result = FakeResult()
             result.reason = 'Connection failed. Reason: ' + str(e)
@@ -47,22 +49,21 @@ class CBM:
     def _delete(self, endpoint):
         logging.info('deleting %s', endpoint)
         api = os.path.join(self.api_root, endpoint)
-        result = requests.delete(api, auth=self.auth, verify=False)
+        result = requests.delete(api, auth=self.auth, verify=False, timeout=2)
         self.logIfError(result)
         return result
-
 
     def _post(self, endpoint, data):
         logging.info('posting %s to %s', data, endpoint)
         url = os.path.join(self.api_root, endpoint)
-        result = requests.post(url, data=data, auth=self.auth, verify=False)
+        result = requests.post(url, data=data, auth=self.auth, verify=False, timeout=2)
         self.logIfError(result)
         return result
-    
+
     def _put(self,  endpoint, data):
         logging.info('putting %s to %s', data, endpoint)
         url = os.path.join(self.api_root, endpoint)
-        result = requests.put(url, data=data, auth=self.auth, verify=False)
+        result = requests.put(url, data=data, auth=self.auth, verify=False, timeout=2)
         self.logIfError(result)
         return result
 
@@ -73,7 +74,7 @@ class CBM:
         return {}
 
     def get_buckets(self):
-        
+
         return self._get('pools/default/buckets')
 
 
