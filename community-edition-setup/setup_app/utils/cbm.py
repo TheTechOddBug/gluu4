@@ -115,7 +115,7 @@ class CBM:
     def exec_query(self, query):
         logging.info("Executing n1ql %s", query)
         data = {'statement': query}
-        result = requests.post(self.n1ql_api, data=data, auth=self.auth, verify=False)
+        result = session.post(self.n1ql_api, data=data, auth=self.auth, verify=False)
         self.logIfError(result)
         return result
 
