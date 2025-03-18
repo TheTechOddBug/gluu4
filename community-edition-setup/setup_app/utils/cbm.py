@@ -4,8 +4,19 @@ import urllib3
 import logging
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
 from requests.auth import HTTPBasicAuth
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
+
 from setup_app.utils.base import logIt
+
+session = requests.Session()
+retry = Retry(connect=5, backoff_factor=0.5)
+adapter = HTTPAdapter(max_retries=retry)
+session.mount('http://', adapter)
+session.mount('https://', adapter)
+
 
 try:
     requests.packages.urllib3.disable_warnings()
@@ -37,7 +48,7 @@ class CBM:
         api = os.path.join(self.api_root, endpoint)
         logging.info('getting %s', endpoint)
         try:
-            result = requests.get(api, auth=self.auth, verify=False)
+            result = session.get(api, auth=self.auth, verify=False)
         except Exception as e:
             result = FakeResult()
             result.reason = 'Connection failed. Reason: ' + str(e)
@@ -47,7 +58,7 @@ class CBM:
     def _delete(self, endpoint):
         logging.info('deleting %s', endpoint)
         api = os.path.join(self.api_root, endpoint)
-        result = requests.delete(api, auth=self.auth, verify=False)
+        result = session.delete(api, auth=self.auth, verify=False)
         self.logIfError(result)
         return result
 
@@ -55,14 +66,14 @@ class CBM:
     def _post(self, endpoint, data):
         logging.info('posting %s to %s', data, endpoint)
         url = os.path.join(self.api_root, endpoint)
-        result = requests.post(url, data=data, auth=self.auth, verify=False)
+        result = session.post(url, data=data, auth=self.auth, verify=False)
         self.logIfError(result)
         return result
     
     def _put(self,  endpoint, data):
         logging.info('putting %s to %s', data, endpoint)
         url = os.path.join(self.api_root, endpoint)
-        result = requests.put(url, data=data, auth=self.auth, verify=False)
+        result = session.put(url, data=data, auth=self.auth, verify=False)
         self.logIfError(result)
         return result
 
@@ -73,7 +84,7 @@ class CBM:
         return {}
 
     def get_buckets(self):
-        
+
         return self._get('pools/default/buckets')
 
 
@@ -89,7 +100,7 @@ class CBM:
                 'authType': 'sasl',
                 
                 }
-        
+
         return self._post('pools/default/buckets', data)
 
     def get_certificate(self):
@@ -104,7 +115,7 @@ class CBM:
     def exec_query(self, query):
         logging.info("Executing n1ql %s", query)
         data = {'statement': query}
-        result = requests.post(self.n1ql_api, data=data, auth=self.auth, verify=False)
+        result = session.post(self.n1ql_api, data=data, auth=self.auth, verify=False)
         self.logIfError(result)
         return result
 
