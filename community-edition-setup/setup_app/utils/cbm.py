@@ -4,10 +4,19 @@ import urllib3
 import logging
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-requests.adapters.DEFAULT_RETRIES = 3
 
 from requests.auth import HTTPBasicAuth
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
+
 from setup_app.utils.base import logIt
+
+session = requests.Session()
+retry = Retry(connect=5, backoff_factor=0.5)
+adapter = HTTPAdapter(max_retries=retry)
+session.mount('http://', adapter)
+session.mount('https://', adapter)
+
 
 try:
     requests.packages.urllib3.disable_warnings()
@@ -39,7 +48,7 @@ class CBM:
         api = os.path.join(self.api_root, endpoint)
         logging.info('getting %s', endpoint)
         try:
-            result = requests.get(api, auth=self.auth, verify=False, timeout=2)
+            result = session.get(api, auth=self.auth, verify=False)
         except Exception as e:
             result = FakeResult()
             result.reason = 'Connection failed. Reason: ' + str(e)
@@ -49,21 +58,22 @@ class CBM:
     def _delete(self, endpoint):
         logging.info('deleting %s', endpoint)
         api = os.path.join(self.api_root, endpoint)
-        result = requests.delete(api, auth=self.auth, verify=False, timeout=2)
+        result = session.delete(api, auth=self.auth, verify=False)
         self.logIfError(result)
         return result
+
 
     def _post(self, endpoint, data):
         logging.info('posting %s to %s', data, endpoint)
         url = os.path.join(self.api_root, endpoint)
-        result = requests.post(url, data=data, auth=self.auth, verify=False, timeout=2)
+        result = session.post(url, data=data, auth=self.auth, verify=False)
         self.logIfError(result)
         return result
-
+    
     def _put(self,  endpoint, data):
         logging.info('putting %s to %s', data, endpoint)
         url = os.path.join(self.api_root, endpoint)
-        result = requests.put(url, data=data, auth=self.auth, verify=False, timeout=2)
+        result = session.put(url, data=data, auth=self.auth, verify=False)
         self.logIfError(result)
         return result
 
@@ -90,7 +100,7 @@ class CBM:
                 'authType': 'sasl',
                 
                 }
-        
+
         return self._post('pools/default/buckets', data)
 
     def get_certificate(self):
