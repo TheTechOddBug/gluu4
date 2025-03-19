@@ -1,22 +1,9 @@
 package org.gluu.oxauth.ws.rs;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
-
+import com.google.common.collect.Lists;
 import org.apache.logging.log4j.util.Strings;
 import org.gluu.oxauth.BaseTest;
-import org.gluu.oxauth.client.AuthorizationRequest;
-import org.gluu.oxauth.client.AuthorizationResponse;
-import org.gluu.oxauth.client.AuthorizeClient;
-import org.gluu.oxauth.client.RegisterClient;
-import org.gluu.oxauth.client.RegisterRequest;
-import org.gluu.oxauth.client.RegisterResponse;
+import org.gluu.oxauth.client.*;
 import org.gluu.oxauth.model.common.Prompt;
 import org.gluu.oxauth.model.common.ResponseType;
 import org.gluu.oxauth.model.common.SubjectType;
@@ -30,13 +17,16 @@ import org.gluu.oxauth.page.LoginPage;
 import org.gluu.oxauth.page.PageConfig;
 import org.gluu.oxauth.page.SelectPage;
 import org.json.JSONArray;
-import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
-import com.google.common.collect.Lists;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
+
+import static org.testng.Assert.*;
 
 /**
  * @author Yuriy Zabrovarnyy
@@ -47,7 +37,7 @@ public class SelectAccountHttpTest extends BaseTest {
 
     @BeforeTest
     public void setUp() {
-        driver = new HtmlUnitDriver(true);
+        startSelenium();
         pageConfig = newPageConfig(driver);
     }
 

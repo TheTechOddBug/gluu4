@@ -248,6 +248,7 @@ class TestDataLoader(BaseInstaller, SetupUtils):
                                     'skipRefreshTokenDuringRefreshing': False,
                                     'enabledComponents': ['unknown', 'health_check', 'userinfo', 'clientinfo', 'id_generation', 'registration', 'introspection', 'revoke_token', 'revoke_session', 'end_session', 'status_session', 'gluu_configuration', 'ciba', 'uma', 'u2f', 'device_authz', 'stat'],
                                     'opPolicyUri':'https://test.as.org/policy',
+                                    'opTosUri':'https://www.gluu.org/terms/',
                                     'cleanServiceInterval':7200
                                     }
 
