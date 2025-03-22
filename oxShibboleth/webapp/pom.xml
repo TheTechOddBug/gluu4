@@ -76,7 +76,7 @@
 							<goal>wget</goal>
 						</goals>
 						<configuration>
-							<url>https://shibboleth.net/downloads/identity-provider/${shibboleth.version}/shibboleth-identity-provider-${shibboleth.version}.tar.gz</url>
+							<url>https://shibboleth.net/downloads/identity-provider/latest4/shibboleth-identity-provider-${shibboleth.version}.tar.gz</url>
 							<unpack>true</unpack>
 							<outputDirectory>${project.build.directory}</outputDirectory>
 							<sha256>${shibboleth.dist.sha256}</sha256>

@@ -120,6 +120,11 @@ public class OxAuthReuseResultByAcr implements Predicate<ProfileRequestContext> 
             return true;
         }
 
+        if(gsContext == null) {
+            
+            return authnContext.isForceAuthn();
+        }
+
         final String forceauthnqueryparam = gsContext.getExtraHttpParameter(FORCE_AUTHN_QUERY_PARAM);
         if(forceauthnqueryparam == null) {
 

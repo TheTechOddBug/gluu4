@@ -179,11 +179,9 @@ public class ShibOxAuthAuthServlet extends HttpServlet {
             final ProfileRequestContext prContext = ExternalAuthentication.getProfileRequestContext(flowExecutionKey,request);
             final GluuScratchContext gsContext = prContext.getSubcontext(GluuScratchContext.class);
             if(gsContext != null && gsContext.hasExtraHttpParameter(FORCE_AUTHN_REQUEST_PARAM)) {
-                LOG.info("Force authn parameter");
                 final String forceAuthnParamValue = gsContext.getExtraHttpParameter(FORCE_AUTHN_REQUEST_PARAM);
                 if(forceAuthnParamValue.equals("true")) {
                     force = true;
-                    LOG.info("Force authn parameter is true.");
                 }
             }else {
                 LOG.info("No force authn parameter");
