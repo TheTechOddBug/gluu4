@@ -69,19 +69,19 @@ public class DBDocumentStoreProvider extends DocumentStoreProvider<DBDocumentSto
 	}
 
 	@Override
-	public boolean hasDocument(String DisplayName) {
-		log.debug("Has document: '{}'", DisplayName);
-		if (StringHelper.isEmpty(DisplayName)) {
+	public boolean hasDocument(String displayName) {
+		log.debug("Has document: '{}'", displayName);
+		if (StringHelper.isEmpty(displayName)) {
 			throw new IllegalArgumentException("Specified path should not be empty!");
 		}		
 		OxDocument oxDocument = null;
 		try {
-			oxDocument = documentService.getOxDocumentByDisplayName(DisplayName);
+			oxDocument = documentService.getOxDocumentByDisplayName(displayName);
 			if(oxDocument != null) {
 				return true;
 			}
 		} catch (Exception e) {
-			log.error("Failed to check if path '" + DisplayName + "' exists in repository", e);
+			log.error("Failed to check if path '" + displayName + "' exists in repository", e);
 		}
 
 		return false;
@@ -143,10 +143,11 @@ public class DBDocumentStoreProvider extends DocumentStoreProvider<DBDocumentSto
 			oxDocument.setOxEnabled(true);
 			oxDocument.setOxModuleProperty(moduleList);
 			
-			if(update)
-				documentService.updateOxDocument(oxDocument);				
-			else
+			if (update) {
+				documentService.updateOxDocument(oxDocument);
+			} else {
 				documentService.addOxDocument(oxDocument);
+			}
 			
 			return true;
 		} catch (IOException e) {
@@ -192,6 +193,15 @@ public class DBDocumentStoreProvider extends DocumentStoreProvider<DBDocumentSto
 		log.debug("Rename document: '{}' -> '{}'", currentDisplayName, destinationDisplayName);
 		OxDocument oxDocument;
 		try {
+			// Check and remove destinationDisplayName
+			oxDocument = documentService.getOxDocumentByDisplayName(destinationDisplayName);
+			if (oxDocument != null) {
+				boolean removed = removeDocument(oxDocument.getInum());
+				if (!removed) {
+					return false;
+				}
+			}
+
 			oxDocument = documentService.getOxDocumentByDisplayName(currentDisplayName);
 			if (oxDocument == null) {
 				log.error("Document doesn't Exist with the name  '{}'", currentDisplayName);
