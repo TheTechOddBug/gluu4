@@ -1,0 +1,11 @@
+diff -aurN shibboleth-idp.orig/conf/authn/authn.properties shibboleth-idp/conf/authn/authn.properties
+--- shibboleth-idp.orig/conf/authn/authn.properties	2025-03-26 07:27:23.700173988 +0100
++++ shibboleth-idp/conf/authn/authn.properties	2025-03-26 07:33:35.712948946 +0100
+@@ -243,6 +243,7 @@
+ # Unset if you plan to return full Java Subject from external source
+ idp.authn.oxAuth.addDefaultPrincipals = true
+ idp.authn.oxAuth.reuseCondition = shibboleth.gluu.AuthResultReuseCondition
++#idp.authn.oxAuth.forcedAuthenticationSupported = false
+ idp.authn.oxAuth.supportedPrincipals = \
+     saml2/urn:oasis:names:tc:SAML:2.0:ac:classes:InternetProtocol, \
+     saml2/urn:oasis:names:tc:SAML:2.0:ac:classes:Password, \
