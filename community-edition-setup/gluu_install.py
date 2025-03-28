@@ -394,12 +394,6 @@ if not argsp.u:
     download('https://files.pythonhosted.org/packages/7a/46/8b58d6b8244ff613ecb983b9428d1168dd0b014a34e13fb19737b9ba1fc1/cryptography-39.0.0-cp36-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl', os.path.join(app_dir, 'cryptography.whl'))
     download('https://github.com/jpadilla/pyjwt/archive/refs/tags/2.4.0.zip', os.path.join(app_dir, 'pyjwt.zip'))
 
-
-    # delete these downloads when jetty package includes them
-    download('https://ox.gluu.org/icrby8xcvbcv/maven/jetty-ee8-cdi-12.0.16-config.jar', os.path.join(app_dir, 'jetty-ee8-cdi-12.0.17-config.jar'))
-    download('https://ox.gluu.org/icrby8xcvbcv/maven/jetty-ee8-cdi-12.0.16.jar', os.path.join(app_dir, 'jetty-ee8-cdi-12.0.17.jar'))
-    #########################################################
-
 shutil.copy(os.path.join(gluu_app_dir, 'facter'), '/usr/bin')
 os.chmod('/usr/bin/facter', 33261)
 if not os.path.exists(certs_dir):

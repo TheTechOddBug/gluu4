@@ -58,27 +58,6 @@ class JettyInstaller(BaseInstaller, SetupUtils):
         self.run([paths.cmd_ln, '-sf', jettyDestinationPath, self.jetty_home])
         self.run([paths.cmd_chmod, '-R', "755", "%s/bin/" % jettyDestinationPath])
 
-
-        # extroct/copy ee8-cdi modules. Remove these after jetty package includes them
-        base.extract_subdir(
-            os.path.join(Config.distAppFolder, 'jetty-ee8-cdi-12.0.17-config.jar'),
-            "modules",
-            os.path.join(self.jetty_home, 'modules'),
-            par_dir=''
-            )
-        base.extract_subdir(
-            os.path.join(Config.distAppFolder, 'jetty-ee8-cdi-12.0.17-config.jar'),
-            "etc",
-            os.path.join(self.jetty_home, 'etc'),
-            par_dir=''
-            )
-        self.copyFile(
-            os.path.join(Config.distAppFolder, 'jetty-ee8-cdi-12.0.17.jar'),
-            os.path.join(self.jetty_home, 'lib')
-            )
-        ###########################################################################
-
-
         self.run([paths.cmd_chown, '-R', Config.user_group, jetty_dist])
         self.run([paths.cmd_chown, '-R', Config.user_group, jettyDestinationPath])
         self.run([paths.cmd_chown, '-h', Config.user_group, self.jetty_home])
