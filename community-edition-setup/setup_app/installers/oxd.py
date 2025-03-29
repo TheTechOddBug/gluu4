@@ -58,11 +58,6 @@ class OxdInstaller(SetupUtils, BaseInstaller):
             self.create_service_user(oxd_user)
 
         self.log_dir = '/var/log/oxd-server'
-        service_file = os.path.join(self.oxd_root, 'oxd-server.service')
-        if os.path.exists(service_file):
-            self.run(['cp', service_file, '/lib/systemd/system'])
-        else:
-            self.run([Config.cmd_ln, service_file, '/etc/init.d/oxd-server'])
 
         if not os.path.exists(self.log_dir):
             self.run([paths.cmd_mkdir, self.log_dir])
