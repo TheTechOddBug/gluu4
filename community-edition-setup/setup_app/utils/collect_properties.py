@@ -253,13 +253,11 @@ class CollectProperties(SetupUtils, BaseInstaller):
         if 'keyStoreSecret' in oxAuthConfDynamic:
             Config.oxauth_openid_jks_pass = oxAuthConfDynamic['keyStoreSecret']
 
-
         ssl_subj = self.get_ssl_subject('/etc/certs/httpd.crt')
         Config.countryCode = ssl_subj['C']
         Config.state = ssl_subj['ST']
         Config.city = ssl_subj['L']
-        Config.city = ssl_subj['L']
-         
+
          #this is not good, but there is no way to retreive password from ldap
         if not Config.get('oxtrust_admin_password'):
             if Config.get('ldapPass'):
