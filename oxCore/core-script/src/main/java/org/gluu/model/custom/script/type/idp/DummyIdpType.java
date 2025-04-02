@@ -50,4 +50,10 @@ public class DummyIdpType implements IdpType {
 		return true;
 	}
 
+	@Override
+	public boolean onReuseAuthnResult(Object context, Map<String, SimpleCustomProperty> configurationAttributes) {
+
+		return true;
+	}
+
 }
