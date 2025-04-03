@@ -14,6 +14,8 @@ import net.shibboleth.idp.profile.context.RelyingPartyContext;
 import net.shibboleth.idp.saml.saml2.profile.config.BrowserSSOProfileConfiguration;
 
 import org.gluu.idp.context.GluuScratchContext;
+import org.gluu.idp.script.service.IdpCustomScriptManager;
+import org.gluu.idp.script.service.external.IdpExternalScriptService;
 import org.gluu.orm.util.StringHelper;
 import org.opensaml.messaging.context.navigate.ChildContextLookup;
 import org.opensaml.profile.context.ProfileRequestContext;
@@ -29,12 +31,14 @@ public class OxAuthReuseResultByAcr implements Predicate<ProfileRequestContext> 
 
     private Function<ProfileRequestContext,AuthenticationContext> authnContextLookupStrategy;
     private Function<ProfileRequestContext,GluuScratchContext> gluuScratchContextLookupStrategy;
+    private IdpExternalScriptService externalScriptService;
 
     private static final String OX_AUTH_FLOW_ID  = "authn/oxAuth";
     private static final String FORCE_AUTHN_QUERY_PARAM = "forceAuthn_";
 
-    public OxAuthReuseResultByAcr() {
+    public OxAuthReuseResultByAcr(IdpCustomScriptManager customScriptManager) {
 
+        externalScriptService = customScriptManager.getIdpExternalScriptService();
         authnContextLookupStrategy = new ChildContextLookup<ProfileRequestContext,AuthenticationContext>(AuthenticationContext.class);
         gluuScratchContextLookupStrategy = new ChildContextLookup<>(GluuScratchContext.class);
     }
@@ -67,16 +71,24 @@ public class OxAuthReuseResultByAcr implements Predicate<ProfileRequestContext> 
         String previouslyRequestedAcr = authnResult.getAdditionalData().get(ShibOxAuthAuthServlet.OXAUTH_ACR_REQUESTED);
 
         List<String> requestedAcrs = determineAcrs(profileRequestContext, authnContext);
-        LOG.info("Used ACR {}:{}, requested ACRs: {}",usedAcr,previouslyRequestedAcr,requestedAcrs);
+        LOG.debug("Used ACR {}:{}, requested ACRs: {}",usedAcr,previouslyRequestedAcr,requestedAcrs);
 
         if((requestedAcrs == null) || (requestedAcrs.size() == 0) ) {
             LOG.debug("There are no requested acrs. Re-using authentication result");
+            final ReuseAuthnResultContext scriptctx = new ReuseAuthnResultContext();
+            scriptctx.setUsedAcr(usedAcr);
+            scriptctx.setRequestedAcr(null);
+            externalScriptService.executeOnReuseAuthnResult(scriptctx); 
             return true;
         }
 
         for(String requestedAcr : requestedAcrs) {
             if(StringHelper.equals(usedAcr,requestedAcr) || StringHelper.equals(previouslyRequestedAcr,requestedAcr)) {
                 LOG.debug("Used and requested ACR are the same: {}, Re-using authentication result",usedAcr);
+                final ReuseAuthnResultContext scriptctx = new ReuseAuthnResultContext();
+                scriptctx.setUsedAcr(usedAcr);
+                scriptctx.setRequestedAcr(requestedAcr);
+                externalScriptService.executeOnReuseAuthnResult(scriptctx);
                 return true;
             }
         }
