@@ -78,6 +78,8 @@ public class OxAuthReuseResultByAcr implements Predicate<ProfileRequestContext> 
             final ReuseAuthnResultContext scriptctx = new ReuseAuthnResultContext();
             scriptctx.setUsedAcr(usedAcr);
             scriptctx.setRequestedAcr(null);
+            scriptctx.setProfileRequestContext(profileRequestContext);
+            scriptctx.setAuthenticationContext(authnContext);
             externalScriptService.executeOnReuseAuthnResult(scriptctx); 
             return true;
         }
@@ -88,6 +90,8 @@ public class OxAuthReuseResultByAcr implements Predicate<ProfileRequestContext> 
                 final ReuseAuthnResultContext scriptctx = new ReuseAuthnResultContext();
                 scriptctx.setUsedAcr(usedAcr);
                 scriptctx.setRequestedAcr(requestedAcr);
+                scriptctx.setProfileRequestContext(profileRequestContext);
+                scriptctx.setAuthenticationContext(authnContext);
                 externalScriptService.executeOnReuseAuthnResult(scriptctx);
                 return true;
             }
