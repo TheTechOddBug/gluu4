@@ -4,6 +4,7 @@ import socket
 import ruamel.yaml
 import tempfile
 import pathlib
+import socket
 
 from setup_app import paths
 from setup_app.static import AppType, InstallOption, fapolicyd_rule_tmp
@@ -58,11 +59,6 @@ class OxdInstaller(SetupUtils, BaseInstaller):
             self.create_service_user(oxd_user)
 
         self.log_dir = '/var/log/oxd-server'
-        service_file = os.path.join(self.oxd_root, 'oxd-server.service')
-        if os.path.exists(service_file):
-            self.run(['cp', service_file, '/lib/systemd/system'])
-        else:
-            self.run([Config.cmd_ln, service_file, '/etc/init.d/oxd-server'])
 
         if not os.path.exists(self.log_dir):
             self.run([paths.cmd_mkdir, self.log_dir])
@@ -126,18 +122,23 @@ class OxdInstaller(SetupUtils, BaseInstaller):
         if self.oxd_hostname == 'localhost':
             addr_list.append(lo)
 
-        if 'bind_ip_addresses' in oxd_yaml:
-            oxd_yaml['bind_ip_addresses'] += addr_list
+        try:
+            oxd_ip_addr = socket.gethostbyname(self.oxd_hostname)
+        except Exception as e:
+            self.logIt(f"Can't resolve oxd-hostname {self.oxd_hostname} - {e}")
         else:
-            for i, k in enumerate(oxd_yaml):
-                if k == 'storage':
-                    break
-            else:
-                i = 1
-            
-            if Config.profile == SetupProfiles.DISA_STIG and lo not in addr_list:
-                addr_list.append(lo)
-            oxd_yaml.insert(i, 'bind_ip_addresses',  addr_list)
+            if oxd_ip_addr not in addr_list:
+                addr_list.append(oxd_ip_addr)
+
+        if Config.profile == SetupProfiles.DISA_STIG and lo not in addr_list:
+            addr_list.append(lo)
+
+        if 'bind_ip_addresses' not in oxd_yaml:
+            oxd_yaml['bind_ip_addresses'] = []
+
+        for ba in addr_list:
+            if not ba in oxd_yaml['bind_ip_addresses']:
+                oxd_yaml['bind_ip_addresses'].append(ba)
 
         if Config.get('oxd_use_gluu_storage'):
 
