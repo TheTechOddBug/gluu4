@@ -110,4 +110,33 @@ public class IdpExternalScriptService extends ExternalScriptService {
         return result;
     }
 
+    public boolean executeExternalOnReuseAuthnResult(Object context, CustomScriptConfiguration customScriptConfiguration ) {
+
+        try {
+            log.debug("Execution python 'onReuseAuthnResult' method");
+            IdpType idpType = (IdpType) customScriptConfiguration.getExternalType();
+            Map<String,SimpleCustomProperty> configurationAttributes = customScriptConfiguration.getConfigurationAttributes();
+            return idpType.onReuseAuthnResult(context, configurationAttributes);
+        }catch(Exception ex) {
+            log.error(ex.getMessage(),ex);
+            saveScriptError(customScriptConfiguration.getCustomScript(),ex);
+        }
+
+        return false;
+    }
+
+    public boolean executeOnReuseAuthnResult(Object context) {
+
+        boolean result = true;
+        for (CustomScriptConfiguration customScriptConfiguration: this.customScriptConfigurations) {
+            if(customScriptConfiguration.getExternalType().getApiVersion() > 13 ) {
+                result &= executeExternalOnReuseAuthnResult(context,customScriptConfiguration);
+                if (!result) {
+                    return result;
+                }
+            }
+        }
+        return result;
+    }
+
 }

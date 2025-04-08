@@ -124,3 +124,14 @@ class IdpExtension(IdpType):
             return False
 
         return True
+    
+    # Event handler invoked when the authentication context is re-used 
+    #   context is org.gluu.idp.externalauth.ReuseAuthnResultContext
+    #   configurationAttributes is java.util.Map<String,SimpleCustomProperty>
+    #   minimum required api version is 14 
+    def onReuseAuthnResult(self, context, configurationAttributes):
+        print "Idp extension. Method: onReuseAuthnResult"
+        usedAcr = context.getUsedAcr()
+        requestedAcr = context.getRequestedAcr()
+        print "Idp extension. Method: onReuseAuthnResult. usedAcr '%s', requestedAcr '%s'" % (usedAcr,requestedAcr)
+        return True
