@@ -135,6 +135,11 @@ public class TrustRelationshipWebService extends BaseWebResource {
         logger.info("Read Trust Relationship");
         try {
             GluuSAMLTrustRelationship trustRelationship = trustService.getRelationshipByInum(inum);
+            if (GluuMetadataSourceType.FILE == trustRelationship.getSpMetaDataSourceType()) {
+            	String fileContent = shibboleth3ConfService.readSpMetadataFile(trustRelationship);
+            	trustRelationship.setMetadataStr(fileContent);
+            }
+
             return Response.ok(trustRelationship).build();
         } catch (Exception e) {
             logger.error("read() Exception", e);
@@ -186,9 +191,6 @@ public class TrustRelationshipWebService extends BaseWebResource {
     public Response update(@PathParam("inum") @NotNull String inum, GluuSAMLTrustRelationship trustRelationship) {
         logger.info("Update Trust Relationship");
         try {
-            //String dn = trustService.getDnForTrustRelationShip(inum);
-            //trustRelationship.setDn(dn);
-            //trustService.updateTrustRelationship(trustRelationship);
         	String result = saveTR(trustRelationship);
             if(result.equalsIgnoreCase(OxTrustConstants.RESULT_SUCCESS)) {
             	return Response.ok(trustService.getRelationshipByInum(inum)).build();
@@ -823,7 +825,7 @@ public class TrustRelationshipWebService extends BaseWebResource {
             if (shibboleth3ConfService.isLocalDocumentStoreType()) {
                 File file = new File(filePath);
                 if (!file.exists()) {
-                    logger.debug("The trust relationship {} metadata used local storage but the SP metadata file `{}` was not found",
+                    logger.debug("The trust relationship {} metadata used local storage but the SP metadata file '{}' was not found",
                             trustRelationship.getInum(),filePath);
                     return false;
                 }
@@ -1023,7 +1025,7 @@ public class TrustRelationshipWebService extends BaseWebResource {
                 
                 File file = new File(filePath);
                 if(!file.exists()) {
-                    logger.debug("The trust relationship {} metadata used local storage but the SP metadata file `{}` was not found",
+                    logger.debug("The trust relationship {} metadata used local storage but the SP metadata file '{}' was not found",
                     trustRelationship.getInum(),filePath);
                     return false;
                 }
@@ -1045,8 +1047,7 @@ public class TrustRelationshipWebService extends BaseWebResource {
         if (StringHelper.isNotEmpty(result)) {
             metadataValidationTimer.queue(result);
         } else {
-            //facesMessages.add(FacesMessage.SEVERITY_ERROR,
-              //      "Failed to save SP meta-data file. Please check if you provide correct file");
+            logger.error("Failed to save SP meta-data file '{}' for trust relationship '{}'. Please check if you provide correct file.", spMetadataFileName, trustRelationship.getInum());
         }
         return StringHelper.isNotEmpty(result);
     }
