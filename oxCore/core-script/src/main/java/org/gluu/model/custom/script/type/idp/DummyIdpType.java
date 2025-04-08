@@ -52,7 +52,6 @@ public class DummyIdpType implements IdpType {
 
 	@Override
 	public boolean onReuseAuthnResult(Object context, Map<String, SimpleCustomProperty> configurationAttributes) {
-
 		return true;
 	}
 

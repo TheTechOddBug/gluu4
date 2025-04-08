@@ -79,9 +79,8 @@ public class OxAuthReuseResultByAcr implements Predicate<ProfileRequestContext> 
             scriptctx.setUsedAcr(usedAcr);
             scriptctx.setRequestedAcr(null);
             scriptctx.setProfileRequestContext(profileRequestContext);
-            scriptctx.setAuthenticationContext(authnContext);
-            externalScriptService.executeOnReuseAuthnResult(scriptctx); 
-            return true;
+            scriptctx.setAuthenticationContext(authnContext); 
+            return externalScriptService.executeOnReuseAuthnResult(scriptctx); 
         }
 
         for(String requestedAcr : requestedAcrs) {
@@ -92,8 +91,7 @@ public class OxAuthReuseResultByAcr implements Predicate<ProfileRequestContext> 
                 scriptctx.setRequestedAcr(requestedAcr);
                 scriptctx.setProfileRequestContext(profileRequestContext);
                 scriptctx.setAuthenticationContext(authnContext);
-                externalScriptService.executeOnReuseAuthnResult(scriptctx);
-                return true;
+                return externalScriptService.executeOnReuseAuthnResult(scriptctx);
             }
         }
 
