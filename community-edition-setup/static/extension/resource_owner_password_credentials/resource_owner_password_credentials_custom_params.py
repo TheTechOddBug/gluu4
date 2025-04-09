@@ -7,7 +7,7 @@
 
 from org.gluu.model.custom.script.type.owner import ResourceOwnerPasswordCredentialsType
 from org.gluu.oxauth.service import AuthenticationService, SessionIdService
-from org.gluu.oxauth.model.common import SessionIdState
+from org.gluu.oxauth.model.session import SessionIdState
 from org.gluu.oxauth.security import Identity
 from org.gluu.service.cdi.util import CdiUtil
 from org.gluu.oxauth.model.authorize import AuthorizeRequestParam
