@@ -5,7 +5,7 @@ from java.util import Date , HashMap
 from org.gluu.oxnotify.client import NotifyClientFactory
 
 from org.gluu.model.custom.script.type.owner import ResourceOwnerPasswordCredentialsType
-from org.gluu.oxauth.model.common import SessionIdState
+from org.gluu.oxauth.model.session import SessionIdState
 from org.gluu.oxauth.model.config import ConfigurationFactory, Constants
 from org.gluu.oxauth.security import Identity
 from org.gluu.oxauth.service import AuthenticationService, SessionIdService
