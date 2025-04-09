@@ -43,7 +43,7 @@ class IdpExtension(IdpType):
         return True
 
     def getApiVersion(self):
-        return 13
+        return 14
 
     # Translate attributes from user profile
     #   context is org.gluu.idp.externalauth.TranslateAttributesContext (https://github.com/GluuFederation/shib-oxauth-authn3/blob/master/src/main/java/org/gluu/idp/externalauth/TranslateAttributesContext.java)
@@ -133,5 +133,6 @@ class IdpExtension(IdpType):
         print "Idp extension. Method: onReuseAuthnResult"
         usedAcr = context.getUsedAcr()
         requestedAcr = context.getRequestedAcr()
-        print "Idp extension. Method: onReuseAuthnResult. usedAcr '%s', requestedAcr '%s'" % (usedAcr,requestedAcr)
+        hintedName = context.getAuthenticationContext().getHintedName()
+        print "Idp extension. Method: onReuseAuthnResult. usedAcr '%s', requestedAcr '%s', hintedName '%s'" % (usedAcr, requestedAcr, hintedName)
         return True
