@@ -20,7 +20,13 @@ from datetime import timedelta
 from ipaddress import IPv4Address
 
 from cryptography.hazmat.primitives.ciphers import Cipher
-from cryptography.hazmat.primitives.ciphers import algorithms
+
+try:
+    from cryptography.hazmat.decrepit.ciphers import algorithms
+except ImportError:
+    # deprecated and only available until cryptography v47
+    from cryptography.hazmat.primitives.ciphers import algorithms
+
 from cryptography.hazmat.primitives.ciphers import modes
 from cryptography.hazmat.primitives import padding
 from cryptography.hazmat.backends import default_backend
