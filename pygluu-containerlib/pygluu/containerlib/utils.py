@@ -193,12 +193,10 @@ def get_server_certificate(
     server_hostname = server_hostname or host
 
     with socket.create_connection((host, port)) as conn:
-        # use the default ``PROTOCOL_TLS`` constant
-        context = ssl.SSLContext(ssl.PROTOCOL_TLS)
-
-        # by default, ``SSLContext.options`` only excludes insecure protocols
-        # SSLv2 and SSLv3; hence we need to exclude TLSv1 as well
-        context.options = context.options | ssl.OP_NO_TLSv1 | ssl.OP_NO_TLSv1_1
+        context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+        # we don't need to validate cert at the moment
+        context.check_hostname = False
+        context.verify_mode = ssl.CERT_NONE
 
         with context.wrap_socket(conn, server_hostname=server_hostname) as sock:
             der = sock.getpeercert(True)
