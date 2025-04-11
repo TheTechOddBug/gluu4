@@ -23,6 +23,7 @@
 		<jetty-server.version>12.0.17</jetty-server.version>
 		<richfaces.version>4.5.19-gluu.Final</richfaces.version>
 
+		<jsp-impl.version>9.0.102</jsp-impl.version>
 		<jsf-api.version>2.2.20</jsf-api.version>
 		<jsf-impl.version>2.3.18</jsf-impl.version>
 		<uel-api.version>2.2.1-b04</uel-api.version>
@@ -317,6 +318,11 @@
 				<groupId>org.glassfish.web</groupId>
 				<artifactId>el-impl</artifactId>
 				<version>${uel-impl.version}</version>
+			</dependency>
+			<dependency>
+			    <groupId>org.mortbay.jasper</groupId>
+			    <artifactId>apache-jsp</artifactId>
+			    <version>${jsp-impl.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.sun.faces</groupId>
