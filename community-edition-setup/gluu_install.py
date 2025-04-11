@@ -205,7 +205,7 @@ jetty_home = '/opt/gluu/jetty'
 services = ['casa.service', 'identity.service', 'opendj.service', 'oxauth.service', 'passport.service', 'fido2.service', 'idp.service', 'oxd-server.service', 'scim.service']
 
 jetty_dist_string = 'jetty-distribution'
-if hasattr(argsp, 'jetty_version'):
+if argsp.a and hasattr(argsp, 'jetty_version') and argsp.jetty_version:
     app_versions['JETTY_VERSION'] = argsp.jetty_version
 
 result = re.findall(r'(\d*).', app_versions['JETTY_VERSION'])
