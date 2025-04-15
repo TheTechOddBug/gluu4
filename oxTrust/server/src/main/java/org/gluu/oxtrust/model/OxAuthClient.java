@@ -161,9 +161,6 @@ public class OxAuthClient extends Entry implements Serializable {
 	@AttributeName(name = "oxAuthRequireAuthTime")
 	private Boolean requireAuthTime;
 
-	@AttributeName(name = "oxAuthPostLogoutRedirectURI")
-	private String[] postLogoutRedirectUris;
-
 	@AttributeName(name = "oxClaimRedirectURI")
 	private String[] claimRedirectURI;
 
@@ -563,14 +560,6 @@ public class OxAuthClient extends Entry implements Serializable {
 
 	public void setTokenEndpointAuthMethod(AuthenticationMethod tokenEndpointAuthMethod) {
 		this.tokenEndpointAuthMethod = tokenEndpointAuthMethod;
-	}
-
-	public String[] getPostLogoutRedirectUris() {
-		return postLogoutRedirectUris;
-	}
-
-	public void setPostLogoutRedirectUris(String[] postLogoutRedirectUris) {
-		this.postLogoutRedirectUris = postLogoutRedirectUris;
 	}
 
 	public List<String> getLogoutUri() {
