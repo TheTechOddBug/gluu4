@@ -7,7 +7,7 @@
       "ratio": 0.2
     },
     "jetty": {
-      "modules": "server,resources,http,http-forwarded,threadpool,console-capture,ee8-deploy,ee8-annotations,ee8-jsp,ee8-websocket-javax,ee8-cdi-decorate"
+      "modules": "server,resources,http,http-forwarded,threadpool,console-capture,ee8-deploy,ee8-annotations,ee8-websocket-javax,ee8-cdi-decorate"
     },
     "installed": false,
     "name": "oxauth"
@@ -20,7 +20,7 @@
       "ratio": 0.2
     },
     "jetty": {
-      "modules": "server,resources,http,http-forwarded,threadpool,console-capture,ee8-deploy,ee8-annotations,ee8-jsp,ee8-websocket-javax,ee8-cdi-decorate"
+      "modules": "server,resources,http,http-forwarded,threadpool,console-capture,ee8-deploy,ee8-annotations,ee8-websocket-javax,ee8-cdi-decorate"
     },
     "installed": false,
     "name": "identity"

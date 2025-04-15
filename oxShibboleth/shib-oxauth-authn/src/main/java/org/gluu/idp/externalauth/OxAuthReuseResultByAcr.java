@@ -79,8 +79,8 @@ public class OxAuthReuseResultByAcr implements Predicate<ProfileRequestContext> 
             scriptctx.setUsedAcr(usedAcr);
             scriptctx.setRequestedAcr(null);
             scriptctx.setProfileRequestContext(profileRequestContext);
-            scriptctx.setAuthenticationContext(authnContext); 
-            return externalScriptService.executeOnReuseAuthnResult(scriptctx); 
+            scriptctx.setAuthenticationContext(authnContext);
+            return externalScriptService.executeOnReuseAuthnResult(scriptctx);
         }
 
         for(String requestedAcr : requestedAcrs) {

@@ -740,6 +740,10 @@
 					<artifactId>cdi-api</artifactId>
 				</dependency>
 				<dependency>
+					<groupId>org.mortbay.jasper</groupId>
+					<artifactId>apache-jsp</artifactId>
+				</dependency>
+				<dependency>
 				    <groupId>org.glassfish</groupId>
 				    <artifactId>jakarta.faces</artifactId>
 				</dependency>
@@ -778,7 +782,7 @@
 		            <artifactId>jboss-ejb-api_3.2_spec</artifactId>
 		            <scope>provided</scope>
 		        </dependency>
- 
+
 				<!-- Test: Embedded Jetty -->
 				<dependency>
 					<groupId>org.jboss.arquillian.container</groupId>
@@ -824,7 +828,7 @@
 								</manifest>
 								<manifestEntries>
 									<Implementation-Build>${buildNumber}</Implementation-Build>
-                                    <!--suppress UnresolvedMavenProperty -->
+									<!--suppress UnresolvedMavenProperty -->
                                     <Build-Branch>${git.branch}</Build-Branch>
 								</manifestEntries>
 							</archive>

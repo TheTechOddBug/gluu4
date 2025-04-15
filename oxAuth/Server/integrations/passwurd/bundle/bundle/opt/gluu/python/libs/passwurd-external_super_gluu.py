@@ -1,7 +1,6 @@
 # Based on oxAuth SuperGluuExternalAuthenticator.py
 
 from com.google.android.gcm.server import Sender, Message
-from com.notnoop.apns import APNS
 from java.util import Arrays
 from org.apache.http.params import CoreConnectionPNames
 from org.gluu.service.cdi.util import CdiUtil
@@ -28,6 +27,13 @@ try:
 except ImportError:
     print "Super-Gluu. Load. Failed to load licensing API"
     has_license_api = False
+
+try:
+    from com.notnoop.apns import APNS
+    has_apns = True
+except ImportError:
+    print "Super-Gluu. Load. Native APNS will be disabled. There are missing libs needed to enable it"
+    has_apns = False
 
 import datetime
 import urllib
