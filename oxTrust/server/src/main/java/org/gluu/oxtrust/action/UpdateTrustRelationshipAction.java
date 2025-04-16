@@ -26,6 +26,7 @@ import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -94,6 +95,7 @@ import org.gluu.service.cdi.async.Asynchronous;
 import org.gluu.service.security.Secure;
 import org.gluu.util.StringHelper;
 import org.gluu.util.security.SecurityProviderUtility;
+import org.python.google.common.collect.Lists;
 import org.slf4j.Logger;
 
 import com.onelogin.saml2.model.Organization;
@@ -642,9 +644,9 @@ public class UpdateTrustRelationshipAction implements Serializable {
 
                 }
                 if (updatedLogoutRedirectUris.isEmpty()) {
-                    client.setPostLogoutRedirectUris(null);
+                    client.setOxAuthPostLogoutRedirectURIs(null);
                 } else {
-                    client.setPostLogoutRedirectUris(updatedLogoutRedirectUris.toArray(new String[0]));
+                    client.setOxAuthPostLogoutRedirectURIs(Lists.newArrayList(updatedLogoutRedirectUris));
                 }
                 clientService.updateClient(client);
             }
