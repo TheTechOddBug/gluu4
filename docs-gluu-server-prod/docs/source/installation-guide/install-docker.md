@@ -280,8 +280,8 @@ The following services are available during deployment:
 | `oxshibboleth`      | `SVC_OXSHIBBOLETH`     | no        | no                |
 | `redis`             | `SVC_REDIS`            | no        | no                |
 | `vault` auto-unseal | `SVC_VAULT_AUTOUNSEAL` | no        | no                |
-| `oxd_server`        | `SVC_OXD_SERVER`       | no        | no                |
-| `cr_rotate`         | `SVC_CR_ROTATE`        | no        | no                |
+| `oxd-server`        | `SVC_OXD_SERVER`       | no        | no                |
+| `cr-rotate`         | `SVC_CR_ROTATE`        | no        | no                |
 | `casa`              | `SVC_CASA`             | no        | no                |
 | `scim`              | `SVC_SCIM`             | no        | no                |
 | `fido2`             | `SVC_FIDO2`            | no        | no                |
