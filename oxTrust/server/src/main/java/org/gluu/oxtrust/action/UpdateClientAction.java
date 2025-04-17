@@ -1150,24 +1150,24 @@ public class UpdateClientAction implements Serializable {
 
     private void updateCustomScripts() {
     	if(!this.client.getAttributes().getPostAuthnScripts().contains(customScriptsforPostAuthn)
-    			&&  !customScriptsforPostAuthn.isEmpty()) {
+    			&&  StringHelper.isNotEmpty(customScriptsforPostAuthn)) {
     		this.client.getAttributes().getPostAuthnScripts().add(customScriptsforPostAuthn);
     	}
     	if(!this.client.getAttributes().getRptClaimsScripts().contains(rptClaimsScript)
-    			&&  !rptClaimsScript.isEmpty()) {
+    			&&  StringHelper.isNotEmpty(rptClaimsScript)) {
     		this.client.getAttributes().getRptClaimsScripts().add(rptClaimsScript);
     	}
     	if(!this.client.getAttributes().getConsentGatheringScripts().contains(customScriptsforConsentGather)
-    			&&  !customScriptsforConsentGather.isEmpty()) {
+    			&&  StringHelper.isNotEmpty(customScriptsforConsentGather)) {
     		this.client.getAttributes().getConsentGatheringScripts().add(customScriptsforConsentGather);
     	}
     	if(!this.client.getAttributes().getIntrospectionScripts().contains(introspectionCustomScript)
-    			&&  !introspectionCustomScript.isEmpty()) {
+    			&&  StringHelper.isNotEmpty(introspectionCustomScript)) {
             this.client.getAttributes().getIntrospectionScripts().clear();
     		this.client.getAttributes().getIntrospectionScripts().add(introspectionCustomScript);
     	}
     	if(!this.client.getAttributes().getSpontaneousScopeScriptDns().contains(spontaneousScopeCustomScript)
-    			&&  !spontaneousScopeCustomScript.isEmpty()) {
+    			&&  StringHelper.isNotEmpty(spontaneousScopeCustomScript)) {
     		this.client.getAttributes().getSpontaneousScopeScriptDns().add(spontaneousScopeCustomScript);
     	}
     	
