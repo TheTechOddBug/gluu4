@@ -5453,7 +5453,9 @@
                 "oxAuthUserDN",
                 "creationDate",
                 "oxAuthClientId",
-                "oxAttributes"
+                "oxAttributes",
+                "exp",
+                "del"
             ],
             "must": [
                 "objectclass"
