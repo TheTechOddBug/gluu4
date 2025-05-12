@@ -2,7 +2,7 @@
 version: "2.4"
 
 services:
-  oxd_server:
+  oxd-server:
     image: gluufederation/oxd-server:4.5.9_dev
     environment:
       - GLUU_CONFIG_CONSUL_HOST=consul
@@ -13,8 +13,8 @@ services:
       - GLUU_COUCHBASE_URL=${COUCHBASE_URL}
       - GLUU_COUCHBASE_USER=${COUCHBASE_USER}
       - GLUU_COUCHBASE_BUCKET_PREFIX=${COUCHBASE_BUCKET_PREFIX}
-      - GLUU_OXD_APPLICATION_CERT_CN=oxd_server
-      - GLUU_OXD_ADMIN_CERT_CN=oxd_server
+      - GLUU_OXD_APPLICATION_CERT_CN=oxd-server
+      - GLUU_OXD_ADMIN_CERT_CN=oxd-server
       - GLUU_SQL_DB_DIALECT=${SQL_DB_DIALECT}
       - GLUU_SQL_DB_NAME=${SQL_DB_NAME}
       - GLUU_SQL_DB_HOST=${SQL_DB_HOST}

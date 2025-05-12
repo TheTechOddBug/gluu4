@@ -4257,7 +4257,6 @@
                 "oxPublicKeyIdHash"
             ],
             "oid": "oxAttribute",
-            "substr": "caseIgnoreSubstringsMatch",
             "syntax": "1.3.6.1.4.1.1466.115.121.1.27",
             "x_origin": "Gluu created attribute"
         },
@@ -4316,13 +4315,12 @@
         },
         {
             "desc": "OX code challenge hash",
-            "equality": "caseIgnoreMatch",
-            "substr": "caseIgnoreSubstringsMatch",
+            "equality": "integerMatch",
             "names": [
                 "oxCodeChallengeHash"
             ],
             "oid": "oxAttribute",
-            "syntax": "1.3.6.1.4.1.1466.115.121.1.15",
+            "syntax": "1.3.6.1.4.1.1466.115.121.1.27",
             "x_origin": "Gluu created attribute"
         },
         {
