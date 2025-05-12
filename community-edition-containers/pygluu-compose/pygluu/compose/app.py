@@ -630,11 +630,9 @@ class App:
         curdir = os.getcwd()
         for entry in entries.iterdir():
             dst = os.path.join(curdir, entry.name)
-            if os.path.exists(dst):
-                print(f"[W] Skipping existing {dst}")
-                continue
-            shutil.copy(entry, dst)
-            print(f"[I] Creating new {dst}")
+            if dst.endswith("yaml") or dst.endswith("yml"):
+                shutil.copy(entry, dst)
+                print(f"[I] Creating/updating {dst}")
 
     def check_ports(self):
         """Check whether ports required by the application are available.
