@@ -70,6 +70,7 @@ import org.gluu.orm.util.ArrayHelper;
 import org.gluu.saml.metadata.SAMLMetadataParser;
 import org.gluu.service.MailService;
 import org.gluu.util.StringHelper;
+import org.python.google.common.collect.Lists;
 import org.slf4j.Logger;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -748,9 +749,9 @@ public class TrustRelationshipWebService extends BaseWebResource {
                     }
                 }
                 if(updatedLogoutRedirectUris.isEmpty()){
-                    client.setPostLogoutRedirectUris(null);
+                    client.setOxAuthPostLogoutRedirectURIs(null);
                 }else{
-                    client.setPostLogoutRedirectUris(updatedLogoutRedirectUris.toArray(new String[0]));
+                    client.setOxAuthPostLogoutRedirectURIs((Lists.newArrayList(updatedLogoutRedirectUris)));
                 }
                 clientService.updateClient(client);
             }        

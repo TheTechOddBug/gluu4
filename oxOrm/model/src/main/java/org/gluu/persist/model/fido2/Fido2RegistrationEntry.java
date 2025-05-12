@@ -49,7 +49,7 @@ public class Fido2RegistrationEntry extends Fido2Entry implements Serializable {
     private Fido2DeviceNotificationConf deviceNotificationConf;
 
     @JsonObject
-	@AttributeName(name = "jansDeviceData")
+	@AttributeName(name = "oxDeviceData")
 	private Fido2DeviceData deviceData;
 
     public Fido2RegistrationEntry() {

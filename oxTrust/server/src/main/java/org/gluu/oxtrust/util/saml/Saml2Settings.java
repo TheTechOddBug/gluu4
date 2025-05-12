@@ -1,6 +1,5 @@
 package org.gluu.oxtrust.util.saml;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.cert.X509Certificate;
 
