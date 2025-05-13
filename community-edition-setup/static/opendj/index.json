@@ -117,11 +117,19 @@
     },
 
     {
+        "attribute": "jansStatus",
+        "type": "string",
+        "index": ["equality"],
+        "backend": ["userRoot", "site"]
+    },
+
+    {
         "attribute": "oxState",
         "type": "string",
         "index": ["equality"],
         "backend": ["userRoot"]
     },
+
 
     {
         "attribute": "oxScriptType",
@@ -153,6 +161,13 @@
 
     {
         "attribute": "oxApplication",
+        "type": "string",
+        "index": ["equality"],
+        "backend": ["userRoot"]
+    },
+
+    {
+        "attribute": "jansApp",
         "type": "string",
         "index": ["equality"],
         "backend": ["userRoot"]
@@ -243,7 +258,7 @@
     },
 
     {
-        "attribute": "oxCodeChallenge",
+        "attribute": "jansCodeChallenge",
         "type": "string",
         "index": ["equality"],
         "backend": ["userRoot"]
@@ -257,14 +272,14 @@
     },
 
     {
-        "attribute": "oxCodeChallengeHash",
+        "attribute": "jansCodeChallengeHash",
         "type": "integer",
         "index": ["equality"],
         "backend": ["userRoot"]
     },
 
     {
-        "attribute": "oxPublicKeyId",
+        "attribute": "jansDeviceKeyHandle",
         "type": "string",
         "index": ["equality"],
         "backend": ["userRoot"]
