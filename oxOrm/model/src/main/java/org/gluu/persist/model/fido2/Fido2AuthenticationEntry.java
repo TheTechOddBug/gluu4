@@ -19,17 +19,17 @@ import org.gluu.persist.annotation.ObjectClass;
  * @author Yuriy Movchan
  * @version 11/02/2018
  */
-@ObjectClass(value = "oxFido2AuthenticationEntry")
+@ObjectClass(value = "jansFido2AuthnEntry")
 public class Fido2AuthenticationEntry extends Fido2Entry implements Serializable {
 
     private static final long serialVersionUID = -2242931562244920584L;
 
     @JsonObject
-    @AttributeName(name = "oxAuthenticationData")
+    @AttributeName(name = "jansAuthData")
     private Fido2AuthenticationData authenticationData;
 
     @JsonObject
-    @AttributeName(name = "oxStatus")
+    @AttributeName(name = "jansStatus")
     private Fido2AuthenticationStatus authenticationStatus;
 
     public Fido2AuthenticationEntry() {

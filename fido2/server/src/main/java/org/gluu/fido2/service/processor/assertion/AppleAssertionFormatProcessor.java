@@ -88,7 +88,7 @@ public class AppleAssertionFormatProcessor implements AssertionFormatProcessor {
 	public void process(String base64AuthenticatorData, String signature, String clientDataJson,
 			Fido2RegistrationData registration, Fido2AuthenticationData authenticationEntity) {
 		AuthData authData = authenticatorDataParser.parseAssertionData(base64AuthenticatorData);
-		commonVerifiers.verifyRpIdHash(authData, registration.getDomain());
+		commonVerifiers.verifyRpIdHash(authData, registration.getOrigin());
 
 		log.info("User verification option {}", authenticationEntity.getUserVerificationOption());
 		userVerificationVerifier.verifyUserVerificationOption(authenticationEntity.getUserVerificationOption(),

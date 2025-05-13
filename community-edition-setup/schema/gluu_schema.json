@@ -2480,6 +2480,16 @@
             "x_origin": "Gluu created attribute"
         },
         {
+            "desc": "jansCounter",
+            "equality": "integerMatch",
+            "names": [
+                "jansCounter"
+            ],
+            "oid": "jansAttr",
+            "syntax": "1.3.6.1.4.1.1466.115.121.1.27",
+            "x_origin": "Jans created attribute"
+        },
+        {
             "desc": "oxStatus",
             "equality": "caseIgnoreMatch",
             "names": [
@@ -2491,6 +2501,17 @@
             "x_origin": "Gluu created attribute"
         },
         {
+            "desc": "jansStatus",
+            "equality": "caseIgnoreMatch",
+            "names": [
+                "jansStatus"
+            ],
+            "oid": "jansAttr",
+            "substr": "caseIgnoreSubstringsMatch",
+            "syntax": "1.3.6.1.4.1.1466.115.121.1.15",
+            "x_origin": "Jans created attribute"
+        },
+        {
             "desc": "oxApplication",
             "equality": "caseIgnoreMatch",
             "names": [
@@ -2500,6 +2521,17 @@
             "substr": "caseIgnoreSubstringsMatch",
             "syntax": "1.3.6.1.4.1.1466.115.121.1.15",
             "x_origin": "Gluu created attribute"
+        },
+        {
+            "desc": "jansApp",
+            "equality": "caseIgnoreMatch",
+            "names": [
+                "jansApp"
+            ],
+            "oid": "jansAttr",
+            "substr": "caseIgnoreSubstringsMatch",
+            "syntax": "1.3.6.1.4.1.1466.115.121.1.15",
+            "x_origin": "Jans created attribute"
         },
         {
             "desc": "oxDeviceRegistrationConf",
@@ -2565,6 +2597,17 @@
             "substr": "caseIgnoreSubstringsMatch",
             "syntax": "1.3.6.1.4.1.1466.115.121.1.15",
             "x_origin": "Gluu created attribute"
+        },
+        {
+            "desc": "jansDeviceData",
+            "equality": "caseIgnoreMatch",
+            "names": [
+                "jansDeviceData"
+            ],
+            "oid": "jansAttr",
+            "substr": "caseIgnoreSubstringsMatch",
+            "syntax": "1.3.6.1.4.1.1466.115.121.1.15",
+            "x_origin": "Jans created attribute"
         },
         {
             "desc": "oxEnrollmentCode",
@@ -3706,15 +3749,15 @@
             "x_origin": "Gluu created attribute"
         },
         {
-            "desc": "OX PKCE code challenge",
+            "desc": "Jans PKCE code challenge",
             "equality": "caseIgnoreMatch",
             "names": [
-                "oxCodeChallenge"
+                "jansCodeChallenge"
             ],
-            "oid": "oxAttribute",
+            "oid": "jansAttr",
             "substr": "caseIgnoreSubstringsMatch",
             "syntax": "1.3.6.1.4.1.1466.115.121.1.15",
-            "x_origin": "Gluu created attribute"
+            "x_origin": "Jans created attribute"
         },
         {
             "desc": "OX PKCE code challenge",
@@ -3781,6 +3824,17 @@
             "substr": "caseIgnoreSubstringsMatch",
             "syntax": "1.3.6.1.4.1.1466.115.121.1.15",
             "x_origin": "Gluu created attribute"
+        },
+        {
+            "desc": "jansSessStateId",
+            "equality": "caseIgnoreMatch",
+            "names": [
+                "jansSessStateId"
+            ],
+            "oid": "jansAttr",
+            "substr": "caseIgnoreSubstringsMatch",
+            "syntax": "1.3.6.1.4.1.1466.115.121.1.15",
+            "x_origin": "Jans created attribute"
         },
         {
             "desc": "oxAuth Session DN",
@@ -4054,6 +4108,17 @@
             "x_origin": "Gluu created attribute"
         },
         {
+            "desc": "Extended push notification configuration",
+            "equality": "caseIgnoreMatch",
+            "names": [
+                "jansDeviceNotificationConf"
+            ],
+            "oid": "jansAttr",
+            "substr": "caseIgnoreSubstringsMatch",
+            "syntax": "1.3.6.1.4.1.1466.115.121.1.15",
+            "x_origin": "Jans created attribute"
+        },
+        {
             "desc": "oxAuth Claims",
             "equality": "caseIgnoreMatch",
             "names": [
@@ -4218,47 +4283,47 @@
             "x_origin": "Gluu created attribute"
         },
         {
-            "desc": "oxRegistrationData",
+            "desc": "jansRegistrationData",
             "equality": "caseIgnoreMatch",
             "names": [
-                "oxRegistrationData"
+                "jansRegistrationData"
             ],
-            "oid": "oxAttribute",
+            "oid": "jansAttr",
             "substr": "caseIgnoreSubstringsMatch",
             "syntax": "1.3.6.1.4.1.1466.115.121.1.15",
-            "x_origin": "Gluu created attribute"
+            "x_origin": "Jans created attribute"
         },
         {
-            "desc": "oxAuthenticationData",
+            "desc": "jansAuthData",
             "equality": "caseIgnoreMatch",
             "names": [
-                "oxAuthenticationData"
+                "jansAuthData"
             ],
-            "oid": "oxAttribute",
+            "oid": "jansAttr",
             "substr": "caseIgnoreSubstringsMatch",
             "syntax": "1.3.6.1.4.1.1466.115.121.1.15",
-            "x_origin": "Gluu created attribute"
+            "x_origin": "Jans created attribute"
         },
         {
-            "desc": "oxPublicKeyId",
+            "desc": "jansPublicKeyId",
             "equality": "caseIgnoreMatch",
             "names": [
-                "oxPublicKeyId"
+                "jansPublicKeyId"
             ],
-            "oid": "oxAttribute",
+            "oid": "jansAttr",
             "substr": "caseIgnoreSubstringsMatch",
             "syntax": "1.3.6.1.4.1.1466.115.121.1.15",
-            "x_origin": "Gluu created attribute"
+            "x_origin": "Jans created attribute"
         },
         {
-            "desc": "oxPublicKeyIdHash",
+            "desc": "jansPublicKeyIdHash",
             "equality": "integerMatch",
             "names": [
-                "oxPublicKeyIdHash"
+                "jansPublicKeyIdHash"
             ],
-            "oid": "oxAttribute",
+            "oid": "jansAttr",
             "syntax": "1.3.6.1.4.1.1466.115.121.1.27",
-            "x_origin": "Gluu created attribute"
+            "x_origin": "Jans created attribute"
         },
         {
             "desc": "Lifetime of access token",
@@ -4314,14 +4379,14 @@
             "x_origin": "Gluu created attribute"
         },
         {
-            "desc": "OX code challenge hash",
+            "desc": "Jans code challenge hash",
             "equality": "integerMatch",
             "names": [
-                "oxCodeChallengeHash"
+                "jansCodeChallengeHash"
             ],
-            "oid": "oxAttribute",
+            "oid": "jansAttr",
             "syntax": "1.3.6.1.4.1.1466.115.121.1.27",
-            "x_origin": "Gluu created attribute"
+            "x_origin": "Jans created attribute"
         },
         {
             "desc": "del",
@@ -5974,15 +6039,15 @@
         {
             "kind": "STRUCTURAL",
             "may": [
-                "oxId",
+                "jansId",
                 "creationDate",
-                "oxSessionStateId",
-                "oxCodeChallenge",
-                "oxCodeChallengeHash",
+                "jansApp",
+                "jansSessStateId",
+                "jansCodeChallenge",
+                "jansCodeChallengeHash",
                 "personInum",
-                "oxAuthenticationData",
-                "oxApplication",
-                "oxStatus",
+                "jansAuthData",
+                "jansStatus",
                 "exp",
                 "del"
             ],
@@ -5990,7 +6055,7 @@
                 "objectclass"
             ],
             "names": [
-                "oxFido2AuthenticationEntry"
+                "jansFido2AuthnEntry"
             ],
             "oid": "oxObjectClass",
             "sup": [
@@ -6001,21 +6066,21 @@
         {
             "kind": "STRUCTURAL",
             "may": [
-                "oxId",
+                "jansId",
                 "creationDate",
                 "displayName",
-                "oxApplication",
-                "oxSessionStateId",
-                "oxCodeChallenge",
-                "oxCodeChallengeHash",
-                "oxPublicKeyId",
-                "oxPublicKeyIdHash",
+                "jansApp",
+                "jansSessStateId",
+                "jansCodeChallenge",
+                "jansCodeChallengeHash",
+                "jansPublicKeyId",
+                "jansPublicKeyIdHash",
                 "personInum",
-                "oxRegistrationData",
-                "oxDeviceData",
-                "oxDeviceNotificationConf",
-                "oxCounter",
-                "oxStatus",
+                "jansRegistrationData",
+                "jansDeviceData",
+                "jansDeviceNotificationConf",
+                "jansCounter",
+                "jansStatus",
                 "exp",
                 "del"
             ],
@@ -6023,7 +6088,7 @@
                 "objectclass"
             ],
             "names": [
-                "oxFido2RegistrationEntry"
+                "jansFido2RegistrationEntry"
             ],
             "oid": "oxObjectClass",
             "sup": [

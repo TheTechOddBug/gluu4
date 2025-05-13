@@ -84,7 +84,7 @@ public class TPMAssertionFormatProcessor implements AssertionFormatProcessor {
     public void process(String base64AuthenticatorData, String signature, String clientDataJson, Fido2RegistrationData registration,
                         Fido2AuthenticationData authenticationEntity) {
         AuthData authData = authenticatorDataParser.parseAssertionData(base64AuthenticatorData);
-        commonVerifiers.verifyRpIdHash(authData, registration.getDomain());
+        commonVerifiers.verifyRpIdHash(authData, registration.getOrigin());
 
         log.debug("User verification option {}", authenticationEntity.getUserVerificationOption());
         userVerificationVerifier.verifyUserVerificationOption(authenticationEntity.getUserVerificationOption(), authData);
@@ -103,7 +103,7 @@ public class TPMAssertionFormatProcessor implements AssertionFormatProcessor {
             log.debug("EC Public key hex {}", hexUtilService.encodeHexString(publicKey.getEncoded()));
             // apple algorithm = -7
             // windows hello algorithm is -257
-            int algorithm = registration.getAttenstationRequest().contains(AuthenticatorAttachment.PLATFORM.getAttachment()) ? -257 : registration.getSignatureAlgorithm();
+            int algorithm = registration.getAttestationRequest().contains(AuthenticatorAttachment.PLATFORM.getAttachment()) ? -257 : registration.getSignatureAlgorithm();
             log.debug("registration.getSignatureAlgorithm(): " + registration.getSignatureAlgorithm());
             log.debug("Platform authenticator: " + algorithm);
             authenticatorDataVerifier.verifyAssertionSignature(authData, clientDataHash, signature, publicKey, algorithm);

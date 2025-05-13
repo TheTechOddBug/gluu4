@@ -90,7 +90,7 @@ class NoneAssertionFormatProcessorTest {
         when(coseService.createUncompressedPointFromCOSEPublicKey(any())).thenReturn(publicKey);
         when(publicKey.getEncoded()).thenReturn("test".getBytes());
         when(authenticationEntity.getUserVerificationOption()).thenReturn(UserVerification.preferred);
-        when(registration.getDomain()).thenReturn("domain_test");
+        when(registration.getOrigin()).thenReturn("domain_test");
 
         noneAssertionFormatProcessor.process(base64AuthenticatorData, signature, clientDataJson, registration, authenticationEntity);
 
@@ -117,7 +117,7 @@ class NoneAssertionFormatProcessorTest {
         Fido2AuthenticationData authenticationEntity = mock(Fido2AuthenticationData.class);
 
         when(authenticationEntity.getUserVerificationOption()).thenReturn(UserVerification.preferred);
-        when(registration.getDomain()).thenReturn("domain_test");
+        when(registration.getOrigin()).thenReturn("domain_test");
         when(registration.getCounter()).thenReturn(100);
 
         when(authenticatorDataParser.parseAssertionData(any())).thenReturn(mock(AuthData.class));
@@ -149,7 +149,7 @@ class NoneAssertionFormatProcessorTest {
         Fido2AuthenticationData authenticationEntity = mock(Fido2AuthenticationData.class);
 
         when(authenticationEntity.getUserVerificationOption()).thenReturn(UserVerification.preferred);
-        when(registration.getDomain()).thenReturn("domain_test");
+        when(registration.getOrigin()).thenReturn("domain_test");
         when(registration.getCounter()).thenReturn(100);
         when(registration.getUncompressedECPoint()).thenReturn("uncompressedECPoint_test");
 

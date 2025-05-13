@@ -189,16 +189,16 @@ public class AttestationService {
 		entity.setUsername(username);
 		entity.setUserId(userId);
 		entity.setChallenge(challenge);
-		entity.setDomain(documentDomain);
+		entity.setOrigin(documentDomain);
 		entity.setStatus(Fido2RegistrationStatus.pending);
 		if (params.hasNonNull(CommonVerifiers.SUPER_GLUU_APP_ID)) {
-			entity.setApplicationId(params.get(CommonVerifiers.SUPER_GLUU_APP_ID).asText());
+			entity.setRpId(params.get(CommonVerifiers.SUPER_GLUU_APP_ID).asText());
 		} else {
-			entity.setApplicationId(documentDomain);
+			entity.setRpId(documentDomain);
 		}
 
 		// Store original requests
-		entity.setAttenstationRequest(params.toString());
+		entity.setAttestationRequest(params.toString());
 
 		Fido2RegistrationEntry registrationEntry = registrationPersistenceService.buildFido2RegistrationEntry(entity, oneStep);
 		if (params.hasNonNull("session_id")) {
@@ -253,7 +253,7 @@ public class AttestationService {
 		Fido2RegistrationData registrationData = registrationEntry.getRegistrationData();
 
 		// Verify domain
-		domainVerifier.verifyDomain(registrationData.getDomain(), clientDataJSONNode);
+		domainVerifier.verifyDomain(registrationData.getOrigin(), clientDataJSONNode);
 
 		// Verify authenticator attestation response
 		CredAndCounterData attestationData = attestationVerifier.verifyAuthenticatorAttestationResponse(responseNode,
@@ -277,7 +277,7 @@ public class AttestationService {
         }
 
 		// Store original response
-		registrationData.setAttenstationResponse(params.toString());
+		registrationData.setAttestationResponse(params.toString());
 
 		// Set actual counter value. Note: Fido2 not update initial value in
 		// Fido2RegistrationData to minimize DB updates

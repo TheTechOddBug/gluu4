@@ -85,7 +85,7 @@ public class PackedAssertionFormatProcessor implements AssertionFormatProcessor 
     public void process(String base64AuthenticatorData, String signature, String clientDataJson, Fido2RegistrationData registration,
             Fido2AuthenticationData authenticationEntity) {
         AuthData authData = authenticatorDataParser.parseAssertionData(base64AuthenticatorData);
-        commonVerifiers.verifyRpIdHash(authData, registration.getDomain());
+        commonVerifiers.verifyRpIdHash(authData, registration.getOrigin());
 
         log.debug("User verification option {}", authenticationEntity.getUserVerificationOption());
         userVerificationVerifier.verifyUserVerificationOption(authenticationEntity.getUserVerificationOption(), authData);
@@ -105,8 +105,8 @@ public class PackedAssertionFormatProcessor implements AssertionFormatProcessor 
             // apple algorithm = -7preferred
             // windows hello algorithm is -257
             log.debug("registration.getSignatureAlgorithm(): "+registration.getSignatureAlgorithm());
-            log.debug("Platform authenticator: "+ (registration.getAttenstationRequest().contains(AuthenticatorAttachment.PLATFORM.getAttachment()) ? -7 : registration.getSignatureAlgorithm()));
-            authenticatorDataVerifier.verifyAssertionSignature(authData, clientDataHash, signature, publicKey, registration.getAttenstationRequest().contains(AuthenticatorAttachment.PLATFORM.getAttachment()) ? -7 : registration.getSignatureAlgorithm());
+            log.debug("Platform authenticator: "+ (registration.getAttestationRequest().contains(AuthenticatorAttachment.PLATFORM.getAttachment()) ? -7 : registration.getSignatureAlgorithm()));
+            authenticatorDataVerifier.verifyAssertionSignature(authData, clientDataHash, signature, publicKey, registration.getAttestationRequest().contains(AuthenticatorAttachment.PLATFORM.getAttachment()) ? -7 : registration.getSignatureAlgorithm());
            
         } catch (Fido2CompromisedDevice ex) {
         	throw ex;

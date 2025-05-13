@@ -29,13 +29,13 @@ public class Fido2Entry extends BaseEntry {
 
 	private static final long serialVersionUID = -3122430771066187529L;
 
-    @AttributeName(ignoreDuringUpdate = true, name = "oxId")
+	@AttributeName(ignoreDuringUpdate = true, name = "jansId")
     private String id;
 
-    @AttributeName(name = "oxCodeChallenge")
+    @AttributeName(name = "jansCodeChallenge")
     private String challange;
 
-    @AttributeName(name = "oxCodeChallengeHash")
+    @AttributeName(name = "jansCodeChallengeHash")
     private Integer challengeHash;
 
     @AttributeName(name = "creationDate")
@@ -44,10 +44,10 @@ public class Fido2Entry extends BaseEntry {
     @AttributeName(name = "personInum")
     private String userInum;
 
-	@AttributeName(name = "oxApplication")
+	@AttributeName(name = "jansApp")
 	private String rpId;
 
-    @AttributeName(name = "oxSessionStateId")
+    @AttributeName(name = "jansSessStateId")
     private String sessionStateId;
 
     @AttributeName(name = "exp")
