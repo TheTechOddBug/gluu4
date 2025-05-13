@@ -69,7 +69,7 @@ public class UserService extends org.gluu.oxauth.service.common.UserService {
 
         Filter userInumFilter = Filter.createEqualityFilter("personInum", userInum);
         Filter registeredFilter = Filter.createEqualityFilter("jansStatus", "registered");
-        Filter domainFilter = Filter.createEqualityFilter("jansApplication", domain);
+        Filter domainFilter = Filter.createEqualityFilter("jansApp", domain);
         Filter filter = Filter.createANDFilter(userInumFilter, registeredFilter, domainFilter);
 
         return persistenceEntryManager.countEntries(baseDn, Fido2RegistrationEntry.class, filter);
