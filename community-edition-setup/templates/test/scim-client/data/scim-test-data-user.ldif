@@ -346,16 +346,16 @@ ou: fido2_register
 
 dn: oxId=61a53f4c-07d3-4d3e-84f0-488cdeef5fd2,ou=fido2_register,inum=XXXX.EEEE-1111,ou=people,o=gluu
 objectClass: top
-objectClass: oxFido2RegistrationEntry
+objectClass: jansFido2RegistrationEntry
 creationDate: 20210213122333.811Z
 displayName: Black Fido2 key
-oxCodeChallenge: 6PVFB1E_xkZJJoIJU2wB4ClOOjHQdwmWvpJSU1VFQLA
-oxCodeChallengeHash: 76069
-oxCounter: 0
-oxId: 61a53f4c-07d3-4d3e-84f0-488cdeef5fd2
-oxPublicKeyId: Ohf3r7UJ8kKOSqV-GVNjToOIoDLz1izDrnPFlB9P1UlXp_zdCpLrvh6aa7ngZ
+jansCodeChallenge: 6PVFB1E_xkZJJoIJU2wB4ClOOjHQdwmWvpJSU1VFQLA
+jansCodeChallengeHash: 76069
+jansCounter: 0
+jansId: 61a53f4c-07d3-4d3e-84f0-488cdeef5fd2
+jansPublicKeyId: Ohf3r7UJ8kKOSqV-GVNjToOIoDLz1izDrnPFlB9P1UlXp_zdCpLrvh6aa7ngZ
  V6bywmEJ42kCk06zo0nfeCcMQ
-oxRegistrationData: {"createdDate":1613219013811,"updatedDate":1613219022408
+jansRegistrationData: {"createdDate":1613219013811,"updatedDate":1613219022408
  ,"createdBy":"test","updatedBy":"test","username":"test","domain":"buster.g
  luu.info","userId":"XWt4NghuevFiawUdwMJnlOdkaCksuWhX25h1MANMFZM","challenge
  ":"6PVFB1E_xkZJJoIJU2wB4ClOOjHQdwmWvpJSU1VFQLA","attenstationRequest":"{\"a
@@ -391,21 +391,21 @@ oxRegistrationData: {"createdDate":1613219013811,"updatedDate":1613219022408
  lXp_zdCpLrvh6aa7ngZV6bywmEJ42kCk06zo0nfeCcMQ","type":"public-key","status":
  "registered","counter":0,"attestationType":"packed","signatureAlgorithm":-7
  ,"applicationId":null}
-oxStatus: registered
+jansStatus: registered
 personInum: XXXX.EEEE-1111
 
 dn: oxId=0a3236fe-ec36-4308-80dc-9bf6319d780c,ou=fido2_register,inum=XXXX.EEEE-1111,ou=people,o=gluu
 objectClass: top
-objectClass: oxFido2RegistrationEntry
+objectClass: jansFido2RegistrationEntry
 creationDate: 20210213122402.477Z
 displayName: Blue Fido2 key
-oxCodeChallenge: mXhvHlh0_udGlTyHkoVXJoLmxlD7iSxHe73_sCY4Fr8
-oxCodeChallengeHash: 77976
-oxCounter: 0
-oxId: 0a3236fe-ec36-4308-80dc-9bf6319d780c
-oxPublicKeyId: 1ASsUz7Y5TIMJsy7NQ2h3qW4iyDj00W-GcpOpGOZXLpHgXx95nDjkwWqY9hJd
+jansCodeChallenge: mXhvHlh0_udGlTyHkoVXJoLmxlD7iSxHe73_sCY4Fr8
+jansCodeChallengeHash: 77976
+jansCounter: 0
+jansId: 0a3236fe-ec36-4308-80dc-9bf6319d780c
+jansPublicKeyId: 1ASsUz7Y5TIMJsy7NQ2h3qW4iyDj00W-GcpOpGOZXLpHgXx95nDjkwWqY9hJd
  mMqM1cTqtWA6REI8cL1af-Z4Q
-oxRegistrationData: {"createdDate":1613219042477,"updatedDate":1613219046555
+jansRegistrationData: {"createdDate":1613219042477,"updatedDate":1613219046555
  ,"createdBy":"test","updatedBy":"test","username":"test","domain":"buster.g
  luu.info","userId":"KwZK_GDZMdCiPVfCuQjbCmp_ZVzDYinTRiTevsGrtZ4","challenge
  ":"mXhvHlh0_udGlTyHkoVXJoLmxlD7iSxHe73_sCY4Fr8","attenstationRequest":"{\"a
@@ -437,5 +437,5 @@ oxRegistrationData: {"createdDate":1613219042477,"updatedDate":1613219046555
  x95nDjkwWqY9hJdmMqM1cTqtWA6REI8cL1af-Z4Q","type":"public-key","status":"reg
  istered","counter":0,"attestationType":"fido-u2f","signatureAlgorithm":-7,"
  applicationId":null}
-oxStatus: registered
+jansStatus: registered
 personInum: XXXX.EEEE-1111

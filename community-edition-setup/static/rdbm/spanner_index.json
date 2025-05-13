@@ -183,18 +183,18 @@
     ],
     "custom": []
   },
-  "oxFido2AuthenticationEntry": {
+  "jansFido2AuthnEntry": {
     "fields": [
       "creationDate",
-      "oxStatus",
+      "jansStatus",
       "personInum"
     ],
     "custom": []
   },
-  "oxFido2RegistrationEntry": {
+  "jansFido2RegistrationEntry": {
     "fields": [
       "creationDate",
-      "oxStatus",
+      "jansStatus",
       "personInum"
     ],
     "custom": []

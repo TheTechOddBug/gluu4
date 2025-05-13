@@ -5974,15 +5974,15 @@
         {
             "kind": "STRUCTURAL",
             "may": [
-                "oxId",
+                "jansId",
                 "creationDate",
-                "oxSessionStateId",
-                "oxCodeChallenge",
-                "oxCodeChallengeHash",
+                "jansApp",
+                "jansSessStateId",
+                "jansCodeChallenge",
+                "jansCodeChallengeHash",
                 "personInum",
-                "oxAuthenticationData",
-                "oxApplication",
-                "oxStatus",
+                "jansAuthData",
+                "jansStatus",
                 "exp",
                 "del"
             ],
@@ -5990,7 +5990,7 @@
                 "objectclass"
             ],
             "names": [
-                "oxFido2AuthenticationEntry"
+                "jansFido2AuthnEntry"
             ],
             "oid": "oxObjectClass",
             "sup": [
@@ -6001,21 +6001,21 @@
         {
             "kind": "STRUCTURAL",
             "may": [
-                "oxId",
+                "jansId",
                 "creationDate",
                 "displayName",
-                "oxApplication",
-                "oxSessionStateId",
-                "oxCodeChallenge",
-                "oxCodeChallengeHash",
-                "oxPublicKeyId",
-                "oxPublicKeyIdHash",
+                "jansApp",
+                "jansSessStateId",
+                "jansCodeChallenge",
+                "jansCodeChallengeHash",
+                "jansPublicKeyId",
+                "jansPublicKeyIdHash",
                 "personInum",
-                "oxRegistrationData",
-                "oxDeviceData",
-                "oxDeviceNotificationConf",
-                "oxCounter",
-                "oxStatus",
+                "jansRegistrationData",
+                "jansDeviceData",
+                "jansDeviceNotificationConf",
+                "jansCounter",
+                "jansStatus",
                 "exp",
                 "del"
             ],
@@ -6023,7 +6023,7 @@
                 "objectclass"
             ],
             "names": [
-                "oxFido2RegistrationEntry"
+                "jansFido2RegistrationEntry"
             ],
             "oid": "oxObjectClass",
             "sup": [
