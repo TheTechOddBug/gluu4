@@ -66,7 +66,7 @@ public class NoneAssertionFormatProcessor implements AssertionFormatProcessor {
         log.debug("Registration: {}", registration);
 
         AuthData authData = authenticatorDataParser.parseAssertionData(base64AuthenticatorData);
-        commonVerifiers.verifyRpIdHash(authData, registration.getDomain());
+        commonVerifiers.verifyRpIdHash(authData, registration.getOrigin());
 
         log.debug("User verification option: {}", authenticationEntity.getUserVerificationOption());
         userVerificationVerifier.verifyUserVerificationOption(authenticationEntity.getUserVerificationOption(), authData);

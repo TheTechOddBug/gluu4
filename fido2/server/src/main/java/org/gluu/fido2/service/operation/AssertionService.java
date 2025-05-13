@@ -210,13 +210,13 @@ public class AssertionService {
 		Fido2AuthenticationData entity = new Fido2AuthenticationData();
 		entity.setUsername(username);
 		entity.setChallenge(challenge);
-		entity.setDomain(documentDomain);
+		entity.setOrigin(documentDomain);
 		entity.setUserVerificationOption(userVerification);
 		entity.setStatus(Fido2AuthenticationStatus.pending);
 		if (params.hasNonNull(CommonVerifiers.SUPER_GLUU_APP_ID)) {
-			entity.setApplicationId(params.get(CommonVerifiers.SUPER_GLUU_APP_ID).asText());
+			entity.setRpId(params.get(CommonVerifiers.SUPER_GLUU_APP_ID).asText());
 		} else {
-			entity.setApplicationId(documentDomain);
+			entity.setRpId(documentDomain);
 		}
 
 		// Store original request
@@ -277,10 +277,10 @@ public class AssertionService {
 		Fido2AuthenticationData entity = new Fido2AuthenticationData();
 		entity.setUsername(null);
 		entity.setChallenge(challenge);
-		entity.setDomain(documentDomain);
+		entity.setOrigin(documentDomain);
 		entity.setUserVerificationOption(userVerification);
 		entity.setStatus(Fido2AuthenticationStatus.pending);
-		entity.setApplicationId(documentDomain);
+		entity.setRpId(documentDomain);
 
 		// Store original request
 		entity.setAssertionRequest(params.toString());
@@ -342,7 +342,7 @@ public class AssertionService {
 		Fido2AuthenticationData authenticationData = authenticationEntity.getAuthenticationData();
 
 		// Verify domain
-		domainVerifier.verifyDomain(authenticationData.getDomain(), clientDataJSONNode);
+		domainVerifier.verifyDomain(authenticationData.getOrigin(), clientDataJSONNode);
 
 		// Find registered public key
 		Fido2RegistrationEntry registrationEntry = registrationPersistenceService.findByPublicKeyId(keyId, authenticationEntity.getRpId())
@@ -470,13 +470,13 @@ public class AssertionService {
 
 		List<JsonNode> allowedFido2Keys =  new ArrayList<>(allowedFido2Registrations.size());
 		allowedFido2Registrations.forEach((f) -> {
-			log.debug("attestation request:" + f.getRegistrationData().getAttenstationRequest());
+			log.debug("attestation request:" + f.getRegistrationData().getAttestationRequest());
 			String transports[];
 			if (superGluu) {
 				transports = new String[] { "net", "qr" };
 			} else {
-				transports = ((f.getRegistrationData().getAttestationType().equalsIgnoreCase(AttestationFormat.apple.getFmt())) || ( f.getRegistrationData().getAttenstationRequest() != null &&
-						f.getRegistrationData().getAttenstationRequest().contains(AuthenticatorAttachment.PLATFORM.getAttachment())))
+				transports = ((f.getRegistrationData().getAttestationType().equalsIgnoreCase(AttestationFormat.apple.getFmt())) || ( f.getRegistrationData().getAttestationRequest() != null &&
+						f.getRegistrationData().getAttestationRequest().contains(AuthenticatorAttachment.PLATFORM.getAttachment())))
 
 						? new String[] { "internal" }
 						: new String[] { "usb", "ble", "nfc" };
@@ -489,11 +489,11 @@ public class AssertionService {
 		});
 
 		Optional<Fido2RegistrationEntry> fidoRegistration = allowedFido2Registrations.parallelStream()
-				.filter(f -> StringUtils.isNotEmpty(f.getRegistrationData().getApplicationId())).findAny();
+				.filter(f -> StringUtils.isNotEmpty(f.getRegistrationData().getRpId())).findAny();
 		String applicationId = null;
 		// applicationId should not be sent incase of pure fido2
 		if (fidoRegistration.isPresent() && superGluu) {
-			applicationId = fidoRegistration.get().getRegistrationData().getApplicationId();
+			applicationId = fidoRegistration.get().getRegistrationData().getRpId();
 		}
 
 		ArrayNode allowedCredentials = dataMapperService.createArrayNode();

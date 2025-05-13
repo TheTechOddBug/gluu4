@@ -92,8 +92,8 @@ class TPMAssertionFormatProcessorTest {
         Fido2RegistrationData registration = mock(Fido2RegistrationData.class);
         Fido2AuthenticationData authenticationEntity = mock(Fido2AuthenticationData.class);
 
-        when(registration.getDomain()).thenReturn("domain.test");
-        when(registration.getAttenstationRequest()).thenReturn("{\"authenticator\": \"platform\"}");
+        when(registration.getOrigin()).thenReturn("domain.test");
+        when(registration.getAttestationRequest()).thenReturn("{\"authenticator\": \"platform\"}");
         when(registration.getSignatureAlgorithm()).thenReturn(-1);
         when(authenticationEntity.getUserVerificationOption()).thenReturn(UserVerification.preferred);
 
@@ -123,8 +123,8 @@ class TPMAssertionFormatProcessorTest {
         Fido2RegistrationData registration = mock(Fido2RegistrationData.class);
         Fido2AuthenticationData authenticationEntity = mock(Fido2AuthenticationData.class);
 
-        when(registration.getDomain()).thenReturn("domain.test");
-        when(registration.getAttenstationRequest()).thenReturn("{\"authenticator\": \"none\"}");
+        when(registration.getOrigin()).thenReturn("domain.test");
+        when(registration.getAttestationRequest()).thenReturn("{\"authenticator\": \"none\"}");
         when(registration.getSignatureAlgorithm()).thenReturn(-1);
         when(authenticationEntity.getUserVerificationOption()).thenReturn(UserVerification.preferred);
 
@@ -154,7 +154,7 @@ class TPMAssertionFormatProcessorTest {
         Fido2RegistrationData registration = mock(Fido2RegistrationData.class);
         Fido2AuthenticationData authenticationEntity = mock(Fido2AuthenticationData.class);
 
-        when(registration.getDomain()).thenReturn("domain.test");
+        when(registration.getOrigin()).thenReturn("domain.test");
         when(authenticationEntity.getUserVerificationOption()).thenReturn(UserVerification.preferred);
         when(registration.getCounter()).thenReturn(1000);
 
@@ -184,7 +184,7 @@ class TPMAssertionFormatProcessorTest {
         Fido2RegistrationData registration = mock(Fido2RegistrationData.class);
         Fido2AuthenticationData authenticationEntity = mock(Fido2AuthenticationData.class);
 
-        when(registration.getDomain()).thenReturn("domain.test");
+        when(registration.getOrigin()).thenReturn("domain.test");
         when(authenticationEntity.getUserVerificationOption()).thenReturn(UserVerification.preferred);
         when(registration.getCounter()).thenReturn(1000);
 

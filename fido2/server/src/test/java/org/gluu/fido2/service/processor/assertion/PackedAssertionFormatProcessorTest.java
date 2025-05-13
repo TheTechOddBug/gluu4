@@ -92,9 +92,9 @@ class PackedAssertionFormatProcessorTest {
         Fido2RegistrationData registration = mock(Fido2RegistrationData.class);
         Fido2AuthenticationData authenticationEntity = mock(Fido2AuthenticationData.class);
 
-        when(registration.getDomain()).thenReturn("domain_test");
+        when(registration.getOrigin()).thenReturn("domain_test");
         when(authenticationEntity.getUserVerificationOption()).thenReturn(UserVerification.preferred);
-        when(registration.getAttenstationRequest()).thenReturn(AuthenticatorAttachment.PLATFORM.getAttachment());
+        when(registration.getAttestationRequest()).thenReturn(AuthenticatorAttachment.PLATFORM.getAttachment());
         when(registration.getSignatureAlgorithm()).thenReturn(-256);
 
         when(authenticatorDataParser.parseAssertionData(any())).thenReturn(mock(AuthData.class));
@@ -123,9 +123,9 @@ class PackedAssertionFormatProcessorTest {
         Fido2RegistrationData registration = mock(Fido2RegistrationData.class);
         Fido2AuthenticationData authenticationEntity = mock(Fido2AuthenticationData.class);
 
-        when(registration.getDomain()).thenReturn("domain_test");
+        when(registration.getOrigin()).thenReturn("domain_test");
         when(authenticationEntity.getUserVerificationOption()).thenReturn(UserVerification.preferred);
-        when(registration.getAttenstationRequest()).thenReturn("wrong_attestation_request");
+        when(registration.getAttestationRequest()).thenReturn("wrong_attestation_request");
         when(registration.getSignatureAlgorithm()).thenReturn(-256);
 
         when(authenticatorDataParser.parseAssertionData(any())).thenReturn(mock(AuthData.class));
@@ -154,7 +154,7 @@ class PackedAssertionFormatProcessorTest {
         Fido2RegistrationData registration = mock(Fido2RegistrationData.class);
         Fido2AuthenticationData authenticationEntity = mock(Fido2AuthenticationData.class);
 
-        when(registration.getDomain()).thenReturn("domain_test");
+        when(registration.getOrigin()).thenReturn("domain_test");
         when(authenticationEntity.getUserVerificationOption()).thenReturn(UserVerification.preferred);
         when(registration.getCounter()).thenReturn(1);
 
@@ -181,7 +181,7 @@ class PackedAssertionFormatProcessorTest {
         Fido2RegistrationData registration = mock(Fido2RegistrationData.class);
         Fido2AuthenticationData authenticationEntity = mock(Fido2AuthenticationData.class);
 
-        when(registration.getDomain()).thenReturn("domain_test");
+        when(registration.getOrigin()).thenReturn("domain_test");
         when(authenticationEntity.getUserVerificationOption()).thenReturn(UserVerification.preferred);
         when(registration.getCounter()).thenReturn(1);
 

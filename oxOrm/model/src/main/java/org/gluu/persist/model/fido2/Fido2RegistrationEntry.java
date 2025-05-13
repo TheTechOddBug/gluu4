@@ -19,7 +19,7 @@ import org.gluu.persist.annotation.ObjectClass;
  * @author Yuriy Movchan
  * @version 11/02/2018
  */
-@ObjectClass(value = "oxFido2RegistrationEntry")
+@ObjectClass(value = "jansFido2RegistrationEntry")
 public class Fido2RegistrationEntry extends Fido2Entry implements Serializable {
 
     private static final long serialVersionUID = -2242931562244920584L;
@@ -27,29 +27,29 @@ public class Fido2RegistrationEntry extends Fido2Entry implements Serializable {
     @AttributeName(name = "displayName")
     private String displayName;
 
-    @AttributeName(name = "oxPublicKeyId")
+    @AttributeName(name = "jansPublicKeyId")
     protected String publicKeyId;
 
-	@AttributeName(name = "oxPublicKeyIdHash")
+	@AttributeName(name = "jansPublicKeyIdHash")
 	private Integer publicKeyIdHash;
 
     @JsonObject
-    @AttributeName(name = "oxRegistrationData")
+    @AttributeName(name = "jansRegistrationData")
     private Fido2RegistrationData registrationData;
 
-    @AttributeName(name = "oxCounter")
+    @AttributeName(name = "jansCounter")
 	private int counter;
 
     @JsonObject
-    @AttributeName(name = "oxStatus")
+    @AttributeName(name = "jansStatus")
     private Fido2RegistrationStatus registrationStatus;
 
     @JsonObject
-    @AttributeName(name = "oxDeviceNotificationConf")
+    @AttributeName(name = "jansDeviceNotificationConf")
     private Fido2DeviceNotificationConf deviceNotificationConf;
 
     @JsonObject
-	@AttributeName(name = "oxDeviceData")
+	@AttributeName(name = "jansDeviceData")
 	private Fido2DeviceData deviceData;
 
     public Fido2RegistrationEntry() {
