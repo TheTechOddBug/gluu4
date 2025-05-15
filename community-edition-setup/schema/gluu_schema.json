@@ -6039,6 +6039,66 @@
         {
             "kind": "STRUCTURAL",
             "may": [
+                "oxId",
+                "creationDate",
+                "oxSessionStateId",
+                "oxCodeChallenge",
+                "oxCodeChallengeHash",
+                "personInum",
+                "oxAuthenticationData",
+                "oxApplication",
+                "oxStatus",
+                "exp",
+                "del"
+            ],
+            "must": [
+                "objectclass"
+            ],
+            "names": [
+                "oxFido2AuthenticationEntry"
+            ],
+            "oid": "oxObjectClass",
+            "sup": [
+                "top"
+            ],
+            "x_origin": "Gluu created objectclass"
+        },
+        {
+            "kind": "STRUCTURAL",
+            "may": [
+                "oxId",
+                "creationDate",
+                "displayName",
+                "oxApplication",
+                "oxSessionStateId",
+                "oxCodeChallenge",
+                "oxCodeChallengeHash",
+                "oxPublicKeyId",
+                "oxPublicKeyIdHash",
+                "personInum",
+                "oxRegistrationData",
+                "oxDeviceData",
+                "oxDeviceNotificationConf",
+                "oxCounter",
+                "oxStatus",
+                "exp",
+                "del"
+            ],
+            "must": [
+                "objectclass"
+            ],
+            "names": [
+                "oxFido2RegistrationEntry"
+            ],
+            "oid": "oxObjectClass",
+            "sup": [
+                "top"
+            ],
+            "x_origin": "Gluu created objectclass"
+        },
+        {
+            "kind": "STRUCTURAL",
+            "may": [
                 "jansId",
                 "creationDate",
                 "jansApp",
