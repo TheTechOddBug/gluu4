@@ -42,7 +42,6 @@ public class Fido2Service extends BaseService {
     }
 
     public void reloadConfiguration() {
-
         props = persistenceService.getCustScriptConfigProperties(SecurityKey2Extension.ACR);
         String tmp = getScriptPropertyValue("fido2_server_uri");
 
@@ -74,7 +73,7 @@ public class Fido2Service extends BaseService {
         String state = active ? Fido2RegistrationStatus.registered.getValue() : Fido2RegistrationStatus.pending.getValue();
         logger.trace("Finding Fido 2 devices with state={} for user={}", state, userId);
         Filter filter = Filter.createANDFilter(
-                Filter.createEqualityFilter("oxStatus", state),
+                Filter.createEqualityFilter("jansStatus", state),
                 Filter.createEqualityFilter("personInum", userId));
 
         List<FidoDevice> devices = new ArrayList<>();
