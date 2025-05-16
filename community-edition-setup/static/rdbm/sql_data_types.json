@@ -95,6 +95,9 @@
     "mysql": {
       "type": "TEXT"
     },
+    "pgsql": {
+      "type": "TEXT"
+    },
     "spanner": {
       "type": "STRING(MAX)"
     }
@@ -269,7 +272,7 @@
     "mysql": {
       "type": "TEXT"
     },
-    "mysql": {
+    "pgsql": {
       "type": "TEXT"
     },
     "spanner": {
@@ -288,7 +291,7 @@
     "mysql": {
       "type": "TEXT"
     },
-    "mysql": {
+    "pgsql": {
       "type": "TEXT"
     },
     "spanner": {
@@ -299,7 +302,7 @@
     "mysql": {
       "type": "TEXT"
     },
-    "mysql": {
+    "pgsql": {
       "type": "TEXT"
     },
     "spanner": {
