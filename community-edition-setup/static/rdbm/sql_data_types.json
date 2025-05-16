@@ -210,16 +210,6 @@
       "size": 128,
       "type": "VARCHAR"
     },
-  },
-  "jansDeviceKeyHandle": {
-    "mysql": {
-      "size": 128,
-      "type": "VARCHAR"
-    },
-    "pgsql": {
-      "size": 128,
-      "type": "VARCHAR"
-    },
     "spanner": {
       "size": 128,
       "type": "STRING"
@@ -232,6 +222,47 @@
     },
     "spanner": {
       "size": 96,
+      "type": "STRING"
+    }
+  },
+  "oxRegistrationData": {
+    "mysql": {
+      "type": "TEXT"
+    },
+    "spanner": {
+      "type": "STRING(MAX)"
+    }
+  },
+  "oxDeviceRegistrationConf": {
+    "mysql": {
+      "type": "TEXT"
+    },
+    "spanner": {
+      "type": "STRING(MAX)"
+    }
+  },
+  "oxDeviceData": {
+    "mysql": {
+      "type": "TEXT"
+    },
+    "pgsql": {
+      "type": "TEXT"
+    },
+    "spanner": {
+      "type": "STRING(MAX)"
+    }
+  },
+  "jansDeviceKeyHandle": {
+    "mysql": {
+      "size": 128,
+      "type": "VARCHAR"
+    },
+    "pgsql": {
+      "size": 128,
+      "type": "VARCHAR"
+    },
+    "spanner": {
+      "size": 128,
       "type": "STRING"
     }
   },
@@ -249,26 +280,7 @@
       "type": "STRING"
     }
   },
-  "oxRegistrationData": {
-    "mysql": {
-      "type": "TEXT"
-    },
-    "spanner": {
-      "type": "STRING(MAX)"
-    }
-  },
   "jansRegistrationData": {
-    "mysql": {
-      "type": "TEXT"
-    },
-    "mysql": {
-      "type": "TEXT"
-    },
-    "spanner": {
-      "type": "STRING(MAX)"
-    }
-  },
-  "oxDeviceRegistrationConf": {
     "mysql": {
       "type": "TEXT"
     },
@@ -295,17 +307,6 @@
       "type": "TEXT"
     },
     "mysql": {
-      "type": "TEXT"
-    },
-    "spanner": {
-      "type": "STRING(MAX)"
-    }
-  },
-  "oxDeviceData": {
-    "mysql": {
-      "type": "TEXT"
-    },
-    "pgsql": {
       "type": "TEXT"
     },
     "spanner": {
