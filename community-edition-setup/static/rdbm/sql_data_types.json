@@ -83,6 +83,14 @@
       "type": "STRING(MAX)"
     }
   },
+  "oxAuthenticationData": {
+    "mysql": {
+      "type": "TEXT"
+    },
+    "spanner": {
+      "type": "STRING(MAX)"
+    }
+  },
   "jansAuthData": {
     "mysql": {
       "type": "TEXT"
@@ -225,6 +233,16 @@
       "type": "STRING"
     }
   },
+  "oxPublicKeyId": {
+    "mysql": {
+      "size": 96,
+      "type": "VARCHAR"
+    },
+    "spanner": {
+      "size": 96,
+      "type": "STRING"
+    }
+  },
   "jansPublicKeyId": {
     "mysql": {
       "size": 256,
@@ -239,6 +257,14 @@
       "type": "STRING"
     }
   },
+  "oxRegistrationData": {
+    "mysql": {
+      "type": "TEXT"
+    },
+    "spanner": {
+      "type": "STRING(MAX)"
+    }
+  },
   "jansRegistrationData": {
     "mysql": {
       "type": "TEXT"
@@ -251,9 +277,6 @@
     }
   },
   "oxDeviceRegistrationConf": {
-    "mysql": {
-      "type": "TEXT"
-    },
     "mysql": {
       "type": "TEXT"
     },
