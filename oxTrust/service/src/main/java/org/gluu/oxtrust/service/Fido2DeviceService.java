@@ -14,6 +14,7 @@ import org.gluu.oxtrust.util.OxTrustConstants;
 import org.gluu.persist.PersistenceEntryManager;
 import org.gluu.persist.exception.EntryPersistenceException;
 import org.gluu.persist.exception.operation.SearchException;
+import org.gluu.persist.model.base.SimpleBranch;
 import org.gluu.search.filter.Filter;
 import org.gluu.util.StringHelper;
 import org.slf4j.Logger;
@@ -58,12 +59,19 @@ public class Fido2DeviceService implements Serializable {
 	public List<GluuFido2Device> findAllFido2Devices(GluuCustomPerson person) {
 		try {
 			String baseDnForU2fDevices = getDnForFido2Device(null, person.getInum());
+			if (ldapEntryManager.hasBranchesSupport(baseDnForU2fDevices)) {
+				if (!ldapEntryManager.contains(baseDnForU2fDevices, SimpleBranch.class)) {
+					return new ArrayList<>();
+				}
+			}
+
 			Filter inumFilter = Filter.createEqualityFilter(OxTrustConstants.PERSON_INUM, person.getInum());
 			return ldapEntryManager.findEntries(baseDnForU2fDevices, GluuFido2Device.class, inumFilter);
 		} catch (EntryPersistenceException e) {
-			log.warn("No fido2 devices enrolled for " + person.getDisplayName());
-			return new ArrayList<>();
+			log.warn("Failed to load fido2 devices enrolled for {}", person.getDisplayName(), e);
 		}
+
+		return new ArrayList<>();
 	}
 
 	public GluuFido2Device getFido2DeviceById(String userId, String id) throws Exception {
