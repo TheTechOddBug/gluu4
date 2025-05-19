@@ -12,6 +12,7 @@ from org.gluu.service.cdi.util import CdiUtil
 from org.gluu.util import StringHelper
 
 from java.util.concurrent.locks import ReentrantLock
+from javax.faces.context import FacesContext
 
 import java
 import sys
@@ -154,8 +155,10 @@ class PersonAuthentication(PersonAuthenticationType):
             assertionResponse = None
             attestationResponse = None
 
+            facesContext = CdiUtil.bean(FacesContext)
+            domain = facesContext.getExternalContext().getRequest().getServerName()
             # Check if user have registered devices
-            count = CdiUtil.bean(UserService).countFido2RegisteredDevices(userName)
+            count = CdiUtil.bean(UserService).countFido2RegisteredDevices(userName, domain)
             if (count > 0):
                 print "Fido2. Prepare for step 2. Call Fido2 endpoint in order to start assertion flow"
 
@@ -243,4 +246,6 @@ class PersonAuthentication(PersonAuthenticationType):
     # Added for Casa compliance
 
     def hasEnrollments(self, configurationAttributes, user):
-        return CdiUtil.bean(UserService).countFido2RegisteredDevices(user.getUserId()) > 0
+        facesContext = CdiUtil.bean(FacesContext)
+        domain = facesContext.getExternalContext().getRequest().getServerName()
+        return CdiUtil.bean(UserService).countFido2RegisteredDevices(user.getUserId(), domain) > 0
