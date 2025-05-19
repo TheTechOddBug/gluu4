@@ -601,7 +601,7 @@ public class SessionIdService {
                 sessionId.setPersisted(true);
                 sessionId.setExpirationDate(expiration.getFirst());
                 sessionId.setTtl(expiration.getSecond());
-                log.trace("sessionIdAttributes: " + sessionId.getPermissionGrantedMap());
+                log.trace("sessionIdAttributes: {}", sessionId.getPermissionGrantedMap());
                 if (appConfiguration.getSessionIdPersistInCache()) {
                     cacheService.put(expiration.getSecond(), sessionId.getDn(), sessionId);
                 } else {
@@ -611,7 +611,8 @@ public class SessionIdService {
                 return true;
             }
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            // log exception in TRACE by intention because this method can be called over existing session by design, #213
+            log.trace(e.getMessage(), e);
         }
 
         return false;
