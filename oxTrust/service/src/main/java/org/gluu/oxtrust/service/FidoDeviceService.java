@@ -11,6 +11,7 @@ import org.apache.commons.lang.StringUtils;
 import org.gluu.oxtrust.model.fido.GluuCustomFidoDevice;
 import org.gluu.persist.PersistenceEntryManager;
 import org.gluu.persist.exception.operation.SearchException;
+import org.gluu.persist.model.base.SimpleBranch;
 import org.gluu.search.filter.Filter;
 import org.slf4j.Logger;
 
@@ -94,12 +95,20 @@ public class FidoDeviceService implements IFidoDeviceService, Serializable {
 	@Override
 	public List<GluuCustomFidoDevice> searchFidoDevices(String userInum, String... returnAttributes) {
 		try {
+			String dnForFidoDevice = getDnForFidoDevice(userInum, null);
+			if (ldapEntryManager.hasBranchesSupport(dnForFidoDevice)) {
+				if (!ldapEntryManager.contains(dnForFidoDevice, SimpleBranch.class)) {
+					return new ArrayList<>();
+				}
+			}
+
 			Filter equalityFilter = Filter.createEqualityFilter("personInum", userInum);
-			return ldapEntryManager.findEntries(getDnForFidoDevice(userInum, null), GluuCustomFidoDevice.class,
+			return ldapEntryManager.findEntries(dnForFidoDevice, GluuCustomFidoDevice.class,
 					equalityFilter, returnAttributes);
 		} catch (Exception e) {
-			log.warn("", e);
-			return new ArrayList<>();
+			log.warn("Failed to load fido2 devices enrolled for {}", userInum, e);
 		}
+
+		return new ArrayList<>();
 	}
 }
