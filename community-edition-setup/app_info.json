@@ -4,7 +4,7 @@
   "OX_GITVERISON": ".Final",
   "NODE_VERSION": "v16.16.0",
   "OX_VERSION": "4.5.9",
-  "PASSPORT_VERSION": "4.5",
+  "PASSPORT_VERSION": "4.5.9.Final",
   "JYTHON_VERSION": "2.7.3",
   "OPENDJ_VERSION": "4.5.3",
   "TWILIO_VERSION": "7.17.0",
