@@ -181,7 +181,7 @@ class PersonAuthentication(PersonAuthenticationType):
             #this param could have been set previously in authenticate step if current step is being retried
             provider = identity.getWorkingParameter("selectedProvider")
             if provider != None:
-                url = self.getPassportRedirectUrl(provider, sessionAttributes)
+                url = self.getPassportRedirectUrl(provider, sessionAttributes, identity)
                 identity.setWorkingParameter("selectedProvider", None)
 
             elif providerParam != None:
@@ -196,7 +196,7 @@ class PersonAuthentication(PersonAuthenticationType):
                     elif not provider in self.registeredProviders:
                         print "Passport. prepareForStep. Provider '%s' not part of known configured IDPs/OPs" % provider
                     else:
-                        url = self.getPassportRedirectUrl(provider, sessionAttributes)
+                        url = self.getPassportRedirectUrl(provider, sessionAttributes, identity)
 
             if url == None:
                 print "Passport. prepareForStep. A page to manually select an identity provider will be shown"
@@ -424,7 +424,7 @@ class PersonAuthentication(PersonAuthenticationType):
         return provider
 
 
-    def getPassportRedirectUrl(self, provider, sessionAttributes):
+    def getPassportRedirectUrl(self, provider, sessionAttributes, identity):
 
         # provider is assumed to exist in self.registeredProviders
         url = None
@@ -448,7 +448,7 @@ class PersonAuthentication(PersonAuthenticationType):
                 url = "/passport/auth/%s/%s" % (provider, tokenObj["token_"])
             else:
                 for key, value in self.stateAuthzParameters.items():
-                    queryParamValue = sessionAttributes.get(key)
+                    queryParamValue = sessionAttributes.get(key) or identity.getWorkingParameter(key)
                     if queryParamValue != None:
                         print "Passport. getPassportRedirectUrl. updating state %s. Found in query param. New value is %s" % (key, queryParamValue)
                         self.stateAuthzParameters[key] = queryParamValue
