@@ -328,6 +328,44 @@ If you get an error page like the one below, double check your configuration and
 
 Once login is successful, you can check user profile data as explained [here](#checking-user-profile).
 
+## Passing a value to a provider
+
+In some cases, you may want to pass custom parameters to an external provider. This feature allows you to send custom parameters using the `state` parameter in the authentication request.
+
+```mermaid
+
+sequenceDiagram
+
+title Passing a value to a provider via state
+
+autonumber
+User->>RP: Request
+RP->>Authz: authorization code flow request with custom parameter **e.g. block=true**
+Authz->User: show provider lists
+User->>Authz: select Provider
+Authz->>Passport: request for auth with Base64 encoded state \n **e.g. state=eyAiYmxvY2siOiB0cnVlLCAiZGF0ZSI6ICIyMDI1LTA1LTI2IDE0OjQ2OjEyLjM4NDAwMCIgfQ==** \n { "block": true, "date": "2025-05-26 14:46:12.384000" }
+Passport->>ExternalAuthZ: Request with base64 encoded state \n **e.g. state=eyAiYmxvY2siOiB0cnVlLCAiZGF0ZSI6ICIyMDI1LTA1LTI2IDE0OjQ2OjEyLjM4NDAwMCIgfQ==** \n { "block": true, "date": "2025-05-26 14:46:12.384000" }
+User<<->>ExternalAuthZ: Present Login & user enter username/password
+note over ExternalAuthZ: Authenticate User
+ExternalAuthZ->>Authz: Redirect
+Authz->>RP: Redirect
+RP->>User: Access granted
+```
+
+To enable this, you need to configure the `authz_req_state_param` property in the script. This property accepts a JSON object.
+
+For example: 
+
+```js
+authz_req_state_param = { "block": false, "quantity": 100, "user": "admin" }`. 
+```
+
+The script checks for any custom parameters in the initial authentication request. **If a parameter is found in the query parameters of the authentication request, its value is replaced with the new one**. Otherwise, the default value from the configuration is used.
+
+For example, if the initial request includes `block=true`, the script detects this updated value for the block parameter and uses `block=true`. The other parameters remain unchanged, so `"quantity": 100 and "user": "admin"` are used as configured.
+
+On the external provider side, you can easily get the `state` parameter from the query string in the URL. Decode the Base64-encoded value to get the plain JSON, and customize the user experience according to your requirements.
+
 ## Checking user profile
 
 Once login is successful, check user data by navigating to `Personal` > `Profile` in oxTrust. Alternatively you can use the admin user and navigate to `Users` > `Manage people` to inspect the recently created user entry.
