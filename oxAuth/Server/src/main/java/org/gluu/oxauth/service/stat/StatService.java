@@ -94,6 +94,7 @@ public class StatService {
         log.trace("Started updateStat ...");
 
         prepareMonthlyBranch();
+        initNodeId();
         setupCurrentEntry();
 
         final Stat stat = currentEntry.getStat();
@@ -173,23 +174,24 @@ public class StatService {
     }
 
     private void initNodeId() {
-        if (StringUtils.isNotBlank(nodeId)) {
+        final String currentMonth = currentMonth();
+        if (StringUtils.isNotBlank(nodeId) && nodeId.endsWith(currentMonth)) {
             log.trace("NodeId is not blank: {}", nodeId);
             return;
         }
 
         try {
-            nodeId = InetAddressUtility.getMACAddressOrNull();
+            nodeId = InetAddressUtility.getMACAddressOrNull() + "_" + currentMonth;
             if (StringUtils.isNotBlank(nodeId)) {
                 log.trace("NodeId created: " + nodeId);
                 return;
             }
 
-            nodeId = UUID.randomUUID().toString();
+            nodeId = UUID.randomUUID().toString() + "_" + currentMonth;
             log.trace("NodeId created: " + nodeId);
         } catch (Exception e) {
             log.error("Failed to identify nodeId.", e);
-            nodeId = UUID.randomUUID().toString();
+            nodeId = UUID.randomUUID().toString() + "_" + currentMonth;
             log.trace("NodeId created: " + nodeId);
         }
     }
