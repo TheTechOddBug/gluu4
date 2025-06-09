@@ -49,7 +49,6 @@ public class StatService {
     private StaticConfiguration staticConfiguration;
 
     private String nodeId;
-    private String monthlyDn;
     private StatEntry currentEntry;
     private HLL hll;
     private ConcurrentMap<String, Map<String, Long>> tokenCounters;
@@ -74,13 +73,10 @@ public class StatService {
                 return false;
             }
 
-            final Date now = new Date();
-            prepareMonthlyBranch(now);
-            log.trace("Monthly branch created: " + monthlyDn);
-
-            setupCurrentEntry(now);
-            log.info("Initialized Stat Service");
+            prepareMonthlyBranch();
+            setupCurrentEntry();
             initialized = true;
+            log.info("Initialized Stat Service");
             return true;
         } catch (Exception e) {
             log.error("Failed to initialize Stat Service.", e);
@@ -89,53 +85,71 @@ public class StatService {
     }
 
     public void updateStat() {
+        log.trace("updateStat ...  (initialized: {})", initialized);
+
         if (!initialized) {
             return;
         }
 
         log.trace("Started updateStat ...");
 
-        Date now = new Date();
-        prepareMonthlyBranch(now);
-
-        setupCurrentEntry(now);
+        prepareMonthlyBranch();
+        setupCurrentEntry();
 
         final Stat stat = currentEntry.getStat();
         stat.setTokenCountPerGrantType(tokenCounters);
-        stat.setLastUpdatedAt(now.getTime());
+        stat.setLastUpdatedAt(System.currentTimeMillis());
 
         synchronized (hll) {
             currentEntry.setUserHllData(Base64.getEncoder().encodeToString(hll.toBytes()));
         }
+
+        log.trace("Updating entry dn {}", currentEntry.getDn());
         entryManager.merge(currentEntry);
 
         log.trace("Finished updateStat.");
     }
 
-    private void setupCurrentEntry() {
-        setupCurrentEntry(new Date());
+    public static String currentMonth() {
+        return PERIOD_DATE_FORMAT.format(new Date());
     }
 
-    private void setupCurrentEntry(Date now) {
-        final String month = PERIOD_DATE_FORMAT.format(now);
-        String dn = String.format("jansId=%s,%s", nodeId, monthlyDn); // jansId=<id>,ou=yyyyMM,ou=stat,o=gluu
+    public String currentMonthDn() {
+        final String baseDn = getBaseDn();
+        final String month = currentMonth();
+        return String.format("ou=%s,%s", month, baseDn);
+    }
 
-        if (currentEntry != null && month.equals(currentEntry.getStat().getMonth())) {
+    private void setupCurrentEntry() {
+        String currentMonth = currentMonth();
+        String dn = String.format("jansId=%s,%s", nodeId, currentMonthDn()); // jansId=<id>,ou=yyyyMM,ou=stat,o=gluu
+        log.trace("Stat entry dn: {}", dn);
+
+        final boolean sameMonth = currentEntry != null && currentMonth.equals(currentEntry.getStat().getMonth());
+        if (sameMonth) {
+            log.trace("Same month {}", currentMonth);
             return;
+        } else {
+            log.trace("Different month {}", currentMonth);
+            currentEntry = null; // set current entry to null to force re-fetch it from DB or create new one
         }
 
         try {
             StatEntry entryFromPersistence = entryManager.find(StatEntry.class, dn);
-            if (entryFromPersistence != null && month.equals(entryFromPersistence.getStat().getMonth())) {
+            if (entryFromPersistence != null && currentMonth.equals(entryFromPersistence.getStat().getMonth())) {
                 hll = HLL.fromBytes(Base64.getDecoder().decode(entryFromPersistence.getUserHllData()));
                 tokenCounters = new ConcurrentHashMap<>(entryFromPersistence.getStat().getTokenCountPerGrantType());
                 currentEntry = entryFromPersistence;
-                log.trace("Stat entry loaded.");
+                log.trace("Stat entry {} loaded.", dn);
                 return;
+            } else {
+                log.trace("Month does not match. Current month {}, entry month {}, entry dn: {}", currentMonth, entryFromPersistence != null ? entryFromPersistence.getStat().getMonth() : "", dn);
             }
         } catch (EntryPersistenceException e) {
-            log.trace("Stat entry is not found in persistence.");
+            log.trace("Stat entry is not found in persistence. dn: " + dn, e);
         }
+
+        log.trace("Current entry before nullity check, dn {}", currentEntry != null ? currentEntry.getDn() : "null");
 
         if (currentEntry == null) {
             log.trace("Creating stat entry ...");
@@ -150,6 +164,8 @@ public class StatService {
             entryManager.persist(currentEntry);
             log.trace("Created stat entry. nodeId:" + nodeId);
         }
+
+        log.trace("Current entry dn {}", currentEntry != null ? currentEntry.getDn() : "null");
     }
 
     public HLL newHll() {
@@ -158,6 +174,7 @@ public class StatService {
 
     private void initNodeId() {
         if (StringUtils.isNotBlank(nodeId)) {
+            log.trace("NodeId is not blank: {}", nodeId);
             return;
         }
 
@@ -173,6 +190,7 @@ public class StatService {
         } catch (Exception e) {
             log.error("Failed to identify nodeId.", e);
             nodeId = UUID.randomUUID().toString();
+            log.trace("NodeId created: " + nodeId);
         }
     }
 
@@ -184,22 +202,23 @@ public class StatService {
         return staticConfiguration.getBaseDn().getStat();
     }
 
-    private void prepareMonthlyBranch(Date now) {
-        final String baseDn = getBaseDn();
-        final String month = PERIOD_DATE_FORMAT.format(now); // yyyyMM
-        monthlyDn = String.format("ou=%s,%s", month, baseDn); // ou=yyyyMM,ou=stat,o=gluu
-
-        if (!entryManager.hasBranchesSupport(baseDn)) {
+    private void prepareMonthlyBranch() {
+        if (!entryManager.hasBranchesSupport(getBaseDn())) {
+            log.trace("Monthly branch creation is skipped. DB does not support branches.");
             return;
         }
 
+        String monthlyDn = currentMonthDn();
+
         try {
             if (!entryManager.contains(monthlyDn, SimpleBranch.class)) { // Create ou=yyyyMM branch if needed
-                createBranch(monthlyDn, month);
+                createBranch(monthlyDn, currentMonth());
+                log.info("Monthly branch is created: {}", monthlyDn);
             }
         } catch (Exception e) {
-            log.error("Failed to prepare monthly branch: " + monthlyDn, e);
-            throw e;
+            final String msg = "Failed to prepare monthly branch: " + monthlyDn;
+            log.error(msg, e);
+            throw new RuntimeException(msg, e);
         }
     }
 
