@@ -8,33 +8,33 @@ annotations:
     - Gluu 4.5.9  chart release
   artifacthub.io/images: |
     - name: casa
-      image: gluufederation/casa:4.5.9_dev
+      image: gluufederation/casa:4.5.9-1
     - name: fido2
-      image: gluufederation/fido2:4.5.9_dev
+      image: gluufederation/fido2:4.5.9-1
     - name: scim
-      image: gluufederation/scim:4.5.9_dev
+      image: gluufederation/scim:4.5.9-1
     - name: configuration-manager
-      image: gluufederation/config-init:4.5.9_dev
+      image: gluufederation/config-init:4.5.9-1
     - name: cr-rotate
-      image: gluufederation/cr-rotate:4.5.9_dev
+      image: gluufederation/cr-rotate:4.5.9-1
     - name: certmanager
-      image: gluufederation/certmanager:4.5.9_dev
+      image: gluufederation/certmanager:4.5.9-1
     - name: opendj
-      image: gluufederation/opendj:4.5.9_dev
+      image: gluufederation/opendj:4.5.9-1
     - name: jackrabbit
-      image: gluufederation/jackrabbit:4.5.9_dev
+      image: gluufederation/jackrabbit:4.5.9-1
     - name: oxauth
-      image: gluufederation/oxauth:4.5.9_dev
+      image: gluufederation/oxauth:4.5.9-1
     - name: oxd-server
-      image: gluufederation/oxd-server:4.5.9_dev
+      image: gluufederation/oxd-server:4.5.9-1
     - name: oxpassport
-      image: gluufederation/oxpassport:4.5.9_dev
+      image: gluufederation/oxpassport:4.5.9-1
     - name: oxshibboleth
-      image: gluufederation/oxshibboleth:4.5.9_dev
+      image: gluufederation/oxshibboleth:4.5.9-1
     - name: persistence
-      image: gluufederation/persistence:4.5.9_dev
+      image: gluufederation/persistence:4.5.9-1
     - name: oxtrust
-      image: gluufederation/oxtrust:4.5.9_dev
+      image: gluufederation/oxtrust:4.5.9-1
   artifacthub.io/license: Apache-2.0
 icon: https://gluu.org/docs/gluu-server/favicon.ico
 home: https://www.gluu.org
