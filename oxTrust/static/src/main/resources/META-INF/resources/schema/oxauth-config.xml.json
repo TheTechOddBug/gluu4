@@ -1862,6 +1862,43 @@
                     "minLength": 1
                 }
             }
+        },
+        "connectionServiceConfiguration": {
+            "id": "connectionServiceConfiguration",
+            "description": "Connection Service Configuration",
+            "type": "object",
+            "properties": {
+                "maxTotal": {
+                    "id": "maxTotal",
+                    "description": "Set the maximum number of total open connections. Default value is 200.",
+                    "type": "integer",
+                    "multipleOf": 1,
+                    "maximum": 2147483647,
+                    "minimum": 1,
+                    "exclusiveMaximum": false,
+                    "exclusiveMinimum": false
+                },
+                "maxPerRoute": {
+                    "id": "maxPerRoute",
+                    "description": "Set the maximum number of concurrent connections per route. Default value is 50.",
+                    "type": "integer",
+                    "multipleOf": 1,
+                    "maximum": 2147483647,
+                    "minimum": 1,
+                    "exclusiveMaximum": false,
+                    "exclusiveMinimum": false
+                },
+                "validateAfterInactivity": {
+                    "id": "validateAfterInactivity",
+                    "description": "Defines period of inactivity in milliseconds after which persistent connections must be re-validated prior to being leased to the consumer. Default value is 2000.",
+                    "type": "integer",
+                    "multipleOf": 1,
+                    "maximum": 2147483647,
+                    "minimum": -1,
+                    "exclusiveMaximum": false,
+                    "exclusiveMinimum": false
+                }
+            }
         }
     },
     "required": [
@@ -2013,6 +2050,7 @@
         "deviceAuthzRequestExpiresIn",
         "deviceAuthzTokenPollInterval",
         "deviceAuthzResponseTypeToProcessAuthz",
-        "skipAuthenticationFilterOptionsMethod"
+        "skipAuthenticationFilterOptionsMethod",
+        "connectionServiceConfiguration"
     ]
 }

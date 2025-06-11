@@ -282,6 +282,8 @@ public class AppConfiguration implements Configuration {
     private Boolean allowBlankValuesInDiscoveryResponse;
 
     private Boolean skipAuthenticationFilterOptionsMethod = false;
+    
+    private ConnectionServiceConfiguration connectionServiceConfiguration;
 
     public Integer getAuthorizationChallengeSessionLifetimeInSeconds() {
         if (authorizationChallengeSessionLifetimeInSeconds == null) {
@@ -2270,6 +2272,14 @@ public class AppConfiguration implements Configuration {
 
 	public void setSkipAuthenticationFilterOptionsMethod(Boolean skipAuthenticationFilterOptionsMethod) {
 		this.skipAuthenticationFilterOptionsMethod = skipAuthenticationFilterOptionsMethod;
+	}
+
+	public ConnectionServiceConfiguration getConnectionServiceConfiguration() {
+		return connectionServiceConfiguration;
+	}
+
+	public void setConnectionServiceConfiguration(ConnectionServiceConfiguration connectionServiceConfiguration) {
+		this.connectionServiceConfiguration = connectionServiceConfiguration;
 	}
 
 }
