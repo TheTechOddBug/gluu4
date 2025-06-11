@@ -167,6 +167,10 @@ forceOfflineAccessScopeToEnableRefreshToken        | Boolean value specifying wh
 errorReasonEnabled                                 | Boolean value specifying whether to return detailed reason of the error from AS. Default value is false.
 removeRefreshTokensForClientOnLogout               | Boolean value specifying whether to remove Refresh Tokens on logout. Default value is false.
 forceRopcInAuthorizationEndpoint                   | Boolean value specifying whether to enabled ROPC custom script on Authorization Endpoint. Default value is false.
+connectionServiceConfiguration                     | Group for HttpService2 network configuration
+- maxTotal                                         | Set the maximum number of total open connections. Default value is 200. Property can be overwritten with system property `httpclient.maxTotal`
+- maxPerRoute                                      | Set the maximum number of concurrent connections per route. Default value is 50. Property can be overwritten with system property `httpclient.maxPerRoute`
+- validateAfterInactivity                          | Defines period of inactivity in milliseconds after which persistent connections must be re-validated prior to being leased to the consumer. Default value is 2000. Property can be overwritten with system property `httpclient.validateAfterInactivity`
 
 ### Brute Force Protection
 
