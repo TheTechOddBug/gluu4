@@ -16,6 +16,7 @@ import org.gluu.persist.annotation.CustomObjectClass;
 import org.gluu.persist.annotation.DN;
 import org.gluu.persist.annotation.DataEntry;
 import org.gluu.persist.annotation.ObjectClass;
+import org.gluu.persist.annotation.Password;
 import org.gluu.persist.model.base.CustomObjectAttribute;
 import org.gluu.orm.util.StringHelper;
 
@@ -38,6 +39,7 @@ public class SimpleUser implements Serializable {
     private String userId;
 
     @AttributeName(name = "userPassword")
+    @Password(skipHashed = true)
     private String userPassword;
     
     @AttributeName(name = "role")

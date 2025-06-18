@@ -35,6 +35,7 @@ import org.gluu.persist.annotation.DataEntry;
 import org.gluu.persist.annotation.Expiration;
 import org.gluu.persist.annotation.JsonObject;
 import org.gluu.persist.annotation.ObjectClass;
+import org.gluu.persist.annotation.Password;
 import org.gluu.persist.annotation.SchemaEntry;
 import org.gluu.persist.exception.EntryPersistenceException;
 import org.gluu.persist.exception.InvalidArgumentException;
@@ -45,6 +46,7 @@ import org.gluu.persist.model.AttributeDataModification;
 import org.gluu.persist.model.SearchScope;
 import org.gluu.persist.model.AttributeDataModification.AttributeModificationType;
 import org.gluu.persist.model.AttributeType;
+import org.gluu.persist.model.PasswordAttributeData;
 import org.gluu.persist.operation.PersistenceOperationService;
 import org.gluu.persist.reflect.property.Getter;
 import org.gluu.persist.reflect.property.PropertyAnnotation;
@@ -71,7 +73,7 @@ public abstract class BaseEntryManager<O extends PersistenceOperationService> im
 	private static final Class<?>[] LDAP_ENTRY_TYPE_ANNOTATIONS = { DataEntry.class, SchemaEntry.class, 
 			ObjectClass.class };
 	private static final Class<?>[] LDAP_ENTRY_PROPERTY_ANNOTATIONS = { AttributeName.class, AttributesList.class,
-			JsonObject.class };
+			JsonObject.class, Password.class };
 	private static final Class<?>[] LDAP_CUSTOM_OBJECT_CLASS_PROPERTY_ANNOTATION = { CustomObjectClass.class };
 	private static final Class<?>[] LDAP_DN_PROPERTY_ANNOTATION = { DN.class };
 	private static final Class<?>[] LDAP_EXPIRATION_PROPERTY_ANNOTATION = { Expiration.class };
@@ -1592,6 +1594,11 @@ public abstract class BaseEntryManager<O extends PersistenceOperationService> im
 				JsonObject.class);
 		boolean jsonObject = ldapJsonObject != null;
 		AttributeData attribute = getAttributeData(propertyName, ldapAttributeName, getter, entry, multiValued, jsonObject);
+
+		Annotation passwordObject = ReflectHelper.getAnnotationByType(propertiesAnnotation.getAnnotations(), Password.class);
+		if (passwordObject != null) {
+			attribute = new PasswordAttributeData(attribute, ((Password) passwordObject).skipHashed());
+		}
 
 		return attribute;
 	}

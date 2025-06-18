@@ -18,6 +18,7 @@ import org.gluu.persist.exception.operation.DuplicateEntryException;
 import org.gluu.persist.exception.operation.EntryNotFoundException;
 import org.gluu.persist.exception.operation.PersistenceException;
 import org.gluu.persist.exception.operation.SearchException;
+import org.gluu.persist.model.AttributeData;
 import org.gluu.persist.model.PagedResult;
 import org.gluu.persist.model.SearchScope;
 import org.gluu.persist.model.Sort;
@@ -59,7 +60,7 @@ public interface CouchbaseOperationService extends PersistenceOperationService {
             String[] attributes, Sort[] orderBy, CouchbaseBatchOperationWraper<O> batchOperationWraper, SearchReturnDataType returnDataType,
             int start, int count, int pageSize) throws SearchException;
 
-    String[] createStoragePassword(String[] passwords);
+    String[] createStoragePassword(String[] passwords, AttributeData attributeData);
 
     boolean isBinaryAttribute(String attribute);
     boolean isCertificateAttribute(String attribute);

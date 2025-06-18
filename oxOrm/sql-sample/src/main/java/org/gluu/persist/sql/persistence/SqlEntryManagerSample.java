@@ -33,7 +33,7 @@ public class SqlEntryManagerSample {
             connectionProperties.put("sql#auth.userPassword", "secret");
         } else {
             connectionProperties.put("sql#db.schema.name", "public");
-        	connectionProperties.put("sql#connection.uri", "jdbc:postgresql://u204.gluu.info:5432/gluudb");
+        	connectionProperties.put("sql#connection.uri", "jdbc:postgresql://localhost:5432/gluudb");
 
         	connectionProperties.put("sql#auth.userName", "postgres");
             connectionProperties.put("sql#auth.userPassword", "secret");
