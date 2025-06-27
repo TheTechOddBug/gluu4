@@ -129,7 +129,7 @@ public class RegistrationService extends RequestService {
         int keyHandleHashCode = deviceRegistrationService.getKeyHandleHashCode(rawRegisterResponse.getKeyHandle());
         deviceRegistration.setKeyHandleHashCode(keyHandleHashCode);
 
-        final String deviceRegistrationId = String.valueOf(System.currentTimeMillis());
+        final String deviceRegistrationId = UUID.randomUUID().toString();
         deviceRegistration.setId(deviceRegistrationId);
 
         String responseDeviceData = response.getDeviceData();
