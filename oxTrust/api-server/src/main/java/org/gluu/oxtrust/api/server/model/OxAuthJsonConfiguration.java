@@ -16,10 +16,12 @@ import org.gluu.oxauth.model.configuration.CorsConfigurationFilter;
 import org.gluu.oxauth.model.error.ErrorHandlingMethod;
 import org.gluu.oxauth.model.jwk.KeySelectionStrategy;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 @JsonPropertyOrder({
 	"issuer", "baseEndpoint", "authorizationEndpoint", "tokenEndpoint", "tokenRevocationEndpoint", "userInfoEndpoint", "clientInfoEndpoint",
 	"checkSessionIFrame", "endSessionEndpoint", "jwksUri", "registrationEndpoint", "openIdDiscoveryEndpoint",

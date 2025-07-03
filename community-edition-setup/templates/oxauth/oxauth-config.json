@@ -15,7 +15,6 @@
     "idGenerationEndpoint":"https://%(hostname)s/oxauth/restv1/id",
     "introspectionEndpoint":"https://%(hostname)s/oxauth/restv1/introspection",
     "umaConfigurationEndpoint":"https://%(hostname)s/oxauth/restv1/uma2-configuration",
-    "sectorIdentifierEndpoint":"https://%(hostname)s/oxauth/sectoridentifier",
     "oxElevenGenerateKeyEndpoint":"https://%(hostname)s/oxeleven/rest/oxeleven/generateKey",
     "oxElevenSignEndpoint":"https://%(hostname)s/oxeleven/rest/oxeleven/sign",
     "oxElevenVerifySignatureEndpoint":"https://%(hostname)s/oxeleven/rest/oxeleven/verifySignature",
