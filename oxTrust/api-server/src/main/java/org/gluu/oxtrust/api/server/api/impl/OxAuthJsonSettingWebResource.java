@@ -41,7 +41,7 @@ public class OxAuthJsonSettingWebResource extends BaseWebResource {
                     @ApiResponse(responseCode = "500", description = "Server error")
             }
     )
-	@ProtectedApi(scopes = { ApiScopeConstants.SCOPE_OXAUTH_JSONS_ETTING_READ })
+	@ProtectedApi(scopes = { ApiScopeConstants.SCOPE_OXAUTH_JSONS_SETTING_READ })
 	public Response getOxAuthJsonSettings() {
 		try {
 			log(logger, "Processing oxauth json settings retrieval request");
