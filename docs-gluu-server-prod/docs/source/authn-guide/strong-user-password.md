@@ -24,6 +24,6 @@ This guide walks you through the steps to enable and configure strong password p
    **"Enable custom validation for this attribute"**
 4. In the **"Validation RegExp"** field, enter your desired regular expression.  
    Example (for strong password requirements):
-
-   ```regex
+   ```regex title='Regular Expression'
    ^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,20}$
+   ```
