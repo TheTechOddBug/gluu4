@@ -61,6 +61,39 @@
 		<listener-class>org.jboss.weld.environment.servlet.Listener</listener-class>
 	</listener>
 
+    <filter>
+        <filter-name>ServletLoggingFilter</filter-name>
+        <filter-class>org.gluu.oxauth.audit.debug.ServletLoggingFilter</filter-class>
+    </filter>
+    <filter>
+        <filter-name>CorsFilter</filter-name>
+        <filter-class>org.gluu.oxauth.filter.CorsFilter</filter-class>
+    </filter>
+    <filter>
+        <filter-name>AuthenticationFilter</filter-name>
+        <filter-class>org.gluu.oxauth.auth.AuthenticationFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>ServletLoggingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>CorsFilter</filter-name>
+        <url-pattern>/.well-known/*</url-pattern>
+        <url-pattern>/restv1/*</url-pattern>
+        <url-pattern>/opiframe</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>AuthenticationFilter</filter-name>
+        <url-pattern>/restv1/authorize</url-pattern>
+        <url-pattern>/restv1/token</url-pattern>
+        <url-pattern>/restv1/userinfo</url-pattern>
+        <url-pattern>/restv1/revoke</url-pattern>
+        <url-pattern>/restv1/revoke_session</url-pattern>
+        <url-pattern>/restv1/bc-authorize</url-pattern>
+        <url-pattern>/restv1/device_authorization</url-pattern>
+    </filter-mapping>
+
 	<!-- JSF -->
 	<listener>
 		<listener-class>com.sun.faces.config.ConfigureListener</listener-class>
