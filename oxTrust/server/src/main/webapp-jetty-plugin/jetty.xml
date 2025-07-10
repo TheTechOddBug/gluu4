@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!DOCTYPE Configure PUBLIC "-//Jetty//Configure//EN"
+  "http://www.eclipse.org/jetty/configure_10_0.dtd">
+
+<Configure id="Server" class="org.eclipse.jetty.server.Server">
+
+  <!-- HTTP connector -->
+  <Call name="addConnector">
+    <Arg>
+      <New id="httpConnector" class="org.eclipse.jetty.server.ServerConnector">
+        <Arg name="server"><Ref refid="Server" /></Arg>
+        <Set name="port">8082</Set>
+      </New>
+    </Arg>
+  </Call>
+
+
+  <!-- HTTPS connector -->
+  <Call  name="addConnector">
+    <Arg>
+      <New id="sslConnector" class="org.eclipse.jetty.server.ServerConnector">
+        <Arg name="server"><Ref refid="Server" /></Arg>
+        <Arg>
+          <New class="org.eclipse.jetty.util.ssl.SslContextFactory$Server">
+            <Set name="keyStorePath">src/main/webapp-jetty-plugin/keystore.p12</Set>
+            <Set name="keyStorePassword">changeit</Set>
+            <Set name="keyManagerPassword">changeit</Set>
+          </New>
+        </Arg>
+        <Set name="port">8045</Set>
+      </New>
+    </Arg>
+  </Call>
+
+</Configure>
