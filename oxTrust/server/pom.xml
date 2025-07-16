@@ -35,9 +35,8 @@
 		<resources>
 			<resource>
 				<directory>src/main/resources</directory>
-				<filtering>true</filtering>
+				<filtering>false</filtering>
 				<includes>
-					<include>**/*.xml</include>
 					<include>**/*.properties</include>
 					<include>**/*.pdf</include>
 					<include>**/*.js</include>
@@ -45,9 +44,21 @@
 					<include>**/*.gif</include>
 					<include>**/*.ico</include>
 					<include>**/*.json</include>
+					<include>ehcache.xml</include>
+					<include>faces-config.xml</include>
+					<include>oxTrust-dev-ds.xml</include>
+					<include>META-INF/services/**</include>
 					<include>META-INF/navigation/*.navigation.xml</include>
+					<include>META-INF/navigation/*.navigation.xml</include>
+					<include>META-INF/gluufunctions.taglib.xml</include>
+				</includes>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+				<includes>
+					<include>log4j2.xml</include>
 					<include>META-INF/beans.xml</include>
-					<include>META-INF/services/*.*</include>
 				</includes>
 			</resource>
 		</resources>
@@ -208,35 +219,6 @@
 							<Build-Branch>${git.branch}</Build-Branch>
 						</manifestEntries>
 					</archive>
-
-					<webResources>
-						<resource>
-							<directory>src/main/webapp</directory>
-							<filtering>true</filtering>
-							<includes>
-								<include>**/*.xml</include>
-								<include>**/*.properties</include>
-							</includes>
-						</resource>
-						<resource>
-							<directory>src/main/webapp</directory>
-							<filtering>false</filtering>
-							<includes>
-								<include>META-INF/navigation/*.navigation.xml</include>
-								<include>**/*.xhtml</include>
-								<include>**/*.jsp</include>
-								<include>**/*.html</include>
-								<include>**/*.pdf</include>
-								<include>**/*.js</include>
-								<include>**/*.css</include>
-								<include>**/*.xcss</include>
-								<include>**/*.png</include>
-								<include>**/*.jpg</include>
-								<include>**/*.gif</include>
-								<include>**/*.ico</include>
-							</includes>
-						</resource>
-					</webResources>
 				</configuration>
 			</plugin>
 
@@ -256,21 +238,6 @@
 				<configuration>
 					<doCheck>false</doCheck>
 					<doUpdate>false</doUpdate>
-				</configuration>
-			</plugin>
-
-			<!-- Jetty plugin -->
-			<plugin>
-				<groupId>org.eclipse.jetty</groupId>
-				<artifactId>jetty-maven-plugin</artifactId>
-				<configuration>
-					<webAppConfig>
-						<descriptor>${project.build.directory}/${project.build.finalName}/WEB-INF/web.xml</descriptor>
-						<contextPath>/identity</contextPath>
-					</webAppConfig>
-
-					<webAppSourceDirectory>${project.build.directory}/${project.build.finalName}</webAppSourceDirectory>
-					<scanIntervalSeconds>3</scanIntervalSeconds>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -645,6 +612,7 @@
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-compress</artifactId>
 		</dependency>
+		<!--
 		<dependency>
 			<groupId>org.openid4java</groupId>
 			<artifactId>openid4java-consumer</artifactId>
@@ -672,6 +640,7 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+-->
 		<dependency>
 			<groupId>org.apache.velocity</groupId>
 			<artifactId>velocity-engine-core</artifactId>
@@ -714,7 +683,7 @@
 			<groupId>org.javatuples</groupId>
 			<artifactId>javatuples</artifactId>
 		</dependency>
-			
+
 
 		<!-- Test -->
 		<dependency>
@@ -879,21 +848,25 @@
 					<artifactId>arquillian-jetty-embedded-9</artifactId>
 					<scope>test</scope>
 				</dependency>
+				<!--
 				<dependency>
 					<groupId>org.eclipse.jetty</groupId>
 					<artifactId>jetty-webapp</artifactId>
 					<scope>test</scope>
 				</dependency>
+-->
 				<dependency>
 					<groupId>org.eclipse.jetty</groupId>
 					<artifactId>jetty-deploy</artifactId>
 					<scope>test</scope>
 				</dependency>
+				<!--
 				<dependency>
 					<groupId>org.eclipse.jetty</groupId>
 					<artifactId>jetty-annotations</artifactId>
 					<scope>test</scope>
 				</dependency>
+-->
 				<dependency>
 					<groupId>org.eclipse.jetty</groupId>
 					<artifactId>jetty-plus</artifactId>
@@ -912,6 +885,29 @@
 				<plugins>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-resources-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>prepare-jetty-run-files</id>
+								<phase>compile</phase>
+								<goals>
+									<goal>copy-resources</goal>
+								</goals>
+								<configuration>
+									<outputDirectory>${project.build.directory}/jetty-plugin</outputDirectory>
+									<resources>
+										<resource>
+											<directory>src/main/webapp-jetty</directory>
+											<filtering>true</filtering>
+										</resource>
+									</resources>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-war-plugin</artifactId>
 						<configuration>
 							<archive>
@@ -926,36 +922,30 @@
 
 							<webResources>
 								<resource>
-									<directory>src/main/webapp</directory>
-									<filtering>true</filtering>
-									<includes>
-										<include>**/*.xml</include>
-										<include>**/*.properties</include>
-									</includes>
-								</resource>
-								<resource>
-									<directory>src/main/webapp</directory>
-									<filtering>false</filtering>
-									<includes>
-										<include>META-INF/navigation/*.navigation.xml</include>
-										<include>**/*.xhtml</include>
-										<include>**/*.jsp</include>
-										<include>**/*.html</include>
-										<include>**/*.pdf</include>
-										<include>**/*.js</include>
-										<include>**/*.css</include>
-										<include>**/*.xcss</include>
-										<include>**/*.png</include>
-										<include>**/*.jpg</include>
-										<include>**/*.gif</include>
-										<include>**/*.ico</include>
-									</includes>
-								</resource>
-								<resource>
 									<directory>src/main/webapp-jetty</directory>
 									<filtering>true</filtering>
 								</resource>
 							</webResources>
+						</configuration>
+					</plugin>
+
+					<!-- Jetty plugin -->
+					<plugin>
+						<groupId>org.eclipse.jetty.ee8</groupId>
+						<artifactId>jetty-ee8-maven-plugin</artifactId>
+						<version>12.0.23</version>
+						<configuration>
+							<webApp>
+								<contextPath>/identity</contextPath>
+								<descriptor>${project.build.directory}/jetty-plugin/WEB-INF/web.xml</descriptor>
+								<jettyEnvXml>${project.build.directory}/jetty-plugin/WEB-INF/jetty-env.xml</jettyEnvXml>
+							</webApp>
+                    
+							<jettyXmls>
+								<jettyXml>${project.basedir}/src/main/webapp-jetty-plugin/jetty.xml</jettyXml>
+							</jettyXmls>
+
+							<scanIntervalSeconds>3</scanIntervalSeconds>
 						</configuration>
 					</plugin>
 				</plugins>
