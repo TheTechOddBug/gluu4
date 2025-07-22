@@ -31,6 +31,8 @@ import org.gluu.oxauth.model.util.Util;
 import org.jboss.resteasy.client.jaxrs.ClientHttpEngine;
 import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
+import org.jboss.resteasy.plugins.interceptors.GZIPDecodingInterceptor;
+import org.jboss.resteasy.plugins.interceptors.GZIPEncodingInterceptor;
 
 /**
  * Allows to retrieve HTTP requests to the authorization server and responses from it for display purposes.
@@ -237,6 +239,8 @@ public abstract class BaseClient<T extends BaseRequest, V extends BaseResponse> 
         } else {
         	resteasyClient = ((ResteasyClientBuilder) ResteasyClientBuilder.newBuilder()).httpEngine(executor).build();
         }
+
+        resteasyClient.register(GZIPDecodingInterceptor.class).register(GZIPEncodingInterceptor.class);
 
         webTarget = resteasyClient.target(getUrl());
     }
