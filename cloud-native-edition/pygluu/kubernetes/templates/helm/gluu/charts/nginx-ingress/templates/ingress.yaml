@@ -101,7 +101,7 @@ spec:
     - host: {{ $host | quote }}
       http:
         paths:
-          - path: /device-code
+          - path: /device-code$
             pathType: Exact
             backend:
               service:
@@ -158,8 +158,8 @@ spec:
     - host: {{ $host | quote }}
       http:
         paths:
-          - path: /firebase-messaging-sw.js
-            pathType: Exact
+          - path: /firebase-messaging-sw.js$
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: oxauth
@@ -178,7 +178,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ $fullName }}-openid-config
-  labels: 
+  labels:
     app: {{ $fullName }}-oxauth
 {{- if .Values.ingress.additionalLabels }}
 {{ toYaml .Values.ingress.additionalLabels | indent 4 }}
@@ -213,8 +213,8 @@ spec:
     - host: {{ . | quote }}
       http:
         paths:
-          - path: /.well-known/openid-configuration
-            pathType: Exact
+          - path: /.well-known/openid-configuration$
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: oxauth
@@ -232,7 +232,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ $fullName }}-uma2-config
-  labels: 
+  labels:
     app: {{ $fullName }}-oxauth
 {{- if .Values.ingress.additionalLabels }}
 {{ toYaml .Values.ingress.additionalLabels | indent 4 }}
@@ -267,8 +267,8 @@ spec:
     - host: {{ . | quote }}
       http:
         paths:
-          - path: /.well-known/uma2-configuration
-            pathType: Exact
+          - path: /.well-known/uma2-configuration$
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: oxauth
@@ -286,7 +286,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ $fullName }}-webfinger
-  labels: 
+  labels:
     app: {{ $fullName }}-oxauth
 {{- if .Values.ingress.additionalLabels }}
 {{ toYaml .Values.ingress.additionalLabels | indent 4 }}
@@ -321,8 +321,8 @@ spec:
     - host: {{ . | quote }}
       http:
         paths:
-          - path: /.well-known/webfinger
-            pathType: Exact
+          - path: /.well-known/webfinger$
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: oxauth
@@ -341,7 +341,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ $fullName }}-webdiscovery
-  labels: 
+  labels:
     app: {{ $fullName }}-oxauth
 {{- if .Values.ingress.additionalLabels }}
 {{ toYaml .Values.ingress.additionalLabels | indent 4 }}
@@ -376,8 +376,8 @@ spec:
     - host: {{ . | quote }}
       http:
         paths:
-          - path: /.well-known/simple-web-discovery
-            pathType: Exact
+          - path: /.well-known/simple-web-discovery$
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: oxauth
@@ -430,8 +430,8 @@ spec:
     - host: {{ . | quote }}
       http:
         paths:
-          - path: /.well-known/scim-configuration
-            pathType: Exact
+          - path: /.well-known/scim-configuration$
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: scim
@@ -537,8 +537,8 @@ spec:
     - host: {{ . | quote }}
       http:
         paths:
-          - path: /.well-known/fido-configuration
-            pathType: Exact
+          - path: /.well-known/fido-configuration$
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: oxauth
@@ -591,8 +591,8 @@ spec:
     - host: {{ . | quote }}
       http:
         paths:
-          - path: /.well-known/fido2-configuration
-            pathType: Exact
+          - path: /.well-known/fido2-configuration$
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: fido2
@@ -663,7 +663,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ $fullName }}-gluu
-  labels: 
+  labels:
     app: {{ $fullName }}-oxauth
 {{- if .Values.ingress.additionalLabels }}
 {{ toYaml .Values.ingress.additionalLabels | indent 4 }}
@@ -715,7 +715,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ $fullName }}-passport-statefulset
-  labels: 
+  labels:
     app: {{ $fullName }}-passport
 {{- if .Values.ingress.additionalLabels }}
 {{ toYaml .Values.ingress.additionalLabels | indent 4 }}
@@ -882,7 +882,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ $fullName }}-casa
-  labels: 
+  labels:
     app: {{ $fullName }}-casa
 {{- if .Values.ingress.additionalLabels }}
 {{ toYaml .Values.ingress.additionalLabels | indent 4 }}
