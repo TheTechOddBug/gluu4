@@ -16,7 +16,9 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.core.MediaType;
 
+import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.gluu.oxauth.model.common.AuthorizationMethod;
 import org.gluu.oxauth.model.crypto.OxAuthCryptoProvider;
 import org.gluu.oxauth.model.jwe.Jwe;
@@ -35,6 +37,8 @@ import org.json.JSONObject;
  * @version December 26, 2016
  */
 public class UserInfoClient extends BaseClient<UserInfoRequest, UserInfoResponse> {
+
+    private static final Logger LOG = Logger.getLogger(UserInfoClient.class);
 
     private String sharedKey;
     private PrivateKey privateKey;
@@ -120,10 +124,20 @@ public class UserInfoClient extends BaseClient<UserInfoRequest, UserInfoResponse
             setResponse(new UserInfoResponse(status));
 
             String entity = clientResponse.readEntity(String.class);
+            if (LOG.isDebugEnabled()) {
+        		LOG.debug("Status code: " + status);
+            	if (entity != null) {
+            		LOG.debug("Content in HEX: " + Hex.encodeHexString(entity.getBytes()));
+            	}
+            }
             getResponse().setEntity(entity);
             getResponse().setHeaders(clientResponse.getMetadata());
             if (StringUtils.isNotBlank(entity)) {
                 List<Object> contentType = clientResponse.getHeaders().get("Content-Type");
+                if (LOG.isDebugEnabled() && (contentType != null)) {
+                    LOG.debug("Content types: " + contentType);
+                }
+
                 if (contentType != null && contentType.contains("application/jwt")) {
                     String[] jwtParts = entity.split("\\.");
                     if (jwtParts.length == 5) {
@@ -148,6 +162,10 @@ public class UserInfoClient extends BaseClient<UserInfoRequest, UserInfoResponse
                     }
                 } else {
                     try {
+                    	if (LOG.isDebugEnabled()) {
+                    		LOG.debug("Content type in JSON" + entity);
+                    	}
+
                         JSONObject jsonObj = new JSONObject(entity);
 
                         if (jsonObj.has("error")) {
