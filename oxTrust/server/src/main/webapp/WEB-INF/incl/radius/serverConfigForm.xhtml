@@ -26,15 +26,9 @@
 				<div class="col-xs-12 col-sm-12 col-lg-12" style="margin-top: 5px;">
 					<div class="nav-tabs-custom"
 						style="margin-bottom: 0px; overflow: auto;">
-						<ul class="nav nav-tabs">
-							<li><a href="#basic-settings"
-								data-bs-toggle="tab" class="active">#{msgs['radius.config.tab.basic']}</a></li>
-							<li><a href="#openid-settings" data-bs-toggle="tab">#{msgs['radius.config.tab.openid']}</a>
-							</li>
-						</ul>
-						<div class="tab-content">
+						<b:tabView contentStyle="border: 1px solid">
 							<!-- basic settings tab-->
-							<div class="tab-pane active box box-primary" id="basic-settings">
+							<b:tab id="basic-settings" title="#{msgs['radius.config.tab.basic']}">
 								<div class="row" style="margin-left: 5px; margin-right: 5px;">
 									<div class="col-sm-4 col-lg-4" style="padding: 0px;">
 										<ox:decorate id="auth-listen-port"
@@ -68,11 +62,11 @@
 										</ox:decorate>
 									</div>
 								</div>
-							</div>
+							</b:tab>
 							<!-- end of basic settings tab -->
 
 							<!-- openid settings tab-->
-							<div class="tab-pane box box-primary" id="openid-settings">
+							<b:tab id="openid-scopes" title="#{msgs['radius.config.tab.openid']}">
 								<div class="row" style="margin-left: 5px; margin-right: 5px;">
 									<div class="col-sm-6 col-lg-6" style="padding: 0px;">
 										<ox:decorate id="acr-value"
@@ -120,9 +114,9 @@
 											oncomplete="$('.scopedialogClass').modal('show')" />
 									</h:panelGroup>
 								</b:panel>
-							</div>
+							</b:tab>
 							<!-- end of openid settings tab -->
-						</div>
+						</b:tabView>
 					</div>
 				</div>
 			</div>
