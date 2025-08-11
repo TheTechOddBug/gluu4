@@ -1,0 +1,106 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:b="http://bootsfaces.net/ui"
+	xmlns:gluuext="http://xmlns.jcp.org/jsf/composite/gluuext"
+	xmlns:cc="http://xmlns.jcp.org/jsf/composite">
+
+<cc:interface>
+	<cc:attribute name="listId" required="true" type="java.lang.String" />
+	<cc:attribute name="sourceList" required="true" type="java.util.List" />
+	<cc:attribute name="targetList" required="true" type="java.util.List" />
+	<cc:attribute name="listHeight" required="false" default="200" type="java.lang.Integer" />
+	<cc:attribute name="listWidth" required="false" default="400" type="java.lang.Integer" />
+	<cc:attribute name="sourceCaption" required="false" default="Source" type="java.lang.String" />
+	<cc:attribute name="targetCaption" required="false" default="Target" type="java.lang.String" />
+	<cc:attribute name="update" required="false" type="java.lang.String" />
+	<cc:attribute name="converterId" required="false" type="java.lang.String" />
+</cc:interface>
+
+<cc:implementation>
+	<ui:param name="_hashCode" value="#{gluufn:hashCode(cc.attrs.listId)}"/>
+	<b:panel id="pickListId#{_hashCode}" style="margin: 0 auto;">
+		<ui:param name="_sourceList" value="#{pickListAction.retainUnique(cc.attrs.sourceList, cc.attrs.targetList)}"/>
+		<b:row styleClass="show-grid">
+			<b:column id="sourceColumnId" style="width: #{cc.attrs.listWidth}px">
+				<b:dataTable value="#{_sourceList}" var="item" widgetVar="sourceListWidget#{_hashCode}"
+					searching="false" scroll-size="#{cc.attrs.listHeight}px" paginated="false" info="false" select="true" >
+					<b:column>
+						<f:facet name="header">#{cc.attrs.sourceCaption}</f:facet>
+						<h:outputText rendered="#{cc.attrs.converterId ne null}" value="#{item}">
+							<f:converter converterId="#{cc.attrs.converterId}" />
+						</h:outputText>
+			    	</b:column>
+					<cc:insertChildren />
+				</b:dataTable>
+			</b:column>
+	
+			<b:column medium-screen="3" style="width:80px;vertical-align: middle;">
+				<h:panelGrid columns="1" style="margin-left: 10px;">
+					<gluuext:spacer height="48px" />
+					<b:button look="primary" icon="arrow-right" value="All" onclick="moveAllToTarget#{_hashCode}()" style="width:60px;"/>
+
+					<gluuext:spacer height="8px" />
+					<b:button look="primary" icon="arrow-right" onclick="moveSelectedToTarget#{_hashCode}(sourceListWidget#{_hashCode});" style="width:60px;"/>
+
+					<gluuext:spacer height="32px" />
+					<b:button look="primary" icon="arrow-left" onclick="moveSelectedToSource#{_hashCode}(targetListWidgett#{_hashCode});" style="width:60px;"/>
+
+					<gluuext:spacer height="8px" />
+					<b:button look="primary" icon="arrow-left" value="All" onclick="moveAllToSource#{_hashCode}()" style="width:60px;"/>
+				</h:panelGrid>
+			</b:column>
+	
+			<b:column id="targetColumnId" style="width: #{cc.attrs.listWidth}px">
+				<b:dataTable value="#{cc.attrs.targetList}" var="item" widgetVar="targetListWidgett#{_hashCode}"
+					searching="false" scroll-size="#{cc.attrs.listHeight}px" paginated="false" info="false" select="true">
+					<b:column>
+						<f:facet name="header">#{cc.attrs.targetCaption}</f:facet>
+						<h:outputText rendered="#{cc.attrs.converterId ne null}" value="#{item}">
+							<f:converter converterId="#{cc.attrs.converterId}" />
+						</h:outputText>
+				    </b:column>
+					<cc:insertChildren  name="column" />
+				</b:dataTable>
+			</b:column>
+		</b:row>
+
+		<b:remoteCommand name="moveAllToTarget#{_hashCode}" action="#{pickListAction.moveAll(_sourceList, cc.attrs.targetList)}" ajax="true" process="@this" update="@form:pickListId#{_hashCode}:sourceColumnId @form:pickListId#{_hashCode}:targetColumnId #{cc.attrs.update}"/>
+		<b:remoteCommand name="moveAllToSource#{_hashCode}" action="#{pickListAction.moveAll(cc.attrs.targetList, _sourceList)}" ajax="true" process="@this" update="@form:pickListId#{_hashCode}:sourceColumnId @form:pickListId#{_hashCode}:targetColumnId #{cc.attrs.update}"/>
+	
+		<b:remoteCommand name="moveToSource#{_hashCode}" action="#{pickListAction.move(cc.attrs.targetList, _sourceList)}" parameters="indexes" ajax="true" process="@this" update="@form:pickListId#{_hashCode}:sourceColumnId @form:pickListId#{_hashCode}:targetColumnId #{cc.attrs.update}"/>
+		<b:remoteCommand name="moveToTarget#{_hashCode}" action="#{pickListAction.move(_sourceList, cc.attrs.targetList)}" parameters="indexes" ajax="true" process="@this" update="@form:pickListId#{_hashCode}:sourceColumnId @form:pickListId#{_hashCode}:targetColumnId #{cc.attrs.update}"/>
+	</b:panel>
+	
+	<h:outputScript>
+		function getSelectedList(widgetTable) {
+			var selectedRowIndices = [];
+			widgetTable.DataTable().rows('.selected').each(function(index) {
+				if (index != '') {
+					selectedRowIndices.push(index);
+				}
+			});
+			return selectedRowIndices;
+		}
+
+		function moveSelectedToSource#{_hashCode}(widgetTable) {
+			var items = getSelectedList(widgetTable);
+			if (items.length > 0) {
+				moveToSource#{_hashCode}(items);
+			}
+		}
+
+		function moveSelectedToTarget#{_hashCode}(widgetTable) {
+			var items = getSelectedList(widgetTable);
+			if (items.length > 0) {
+				moveToTarget#{_hashCode}(items);
+			}
+		}
+	</h:outputScript>
+
+</cc:implementation>
+
+</html>

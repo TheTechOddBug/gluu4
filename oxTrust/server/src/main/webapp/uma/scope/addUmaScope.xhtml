@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:a4j="http://richfaces.org/a4j"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:b="http://bootsfaces.net/ui" xmlns:o="http://omnifaces.org/ui"
+	xmlns:b="http://bootsfaces.net/ui"
 	xmlns:ox="http://xmlns.jcp.org/jsf/composite/ox"
-	xmlns:rich="http://richfaces.org/rich"
 	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:richext="http://xmlns.jcp.org/jsf/composite/richext"
+	xmlns:gluuext="http://xmlns.jcp.org/jsf/composite/gluuext"
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	template="/WEB-INF/incl/layout/newtemplate.xhtml">
 	<f:metadata>
@@ -78,9 +76,7 @@
 									<b:panel id="responseTypes"
 										title="#{msgs['uma.authorizationPolicy']}" look="primary">
 										<h:panelGroup id="selectedAuthorizationPolicyId">
-											<a4j:repeat rowKeyVar="_authorizationPolicyIdx"
-												value="#{updateUmaScopeAction.authorizationPolicies}"
-												var="_authorizationPolicy">
+											<ui:repeat value="#{updateUmaScopeAction.authorizationPolicies}" var="_authorizationPolicy" varStatus="_authorizationPolicyStatus">
 												<div class="col-sm-12">
 													<div class="col-sm-6">
 														<h:outputText style="margin-left:-29px;"
@@ -88,19 +84,19 @@
 														<h:outputText value=" " />
 													</div>
 													<div class="col-sm-6">
-														<a4j:commandLink
+														<b:commandLink ajax="true"
 															action="#{updateUmaScopeAction.removeAuthorizationPolicy(_authorizationPolicy)}"
-															execute="@this" render="selectedAuthorizationPolicyId"
+															process="@this" update="selectedAuthorizationPolicyId"
 															styleClass="glyphicon glyphicon-remove removeAuthorization">
-														</a4j:commandLink>
+														</b:commandLink>
 													</div>
 												</div>
-											</a4j:repeat>
-											<p:spacer height="16" />
+											</ui:repeat>
+											<gluuext:spacer height="16" />
 										</h:panelGroup>
 										<h:panelGroup>
-											<a4j:commandButton execute="@this"
-												oncomplete="#{rich:component('authorizationPolicy:selectEntityModalPanel')}.show();"
+											<b:commandButton ajax="true" look="primary" process="@this"
+												oncomplete="$('.authorizationPolicyClass').modal('show')"
 												styleClass="btn btn-primary AddAuthorizationButtonClass"
 												value="#{msgs['uma.addAuthorizationPolicy']}" />
 										</h:panelGroup>
@@ -110,14 +106,13 @@
 									<b:panel id="clients"
 										rendered="#{updateUmaScopeAction.clientList != null}"
 										title="clients" look="primary">
-										<a4j:repeat rowKeyVar="_clientIdx"
-											value="#{updateUmaScopeAction.clientList}" var="_cilent">
+										<ui:repeat value="#{updateUmaScopeAction.clientList}" var="_cilent" varStatus="_clientStatus">
 											<h:link includeViewParams="false"
 												outcome="/client/updateClient"
-												value="#{_cilent.displayName}">
-												<f:param name="inum" value="#{_cilent.inum}" />
+												value="#{_client.displayName}">
+												<f:param name="inum" value="#{_clientIdx.inum}" />
 											</h:link>
-										</a4j:repeat>
+										</ui:repeat>
 									</b:panel>
 								</div>
 								<div class="row" style="margin-left: 10px; margin-right: 10px;">
@@ -154,8 +149,8 @@
 									<h:commandButton action="#{updateUmaScopeAction.save}"
 										styleClass="btn btn-primary updateScopeButtonId"
 										value="#{updateUmaScopeAction.update ? 'Update' : 'Add Scope'}" />
-									<a4j:commandButton ajaxSingle="true"
-										onclick="#{rich:component('deleteConfirmation:acceptRemovalModalPanel')}.show();"
+									<b:commandButton ajax="true" look="primary"
+										oncomplete="$('.acceptRemovalModalPanelClass').modal('show')"
 										rendered="#{updateUmaScopeAction.update}"
 										style="margin-left:3px;"
 										styleClass="btn btn-primary deleteScopeButtonId"
@@ -179,7 +174,7 @@
 			searchMethod="#{updateUmaScopeAction.searchAvailableAuthorizationPolicies}"
 			searchResult="#{updateUmaScopeAction.availableAuthorizationPolicies}" />
 		<ox:acceptRemovalDialog deleteMethod="#{updateUmaScopeAction.delete}"
-			id="deleteConfirmation" subject="scope"
+			dialogId="deleteConfirmation" subject="scope"
 			value="#{updateUmaScopeAction.umaScope.id}" />
 	</ui:define>
 </ui:composition>

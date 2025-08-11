@@ -1,0 +1,39 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:b="http://bootsfaces.net/ui" xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:cc="http://xmlns.jcp.org/jsf/composite">
+
+<cc:interface>
+	<cc:attribute name="id" required="true" type="java.lang.String" />
+	<cc:attribute name="startText" default="" type="java.lang.String" />
+	<cc:attribute name="stopText" default="" type="java.lang.String" />
+	<cc:attribute name="startStyle" default="color:red;display:none;" type="java.lang.String" />
+	<cc:attribute name="stopStyle" default="display:none;" type="java.lang.String" />
+</cc:interface>
+
+<cc:implementation>
+	<span class="#{cc.attrs.id}Status">
+		<span class="gluu-st-start" style="#{cc.attrs.startStyle}">#{cc.attrs.startText}</span>
+		<span class="gluu-st-stop" style="#{cc.attrs.stopStyle}">#{cc.attrs.stopText}</span>
+	</span>
+
+	<h:outputScript>
+		jsf.ajax.addOnEvent(function (data) {
+			startComp = $('.#{cc.attrs.id}Status').find('.gluu-st-start');
+			endComp = $('.#{cc.attrs.id}Status').find('.gluu-st-stop');
+
+	        if (data.status === 'begin') {
+	        	startComp.show();
+	        	endComp.hide();
+	        }
+	        if (data.status === 'complete' || data.status === 'success' || data.status === 'error') {
+	        	startComp.hide();
+	        	endComp.show();
+	        }
+	    });
+	</h:outputScript>
+</cc:implementation>
+</html>

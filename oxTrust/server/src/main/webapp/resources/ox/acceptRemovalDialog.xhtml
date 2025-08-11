@@ -1,15 +1,16 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:a4j="http://richfaces.org/a4j"
-	xmlns:rich="http://richfaces.org/rich"
+	xmlns:b="http://bootsfaces.net/ui"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:richext="http://xmlns.jcp.org/jsf/composite/richext"
+	xmlns:gluuext="http://xmlns.jcp.org/jsf/composite/gluuext"
 	xmlns:cc="http://xmlns.jcp.org/jsf/composite">
 
 <cc:interface>
+	<cc:attribute name="dialogId" required="true" type="java.lang.String" />
 	<cc:attribute name="subject" required="true" type="java.lang.String" />
 	<cc:attribute name="message" required="false" type="java.lang.String" />
 	<cc:attribute name="value" required="true" type="java.lang.String" />
@@ -21,54 +22,43 @@
 </cc:interface>
 
 <cc:implementation>
-	<rich:popupPanel id="acceptRemovalModalPanel"
-		onmaskclick="#{rich:component('acceptRemovalModalPanel')}.hide()"
-		zindex="2000" moveable="true" autosized="true">
-		<f:facet name="header">
-			<h:outputText value="Accept #{cc.attrs.subject} removal" />
-		</f:facet>
-		<f:facet name="controls">
-			<h:graphicImage value="/img/close.gif" styleClass="hidelink"
-				style="cursor:pointer"
-				onclick="#{rich:component('acceptRemovalModalPanel')}.hide(); return false;" />
-		</f:facet>
 
-		<h:panelGrid styleClass="dialogBoxPanelFor#{cc.attrs.value}"
-			columns="1" border="0" cellpadding="0" cellspacing="0" width="100%"
-			columnClasses="alignLeft">
-			<h:panelGroup>
-				<h:outputText value="Warning:&#160;" styleClass="bolded" />
-				<h:outputText rendered="#{cc.attrs.message eq null}"
-					value="Removing #{cc.attrs.subject} '#{cc.attrs.value}' will cause any data stored 
-                   in the #{cc.attrs.subject} to be permanently lost. Are you sure you want to continue?" />
-				<h:outputText rendered="#{cc.attrs.message ne null}"
-					value="#{cc.attrs.message}" />
-			</h:panelGroup>
+	<b:modal styleClass="#{cc.attrs.dialogId}Class"
+		title="Accept #{cc.attrs.subject} removal" size="modal-lg">
 
-			<p:spacer height="8" />
+		<h:panelGroup layout="block"
+			styleClass="dialogBoxPanelFor#{cc.attrs.value}">
+			<h:outputText value="Warning: " styleClass="font-weight-bold" />
+			<br />
+			<h:outputText rendered="#{cc.attrs.message eq null}"
+				value="Removing #{cc.attrs.subject} '#{cc.attrs.value}' will cause any data stored 
+                            in the #{cc.attrs.subject} to be permanently lost. Are you sure you want to continue?" />
+			<h:outputText rendered="#{cc.attrs.message ne null}"
+				value="#{cc.attrs.message}" />
+		</h:panelGroup>
 
-			<h:panelGroup>
-				<a4j:commandButton styleClass="btn btn-primary confirmDialogButton"
-					value="Ok"
-					onbegin="#{rich:component('acceptRemovalModalPanel')}.hide();"
-					action="#{cc.attrs.deleteMethod}" render="#{cc.attrs.render}"
-					execute="@this" />
-                &nbsp;
-                <a4j:commandButton
-					styleClass="btn btn-primary cancelDialogButton" value="Cancel"
-					oncomplete="#{rich:component('acceptRemovalModalPanel')}.hide(); return false;"
-					rendered="#{cc.attrs.cancelMethod == null}" execute="@this" />&nbsp;
-                <a4j:commandButton
-					styleClass="btn btn-primary cancelDialogButton" value="Cancel"
-					oncomplete="#{rich:component('acceptRemovalModalPanel')}.hide(); return false;"
-					rendered="#{cc.attrs.cancelMethod != null}" execute="@this"
-					action="#{cc.attrs.cancelMethod}" />&nbsp;
-                <a4j:status
-					startText="Request in progress please wait......" stopText=""
-					startStyle="color:red" />
-			</h:panelGroup>
-		</h:panelGrid>
-	</rich:popupPanel>
+		<h:form>
+			<b:commandButton value="Ok" look="primary" ajax="true"
+				process="@this" update="#{cc.attrs.render}"
+				action="#{cc.attrs.deleteMethod}"
+				oncomplete="$('.#{cc.attrs.dialogId}Class').modal('hide');"
+				onsuccess="$('.#{cc.attrs.dialogId}Class').modal('hide');"/>
+			<gluuext:spacer width="8px" height="8px"/>
+			<b:commandButton value="Cancel" look="primary"
+				ajax="true"
+				oncomplete="$('.#{cc.attrs.dialogId}Class').modal('hide'); return false;"
+				rendered="#{cc.attrs.cancelMethod == null}" />
+			<gluuext:spacer width="8px" height="8px"/>
+			<b:commandButton value="Cancel" look="primary"
+				rendered="#{cc.attrs.cancelMethod != null}"
+				action="#{cc.attrs.cancelMethod}"
+				ajax="true" process="@this"
+				oncomplete="$('.#{cc.attrs.dialogId}Class').modal('hide'); return false;" />
+
+			<gluuext:spacer width="8px" height="16px"/>
+			<gluuext:status startText="Request in progress please wait......" />
+		</h:form>
+	</b:modal>
 </cc:implementation>
 
 </html>

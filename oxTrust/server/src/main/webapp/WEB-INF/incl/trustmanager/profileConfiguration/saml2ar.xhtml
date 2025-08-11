@@ -4,9 +4,8 @@
     xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
     xmlns:f="http://xmlns.jcp.org/jsf/core"
     xmlns:h="http://xmlns.jcp.org/jsf/html"
-    xmlns:a4j="http://richfaces.org/a4j"
-    xmlns:rich="http://richfaces.org/rich"
-    xmlns:richext="http://xmlns.jcp.org/jsf/composite/richext"
+    xmlns:b="http://bootsfaces.net/ui"
+    xmlns:gluuext="http://xmlns.jcp.org/jsf/composite/gluuext"
     xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
 
     <h:panelGrid columns="2" id="saml2ar" columnClasses="half,half" width="100%"
@@ -14,16 +13,12 @@
 
         <ui:param name="_profileConfigurationSelected" value="#{_relyingPartyAction.getProfileConfiguration('SAML2ArtifactResolution')}" />
 
-        <rich:panel id="SAML2ArtifactResolutionDescription" bodyClass="inpanelBody">
-            <f:facet name="header">
-                <h:outputText value="#{msgs['trustmanager.saml2ArtifactResolutionHelp']}" />
-            </f:facet>
+        <b:panel id="SAML2ArtifactResolutionDescription" look="primary" iconAwesome="fa-th-large" collapsible="false"
+        	title="#{msgs['trustmanager.saml2ArtifactResolutionHelp']}" styleClass="inpanelBody">
             #{msgs['trustmanager.thisProfileConfiguration']}
-        </rich:panel>
-        <rich:panel id="SAML2ArtifactResolutionMenu" bodyClass="inpanelBody">
-            <f:facet name="header">
-                <h:outputText value="#{msgs['trustmanager.saml2ArtifactResolutionProfileConfiguration']}" />
-            </f:facet>
+        </b:panel>
+        <b:panel id="SAML2ArtifactResolutionMenu" look="primary" iconAwesome="fa-th-large" collapsible="false"
+        	title="#{msgs['trustmanager.saml2ArtifactResolutionProfileConfiguration']}" styleClass="inpanelBody">
             <h:panelGrid columns="2">
                 <h:outputText value="#{msgs['trustmanager.signResponses']} " />
                 <h:selectOneMenu value="#{_profileConfigurationSelected.signResponses}">
@@ -59,12 +54,12 @@
             <h:panelGrid>
                 <h:outputText value="#{_profileConfigurationSelected.profileConfigurationCertFileName}"
                     rendered="#{not empty _profileConfigurationSelected.profileConfigurationCertFileName}" />
-                <a4j:commandLink action="#{_profileConfigurationSelected.setProfileConfigurationCertFileName('')}" limitRender="true" render="SAML2ArtifactResolutionMenu"
-                    rendered="#{not empty _profileConfigurationSelected.profileConfigurationCertFileName}" execute="@this">
+                <b:commandLink ajax="true" action="#{_profileConfigurationSelected.setProfileConfigurationCertFileName('')}" limitRender="true" update="@form:SAML2ArtifactResolutionMenu"
+                    rendered="#{not empty _profileConfigurationSelected.profileConfigurationCertFileName}" process="@this">
                     <h:graphicImage value="/img/remove.gif" />
-                </a4j:commandLink>
+                </b:commandLink>
             </h:panelGrid>
 
-        </rich:panel>
+        </b:panel>
     </h:panelGrid>
 </ui:composition>

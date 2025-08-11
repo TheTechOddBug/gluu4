@@ -7,9 +7,9 @@
 	xmlns:b="http://bootsfaces.net/ui"
 	xmlns:ox="http://xmlns.jcp.org/jsf/composite/ox"
 	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:gluuext="http://xmlns.jcp.org/jsf/composite/gluuext"
 	xmlns:gluufn="http://www.gluu.org/jsf/functions"
-	xmlns:p="http://primefaces.org/ui"
-	xmlns:a4j="http://richfaces.org/a4j">
+	xmlns:p="http://primefaces.org/ui">
 
 	<h:outputStylesheet>
         .addConfig {
@@ -179,11 +179,11 @@
 								<ox:decorate id="connectProtection" label="#{msgs['organizationForm.smtpConnectProtection']}">
 									<h:selectOneMenu styleClass="form-control connectProtectionSelectOneMenu"
 										value="#{_smtp.connectProtection}" required="true"
-										id="connectPtotectionTypeId" converter="omnifaces.GenericEnumConverter">
+										id="connectPtotectionTypeId" converterId="org.gluu.jsf2.converter.EnumConverter">
 										<f:selectItems
 											value="#{_smtp.connectProtectionList}"
 											var="_type" itemLabel="#{_type.displayName}" />
-										<a4j:ajax event="change" render="metadataType, spSingleGroup"
+										<f:ajax event="change" render="metadataType, spSingleGroup"
 											execute="@this" />
 									</h:selectOneMenu>
 								</ox:decorate>

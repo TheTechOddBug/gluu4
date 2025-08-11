@@ -4,7 +4,7 @@
 	xmlns:b="http://bootsfaces.net/ui"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:ox="http://xmlns.jcp.org/jsf/composite/ox"
-	xmlns:richext="http://xmlns.jcp.org/jsf/composite/richext"
+	xmlns:gluuext="http://xmlns.jcp.org/jsf/composite/gluuext"
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	template="/WEB-INF/incl/layout/newtemplate.xhtml">
@@ -59,7 +59,7 @@
 											iconAwesome="fa-search" update=":personsFormId" />
 									</ox:decorate>
 								</h:form>
-								<p:spacer height="16" />
+								<gluuext:spacer height="16" />
 								<h:form id="personsFormId">
 									<h:panelGroup
 										style="width: 100%; margin-bottom: 10px; padding:10px;"
@@ -82,7 +82,7 @@
 									</h:panelGroup>
 									<ui:fragment
 										rendered="#{searchPersonAction.personList.size() eq 0}">
-										<p:spacer height="30" />
+										<gluuext:spacer height="30" />
 										<h:outputText value="#{msgs['person.noSearchResultFound']}" />
 									</ui:fragment>
 									<b:dataTable id="personsListId"
@@ -105,7 +105,7 @@
 											<b:label text="#{prs.status}" severity="info" />
 										</b:dataTableColumn>
 									</b:dataTable>
-									<p:spacer height="16" />
+									<gluuext:spacer height="16" />
 									<h:panelGroup style="width: 100%; margin-top: 5px;"
 										rendered="#{searchPersonAction.nbPages gt 1}">
 										<b:commandButton

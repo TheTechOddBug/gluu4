@@ -4,25 +4,20 @@
     xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
     xmlns:f="http://xmlns.jcp.org/jsf/core"
     xmlns:h="http://xmlns.jcp.org/jsf/html"
-    xmlns:a4j="http://richfaces.org/a4j"
-    xmlns:rich="http://richfaces.org/rich"
-    xmlns:richext="http://xmlns.jcp.org/jsf/composite/richext">
+    xmlns:b="http://bootsfaces.net/ui"
+    xmlns:gluuext="http://xmlns.jcp.org/jsf/composite/gluuext">
 
     <h:panelGrid columns="2" id="SignatureValidationFilter" columnClasses="half,half"
         rendered="#{_metadataFiltersAction.isMetadataFilterSelected('signatureValidation')}" width="100%">
 
         <ui:param name="_metadataFilterSelected" value="#{_metadataFiltersAction.getMetadataFilter('signatureValidation')}" />
 
-        <rich:panel id="SignatureValidationFilterDescription" bodyClass="inpanelBody">
-            <f:facet name="header">
-                <h:outputText value="#{msgs['trustmanager.signatureValidationFilterHelp']}" />
-            </f:facet>
+        <b:panel id="SignatureValidationFilterDescription" look="primary" iconAwesome="fa-th-large" collapsible="false"
+        	title="#{msgs['trustmanager.signatureValidationFilterHelp']}" styleClass="inpanelBody">
             #{msgs['trustmanager.thisMetadataFilterValidate']}
-        </rich:panel>
-        <rich:panel id="SignatureValidationFilterMenu" bodyClass="inpanelBody">
-            <f:facet name="header">
-                <h:outputText value="#{msgs['trustmanager.signatureValidationFilterConfiguration']}" />
-            </f:facet>
+        </b:panel>
+        <b:panel id="SignatureValidationFilterMenu" look="primary" iconAwesome="fa-th-large" collapsible="false"
+        	title="#{msgs['trustmanager.signatureValidationFilterConfiguration']}" bodyClass="inpanelBody">
             <h:panelGrid columns="2">
                 <h:outputText value="requireSignedMetadata: " />
                 <h:selectBooleanCheckbox value="#{_metadataFilterSelected.requireSignedMetadata}" />
@@ -30,11 +25,11 @@
             <h:outputText value="#{msgs['trustmanager.validationCertificate']}" />
             <h:panelGrid>
                 <h:outputText value="#{_metadataFilterSelected.filterCertFileName}" rendered="#{not empty _metadataFilterSelected.filterCertFileName}" />
-                <a4j:commandLink action="#{_metadataFilterSelected.setFilterCertFileName('')}" limitRender="true" render="SignatureValidationFilterMenu"
-                    rendered="#{not empty _metadataFilterSelected.filterCertFileName}" execute="@this">
+                <b:commandLink ajax="true" action="#{_metadataFilterSelected.setFilterCertFileName('')}" limitRender="true" update="@form:SignatureValidationFilterMenu"
+                    rendered="#{not empty _metadataFilterSelected.filterCertFileName}" process="@this">
                     <h:graphicImage value="/img/remove.gif" />
-                </a4j:commandLink>
+                </b:commandLink>
             </h:panelGrid>
-        </rich:panel>
+        </b:panel>
     </h:panelGrid>
 </ui:composition>

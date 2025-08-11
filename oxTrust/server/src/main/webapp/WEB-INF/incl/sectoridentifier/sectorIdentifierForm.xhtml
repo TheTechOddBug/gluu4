@@ -3,11 +3,9 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
-	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:a4j="http://richfaces.org/a4j" xmlns:b="http://bootsfaces.net/ui"
-	xmlns:rich="http://richfaces.org/rich"
+	xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:b="http://bootsfaces.net/ui"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:richext="http://xmlns.jcp.org/jsf/composite/richext"
+	xmlns:gluuext="http://xmlns.jcp.org/jsf/composite/gluuext"
 	xmlns:ox="http://xmlns.jcp.org/jsf/composite/ox"
 	xmlns:gluufn="http://www.gluu.org/jsf/functions">
 	<style type="text/css">
@@ -64,7 +62,7 @@
 										value="#{_sectorIdentifierAction.sectorIdentifierUrl}"
 										target="_blank">
 										<i class="icon-external-link"></i>
-										<h:outputText value="&#160;" />
+										<gluuext:spacer width="8px"/>
 										<h:outputText
 											value="#{_sectorIdentifierAction.sectorIdentifierUrl}" />
 									</h:outputLink>
@@ -76,29 +74,28 @@
 										<h:panelGroup id="selectedLoginURIsId">
 											<h:panelGroup columns="1" width="100%" border="0"
 												cellpadding="0" cellspacing="0">
-												<a4j:repeat value="#{_sectorIdentifierAction.loginUris}"
-													rowKeyVar="_urisIdx" var="_uri" iterationStatusVar="loop">
+												<ui:repeat value="#{_sectorIdentifierAction.loginUris}" var="_loginUri" varStatus="_loginUrisStatus">
 													<div class="row-fluid">
-														<div class="#{(loop.index % 2 == 0) ?'odd':'even'}">
-															<h:outputText value="#{empty _uri ? _uri : _uri}" />
+														<div class="#{(_loginUrisStatus.index % 2 == 0) ?'odd':'even'}">
+															<h:outputText value="#{empty _loginUri ? _loginUri : _loginUri}" />
 															<div class="span6 pull-right">
-																<a4j:commandLink styleClass="glyphicon glyphicon-remove RemoveLoginUrl"
+																<b:commandLink ajax="true" styleClass="glyphicon glyphicon-remove RemoveLoginUrl"
 																	style="margin-top:-20px;"
-																	action="#{_sectorIdentifierAction.removeLoginURI(_uri)}"
-																	execute="@this" render="selectedLoginURIsId"
+																	action="#{_sectorIdentifierAction.removeLoginURI(_loginUri)}"
+																	process="@this" update="selectedLoginURIsId"
 																	eventsQueue="clientQueue">
-																</a4j:commandLink>
+																</b:commandLink>
 															</div>
 														</div>
 													</div>
 													<br />
-												</a4j:repeat>
-												<p:spacer height="16" />
+												</ui:repeat>
+												<gluuext:spacer height="16" />
 											</h:panelGroup>
-											<a4j:commandButton styleClass="btn btn-primary AddLoginUrl"
+											<b:commandButton ajax="true" look="primary" styleClass="btn btn-primary AddLoginUrl"
 												value="#{msgs['sectorIdentifier.addLoginUri']}"
-												oncomplete="#{rich:component('loginRedirect:inputText')}.show();"
-												execute="@this" eventsQueue="sectorIdentifierQueue" />
+												oncomplete="$('.loginRedirectClass').modal('show')"
+												process="@this" />
 										</h:panelGroup>
 									</b:panel>
 								</div>
@@ -107,33 +104,30 @@
 										title="#{msgs['sectorIdentifier.clients']}" look="primary">
 										<h:panelGroup id="selectedClientsId">
 											<div class="col-sm-12 prop">
-												<a4j:repeat
-													value="#{_sectorIdentifierAction.clientDisplayNameEntries}"
-													rowKeyVar="_clientIdx" var="_client"
-													iterationStatusVar="loop">
+												<ui:repeat value="#{_sectorIdentifierAction.clientDisplayNameEntries}" var="_client" varStatus="_clientStatus">
 													<div class="row-fluid">
-														<div class="row #{(loop.index % 2 == 0) ?'odd':'even'}">
+														<div class="row #{(_clientStatus.index % 2 == 0) ?'odd':'even'}">
 															<h:outputText value="#{_client.inum}" />
-															<h:outputText value="&nbsp;" />
+															<gluuext:spacer width="8px"/>
 															<h:outputText value="#{_client.displayName}" />
-															<h:outputText value="&nbsp;" />
+															<gluuext:spacer width="8px"/>
 															<div class="span6 pull-right">
-																<a4j:commandLink styleClass="glyphicon glyphicon-remove RemoveClient"
+																<b:commandLink ajax="true" styleClass="glyphicon glyphicon-remove RemoveClient"
 																	action="#{_sectorIdentifierAction.removeClient(_client.inum)}"
-																	render="selectedClientsId" execute="@this">
-																</a4j:commandLink>
+																	update="selectedClientsId" process="@this">
+																</b:commandLink>
 															</div>
 														</div>
 													</div>
 													<br />
-												</a4j:repeat>
+												</ui:repeat>
 											</div>
 										</h:panelGroup>
-										<a4j:commandButton styleClass="btn btn-primary AddClient"
+										<b:commandButton ajax="true" look="primary" styleClass="btn btn-primary AddClient"
 											value="#{msgs['sectorIdentifier.addClient']}"
 											action="#{_sectorIdentifierAction.selectAddedClients}"
-											oncomplete="#{rich:component('client:selectClientModalPanel')}.show();"
-											execute="@this" eventsQueue="sectorIdentifierQueue" />
+											oncomplete="$('.selectClientModalPanelClass').modal('show')"
+											process="@this" />
 									</b:panel>
 								</div>
 							</h:panelGrid>

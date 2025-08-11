@@ -84,6 +84,9 @@ public class ManagePersonAuthenticationAction
 	@Inject
 	private EncryptionService encryptionService;
 
+	@Inject
+	private PasswordValidationAction passwordValidationAction;
+
 	private boolean existLdapConfigIdpAuthConf;
 
 	private List<CustomScript> customScripts;
@@ -459,15 +462,22 @@ public class ManagePersonAuthenticationAction
 	}
 
 	public void updateBindPassword() {
-		if (this.activeLdapConfig == null) {
+		String pwd = passwordValidationAction.getPassword();
+		if (StringHelper.isEmpty(pwd) || (this.activeLdapConfig == null)) {
 			return;
 		}
 
 		try {
-			this.activeLdapConfig.setBindPassword(encryptionService.encrypt(this.activeLdapConfig.getBindPassword()));
+			this.activeLdapConfig.setBindPassword(encryptionService.encrypt(pwd));
 		} catch (EncryptionException ex) {
 			log.error("Failed to encrypt password", ex);
 		}
+		
+		facesMessages.add(FacesMessage.SEVERITY_INFO, "Bind password successfully changed!");
+	}
+
+	public void cancelBindPassword() {
+		passwordValidationAction.reset();
 	}
 
 	@Override

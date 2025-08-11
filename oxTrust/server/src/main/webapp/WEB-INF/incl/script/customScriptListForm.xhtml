@@ -4,10 +4,9 @@
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:p="http://primefaces.org/ui" xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:p="http://primefaces.org/ui"
 	xmlns:b="http://bootsfaces.net/ui"
-	xmlns:rich="http://richfaces.org/rich"
-	xmlns:richext="http://xmlns.jcp.org/jsf/composite/richext"
+	xmlns:gluuext="http://xmlns.jcp.org/jsf/composite/gluuext"
 	xmlns:ox="http://xmlns.jcp.org/jsf/composite/ox"
 	xmlns:gluufn="http://www.gluu.org/jsf/functions">
 	<h:outputStylesheet>
@@ -49,70 +48,78 @@
 }
 </style>
 	</h:head>
+	<h:outputScript>
+		// Workaround for mixing tabs on load
+		function forceTabsUpdate() {
+			var tab0 = document.getElementById('customScriptForm_scriptTabId_0_tab');
+			var tab1 = document.getElementById('customScriptForm_scriptTabId_1_tab');
+			if (tab1 != null) {
+				tab1.click();
+			}
+			if (tab0 != null) {
+				tab0.click();
+			}
+		}
+	</h:outputScript>
 	<h:form id="customScriptForm">
 		<div class="row" style="margin: 1px;">
 			<h:panelGroup>
 				<ox:decorate label="Only show active custom scripts">
 					<h:selectBooleanCheckbox value="#{_action.showActive}"
 											 id="activeBox">
-						<a4j:ajax event="click" render="customScriptForm" />
+						<f:ajax event="click" render="@form"/>
 					</h:selectBooleanCheckbox>
 				</ox:decorate>
 			</h:panelGroup>
 			<b:panel title="Custom Scripts" look="primary" id="customScriptForm"
 				collapsible="false">
-				<rich:tabPanel switchType="ajax" id="scriptTypeTabPanelId"
-					style="overflow-x:auto !important;">
-					<a4j:repeat value="#{_action.getScriptType()}" var="_scriptType">
-						<ui:param name="_customScripts"
-							value="#{_action.customScriptsByTypes[_scriptType]}" />
-						<rich:tab styleClass="#{_scriptType.displayName}"
-							header="#{_scriptType.displayName}"
-							style="overflow-x:auto !important;">
+				<b:tabView id="scriptTypeTabPanelId" ajax="true" tabPosition="left" contentStyle="border: 1px solid" look="primary">
+						<b:tab id="scriptTabId" styleClass="#{_scriptType.displayName}" title="#{_scriptType.displayName}"
+							style="overflow-x:auto !important;" value="#{_action.getScriptType()}" var="_scriptType" varStatus="_scriptTypeStatus">
+							<ui:param name="_customScripts"
+								value="#{_action.customScriptsByTypes[_scriptType]}" />
 							<div class="card #{_scriptType.displayName}"
 								id="#{_scriptType.displayName}">
-								<a4j:region>
-									<rich:dataGrid id="customScriptTypeId"
-										styleClass="allScriptFor#{_scriptType.displayName}"
-										columns="1" value="#{_customScripts}" var="_customScript"
-										style="width: 100%;">
-									<h:panelGroup rendered="#{_action.isShowCurrentScript(_customScript)}">
+								<h:panelGroup id="customScriptRegionId">
+									<ui:repeat id="customScriptTypeId" value="#{_customScripts}" var="_customScript">
+										<ui:param name="_customScriptHash" value="#{gluufn:hashCode(_customScript.name)}" />
+									<h:panelGroup rendered="#{_action.isShowCurrentScript(_customScript)}"
+										 layout="block" styleClass="allScriptFor#{_scriptType.displayName}" style="width: 100%;">
 										<h:panelGroup layout="block"
 											styleClass="#{(_customScript.enabled) ?  'card-header active' : 'card-header'}"
 											style="#{(_customScript.enabled and _action.hasCustomScriptError(_customScript)) ?  'background: red' : ''}"
 											id="headingOne">
 											<h5 class="mb-0">
 												<a class="accordion-toggle in" data-toggle="collapse"
-													href="#collapseOne#{gluufn:hashCode(_customScript.name)}"
+													href="#collapseOne#{_customScriptHash}"
 													aria-expanded="true" aria-controls="collapseOne">
 													#{(_customScript.name == null) ?
 													msgs['customScript.newscript'] : _customScript.name } </a>
 											</h5>
 										</h:panelGroup>
-										<ui:param name="_customScriptId"
-											value="#{_action.getId(_customScript)}" />
+										<ui:param name="_customScriptId" value="#{_action.getId(_customScript)}" />
 										<div id="collapseOne#{gluufn:hashCode(_customScript.name)}"
 											class="#{_customScript.dn != null ? 'collapse' : 'collapse in'}"
 											role="tabpanel" aria-labelledby="headingOne"
 											data-parent="#accordion"
 											expanded="#{_customScript.dn == null}">
 											<h:panelGroup layout="block" class="card-body">
-												<a4j:commandLink value="Delete Script" immediate="true"
-													onclick="#{rich:component('deleteConfirmation:acceptRemovalModalPanel')}.show();"
-													execute="@region"
-													styleClass="btn btn-danger deleteScriptButton" />
-												<h:panelGroup id="scriptErrorViewId">
-													<ox:viewFileDialog id="viewScriptError" label="Error"
-														text="#{_action.getCustomScriptError(_customScript)}"
-														textHeight="370" textWidth="680" />
-												</h:panelGroup>
-												<h:panelGroup layout="block" id="scriptErrorId">
-													<a4j:commandLink value="Show Error"
-														rendered="#{_action.hasCustomScriptError(_customScript)}"
-														render="scriptErrorViewId" immediate="true"
-														oncomplete="#{rich:component('viewScriptError:viewFile')}.show();"
-														execute="@this" styleClass="btn btn-danger"
-														style="top: 55px; z-index:1;" />
+												<h:panelGroup>
+													<b:commandLink value="Delete Script" look="warn"
+														onclick="$('.deleteConfirmation#{_customScriptId}Class').modal('show')"
+														styleClass="btn btn-danger" style="width: unset; right: 120px;"/>
+													<h:panelGroup id="scriptErrorViewId">
+														<ox:viewFileDialog id="viewScriptError" label="Error"
+															text="#{_action.getCustomScriptError(_customScript)}"
+															textHeight="370" textWidth="680" />
+													</h:panelGroup>
+													<h:panelGroup layout="block" id="scriptErrorId">
+														<b:commandLink ajax="true" value="Show Error"
+															rendered="#{_action.hasCustomScriptError(_customScript)}"
+															update="@form:scriptErrorViewId" immediate="true"
+															oncomplete="$('.viewScriptErrorClass').modal('show');"
+															process="@this" styleClass="btn btn-danger"/>
+													</h:panelGroup>
 												</h:panelGroup>
 												<h:panelGroup layout="block" class="form-script">
 													<div class="form-group">
@@ -201,10 +208,9 @@
 																	<f:selectItems
 																		value="#{configurationService.locationTypes}"
 																		var="_type" itemLabel="#{_type.displayName}" />
-																	<a4j:ajax event="change"
+																	<f:ajax event="change"
 																		render="scriptAreaId, scriptPathId" limitRender="true"
-																		execute="@this">
-																	</a4j:ajax>
+																		execute="@this" />
 																</h:selectOneMenu>
 															</ox:decorate>
 														</div>
@@ -235,6 +241,7 @@
 														</div>
 														<div class="right"></div>
 													</div>
+													
 													<ox:simpleCustomPropertiesList
 														label="#{msgs['manageAuthentication.passport.strategy.addProperty']}"
 														hideLabel="true" showRemoveDialogue="true"
@@ -273,35 +280,37 @@
 																styleClass="customScriptStatusCheckBox" />
 														</ox:decorate>
 													</h:panelGroup>
-													<hr></hr>
-													<ox:acceptRemovalDialog id="deleteConfirmation"
+													<ox:acceptRemovalDialog dialogId="deleteConfirmation#{_customScriptId}"
 														subject="Script" value="#{_customScript.name}"
 														deleteMethod="#{_action.removeCustomScript(_customScript)}"
-														render="customScriptTypeId" />
+														render="@parent:@parent:@parent:@parent:@parent:@parent:@parent:@parent:@parent"/>
 												</h:panelGroup>
 											</h:panelGroup>
 										</div>
 									 </h:panelGroup>
-									</rich:dataGrid>
+									 </ui:repeat>
 									<h:panelGroup layout="block" styleClass="addConfig">
-										<a4j:commandLink styleClass="btn btn-primary addConfigButton"
+										<b:commandLink ajax="true" styleClass="btn btn-primary addConfigButton"
 											style="font-size:13px !important;"
 											value="#{msgs['customScript.addCustomScriptConfiguration']}"
 											action="#{_action.addCustomScript(_scriptType)}"
-											render="customScriptTypeId" execute="@region">
+											update="@parent:customScriptRegionId" process="@this">
 											<f:param name="rq" value="1" />
-										</a4j:commandLink>
+										</b:commandLink>
 									</h:panelGroup>
-								</a4j:region>
+								</h:panelGroup>
 							</div>
-						</rich:tab>
-					</a4j:repeat>
-				</rich:tabPanel>
+						</b:tab>
+				</b:tabView>
 				<div class="box-footer">
 					<ui:insert name="controlButttons" />
 				</div>
 			</b:panel>
 		</div>
+		
+		<h:outputScript>		
+			forceTabsUpdate();
+		</h:outputScript>
 	</h:form>
 	<script>
 		$(document).ready(function(){

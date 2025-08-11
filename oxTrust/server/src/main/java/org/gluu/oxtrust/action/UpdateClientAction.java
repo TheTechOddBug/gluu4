@@ -150,6 +150,9 @@ public class UpdateClientAction implements Serializable {
     @Inject
     private OxTrustAuditService oxTrustAuditService;
 
+	@Inject
+	private PasswordValidationAction passwordValidationAction;
+
     @Inject
     private Identity identity;
 
@@ -2257,5 +2260,30 @@ public class UpdateClientAction implements Serializable {
 
 	public void setScopePattern(String scopePattern) {
 		this.scopePattern = scopePattern;
+	}
+
+	public void updateClientPassword() {
+		String pwd = passwordValidationAction.getPassword();
+		if (StringHelper.isEmpty(pwd) || (this.client == null)) {
+			return;
+		}
+
+		OxAuthClient tmpClient = clientService.getClientByDn(client.getDn());
+		try {
+			tmpClient.setOxAuthClientSecret(pwd);
+			tmpClient.setEncodedClientSecret(encryptionService.encrypt(pwd));
+		} catch (EncryptionException e) {
+			log.error("Failed to encrypt password", e);
+		}
+		clientService.updateClient(tmpClient);
+
+		client.setEncodedClientSecret(tmpClient.getEncodedClientSecret());
+		client.setOxAuthClientSecret(pwd);
+
+		facesMessages.add(FacesMessage.SEVERITY_INFO, "Client secret successfully changed!");
+	}
+
+	public void cancelClientPassword() {
+		passwordValidationAction.reset();
 	}
 }

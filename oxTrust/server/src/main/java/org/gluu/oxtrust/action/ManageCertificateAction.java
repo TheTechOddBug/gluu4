@@ -59,8 +59,8 @@ import org.gluu.persist.exception.BasePersistenceException;
 import org.gluu.service.security.Secure;
 import org.gluu.util.StringHelper;
 import org.gluu.util.io.FileHelper;
-import org.richfaces.event.FileUploadEvent;
-import org.richfaces.model.UploadedFile;
+//import org.richfaces.event.FileUploadEvent;
+//import org.richfaces.model.UploadedFile;
 import org.slf4j.Logger;
 
 /**
@@ -480,51 +480,51 @@ public class ManageCertificateAction implements Serializable {
 
 	public void cancel() {
 	}
-
-	public void certUpload(FileUploadEvent event) {
-		if (this.trustStoreCertificateUploadMarker == null) {
-			updateCert(event.getUploadedFile());
-		} else {
-			updateTrsutStoreCert(event.getUploadedFile());
-		}
-	}
-
-	private void updateCert(UploadedFile item) {
-		try (InputStream is = item.getInputStream();
-				OutputStream os = new FileOutputStream(getTempCertDir() + this.uploadMarker)) {
-			BufferedOutputStream bos = new BufferedOutputStream(os);
-			IOUtils.copy(is, bos);
-			bos.flush();
-		} catch (IOException ex) {
-			log.error("Failed to upload certicicate", ex);
-		}
-	}
-
-	private void updateTrsutStoreCert(UploadedFile item) {
-		try (InputStream is = item.getInputStream();) {
-			String certificate = IOUtils.toString(is, "UTF-8");
-			this.trustStoreCertificateUploadMarker.setCertificate(certificate);
-			this.trustStoreCertificateUploadMarker.setAddedAt(new Date());
-			this.trustStoreCertificateUploadMarker.setAddedBy(identity.getUser().getDn());
-		} catch (IOException ex) {
-			log.error("Failed to upload key", ex);
-		}
-	}
-
-	public void keyUpload(FileUploadEvent event) {
-		updateKey(event.getUploadedFile());
-	}
-
-	private void updateKey(UploadedFile item) {
-		try (InputStream is = item.getInputStream();
-				OutputStream os = new FileOutputStream(getTempCertDir() + this.uploadMarker.replace("crt", "key"));) {
-			BufferedOutputStream bos = new BufferedOutputStream(os);
-			IOUtils.copy(is, bos);
-			bos.flush();
-		} catch (IOException ex) {
-			log.error("Failed to upload key", ex);
-		}
-	}
+//
+//	public void certUpload(FileUploadEvent event) {
+//		if (this.trustStoreCertificateUploadMarker == null) {
+//			updateCert(event.getUploadedFile());
+//		} else {
+//			updateTrsutStoreCert(event.getUploadedFile());
+//		}
+//	}
+//
+//	private void updateCert(UploadedFile item) {
+//		try (InputStream is = item.getInputStream();
+//				OutputStream os = new FileOutputStream(getTempCertDir() + this.uploadMarker)) {
+//			BufferedOutputStream bos = new BufferedOutputStream(os);
+//			IOUtils.copy(is, bos);
+//			bos.flush();
+//		} catch (IOException ex) {
+//			log.error("Failed to upload certicicate", ex);
+//		}
+//	}
+//
+//	private void updateTrsutStoreCert(UploadedFile item) {
+//		try (InputStream is = item.getInputStream();) {
+//			String certificate = IOUtils.toString(is, "UTF-8");
+//			this.trustStoreCertificateUploadMarker.setCertificate(certificate);
+//			this.trustStoreCertificateUploadMarker.setAddedAt(new Date());
+//			this.trustStoreCertificateUploadMarker.setAddedBy(identity.getUser().getDn());
+//		} catch (IOException ex) {
+//			log.error("Failed to upload key", ex);
+//		}
+//	}
+//
+//	public void keyUpload(FileUploadEvent event) {
+//		updateKey(event.getUploadedFile());
+//	}
+//
+//	private void updateKey(UploadedFile item) {
+//		try (InputStream is = item.getInputStream();
+//				OutputStream os = new FileOutputStream(getTempCertDir() + this.uploadMarker.replace("crt", "key"));) {
+//			BufferedOutputStream bos = new BufferedOutputStream(os);
+//			IOUtils.copy(is, bos);
+//			bos.flush();
+//		} catch (IOException ex) {
+//			log.error("Failed to upload key", ex);
+//		}
+//	}
 
 	public void addPublicCertificate() {
 		TrustStoreCertificate trustStoreCertificate = new TrustStoreCertificate();

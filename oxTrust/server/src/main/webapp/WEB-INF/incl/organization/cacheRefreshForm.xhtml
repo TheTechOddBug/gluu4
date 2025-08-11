@@ -4,8 +4,7 @@
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:b="http://bootsfaces.net/ui" xmlns:a4j="http://richfaces.org/a4j"
-	xmlns:rich="http://richfaces.org/rich"
+	xmlns:b="http://bootsfaces.net/ui"
 	xmlns:ox="http://xmlns.jcp.org/jsf/composite/ox">
 
 	<h:outputStylesheet>
@@ -37,14 +36,15 @@
         function validateCollapsiblePanel(collapsiblePanelId) {
             var presentErrors = $('div[id*=' + collapsiblePanelId + '] span[class=errors]').length > 0;
             if (presentErrors) {
-                // TODO: Find a way how to expand panel in RichFaces 4. Maybe we can do that on server side
+<!--                 // TODO: Find a way how to expand panel in RichFaces 4. Maybe we can do that on server side -->
             }
         }
     </h:outputScript>
-	<ox:changeBindPasswordDialog id="bindPasswordDialogId"
+	<ox:changePasswordDialog id="bindPasswordDialogId"
 		label="#{msgs['organization.changeBackend']} '#{_configureCacheRefreshAction.activeLdapConfig.configId}' #{msgs['organization.bindPassword']}"
-		password="#{_configureCacheRefreshAction.activeLdapConfig.bindPassword}"
-		setPasswordMethod="#{configureCacheRefreshAction.updateBindPassword}" />
+		setPasswordMethod="#{configureCacheRefreshAction.updateBindPassword}"
+		cancelPasswordMethod="#{configureCacheRefreshAction.cancelBindPassword}"/>
+
 	<h:form id="cacheRefreshForm">
 		<b:panel title="Cache Refresh Form" look="primary"
 			iconAwesome="fa-building" collapsible="false">
@@ -93,7 +93,7 @@
 														var="_type" itemLabel="#{_type.displayName}" />
 													<f:converter
 														converterId="org.gluu.jsf2.converter.EnumConverter" />
-													<a4j:ajax event="change"
+													<f:ajax event="change"
 														render="vdsTogglePanelGroup, copyTogglePanelGroup"
 														execute="@this" limitRender="true" />
 												</h:selectOneMenu>
@@ -216,10 +216,8 @@
 									<div class="box box-primary">
 										<div class="box-header"></div>
 										<h:panelGroup>
-											<rich:dataGrid id="sourceConfigsId"
-												value="#{_configureCacheRefreshAction.sourceConfigs}"
-												var="_ldapConfig" columns="1" style="width: 100%;"
-												border="0" columnClasses="noBorder">
+											<ui:repeat id="sourceConfigsId" value="#{_configureCacheRefreshAction.sourceConfigs}" var="_ldapConfig">
+												<h:panelGroup style="width: 100%;" styleClass="noBorder">
 												<div style="display: inline-block; width: 75% !important;">
 													<ox:ldapConfig ldapConfig="#{_ldapConfig}" id="scId"
 														ldapConfigList="#{_configureCacheRefreshAction.sourceConfigs}"
@@ -229,13 +227,14 @@
 														showTestButton="true" displayAnonymousBind="false"
 														changePasswordDialogId="bindPasswordDialogId:changePasswordModalPanel" />
 												</div>
-											</rich:dataGrid>
+											</h:panelGroup>
+											</ui:repeat>
 											<h:panelGroup layout="block" styleClass="addConfig">
-												<a4j:commandLink
+												<b:commandLink ajax="true"
 													styleClass="btn btn-primary addSourceServerButton"
 													value="#{msgs['organization.addSourceLDAPServer']}"
 													action="#{_configureCacheRefreshAction.addSourceConfig()}"
-													render="sourceConfigsId"
+													update="sourceConfigsId"
 													style="margin-right:1100px;margin-top:50px;" />
 											</h:panelGroup>
 										</h:panelGroup>
@@ -249,7 +248,7 @@
 												<h:selectBooleanCheckbox
 													styleClass="rounded defaultInumServerCheckBox"
 													value="#{_configureCacheRefreshAction.cacheRefreshConfig.defaultInumServer}">
-													<a4j:ajax event="click" render="inumServerId"
+													<f:ajax event="click" render="inumServerId"
 														execute="@this" limitRender="true" />
 												</h:selectBooleanCheckbox>
 											</ox:decorate>
@@ -269,8 +268,8 @@
 							</div>
 						</div>
 						<div class="box-footer">
-							<rich:notifyMessages stayTime="2000" nonblocking="true"
-								rendered="#{showGlobalMessages == 'false'}" />
+							<b:messages globalOnly="true" id="messages" styleClass="message" only-most-severe="true" value="large-screen='full-width'"
+								large-screen="full-width" autoUpdate="true" rendered="#{showGlobalMessages == 'false'}" />
 							<h:commandButton styleClass="btn btn-primary updateButon"
 								value="#{msgs['organization.update']}"
 								action="#{configureCacheRefreshAction.update}" />

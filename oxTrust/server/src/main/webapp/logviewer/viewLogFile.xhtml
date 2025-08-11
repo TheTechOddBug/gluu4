@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:a4j="http://richfaces.org/a4j"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:b="http://bootsfaces.net/ui"
 	xmlns:ox="http://xmlns.jcp.org/jsf/composite/ox"
-	xmlns:rich="http://richfaces.org/rich"
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	template="/WEB-INF/incl/layout/newtemplate.xhtml">
 	<f:metadata>
@@ -61,24 +59,24 @@
 										<div class="tab-content">
 											<div class="tab-pane active" id="logged-files">
 												<div style="display: inline-block; width: 100% !important;">
-													<rich:panel bodyClass="noPadding" id="MainBlock"
-														header="Allowed log files" width="100%">
+													<b:panel look="primary" contentClass="noPadding" id="MainBlock"
+														title="Allowed log files">
 														<h:panelGroup border="0" cellpadding="0" cellspacing="0"
 															columns="1" width="100%" id="PanelGroupId">
-															<a4j:repeat
+															<ui:repeat
 																value="#{viewLogFileAction.logFiles.entrySet().toArray()}"
 																var="_logFile">
 																<div class="filesContentBox">
-																	<a4j:commandLink
+																	<b:commandLink ajax="true"
 																		action="#{viewLogFileAction.setActiveLogFileIndex(_logFile.key)}"
-																		execute="@form" limitRender="true"
-																		onclick="$('.nav-tabs a[href=\'#tail\']').tab('show');"
-																		render="viewLogPanelId" value="#{_logFile.value}" />
+																		process="@this"
+																		oncomplete="$('.nav-tabs a[href=\'#tail\']').tab('show');"
+																		update="@form:viewLogPanelId" value="#{_logFile.value}" />
 																</div>
 																<br />
-															</a4j:repeat>
+															</ui:repeat>
 														</h:panelGroup>
-													</rich:panel>
+													</b:panel>
 												</div>
 											</div>
 											<div class="tab-pane" id="config">

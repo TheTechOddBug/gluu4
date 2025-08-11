@@ -4,9 +4,8 @@
     xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
     xmlns:f="http://xmlns.jcp.org/jsf/core"
     xmlns:h="http://xmlns.jcp.org/jsf/html"
-    xmlns:a4j="http://richfaces.org/a4j"
-    xmlns:rich="http://richfaces.org/rich"
-    xmlns:richext="http://xmlns.jcp.org/jsf/composite/richext"
+    xmlns:b="http://bootsfaces.net/ui"
+    xmlns:gluuext="http://xmlns.jcp.org/jsf/composite/gluuext"
     xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
 
     <h:outputStylesheet>
@@ -17,14 +16,8 @@
     width: 60% !important;
 }
     </h:outputStylesheet>
-    <rich:popupPanel id="entityIdSelector" onmaskclick="#{rich:component('entityIdSelector')}.hide()" keepVisualState="true" autosized="true" zindex="2000"  >
-        <f:facet name="header">
-            <h:outputText value="#{msgs['trustmanager.selectEntityID']}" />
-        </f:facet>
-
-        <f:facet name="controls">
-            <h:graphicImage value="/img/close.gif" styleClass="hidelink" style="cursor:pointer" onclick="#{rich:component('entityIdSelector')}.hide(); return false;" />
-        </f:facet>
+    <b:modal id="entityIdSelector" styleClass="entityIdSelectorClass"
+    	title="#{msgs['trustmanager.selectEntityID']}" size="modal-xl">
 
         <h:panelGrid columns="1" id="entityIdSelectionMenu">
             <h:form>
@@ -32,11 +25,10 @@
                     <h:outputText value="#{msgs['trustmanager.filter']}: " />
                     <h:inputText value="#{_trustRelationshipAction.filterString}">
                     </h:inputText>
-                    <a4j:commandButton value="#{msgs['trustmanager.filter']}" action="#{_trustRelationshipAction.filterEntities()}" eventsQueue="trustQueue" render="EntityIds">
-                    </a4j:commandButton>
+                    <b:commandButton ajax="true" look="primary" value="#{msgs['trustmanager.filter']}" action="#{_trustRelationshipAction.filterEntities()}" update="formEntityIds:EntityIds" />
                 </h:panelGrid>
             </h:form>
-            <h:form>
+            <h:form id="formEntityIds">
                 <h:panelGroup id="EntityIds">
                     <h:selectManyListbox value="#{_trustRelationshipAction.selectedEntities}" styleClass="width: 450px;" size="10">
                         <f:selectItems value="#{_trustRelationshipAction.availableEntities}"/>
@@ -44,11 +36,10 @@
                 </h:panelGroup>
 
                 <div id="EntityIdUpdate">
-                    <a4j:commandButton value="Done" onclick="#{rich:component('entityIdSelector')}.hide()" render="FederationWizardEntitySelection">
-                    </a4j:commandButton>
+                    <b:commandButton ajax="true" look="primary" value="Done" oncomplete="$('.entityIdSelectorClass').modal('hide');" update="trustForm:formTabId:FederationWizardEntitySelection" />
                 </div>
             </h:form>
 
         </h:panelGrid>
-    </rich:popupPanel>
+    </b:modal>
 </ui:composition>

@@ -44,8 +44,7 @@ import org.gluu.service.security.Secure;
 import org.gluu.util.StringHelper;
 import org.oxauth.persistence.model.Scope;
 import org.oxauth.persistence.model.ScopeAttributes;
-import org.richfaces.event.FileUploadEvent;
-import org.richfaces.model.UploadedFile;
+
 import org.slf4j.Logger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -269,29 +268,29 @@ public class UpdateUmaScopeAction implements Serializable {
 		this.curIconImage = null;
 	}
 
-	public void setIconImage(FileUploadEvent event) {
-		UploadedFile uploadedFile = event.getUploadedFile();
-		try {
-			setIconImageImpl(uploadedFile);
-		} finally {
-			try {
-				uploadedFile.delete();
-			} catch (IOException ex) {
-				log.error("Failed to remove temporary image", ex);
-			}
-		}
-	}
-
-	private void setIconImageImpl(UploadedFile uploadedFile) {
-		removeIconImage();
-
-		GluuImage newIcon = imageService.constructImageWithThumbnail(identity.getUser(), uploadedFile, 16, 16);
-		this.curIconImage = newIcon;
-		try {
-		} catch (Exception ex) {
-			log.error("Failed to store icon image: '{}'", newIcon, ex);
-		}
-	}
+//	public void setIconImage(FileUploadEvent event) {
+//		UploadedFile uploadedFile = event.getUploadedFile();
+//		try {
+//			setIconImageImpl(uploadedFile);
+//		} finally {
+//			try {
+//				uploadedFile.delete();
+//			} catch (IOException ex) {
+//				log.error("Failed to remove temporary image", ex);
+//			}
+//		}
+//	}
+//
+//	private void setIconImageImpl(UploadedFile uploadedFile) {
+//		removeIconImage();
+//
+//		GluuImage newIcon = imageService.constructImageWithThumbnail(identity.getUser(), uploadedFile, 16, 16);
+//		this.curIconImage = newIcon;
+//		try {
+//		} catch (Exception ex) {
+//			log.error("Failed to store icon image: '{}'", newIcon, ex);
+//		}
+//	}
 
 	public byte[] getIconImageThumbData() {
 		if ((this.curIconImage != null) && (this.curIconImage.getThumbData() != null)) {

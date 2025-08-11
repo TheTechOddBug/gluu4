@@ -1,11 +1,10 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
     xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
     xmlns:f="http://xmlns.jcp.org/jsf/core"
     xmlns:h="http://xmlns.jcp.org/jsf/html"
-    xmlns:a4j="http://richfaces.org/a4j"
-    xmlns:rich="http://richfaces.org/rich"
-    xmlns:richext="http://xmlns.jcp.org/jsf/composite/richext"
+    xmlns:gluuext="http://xmlns.jcp.org/jsf/composite/gluuext"
     xmlns:cc="http://xmlns.jcp.org/jsf/composite">
 
 <cc:interface>
@@ -13,9 +12,9 @@
 </cc:interface>
 
 <cc:implementation>
-    <a4j:repeat value="#{cc.attrs.value}" rowKeyVar="_itemIdx" var="_item">
-        <h:outputText value="#{_item}"/><h:outputText rendered="#{_itemIdx != cc.attrs.value.size() - 1}" value=", "/>
-    </a4j:repeat>
+    <ui:repeat value="#{cc.attrs.value}" var="_item" varStatus="_itemStatus">
+        <h:outputText value="#{_item}"/><h:outputText rendered="#{itemStatus != cc.attrs.value.size() - 1}" value=", "/>
+    </ui:repeat>
 </cc:implementation>
 
 </html>

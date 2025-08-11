@@ -13,7 +13,7 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.omnifaces.util.Components;
+//import org.omnifaces.util.Components;
 import org.slf4j.Logger;
 
 /**
@@ -31,14 +31,14 @@ public class RenderService implements Serializable {
 	private Logger log;
 
 	public String renderView(String viewId) {
-		String html;
-		try {
-			html = Components.encodeHtml(Components.buildView(viewId));
-		} catch (IOException ex) {
-			log.error("Failed to render viewId: '{}'", ex, viewId);
-			
-			return null;
-		}
+		String html = null;
+//		try {
+//			html = Components.encodeHtml(Components.buildView(viewId));
+//		} catch (IOException ex) {
+//			log.error("Failed to render viewId: '{}'", ex, viewId);
+//			
+//			return null;
+//		}
 
 		return html;
 	}

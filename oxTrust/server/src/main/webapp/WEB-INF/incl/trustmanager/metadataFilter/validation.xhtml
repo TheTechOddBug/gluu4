@@ -4,9 +4,8 @@
     xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
     xmlns:f="http://xmlns.jcp.org/jsf/core"
     xmlns:h="http://xmlns.jcp.org/jsf/html"
-    xmlns:a4j="http://richfaces.org/a4j"
-    xmlns:rich="http://richfaces.org/rich"
-    xmlns:richext="http://xmlns.jcp.org/jsf/composite/richext"
+    xmlns:b="http://bootsfaces.net/ui"
+    xmlns:gluuext="http://xmlns.jcp.org/jsf/composite/gluuext"
     xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
 
     <h:panelGrid columns="2" id="ValidationFilter" columnClasses="half,half"
@@ -14,31 +13,30 @@
 
         <ui:param name="_metadataFilterSelected" value="#{_metadataFiltersAction.getMetadataFilter('validation')}" />
 
-        <rich:panel id="ValidationFilterDescription" bodyClass="inpanelBody">
-            <f:facet name="header">
-                <h:outputText value="#{msgs['trustmanager.validationFilterHelp']}" />
-            </f:facet>
+        <b:panel id="ValidationFilterDescription" look="primary" iconAwesome="fa-th-large" collapsible="false"
+        	title="#{msgs['trustmanager.validationFilterHelp']}" styleClass="inpanelBody">
             #{msgs['trustmanager.theMetadataFilterValidate']}
-        </rich:panel>
-        <rich:panel id="ValidationFilterMenu" bodyClass="inpanelBody">
-            <f:facet name="header">
-                <h:outputText value="#{msgs['trustmanager.validationFilterConfiguration']}" />
-            </f:facet>
+        </b:panel>
+        <b:panel id="ValidationFilterMenu" look="primary" iconAwesome="fa-th-large" collapsible="false"
+        	title="#{msgs['trustmanager.validationFilterConfiguration']}" styleClass="inpanelBody">
             <h:outputText value="#{msgs['trustmanager.addedExtensionSchemas']}" />
-            <rich:list var="_extensionSchema" value="#{_metadataFilterSelected.extensionSchemas}" id="schemaList">
+            
+            <ui:repeat var="_extensionSchema" value="#{_metadataFilterSelected.extensionSchemas}" id="schemaList">
+				<h:panelGrid border="0" cellpadding="0" cellspacing="0" columnClasses="alignTop" columns="1" width="100%">
                 <h:outputText value="#{_extensionSchema}" />
                 <h:outputText value="&#160;">
-                    <a4j:commandLink action="#{_metadataFilterSelected.extensionSchemas.remove(_extensionSchema)}" limitRender="true" render="ValidationFilterMenu">
+                    <b:commandLink ajax="true" action="#{_metadataFilterSelected.extensionSchemas.remove(_extensionSchema)}" limitRender="true" update="@form:ValidationFilterMenu">
                         <h:graphicImage value="/img/remove.gif" />
-                    </a4j:commandLink>
+                    </b:commandLink>
                 </h:outputText>
-            </rich:list>
+                </h:panelGrid>
+            </ui:repeat>
             <h:panelGrid>
                 <h:outputText value="#{msgs['trustmanager.enterNewExtensionSchema']}" />
-                <rich:inplaceInput defaultLabel="#{msgs['trustmanager.clickToEnterExtensionSchema']}" value="#{_metadataFilterSelected.extensionSchema}">
-                    <a4j:ajax event="change" render="ValidationFilterMenu" />
-                </rich:inplaceInput>
+                <h:inputText requiredMessage="#{msgs['trustmanager.clickToEnterExtensionSchema']}" value="#{_metadataFilterSelected.extensionSchema}">
+                    <f:ajax event="change" render="@form:ValidationFilterMenu" />
+                </h:inputText>
             </h:panelGrid>
-        </rich:panel>
+        </b:panel>
     </h:panelGrid>
 </ui:composition>

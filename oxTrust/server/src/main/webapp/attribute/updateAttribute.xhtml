@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:a4j="http://richfaces.org/a4j"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:b="http://bootsfaces.net/ui"
 	xmlns:ox="http://xmlns.jcp.org/jsf/composite/ox"
-	xmlns:rich="http://richfaces.org/rich"
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	template="/WEB-INF/incl/layout/newtemplate.xhtml">
 	<f:metadata>
@@ -51,8 +50,8 @@
 								rendered="#{updateAttributeAction.canEdit()}"
 								styleClass="btn btn-primary updateButton"
 								value="#{msgs['attribute.update']}" />
-							<a4j:commandButton ajaxSingle="true"
-								onclick="#{rich:component('deleteConfirmation:acceptRemovalModalPanel')}.show();"
+							<b:commandButton look="primary" ajax="true"
+								oncomplete="$('.deleteConfirmationClass').modal('show')"
 								rendered="#{updateAttributeAction.canEdit()}"
 								styleClass="btn btn-primary deleteButton"
 								value="#{msgs['attribute.delete']}" />
@@ -64,8 +63,8 @@
 					</ui:define>
 				</ui:decorate>
 				<ox:acceptRemovalDialog
+					dialogId="deleteConfirmation" subject="attribute"
 					deleteMethod="#{updateAttributeAction.delete}"
-					id="deleteConfirmation" subject="attribute"
 					value="#{updateAttributeAction.attribute.displayName}" />
 			</div>
 		</section>

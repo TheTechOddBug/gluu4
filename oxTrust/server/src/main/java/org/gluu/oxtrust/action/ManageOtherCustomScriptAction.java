@@ -70,7 +70,7 @@ public class ManageOtherCustomScriptAction
 	@Inject
 	private AbstractCustomScriptService customScriptService;
 
-	private Map<CustomScriptType, List<CustomScript>> customScriptsByTypes;
+	protected Map<CustomScriptType, List<CustomScript>> customScriptsByTypes;
 
 	private boolean initialized;
 

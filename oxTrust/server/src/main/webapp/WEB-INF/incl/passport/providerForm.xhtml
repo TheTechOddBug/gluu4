@@ -4,10 +4,9 @@
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:b="http://bootsfaces.net/ui" xmlns:a4j="http://richfaces.org/a4j"
-	xmlns:rich="http://richfaces.org/rich"
+	xmlns:b="http://bootsfaces.net/ui"
 	xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
-	xmlns:richext="http://xmlns.jcp.org/jsf/composite/richext"
+	xmlns:gluuext="http://xmlns.jcp.org/jsf/composite/gluuext"
 	xmlns:ox="http://xmlns.jcp.org/jsf/composite/ox">
 	<h:form id="providerForm">
 		<input type='hidden' name='cid' value='#{conversation.id}' />
@@ -25,7 +24,7 @@
 									style="width:100%" required="true"
 									value="#{_providerAction.provider.id}" id="providerID"
 									disabled="#{_providerAction.isUpdate()}">
-									<rich:validator event="blur" />
+									<f:ajax event="blur"/>
 								</h:inputText>
 							</ox:decorate>
 						</div>
@@ -39,7 +38,7 @@
 										style="width:100%" required="true"
 										value="#{_providerAction.provider.displayName}"
 										id="DisplayNameId" rendered="true">
-										<rich:validator event="blur" />
+										<f:ajax event="blur"/>
 									</h:inputText>
 								</ox:decorate>
 								<ox:decorate label="#{msgs['passport.provider.form.type']}"
@@ -53,7 +52,7 @@
 										<f:selectItem noSelectionOption="true" itemLabel="" />
 										<f:selectItems value="#{_providerAction.providerTypes}"
 											var="_type" itemLabel="#{_type}" />
-										<a4j:ajax event="change" render="optionsPanel" />
+										<f:ajax event="change" render="optionsPanel" />
 									</h:selectOneMenu>
 								</ox:decorate>
 								<ox:decorate
@@ -88,7 +87,7 @@
 										id="AuthnParamsId" style="width:100%"
 										value="#{_providerAction.provider.passportAuthnParams}"
 										p:maxlength="1000">
-										<rich:validator event="blur" />
+										<f:ajax event="blur"/>
 									</h:inputTextarea>
 								</ox:decorate>
 								<ox:decorate label="#{msgs['passport.provider.form.logoPath']}"
@@ -96,7 +95,7 @@
 									<h:inputText styleClass="form-control LogoImg"
 										style="width:100%" value="#{_providerAction.provider.logoImg}"
 										id="LogoImgId" rendered="true">
-										<rich:validator event="blur" />
+										<f:ajax event="blur"/>
 									</h:inputText>
 								</ox:decorate>
 

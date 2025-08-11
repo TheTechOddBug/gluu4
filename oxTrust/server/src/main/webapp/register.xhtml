@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:a4j="http://richfaces.org/a4j"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:ox="http://xmlns.jcp.org/jsf/composite/ox"
-	xmlns:rich="http://richfaces.org/rich"
 	xmlns:b="http://bootsfaces.net/ui"
-	xmlns:richext="http://xmlns.jcp.org/jsf/composite/richext"
+	xmlns:gluuext="http://xmlns.jcp.org/jsf/composite/gluuext"
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	template="/WEB-INF/incl/layout/fullWidthEmpty.xhtml">
 	<f:metadata>
@@ -84,10 +82,9 @@ iframe {
 									<ui:param name="_mandatoryAttributes"
 										value="#{registerPersonAction.mandatoryAttributes}" />
 									<div id="registrationFormHolder">
-										<a4j:repeat rowKeyVar="_custAttrIdx"
+										<ui:repeat varStatus="_custAttrIdx"
 											value="#{registerPersonAction.person.customAttributes}"
 											var="_custAttr">
-											<a4j:outputPanel>
 												<ui:param name="_mandatory" value="#{_custAttr.mandatory}" />
 												<ox:decorate id="_custAttrIdx"
 													label="#{(empty _custAttr.metadata) ? _custAttr.name : _custAttr.metadata.displayName }"
@@ -99,12 +96,12 @@ iframe {
 														maxlength="60"
 														rendered="#{not _custAttr.readonly and (_custAttr.metadata.dataType ne 'DATE') and (_custAttr.metadata.displayName ne 'Gender, male or female') }"
 														required="#{_mandatory}" size="40"
-														tabindex="#{_custAttrIdx + 1}" value="#{_custAttr.value}">
+														tabindex="#{_custAttrIdx.index + 1}" value="#{_custAttr.value}">
 														<f:validator validatorId="extendedRegexValidator">
 															<f:attribute name="pattern"
 																value="#{((empty _custAttr) or (empty _custAttr.metadata) or (empty _custAttr.metadata.attributeValidation) or (empty _custAttr.metadata.attributeValidation.regexp)) ? '.*' : _custAttr.metadata.attributeValidation.regexp}" />
 														</f:validator>
-														<rich:validator event="keyup" />
+														<f:ajax event="keyup"/>
 													</h:inputText>
 													<h:selectOneMenu value="#{_custAttr.value}"
 														styleClass="form-control"
@@ -119,10 +116,13 @@ iframe {
 													</h:outputText>
 													<h:outputText value=" " />
 													<!-- Date Attribute -->
-													<rich:calendar datePattern="EEE MMM dd HH:mm:ss Z yyyy"
-														readonly="#{_custAttr.readonly}"
-														rendered="#{not _custAttr.readonly and (_custAttr.metadata.dataType eq 'DATE')}"
-														value="#{_custAttr.value}" />
+													<b:panel contentDisabled="#{_custAttr.readonly}">
+														<b:datepicker
+															rendered="#{not _custAttr.readonly and (_custAttr.metadata.dataType eq 'DATE')}"
+															value="#{_custAttr.value}">
+															<f:convertDateTime pattern="EEE MMM dd HH:mm:ss Z yyyy"/>
+														</b:datepicker>
+													</b:panel>
 
 												</ox:decorate>
 												<!-- Special Attribute. Is this intended to be a combobox-based attribute? -->
@@ -130,7 +130,7 @@ iframe {
 													label="#{(empty _custAttr.metadata) ? _custAttr.name : _custAttr.metadata.displayName }"
 													rendered="#{not registerPersonAction.hiddenAttributes.contains(_custAttr.name) and _custAttr.name.equals('exampleSpecialAttribute')}">
 													<h:selectOneMenu id="custId" required="#{_mandatory}"
-														tabindex="#{_custAttrIdx + 1}" value="#{_custAttr.value}">
+														tabindex="#{_custAttrIdx.index + 1}" value="#{_custAttr.value}" title="#{_custAttr.metadata.gluuTooltip}">
 														<f:selectItem id="item1" itemLabel="News" itemValue="1" />
 														<f:selectItem id="item2" itemLabel="Sports" itemValue="2" />
 														<f:selectItem id="item3" itemLabel="Music" itemValue="3" />
@@ -140,11 +140,7 @@ iframe {
 													</h:selectOneMenu>
 													<h:outputText value=" " />
 												</ox:decorate>
-												<rich:tooltip
-													rendered="#{((not empty _custAttr) and (not empty _custAttr.metadata) and ( not empty _custAttr.metadata.gluuTooltip))}"
-													value="#{_custAttr.metadata.gluuTooltip}" />
-											</a4j:outputPanel>
-										</a4j:repeat>
+										</ui:repeat>
 										<ox:decorate id="passwordField"
 											label="#{msgs['register.password']}"
 											style="margin-left: -15px;"

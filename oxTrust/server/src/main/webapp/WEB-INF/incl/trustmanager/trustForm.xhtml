@@ -4,11 +4,10 @@
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:a4j="http://richfaces.org/a4j" xmlns:b="http://bootsfaces.net/ui"
-	xmlns:rich="http://richfaces.org/rich"
+	xmlns:b="http://bootsfaces.net/ui"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:gluufn="http://www.gluu.org/jsf/functions"
-	xmlns:richext="http://xmlns.jcp.org/jsf/composite/richext"
+	xmlns:gluuext="http://xmlns.jcp.org/jsf/composite/gluuext"
 	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
 	xmlns:ox="http://xmlns.jcp.org/jsf/composite/ox"
 	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
@@ -22,14 +21,25 @@
             }
         }
 
-    function changeEvent(element) {
-    var val = $(element).find('option:selected').text();
-    //alert("val " + val);
-    if(val === 'Manual') {
-       #{rich:component('createMetadata:createMeatadataModalPanel')}.show();
-    }
-	}        
-    </h:outputScript>
+	    function changeEvent(element) {
+		    var val = $(element).find('option:selected').text();
+    		if(val === 'Manual') {
+       			$('.createMeatadataModalPanelClass').modal('show');
+			}
+		}
+
+		// Workaround for mixing tabs on load
+		function forceTabsUpdate() {
+			var tab0 = document.getElementById('trustForm_attributeTabId_0_tab');
+			var tab1 = document.getElementById('trustForm_attributeTabId_1_tab');
+			if (tab1 != null) {
+				tab1.click();
+			}
+			if (tab0 != null) {
+				tab0.click();
+			}
+		}
+	</h:outputScript>
 	<ui:include src="/WEB-INF/incl/trustmanager/viewSPMetadata.xhtml" />
 	<ui:include
 		src="/WEB-INF/incl/trustmanager/configureMetadataFiltersPanel.xhtml" />
@@ -40,7 +50,6 @@
 	<ui:include src="/WEB-INF/incl/trustmanager/entityIdSelector.xhtml" />
 	<b:panel title="Trust Relationship Form" look="primary"
 		collapsible="false" iconAwesome="fa-building">
-		<h:head>
 			<style type="text/css">
 .attributeColumn {
 	width: 350px;
@@ -117,63 +126,65 @@ input[submit] {
 	background-color: #2e6da4 !important;
 }
 </style>
-		</h:head>
 		<h:form enctype="multipart/form-data" id="trustForm">
+
 			<div class="row"
 				style="margin-left: 2px; margin-right: 2px; background: white;">
 				<div class="col-sm-8 col-lg-8" style="padding: 0px;">
 					<b:panel title="" look="success" collapsible="false"
 						iconAwesome="fa-building">
-						<b:tabView id="Form" pills="true"
-							contentStyle="border: 1px solid #337ab7; padding:10px; border-radius:5px;">
-							<b:tab title="#{msgs['trustmanager.trustAgreement']}">
+						<b:tabView id="Form" pills="true" contentStyle="border: 1px solid" look="primary">
+							<b:tab id="formTabId" title="#{msgs['trustmanager.trustAgreement']}">
 								<div style="width: 100%;">
 									<ox:decorate id="displayName"
 										label="#{msgs['trustmanager.displayName']}">
 										<h:inputText styleClass="form-control DisplayName"
 											value="#{_trustRelationship.displayName}" size="40"
-											maxlength="60" required="true" id="displayNameId" />
+											maxlength="60" required="true" id="displayNameId"/>
+										<b:message for="@parent" autoUpdate="true" />
 									</ox:decorate>
 									<ox:decorate id="description"
 										label="#{msgs['trustmanager.description']}">
 										<h:inputTextarea value="#{_trustRelationship.description}"
 											styleClass="form-control Description" rows="3" size="40"
-											maxlength="4000" required="true" id="descriptionId" />
+											maxlength="4000" required="true" id="descriptionId"/>
+										<b:message for="@parent" autoUpdate="true" />
 									</ox:decorate>
 									<ox:decorate id="entityType"
 										label="#{msgs['trustmanager.entityType']}">
 										<h:selectOneMenu styleClass="rounded form-control EntityType"
 											value="#{_trustRelationship.entityType}" required="true"
-											id="entityTypeId" converter="omnifaces.GenericEnumConverter">
+											id="entityTypeId" converterId="org.gluu.jsf2.converter.EnumConverter">
 											<f:selectItem noSelectionOption="true" itemLabel="" />
 											<f:selectItems
 												value="#{_trustRelationshipAction.entityTypeList}"
 												var="_type" itemLabel="#{_type.displayName}" />
-											<a4j:ajax event="change" render="metadataType, spSingleGroup, mdqUrlId, mdqProviderId, mdqEntityId"
+											<f:ajax event="change" render="metadataType spSingleGroup mdqUrlId mdqProviderId mdqEntityId"
 												execute="@this" />
 										</h:selectOneMenu>
+										<b:message for="@parent" autoUpdate="true" />
 									</ox:decorate>
 									<h:panelGroup id="metadataType">
-										<a4j:region>
+										<h:panelGroup>
 											<ox:decorate id="spMetaDataSourceType"
 												label="#{msgs['trustmanager.metadataLocation']}">
 												<h:selectOneMenu
 													styleClass=" rounded form-control MetaDataType"
 													value="#{_trustRelationship.spMetaDataSourceType}"
-													onchange="changeEvent(this)" required="true"
+													onchange="changeEvent(this);"
 													id="spMetaDataSourceTypeId"
-													converter="omnifaces.GenericEnumConverter">
+													converterId="org.gluu.jsf2.converter.EnumConverter">
 													<f:selectItem noSelectionOption="true"
 														itemLabel="Metadata type" />
 													<f:selectItems
 														value="#{_trustRelationshipAction.metadataSourceTypesList}"
 														var="_type" itemLabel="#{_type.displayName}" />
-													<a4j:ajax event="change"
-														render="MetadataOperations, spMetaDataUrlGroupId, FederationWizard, FederationWizardEntitySelection, urlId, mdqUrlId, mdqProviderId, mdqEntityId"
-														limitRender="true" execute="@this" />
+													<f:ajax event="change"
+														render="MetadataOperations spMetaDataUrlGroupId FederationWizard FederationWizardEntitySelection urlId mdqUrlId mdqProviderId mdqEntityId"
+														execute="@this" />
 												</h:selectOneMenu>
 											</ox:decorate>
-											<a4j:region>
+											<h:panelGroup>
 												<h:panelGroup id="urlId"
 													rendered="#{((_trustRelationship.spMetaDataSourceType.value eq 'file') and (not empty _trustRelationship.url))}"
 													label="URL">
@@ -182,6 +193,7 @@ input[submit] {
 															value="#{_trustRelationship.url}" rows="3" size="40"
 															maxlength="4000" id="urlInputId" />
 													</ox:decorate>
+													<b:message for="@parent" autoUpdate="true" />
 												</h:panelGroup>
 												<h:panelGroup id="FederationWizard">
 													<h:panelGroup
@@ -198,8 +210,8 @@ input[submit] {
 																	value="#{_trustRelationshipAction.getAllOtherFederations(_trustRelationship.inum)}"
 																	var="_type" itemLabel="#{_type.displayName}"
 																	itemValue="#{_type.dn}" />
-																<a4j:ajax event="change"
-																	render="FederationWizardEntitySelection, EntityIds"
+																<f:ajax event="change"
+																	render="FederationWizardEntitySelection EntityIds"
 																	limitRender="true" />
 															</h:selectOneMenu>
 														</ox:decorate>
@@ -219,19 +231,19 @@ input[submit] {
 															<b:label severity="primary"
 																text="#{_trustRelationshipAction.getEntityId()}"
 																rendered="#{!empty _trustRelationshipAction.getEntityId()}" />
-															<a4j:commandLink
+															<b:commandLink ajax="true"
 																value="#{empty _trustRelationshipAction.getEntityId() ? 'Click to select entity Id' : '   Click to change entity Id'}"
 																action="#{_trustRelationshipAction.isActive()}"
-																oncomplete="#{rich:component('entityIdSelector')}.show();">
-															</a4j:commandLink>
+																oncomplete="$('.entityIdSelectorClass').modal('show');">
+															</b:commandLink>
 														</ox:decorate>
 													</h:panelGroup>
 												</h:panelGroup>
-											</a4j:region>
-										</a4j:region>
+											</h:panelGroup>
+										</h:panelGroup>
 									</h:panelGroup>
 									<h:panelGroup id="MetadataOperations">
-										<a4j:region>
+										<h:panelGroup>
 											<h:panelGroup id="fileWrapperGroupId"
 												rendered="#{_trustRelationship.spMetaDataSourceType.value eq 'file'}">
 												<ox:decorate id="fileWrapper"
@@ -241,18 +253,19 @@ input[submit] {
 														required="#{_trustRelationship.spMetaDataSourceType.value eq 'file'}"
 														value="#{_trustRelationshipAction.fileWrapper}"
 														rendered="#{empty _trustRelationship.spMetaDataFN}" />
+													<b:message for="@parent" autoUpdate="true" />
 
-													<a4j:commandLink id="fileWrapperFileNameId"
+													<b:commandLink ajax="true" id="fileWrapperFileNameId"
 														value="#{_trustRelationship.spMetaDataFN}"
 														onclick="PF('spMetadataPanel').show();"
 														rendered="#{not empty _trustRelationship.spMetaDataFN}"
-														execute="@this" />
-													<a4j:commandLink style="margin-left:305px;"
-														styleClass="glyphicon glyphicon-remove"
+														process="@this" />
+													<b:commandLink ajax="true" style="margin-left:305px;"
+														icon="glyphicon-remove"
 														action="#{_trustRelationship.setSpMetaDataFN('')}"
-														limitRender="true" render="MetadataOperations"
+														limitRender="true" update="MetadataOperations"
 														rendered="#{not empty _trustRelationship.spMetaDataFN}">
-													</a4j:commandLink>
+													</b:commandLink>
 												</ox:decorate>
 											</h:panelGroup>
 											<p:dialog id="spMetadataPanel" header="SP METADATA"
@@ -264,7 +277,7 @@ input[submit] {
 														value="#{_trustRelationshipAction.metadata}" />
 		                                         </pre>
 											</p:dialog>
-										</a4j:region>
+										</h:panelGroup>
 										<h:panelGroup id="certUpdateWrapperGroupId"
 											rendered="#{((not empty _trustRelationship.spMetaDataFN) and (_trustRelationship.spMetaDataSourceType.value eq 'file'))}">
 											<ox:decorate id="certUpdate"
@@ -285,6 +298,7 @@ input[submit] {
 											<h:inputText styleClass="form-control"
 												value="#{_trustRelationship.spMetaDataURL}" size="40"
 												required="true" id="spMetaDataURLId" />
+											<b:message for="@parent" autoUpdate="true" />
 										</ox:decorate>
 									</h:panelGroup>
 									
@@ -295,6 +309,7 @@ input[submit] {
 											<h:inputText styleClass="form-control"
 												size="40" value="#{_trustRelationship.url}"
 												required="true" id="mdqUrlId__" />
+											<b:message for="@parent" autoUpdate="true" />
 										</ox:decorate>
 									</h:panelGroup>
 
@@ -309,6 +324,7 @@ input[submit] {
 												<f:selectItems value="#{_trustRelationshipAction.allMdqFederatedTrustRelationships}"
 													var="_type" itemLabel="#{_type.displayName}" itemValue="#{_type.dn}" />
 											</h:selectOneMenu>
+											<b:message for="@parent" autoUpdate="true" />
 										</ox:decorate>
 									</h:panelGroup>
 									<h:panelGroup id="mdqEntityId">
@@ -317,6 +333,7 @@ input[submit] {
 											label="#{msgs['trustmanager.mdqEntityId']}">
 											<h:inputText styleClass="form-control"
 												size="40" value="#{_trustRelationship.entityId}" required="true" id="mdqEntityId__"/>
+											<b:message for="@parent" autoUpdate="true" />
 										</ox:decorate>
 									</h:panelGroup>
 										
@@ -344,17 +361,17 @@ input[submit] {
 													<h:panelGrid columns="2">
 														<h:selectBooleanCheckbox styleClass="checkbox1"
 															value="#{_trustRelationship.specificRelyingPartyConfig}">
-															<a4j:ajax event="click" render="RelyingPartyConfig"
+															<f:ajax event="click" render="RelyingPartyConfig"
 																execute="@this" limitRender="true" />
 														</h:selectBooleanCheckbox>
 													</h:panelGrid>
 													<h:panelGroup id="RelyingPartyConfig">
-														<a4j:commandLink id="TRConfig"
+														<b:commandLink ajax="true" id="TRConfig"
 															styleClass="RelyingPartyConfigLink"
 															value="#{msgs['trustmanager.configureRelyingParty']}"
 															rendered="#{_trustRelationship.specificRelyingPartyConfig}"
-															onclick="#{rich:component('TRConfigPanel')}.show();"
-															execute="@this" />
+															onclick="$('.TRConfigPanelClass').modal('show');"
+															process="@this" />
 													</h:panelGroup>
 												</h:panelGrid>
 											</ox:decorate>
@@ -370,18 +387,17 @@ input[submit] {
 												</ox:decorate>
 											</h:panelGroup>
 											<h:panelGroup id="selectedCustomAttributesId">
-												<rich:accordion id="ReleasedAttributePanelBar" width="400">
-													<rich:accordionItem id="newTrustId"
-														header="#{_trustRelationshipAction.trustRelationship.displayName == null ? 'New Trust Relationship' : _trustRelationshipAction.trustRelationship.displayName}">
-														<a4j:ajax event="enter"
+												<b:tabView id="ReleasedAttributePanelBar" switchType="ajax" pills="true" style="width:400px;" ajax="true" contentStyle="border: 1px solid; overflow-y: auto;" look="primary">
+														<f:ajax event="change"
 															listener="#{_trustRelationshipAction.setSelectedTR(_trustRelationship.inum)}"
-															limitRender="true" render="a8.8ttributeTabPanelGroupId"
-															queueId="trustQueue" execute="@this" />
+															limitRender="true" update="AttributeTabPanelGroupId"
+															execute="@this" />
+													<b:tab id="newTrustId"
+														title="#{_trustRelationshipAction.trustRelationship.displayName == null ? 'New Trust Relationship' : _trustRelationshipAction.trustRelationship.displayName}">
 														<b:label severity="warning"
 															text="No attributes release for this Trust relationship."
 															rendered="#{_trustRelationship.releasedCustomAttributes.size() eq 0}" />
-														<a4j:repeat var="_attr"
-															value="#{_trustRelationship.releasedCustomAttributes}">
+														<ui:repeat value="#{_trustRelationship.releasedCustomAttributes}" var="_attr" varStatus="_attrStatus">
 															<ui:param name="_metadata" value="#{_attr.metadata}" />
 															<ui:param name="_aid"
 																value="#{_customAttributeAction.attributeIds[_metadata]}" />
@@ -396,61 +412,52 @@ input[submit] {
 																		title="#{msgs['trustmanager.samlURIForThisAttribute']} | #{_trustRelationshipAction.getSAML1URI(_metadata)} | #{_trustRelationshipAction.getSAML2URI(_metadata)}" />
 																</div>
 																<div class="col-sm-1">
-																	<a4j:commandLink
-																		styleClass="glyphicon glyphicon-remove"
+																	<b:commandLink ajax="true"
+																		icon="glyphicon-remove"
 																		action="#{_customAttributeAction.removeCustomAttribute(_metadata.inum)}"
-																		render="newTrustId"
-																		onbeforedomupdate="changeAttributeVisibility('#{_aid}', true);"
-																		execute="@this">
-																	</a4j:commandLink>
+																		update="@form:formTabId:selectedCustomAttributesId"
+																		oncomplete="changeAttributeVisibility('#{_aid}', true);"
+																		process="@this">
+																	</b:commandLink>
 																</div>
 															</div>
 															<br />
-														</a4j:repeat>
-													</rich:accordionItem>
-													<ui:repeat
-														value="#{_trustRelationshipAction.getFederatees(_trustRelationship)}"
-														var="_trust">
-														<rich:accordionItem
-															header="FEDERATED ==> #{_trust.displayName}"
-															rendered="#{_trustRelationship.isFederation()}">
-															<a4j:ajax event="enter"
-																listener="#{_trustRelationshipAction.setSelectedTR(_trust.inum)}"
-																limitRender="true" render="attributeTabPanelGroupId"
-																queueId="trustQueue" execute="@this" />
-															<b:label severity="warning"
-																text="No attributes release for this Trust relationship."
-																rendered="#{_trustRelationship.releasedCustomAttributes.size() eq 0}" />
-															<a4j:repeat var="_attr"
-																value="#{_trust.releasedCustomAttributes}">
-																<ui:param name="_metadata" value="#{_attr.metadata}" />
-																<ui:param name="_aid"
-																	value="#{_customAttributeAction.attributeIds[_metadata]}" />
-																<h:outputText value="#{_metadata.displayName}"
-																	styleClass="attributeTooltip"
-																	title="#{msgs['trustmanager.samlURIForThisAttribute']} | #{_trustRelationshipAction.getSAML1URI(_metadata)} | #{_trustRelationshipAction.getSAML2URI(_metadata)}" />
-																<p:spacer width="8" />
-																<a4j:commandLink
-																	action="#{_customAttributeAction.removeCustomAttribute(_metadata.inum)}"
-																	render="newTrustId"
-																	onbeforedomupdate="changeAttributeVisibility('#{_aid}');"
-																	execute="@this">
-																	<h:graphicImage value="/img/remove.gif" />
-																</a4j:commandLink>
-																<br />
-															</a4j:repeat>
-														</rich:accordionItem>
-													</ui:repeat>
-												</rich:accordion>
+														</ui:repeat>
+													</b:tab>
+													<b:tab value="#{_trustRelationshipAction.getFederatees(_trustRelationship)}" var="_trust"
+														title="FEDERATED ==> #{_trust.displayName}"
+														rendered="#{_trustRelationship.isFederation()}">
+														<b:label severity="warning"
+															text="No attributes release for this Trust relationship."
+															rendered="#{_trustRelationship.releasedCustomAttributes.size() eq 0}" />
+														<ui:repeat value="#{_trust.releasedCustomAttributes}" var="_attr" varStatus="_attrStatus">
+															<ui:param name="_metadata" value="#{_attr.metadata}" />
+															<ui:param name="_aid"
+																value="#{_customAttributeAction.attributeIds[_metadata]}" />
+															<h:outputText value="#{_metadata.displayName}"
+																styleClass="attributeTooltip"
+																title="#{msgs['trustmanager.samlURIForThisAttribute']} | #{_trustRelationshipAction.getSAML1URI(_metadata)} | #{_trustRelationshipAction.getSAML2URI(_metadata)}" />
+															<gluuext:spacer width="8" />
+															<b:commandLink ajax="true"
+																action="#{_customAttributeAction.removeCustomAttribute(_metadata.inum)}"
+																update="@form:newTrustId"
+																oncomplete="@form:changeAttributeVisibility('#{_aid}');"
+																process="@this">
+																<h:graphicImage value="/img/remove.gif" />
+															</b:commandLink>
+															<br />
+														</ui:repeat>
+													</b:tab>
+												</b:tabView>
 											</h:panelGroup>
 										</h:panelGroup>
 									</h:panelGroup>
-									<a4j:commandLink style="margin-left: 165px;"
+									<b:commandLink ajax="true" style="margin-left: 165px;"
 										id="additionalTRParams"
 										value="#{msgs['trustmanager.configureMetadataFilter']}"
 										rendered="#{(not _new) and (trustService.getTrustContainerFederation(_trustRelationship) eq null)}"
-										onclick="#{rich:component('additionalTRParamsPanel')}.show();"
-										execute="@this" />
+										onclick="$('.additionalTRParamsPanelClass').modal('show');"
+										process="@this" />
 									<h:panelGrid columns="1" width="100%" id="validattionLogId"
 										rendered="#{not (_new or empty _trustRelationship.validationLog)}">
 										<f:facet name="caption">
@@ -473,14 +480,11 @@ input[submit] {
 							<b:tab title="" content-disabled="true"
 								rendered="#{_trustRelationship.isFederation()}">
 								<h:panelGroup>
-									<a4j:commandLink id="breakFederation"
+									<b:commandLink ajax="true" id="breakFederation"
 										value="Federated Websites"
-										oncomplete="#{rich:component('federationDeconstruction')}.show();"
-										execute="@this">
-										<rich:tooltip>
-											<span style="white-space: nowrap">#{msgs['trustmanager.clickHereToConfigure']}</span>
-										</rich:tooltip>
-									</a4j:commandLink>
+										oncomplete="$('.federationDeconstructionClass').modal('show');"
+										process="@this" tooltip="#{msgs['trustmanager.clickHereToConfigure']}">
+									</b:commandLink>
 								</h:panelGroup>
 							</b:tab>
 						</b:tabView>
@@ -489,43 +493,34 @@ input[submit] {
 				<div class="col-sm-4 col-lg-4" style="padding: 0px;">
 					<b:panel title="Release additional attributes" look="success"
 						collapsible="false">
-						<rich:tabPanel switchType="client" id="attributeTabPanelId">
-							<a4j:repeat
-								value="#{gluufn:toList(_customAttributeAction.attributeByOrigin)}"
-								var="origin">
-
-								<rich:tab
-									header="#{_customAttributeAction.originDisplayNames[origin.key]}">
-									<div style="height: 450px; overflow-y: auto;">
-										<ul class="sidebar-menu">
-											<a4j:repeat value="#{origin.value}" var="attr">
-												<li class="treeview"
-													id="#{_customAttributeAction.attributeIds[attr]}"><ui:param
-														name="_aid"
-														value="#{_customAttributeAction.attributeIds[attr]}" /> <a4j:commandLink
-														pt:aid="#{_aid}" value="#{attr.displayName}"
-														action="#{_customAttributeAction.addCustomAttribute(attr.inum)}"
-														render="selectedCustomAttributesId"
-														oncomplete="changeAttributeVisibility('${component.clientId}', false);"
-														style="#{_customAttributeAction.containsCustomAttribute(attr) ? 'display: none;' : ''}"
-														execute="@this" limitRender="true">
-														<rich:tooltip styleClass="tooltip" layout="block">
-															<span style="white-space: nowrap">
-																#{msgs['trustmanager.samlURIFor']} this attribute: <br />
-																#{_trustRelationshipAction.getSAML1URI(attr)} <br />
-																#{_trustRelationshipAction.getSAML2URI(attr)}
-															</span>
-														</rich:tooltip>
-														<f:event
-															listener="#{_customAttributeAction.renderAttribute}"
-															type="preRenderComponent" />
-													</a4j:commandLink></li>
-											</a4j:repeat>
-										</ul>
-									</div>
-								</rich:tab>
-							</a4j:repeat>
-						</rich:tabPanel>
+						<b:tabView id="attributeTabPanelId" contentStyle="border: 1px solid" look="primary">
+							<b:tab id="attributeTabId" value="#{gluufn:toList(_customAttributeAction.attributeByOrigin)}"
+								var="origin" varStatus="_scriptTypeStatus" title="#{_customAttributeAction.originDisplayNames[origin.key]}" >
+								<div style="height: 450px; overflow-y: auto;">
+									<ul class="sidebar-menu">
+										<ui:repeat value="#{origin.value}" var="attr">
+											<li class="treeview"
+												id="#{_customAttributeAction.attributeIds[attr]}"><ui:param
+													name="_aid"
+													value="#{_customAttributeAction.attributeIds[attr]}" /> <b:commandLink ajax="true"
+													pt:aid="#{_aid}" value="#{attr.displayName}"
+													action="#{_customAttributeAction.addCustomAttribute(attr.inum)}"
+													update="@form:formTabId:selectedCustomAttributesId"
+													oncomplete="changeAttributeVisibility('${component.clientId}', false);"
+													style="#{_customAttributeAction.containsCustomAttribute(attr) ? 'display: none;' : ''}"
+													process="@this"
+													tooltip="#{msgs['trustmanager.samlURIFor']} this attribute: &#013;&#010;
+															#{_trustRelationshipAction.getSAML1URI(attr)} &#013;&#010;;
+															#{_trustRelationshipAction.getSAML2URI(attr)}">
+													<f:event
+														listener="#{_customAttributeAction.renderAttribute}"
+														type="preRenderComponent" />
+												</b:commandLink></li>
+										</ui:repeat>
+									</ul>
+								</div>
+							</b:tab>
+						</b:tabView>
 					</b:panel>
 				</div>
 			</div>
@@ -533,10 +528,14 @@ input[submit] {
 				style="margin-left: 5px; margin-right: 5px; background: white;">
 				<ui:insert name="controlButttons" />
 				<h:panelGrid columns="1" width="100%" columnClasses="alignLeft">
-					<p:spacer height="8" />
+					<gluuext:spacer height="8" />
 					<ui:insert name="configurationLink" />
 				</h:panelGrid>
 			</div>
+
+			<h:outputScript>		
+				forceTabsUpdate();
+			</h:outputScript>
 		</h:form>
 	</b:panel>
 </ui:composition>

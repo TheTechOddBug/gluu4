@@ -4,9 +4,8 @@
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:b="http://bootsfaces.net/ui" xmlns:a4j="http://richfaces.org/a4j"
-	xmlns:rich="http://richfaces.org/rich"
-	xmlns:richext="http://xmlns.jcp.org/jsf/composite/richext"
+	xmlns:b="http://bootsfaces.net/ui"
+	xmlns:gluuext="http://xmlns.jcp.org/jsf/composite/gluuext"
 	xmlns:ox="http://xmlns.jcp.org/jsf/composite/ox"
 	xmlns:gluufn="http://www.gluu.org/jsf/functions">
 	<h:outputStylesheet>
@@ -20,11 +19,8 @@
             vertical-align: top;
         }
     </h:outputStylesheet>
-	<ox:changeBindPasswordDialog id="bindPasswordDialogId"
-		label="#{msgs['manageAuthentication.changeBindPassword']}"
-		password="#{managePersonAuthenticationAction.activeLdapConfig.bindPassword}"
-		setPasswordMethod="#{managePersonAuthenticationAction.updateBindPassword}" />
 	<h:form id="customAuthenticationForm">
+		<b:messages/>
 		<div class="row" style="margin: 1px;">
 			<b:panel title="Manage Authentication" look="primary"
 				iconAwesome="fa-suitcase" collapsible="false">
@@ -39,9 +35,9 @@
 						<div class="tab-pane active" id="manage-ldap">
 							<div style="display: inline-block; width: 100% !important;">
 								<h:panelGroup id="ldapManagementGroupId">
-									<rich:dataGrid id="sourceConfigsId"
-										value="#{_action.sourceConfigs}" var="_ldapConfig" columns="1"
-										style="width: 100%;" border="0" columnClasses="noBorder">
+									<ui:repeat id="sourceConfigsId"
+										value="#{_action.sourceConfigs}" var="_ldapConfig">
+										<h:panelGroup layout="block" style="width: 100%;" border="0" styleClass="noBorder">
 										<div style="display: inline-block; width: 100% !important;">
 											<ox:ldapConfig ldapConfig="#{_ldapConfig}"
 												ldapConfigAction="#{_action}" propertiesAction="#{_action}"
@@ -49,36 +45,38 @@
 												displayRemoveButton="true" displayPrimaryKey="true"
 												displayLocalPrimaryKey="true" displayEnable="false"
 												ldapConfigList="#{_action.sourceConfigs}"
-												renderAfterRomoval="sourceConfigsId"
-												changePasswordDialogId="bindPasswordDialogId:changePasswordModalPanel" />
-											<a4j:commandButton
+												renderAfterRomoval="@form:ldapManagementGroupId"
+												changePasswordDialogId="bindPasswordDialogId" />
+											<b:commandButton ajax="true" look="primary"
 												value="#{msgs['manageAuthentication.activate']}"
 												action="#{_ldapConfig.setEnabled(true)}"
 												rendered="#{not _ldapConfig.enabled}"
-												render="ldapManagementGroupId" limitRender="true"
+												update="@form:ldapManagementGroupId" limitRender="true"
 												styleClass="btn btn-primary buttonActivate"
 												style="margin-left:20px;" />
-											<a4j:commandButton
+											<b:commandButton ajax="true" look="primary"
 												value="#{msgs['manageAuthentication.deactivate']}"
 												action="#{_ldapConfig.setEnabled(false)}"
 												rendered="#{_ldapConfig.enabled}"
-												render="ldapManagementGroupId" limitRender="true"
+												update="@form:ldapManagementGroupId" limitRender="true"
 												immediate="true"
 												styleClass="btn btn-primary buttonDeActivate"
 												style="margin-left:20px;" />
-											<a4j:commandLink style="margin-left:5px;"
-												styleClass="btn btn-primary buttonTestConnection"
+											<b:commandLink ajax="true" style="margin-left:5px;"
+												styleClass="buttonTestConnection"
+												icon="btn-primary"
 												value="#{msgs['manageAuthentication.testLDAPConnection']}"
 												rendered="#{_ldapConfig.enabled}"
 												action="#{_action.testLdapConnection(_ldapConfig)}" />
 										</div>
-									</rich:dataGrid>
+										</h:panelGroup>
+									</ui:repeat>
 									<h:panelGroup layout="block" styleClass="addConfig">
-										<a4j:commandLink
+										<b:commandLink ajax="true"
 											styleClass="btn btn-primary addSourceLDAPServer"
 											value="#{msgs['organization.addSourceLDAPServer']}"
 											action="#{_action.addSourceConfig()}"
-											render="sourceConfigsId" execute="@this"
+											update="@form:ldapManagementGroupId" process="@this"
 											style="margin-right:1100px;margin-top:50px;" />
 									</h:panelGroup>
 								</h:panelGroup>
@@ -189,6 +187,12 @@
 			</b:panel>
 		</div>
 	</h:form>
+
+	<ox:changePasswordDialog id="bindPasswordDialogId"
+		label="#{msgs['manageAuthentication.changeBindPassword']}"
+		setPasswordMethod="#{managePersonAuthenticationAction.updateBindPassword}"
+		cancelPasswordMethod="#{managePersonAuthenticationAction.cancelBindPassword}"/>
+
 	<script>
 		$('#customAuthenticationFormtab a').click(function(e) {
 			e.preventDefault();

@@ -1,9 +1,10 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:b="http://bootsfaces.net/ui"
 	xmlns:ox="http://xmlns.jcp.org/jsf/composite/ox"
 	xmlns:cc="http://xmlns.jcp.org/jsf/composite"
 	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
@@ -58,72 +59,63 @@
 		}
 
 	</h:outputScript>
-	<a4j:region>
 		<ox:decorate id="mapping" label="#{cc.attrs.label}"
 			hideLabel="#{cc.attrs.hideLabel}" leftClass="col-sm-1"
 			rightClass="col-sm-11">
-			<h:panelGroup id="customMap">
-				<a4j:region styleClass="col-sm-12 col-lg-12">
-					<a4j:repeat value="#{cc.attrs.properties}" var="_property">
-						<h:panelGrid id="mPG"
-							styleClass="propertiesList col-sm-12 col-lg-12" columns="1"
-							width="100%" border="0" cellpadding="0" cellspacing="0">
-							<h:panelGroup id="propertiesList">
-								<div id="mDiv">
-									<h:inputText id="key"
-										style="margin-right:5px;margin-bottom:10px;width:35%;float:left;"
-										styleClass="col-md-4 form-control propertyLabelTextBox"
-										value="#{_property.key}" size="#{cc.attrs.inputWidth}"
-										readonly="#{(_property.key) eq 'clientID' or (_property.key) eq 'clientSecret'}" />
-									<h:inputText id="value"
-										style="margin-right:2px;margin-bottom:10px;width:45%;float:left;"
-										styleClass="col-md-7 form-control propertyValueTextBox"
-										rendered="#{!_property.isSecret()}" value="#{_property.value}" />
-									<h:inputSecret id="secret"
-										styleClass="col-md-7 form-control togglefield"
-										style="width:45%;float:left;" value="#{_property.value}"
-										size="#{cc.attrs.inputWidth}"
-										required="#{cc.attrs.requiredValue}" redisplay="true"
-										rendered="#{_property.isSecret()}" />
-									<h:graphicImage value="/img/error.gif" rendered="#{invalid}"
-										styleClass="errors" />
-									<h:graphicImage styleClass="col-md-1 col-lg-1"
-										value="/img/eye.png" id="view"
-										onclick="return viewValue(this);"
-										rendered="#{_property.isSecret()}" />
-									<h:graphicImage styleClass="col-md-1 col-lg-1"
-										value="/img/eye-hidden.png" style="display: none;" id="hide"
-										onclick="return hideValue(this);"
-										rendered="#{_property.isSecret()}" />
-									<a4j:commandLink
-										styleClass="glyphicon glyphicon-remove col-md-1 col-lg-1 removePropertyButton"
-										rendered="true"
-										action="#{cc.attrs.propertiesAction.removeEntry(cc.attrs.properties,_property)}"
-										style="float:left;margin-right:10px;margin-top: 8px;"
-										render="customMap" execute="@region" />
-								</div>
-							</h:panelGroup>
+			<h:panelGroup id="customMap" styleClass="col-sm-12 col-lg-12">
+				<ui:repeat value="#{cc.attrs.properties}" var="_property">
+					<h:panelGrid id="mPG"
+						styleClass="propertiesList col-sm-12 col-lg-12" columns="1"
+						width="100%" border="0" cellpadding="0" cellspacing="0">
+						<h:panelGroup id="propertiesList">
+							<div id="mDiv">
+								<h:inputText id="key"
+									style="margin-right:5px;margin-bottom:10px;width:35%;float:left;"
+									styleClass="col-md-4 form-control propertyLabelTextBox"
+									value="#{_property.key}" size="#{cc.attrs.inputWidth}"
+									readonly="#{(_property.key) eq 'clientID' or (_property.key) eq 'clientSecret'}" />
+								<h:inputText id="value"
+									style="margin-right:2px;margin-bottom:10px;width:45%;float:left;"
+									styleClass="col-md-7 form-control propertyValueTextBox"
+									rendered="#{!_property.isSecret()}" value="#{_property.value}" />
+								<h:inputSecret id="secret"
+									styleClass="col-md-7 form-control togglefield"
+									style="width:45%;float:left;" value="#{_property.value}"
+									size="#{cc.attrs.inputWidth}"
+									required="#{cc.attrs.requiredValue}" redisplay="true"
+									rendered="#{_property.isSecret()}" />
+								<h:graphicImage value="/img/error.gif" rendered="#{invalid}"
+									styleClass="errors" />
+								<h:graphicImage styleClass="col-md-1 col-lg-1"
+									value="/img/eye.png" id="view"
+									onclick="return viewValue(this);"
+									rendered="#{_property.isSecret()}" />
+								<h:graphicImage styleClass="col-md-1 col-lg-1"
+									value="/img/eye-hidden.png" style="display: none;" id="hide"
+									onclick="return hideValue(this);"
+									rendered="#{_property.isSecret()}" />
+								<b:commandLink ajax="true"
+									icon="glyphicon-remove"
+									rendered="true"
+									action="#{cc.attrs.propertiesAction.removeEntry(cc.attrs.properties,_property)}"
+									style="float:left;margin-right:10px;margin-top: 8px;"
+									update="@parent:@parent:@parent:customMap" process="@parent:@parent:@parent:customMap" />
+							</div>
+						</h:panelGroup>
+					</h:panelGrid>
 
-							<ox:acceptRemovalDialog
-								deleteMethod="#{cc.attrs.propertiesAction.removeEntry(cc.attrs.properties,_property)}"
-								id="deleteConfirmation" subject="#{cc.attrs.labelAdd}"
-								render="customMap" value="#{_property.key}" />
-						</h:panelGrid>
-
-					</a4j:repeat>
+				</ui:repeat>
 
 
-					<a4j:commandLink
-						action="#{cc.attrs.propertiesAction.addEntry(cc.attrs.properties)}"
-						render="customMap" execute="@region"
-						rendered="#{empty maxItems or maxItems gt properties.size()}">
-						<h:outputText style="margin-top:-5px"
-							styleClass="btn btn-primary addNewPropertyButton"
-							value="#{cc.attrs.labelAdd eq null or  cc.attrs.labelAdd eq '' ? cc.attrs.label : cc.attrs.labelAdd}" />
-					</a4j:commandLink>
-				</a4j:region>
+				<b:commandLink ajax="true"
+					action="#{cc.attrs.propertiesAction.addEntry(cc.attrs.properties)}"
+					update="@parent:customMap" process="@parent:customMap"
+					rendered="#{empty maxItems or maxItems gt properties.size()}">
+					<h:outputText style="margin-top:-5px"
+						styleClass="btn btn-primary addNewPropertyButton"
+						value="#{cc.attrs.labelAdd eq null or  cc.attrs.labelAdd eq '' ? cc.attrs.label : cc.attrs.labelAdd}" />
+				</b:commandLink>
 			</h:panelGroup>
 		</ox:decorate>
-	</a4j:region>
 </cc:implementation>
 </html>

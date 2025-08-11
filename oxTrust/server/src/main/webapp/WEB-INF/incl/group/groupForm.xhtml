@@ -4,9 +4,8 @@
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:b="http://bootsfaces.net/ui" xmlns:a4j="http://richfaces.org/a4j"
-	xmlns:rich="http://richfaces.org/rich"
-	xmlns:richext="http://xmlns.jcp.org/jsf/composite/richext"
+	xmlns:b="http://bootsfaces.net/ui"
+	xmlns:gluuext="http://xmlns.jcp.org/jsf/composite/gluuext"
 	xmlns:ox="http://xmlns.jcp.org/jsf/composite/ox"
 	xmlns:gluufn="http://www.gluu.org/jsf/functions">
 
@@ -24,7 +23,7 @@
 				#{msgs['group.manageGroups']}</a></li>
 	</ol>
 	</section>
-	<section class="content"> <h:form>
+	<section class="content"> <h:form id="groupForm">
 		<div class="row" style="margin: 5px;">
 			<b:panel title="Group Form" id="groups" look="primary"
 				iconAwesome="fa-th-large" collapsible="false">
@@ -40,7 +39,9 @@
 						<h:inputText class="form-control displayNameField"
 							value="#{_group.displayName}"
 							defaultLabel="click to enter display name" maxlength="60"
-							required="true" id="displayNameId" />
+							required="true" id="displayNameId">
+						</h:inputText>
+						<b:message for="@previous" autoUpdate="true" />
 					</ox:decorate>
 					<ox:decorate id="visibility" label="#{msgs['group.type']}">
 						<h:selectOneMenu value="#{_group.visibility}" id="visibilityId"
@@ -58,27 +59,26 @@
 					<b:panel title="#{msgs['group.users']}" id="members" look="success"
 						iconAwesome="fa-users">
 						<h:panelGroup id="selectedMembersId" class="selectedMembersId">
-							<a4j:repeat value="#{_groupAction.members}"
-								rowKeyVar="_memberIdx" var="_member">
+							<ui:repeat value="#{_groupAction.members}" var="_member" varStatus="_membersStatus">
 								<div class="row">
 									<div class="col-sm-6 prop">
 										<h:outputText
 											value="#{empty _member.displayName ? _member.uid : _member.displayName}" />
 									</div>
 									<div class="col-sm-6 prop" style="margin-left: 0px !important;">
-										<a4j:commandLink styleClass="glyphicon glyphicon-remove"
+										<b:commandLink ajax="true" icon="glyphicon-remove"
 											action="#{_groupAction.removeMember(_member.inum)}"
-											render="selectedMembersId" execute="@this">
-										</a4j:commandLink>
+											update="groupForm:selectedMembersId" process="@this">
+										</b:commandLink>
 									</div>
 								</div>
 								<br />
-							</a4j:repeat>
-							<a4j:commandButton style="margin-top:10px;"
+							</ui:repeat>
+							<b:commandButton ajax="true" look="primary" style="margin-top:10px;"
 								styleClass="btn btn-primary AddMember" value="Add member"
 								action="#{_groupAction.selectAddedMembers}"
-								oncomplete="#{rich:component('member:selectMemberModalPanel')}.show();"
-								execute="@this" />
+								oncomplete="$('.memberClass').modal('show');"
+								process="@this" />
 						</h:panelGroup>
 					</b:panel>
 				</h:panelGrid>

@@ -4,12 +4,10 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:b="http://bootsfaces.net/ui"
                 xmlns:p="http://primefaces.org/ui"
-                xmlns:a4j="http://richfaces.org/a4j"
-                xmlns:rich="http://richfaces.org/rich"
-                xmlns:richext="http://xmlns.jcp.org/jsf/composite/richext"
-                xmlns:ox="http://xmlns.jcp.org/jsf/composite/ox"
->
+                          xmlns:gluuext="http://xmlns.jcp.org/jsf/composite/gluuext"
+                xmlns:ox="http://xmlns.jcp.org/jsf/composite/ox">
 
     <h:outputStylesheet>
         .attributeColumn {
@@ -27,33 +25,32 @@
     <ui:include src="/WEB-INF/incl/trustmanager/viewFederationMetadata.xhtml" />
     <ui:include src="/WEB-INF/incl/trustmanager/viewPOPMessage.xhtml" />
 
-    <ox:acceptRemovalDialog id="deleteConfirmation" subject="federation" value="#{joinFederationAction.federationProposal.displayName}" deleteMethod="#{joinFederationAction.delete}" queue="federationQueue" />
+    <ox:acceptRemovalDialog dialogId="deleteConfirmation" subject="federation" value="#{joinFederationAction.federationProposal.displayName}" deleteMethod="#{joinFederationAction.delete}" queue="federationQueue" />
 
     <h:form enctype="multipart/form-data" id="joinFederationForm" rendered="#{_isFederation or (not empty federationService.allFederations)}">
-        <!--a4j:queue onrequestqueue="changeButtonsAvailability('updateButtons',false);" 
-            onrequestdequeue="changeButtonsAvailability('updateButtons',true);"/-->
         <h:panelGrid columns="3" width="100%" columnClasses="attributeColumn, , formColumn" border="0" cellpadding="0" cellspacing="0">
             <ui:param name="_federationProposal" value="#{joinFederationAction.federationProposal}" />
 
-            <rich:panel id="attributeTabPanelGroupId">
+            <h:panelGroup id="attributeTabPanelGroupId" layout="block" >
                 <h:panelGrid columns="1" width="100%">
                     <h:panelGroup id="FederationWizard" rendered="#{not _isFederation}">
                         <ox:decorate id="spMetaDataSourceTypeFederation" label="#{msgs['federation.federationName']}">
                             <h:selectOneMenu value="#{_federationProposal.containerFederation}" id="spMetaDataSourceTypeFederationId" converter="federationProposalConverter" required="true">
                                 <f:selectItem noSelectionOption="true"  itemLabel="#{msgs['federation.federationName']}"/>
                                 <f:selectItems value="#{federationService.allFederations}" var="_type" itemLabel="#{_type.displayName}" />
-                                <a4j:ajax event="change" render="popPanelRules, FederationRules" limitRender="true" execute="@this" />
+                                <f:ajax event="change" render="popPanelRules, FederationRules" limitRender="true" execute="@this" />
                             </h:selectOneMenu>
                         </ox:decorate>
                     </h:panelGroup>
 
                     <h:panelGroup id="FederationRules">
                         <h:panelGrid columns="1" width="100%">
-                            <rich:editor id="editor" width="400" theme="advanced" readonly="#{not _isFederation}" useSeamText="true" value="#{joinFederationAction.rules}"
-                                rendered="#{_isFederation}">
-                            </rich:editor>
-                            <a4j:commandLink value="#{msgs['federation.policiesAndOperatingProcedures']}" rendered="#{_federationProposal.containerFederation ne null}"
-                                onclick="#{rich:component('POPPanel')}.show();" execute="@none" />
+	                        <h:inputTextarea id="editor" readonly="#{not _isFederation}" value="#{joinFederationAction.rules}"
+									maxlength="10000" 
+									autocomplete="off" styleClass="form-control" style="margin-top: 10px; width:400px"
+									rendered="#{_isFederation}"/>
+                            <b:commandLink ajax="true" value="#{msgs['federation.policiesAndOperatingProcedures']}" rendered="#{_federationProposal.containerFederation ne null}"
+                                onclick="$('.POPPanelClass').modal('show');" process="@none" />
 
                             <h:panelGroup id="FederationRulesAccept">
                                 <h:selectBooleanCheckbox value="#{_federationProposal.rulesAccepted}" required="true"
@@ -63,12 +60,12 @@
                         </h:panelGrid>
                     </h:panelGroup>
                 </h:panelGrid>
-            </rich:panel>
+            </h:panelGroup>
 
-            <p:spacer width="10" />
+            <gluuext:spacer width="10" />
 
-            <rich:tabPanel switchType="client">
-                <rich:tab header="#{msgs['federation.trustAgreement']}">
+            <b:tabView contentStyle="border: 1px solid">
+                <b:tab title="#{msgs['federation.trustAgreement']}">
                     <h:panelGrid columns="1" width="100%">
                         <ox:decorate id="displayName" rendered="#{not _isFederation}" label="#{msgs['federation.organizationName']}">
                             <h:inputText value="#{_federationProposal.displayName}" size="40" maxlength="60" required="true" />
@@ -88,10 +85,9 @@
                                     <f:selectItem noSelectionOption="true"  itemLabel="#{msgs['federation.metadataType']}"/>
                                     <f:selectItems value="#{federationService.metadataSourceTypes}" var="_type" itemLabel="#{_type.displayName}" />
                                     <f:converter converterId="org.gluu.jsf2.converter.EnumConverter" />
-                                    <a4j:ajax event="change"
+                                    <f:ajax event="change"
                                         render="fileWrapperGroupId, FederationWizard, spMetaDataUrlGroupId, 
-                                                    FederationWizardEntitySelection" limitRender="true" execute="@this">
-                                    </a4j:ajax>
+                                                    FederationWizardEntitySelection" limitRender="true" execute="@this" />
                                 </h:selectOneMenu>
                             </ox:decorate>
                         </h:panelGroup>
@@ -102,16 +98,15 @@
                                          label="
                                     #{_federationProposal.spMetaDataSourceType.value eq 'file' ? 'Sp Metadata File' : 'Public certificate'}
                                 </ui:define>
-                                <s:fileUpload id="
-                                         fileWrapperId" required="#{_federationProposal.spMetaDataSourceType.value eq 'file'}"
+                                <s:fileUpload id="fileWrapperId" required="#{_federationProposal.spMetaDataSourceType.value eq 'file'}"
                                     fileName="#{joinFederationAction.fileWrapper.fileName}" data="#{joinFederationAction.fileWrapper.stream}" fileSize="#{joinFederationAction.fileWrapper.fileSize}"
                                     contentType="#{joinFederationAction.fileWrapper.contentType}" maxlength="100" rendered="#{empty _federationProposal.spMetaDataFN}" />
-                                <a4j:commandLink value="#{_federationProposal.spMetaDataFN}" rendered="#{not empty _federationProposal.spMetaDataFN}"
-                                    oncomplete="#{rich:component('spMetadataPanel')}.show();" execute="@this" />
-                                <a4j:commandLink action="#{_federationProposal.setSpMetaDataFN('')}" limitRender="true" render="fileWrapperGroupId"
-                                    rendered="#{not empty _federationProposal.spMetaDataFN}" execute="@this">
+                                <b:commandLink ajax="true" value="#{_federationProposal.spMetaDataFN}" rendered="#{not empty _federationProposal.spMetaDataFN}"
+                                    oncomplete="$('.spMetadataPanelClass').modal('show');" process="@this" />
+                                <b:commandLink ajax="true" action="#{_federationProposal.setSpMetaDataFN('')}" limitRender="true" update="fileWrapperGroupId"
+                                    rendered="#{not empty _federationProposal.spMetaDataFN}" process="@this">
                                     <h:graphicImage value="/img/remove.gif" />
-                                </a4j:commandLink>
+                                </b:commandLink>
                             </ox:decorate>
                         </h:panelGroup>
 
@@ -121,13 +116,13 @@
                             </ox:decorate>
                         </h:panelGroup>
                     </h:panelGrid>
-                </rich:tab>
-                <rich:tab header="#{msgs['federation.associatedContacts']}">
+                </b:tab>
+                <b:tab title="#{msgs['federation.associatedContacts']}">
                     <ui:decorate template="/WEB-INF/incl/trustmanager/associatedContactsForm.xhtml">
                         <f:param name="trust" value="#{_federationProposal}" />
                     </ui:decorate>
-                </rich:tab>
-            </rich:tabPanel>
+                </b:tab>
+            </b:tabView>
         </h:panelGrid>
         <div id="updateButtons">
             <h:commandButton value="#{_new?'Add':'Update'}" action="#{joinFederationAction.save(_isFederation)}" styleClass="btn btn-success"/>
@@ -135,7 +130,7 @@
                 rendered="#{permissionService.hasPermission('trust', 'access') and (not _new) and (not _isFederation)}" styleClass="btn btn-success"/>
             <h:commandButton value="#{joinFederationAction.isActive()?'Deactivate':'Activate'}" action="#{joinFederationAction.acceptToggle}"
                 rendered="#{permissionService.hasPermission('trust', 'access') and (not _new) and (_isFederation)}" styleClass="btn btn-success"/>
-            <a4j:commandButton value="#{msgs['federation.delete']}" onclick="#{rich:component('deleteConfirmation:acceptRemovalModalPanel')}.show();" rendered="#{permissionService.hasPermission('trust', 'access')}" styleClass="btn btn-success"/>
+            <b:commandButton ajax="true" look="primary" value="#{msgs['federation.delete']}" oncomplete="$('.acceptRemovalModalPanelClass').modal('show')" rendered="#{permissionService.hasPermission('trust', 'access')}" styleClass="btn btn-success" />
             <h:commandButton value="#{msgs['federation.cancel']}" action="#{joinFederationAction.cancel}" immediate="true" styleClass="btn btn-success"/>
         </div>
     </h:form>

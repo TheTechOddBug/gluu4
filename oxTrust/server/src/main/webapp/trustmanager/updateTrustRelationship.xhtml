@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:a4j="http://richfaces.org/a4j"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:b="http://bootsfaces.net/ui"
 	xmlns:ox="http://xmlns.jcp.org/jsf/composite/ox"
-	xmlns:rich="http://richfaces.org/rich"
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	template="/WEB-INF/incl/layout/newtemplate.xhtml">
 	<f:metadata>
@@ -40,8 +39,8 @@
 										action="#{updateTrustRelationshipAction.activationToggle}"
 										style="margin-left:3px;" styleClass="btn btn-primary"
 										value="#{updateTrustRelationshipAction.isActive()?'Deactivate':'Activate'}" />
-									<a4j:commandButton ajaxSingle="true"
-										onclick="#{rich:component('deleteConfirmation:acceptRemovalModalPanel')}.show();"
+									<b:commandButton ajax="true" look="primary"
+										oncomplete="$('.acceptRemovalModalPanelClass').modal('show')"
 										rendered="#{updateTrustRelationshipAction.update}"
 										style="margin-left:3px;" styleClass="btn btn-primary"
 										value="Delete" />
@@ -65,7 +64,7 @@
 				</ui:decorate>
 				<ox:acceptRemovalDialog
 					deleteMethod="#{updateTrustRelationshipAction.delete}"
-					id="deleteConfirmation" queue="trustQueue"
+					dialogId="deleteConfirmation" queue="trustQueue"
 					subject="Trust Relationship"
 					render="trustForm"
 					value="#{updateTrustRelationshipAction.trustRelationship.displayName}" />

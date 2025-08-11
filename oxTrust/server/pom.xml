@@ -409,25 +409,6 @@
 			<scope>provided</scope>
 		</dependency>
 
-		<!-- Richfaces -->
-		<dependency>
-			<groupId>org.richfaces</groupId>
-			<artifactId>richfaces-core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.richfaces</groupId>
-			<artifactId>richfaces</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.richfaces</groupId>
-			<artifactId>richfaces-a4j</artifactId>
-		</dependency>
-
-		<!-- OmniFaces -->
-		<dependency>
-			<groupId>org.omnifaces</groupId>
-			<artifactId>omnifaces</artifactId>
-		</dependency>
 		<!-- primefaces -->
 		<dependency>
 			<groupId>org.primefaces</groupId>
@@ -945,7 +926,7 @@
 								<jettyXml>${project.basedir}/src/main/webapp-jetty-plugin/jetty.xml</jettyXml>
 							</jettyXmls>
 
-							<scanIntervalSeconds>3</scanIntervalSeconds>
+							<scanIntervalSeconds>1</scanIntervalSeconds>
 						</configuration>
 					</plugin>
 				</plugins>

@@ -6,6 +6,7 @@
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:ox="http://xmlns.jcp.org/jsf/composite/ox"
 	xmlns:gluufn="http://www.gluu.org/jsf/functions"
+	xmlns:gluuext="http://xmlns.jcp.org/jsf/composite/gluuext"
 	xmlns:p="http://primefaces.org/ui">
 
 	<h:form id="attributeImportForm">
@@ -21,18 +22,18 @@
 								rendered="#{_importAction.uploadedFile == null}" required="true"
 								mode="advanced" dragDropSupport="false" multiple="false"
 								sizeLimit="1000000" fileLimit="1" label="Select a file"
-								validateContentType="true" update="attributeImportForm"
+								validateContentType="true" update="@form"
 								allowTypes="/(\.|\/)(ldif)$/">
 							</p:fileUpload>
 						</h:panelGroup>
 					</ox:decorate>
-					<p:spacer height="16" width="100" />
+					<gluuext:spacer height="16" width="100" />
 					<h:panelGroup id="controlButttonId">
 						<ui:insert name="controlButttons" />
 					</h:panelGroup>
 				</h:panelGroup>
 			</div>
-			<div class="box-footer" style="margin-left: 10%; margin-right: 10%;">
+			<div class="box-footer" style="margin-right: 10%;">
 				<ui:insert name="controlButttons" />
 				<div id="updateButtons">
 					<h:commandButton value="Validate"

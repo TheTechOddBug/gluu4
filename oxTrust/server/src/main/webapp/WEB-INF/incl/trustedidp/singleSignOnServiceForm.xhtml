@@ -4,22 +4,20 @@
     xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
     xmlns:f="http://xmlns.jcp.org/jsf/core"
     xmlns:h="http://xmlns.jcp.org/jsf/html"
-    xmlns:a4j="http://richfaces.org/a4j"
-    xmlns:rich="http://richfaces.org/rich"
-    xmlns:richext="http://xmlns.jcp.org/jsf/composite/richext"
+	xmlns:b="http://bootsfaces.net/ui"
+    xmlns:gluuext="http://xmlns.jcp.org/jsf/composite/gluuext"
     xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
 
-    <a4j:region>
+    <h:panelGroup>
         <h:panelGrid columns="1" width="100%" id="trustContacts">
-
-            <rich:dataGrid value="#{_trustedIdpAction.singleSignOnServices}" columnClasses="half,half" var="_singleSignOnService" columns="2" elements="#{_trustedIdpAction.singleSignOnServices.size()}" width="100%">
+			<ui:repeat value="#{_trustedIdpAction.singleSignOnServices}" var="_singleSignOnService" style="width: 100%;">
                 <div class="col-sm-12 box box-primary" style="padding:0px !important;">
-                <rich:panel bodyClass="pbody"  >
-                    <f:facet name="header">
+                <b:panel look="primary" iconAwesome="fa-th-large" collapsible="false" styleClass="pbody">
+                    <f:facet name="heading">
                         <ui:fragment>
-                            <a4j:commandLink style="float:right;" styleClass="glyphicon glyphicon-remove" action="#{_trustedIdpAction.removeSingleSignOnServices(_singleSignOnService)}"  render="trustContacts" eventsQueue="trustQueue">
+                            <b:commandLink ajax="true" style="float:right;" styleClass="glyphicon glyphicon-remove" action="#{_trustedIdpAction.removeSingleSignOnServices(_singleSignOnService)}"  update="trustContacts" eventsQueue="trustQueue">
                                <!--  <h:graphicImage value="/img/remove.gif" />  -->
-                            </a4j:commandLink>
+                            </b:commandLink>
                         </ui:fragment>
                     </f:facet>
 
@@ -53,11 +51,11 @@
                         </div>
                     </h:panelGroup>
                     
-                </rich:panel></div>
-            </rich:dataGrid>
+                </b:panel></div>
+            </ui:repeat>
 <div class="col-sm-12" style="margin-top:15px !important">
-            <a4j:commandLink style="margin-top:10px !important" styleClass="btn btn-success" value="#{msgs['trustedIdp.singleSignOnServices']}" eventsQueue="trustQueue" action="#{_trustedIdpAction.addEmptyContact()}" render="trustContacts" limitRender="true" /> 
+            <b:commandLink ajax="true" style="margin-top:10px !important" styleClass="btn btn-success" value="#{msgs['trustedIdp.singleSignOnServices']}" eventsQueue="trustQueue" action="#{_trustedIdpAction.addEmptyContact()}" update="trustContacts" limitRender="true" /> 
        </div> </h:panelGrid>
-    </a4j:region>
+    </h:panelGroup>
 
 </ui:composition>

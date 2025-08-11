@@ -15,6 +15,8 @@ import org.gluu.model.custom.script.model.CustomScript;
  */
 public class AuthenticationCustomScript extends CustomScript {
 
+    private static final long serialVersionUID = 6673053368640481101L;
+
     public static final String USAGE_TYPE_MODEL_PROPERTY = "usage_type";
 
     public AuthenticationCustomScript() {

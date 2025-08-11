@@ -1,14 +1,15 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
     xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
     xmlns:f="http://xmlns.jcp.org/jsf/core"
-    xmlns:h="http://xmlns.jcp.org/jsf/html" 
-    xmlns:a4j="http://richfaces.org/a4j" 
-    xmlns:rich="http://richfaces.org/rich"
-    xmlns:richext="http://xmlns.jcp.org/jsf/composite/richext"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:b="http://bootsfaces.net/ui"
+    xmlns:gluuext="http://xmlns.jcp.org/jsf/composite/gluuext"
     xmlns:cc="http://xmlns.jcp.org/jsf/composite">
 
 <cc:interface>
+    <cc:attribute name="id" required="true" type="java.lang.String" />
     <cc:attribute name="label" default="Generate Metadata" required="false" type="java.lang.String" />
     <cc:attribute name="generateMethod"  required="true" method-signature="void action()" />
     <cc:attribute name="metadataUri"  required="true"  /> 
@@ -17,13 +18,8 @@
 </cc:interface>
 
 <cc:implementation>
-    <rich:popupPanel id="createSPMeatadataModalPanel" onmaskclick="#{rich:component('createSPMeatadataModalPanel')}.hide()" zindex="2000" moveable="true" autosized="true" width="500" keepVisualState="true">
-        <f:facet name="header">
-            <h:outputText value="#{cc.attrs.label}" />
-        </f:facet>
-        <f:facet name="controls">
-            <h:graphicImage value="/img/close.gif" styleClass="hidelink" style="cursor:pointer" onclick="#{rich:component('createSPMeatadataModalPanel')}.hide(); return false;" />
-        </f:facet>
+    <b:modal id="createSPMeatadataModalPanel" styleClass="#{cc.attrs.id}Class"
+	title="#{cc.attrs.label}" size="modal-xl">
 
         <h:outputStylesheet>
             .red {
@@ -36,7 +32,6 @@
         </h:outputStylesheet>
 
                 <h:form id="generateMetadata">
-                <rich:messages for="gv" />
 
                 <h:panelGrid id="metadataGroupId" columns="2">
                     <h:outputText value="URI" />
@@ -64,7 +59,7 @@
                 </h:commandButton>
                 </h:panelGroup> 
         </h:form>
-    </rich:popupPanel>
+    </b:modal>
 </cc:implementation>
 
 </html>

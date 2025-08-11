@@ -3,7 +3,7 @@
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:ox="http://xmlns.jcp.org/jsf/composite/ox"
-	xmlns:richext="http://xmlns.jcp.org/jsf/composite/richext"
+	xmlns:gluuext="http://xmlns.jcp.org/jsf/composite/gluuext"
 	xmlns:b="http://bootsfaces.net/ui"
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	template="/WEB-INF/incl/layout/newtemplate.xhtml"
@@ -42,7 +42,7 @@
 						    icon="plus"
 							outcome="/group/addGroup" value="#{msgs['group.addGroup']}"
 							includeViewParams="false" style="margin-left:5px !important;" />
-						<p:spacer height="16" />
+						<gluuext:spacer height="16" />
 						<h:form class="searchArea">
 							<ox:decorate hideLabel="true" id="searchPattern">
 								<h:inputText
@@ -56,11 +56,11 @@
 									value="#{msgs['group.search']}" />
 							</ox:decorate>
 						</h:form>
-						<p:spacer height="16" />
+						<gluuext:spacer height="16" />
 						<h:form id="groupsFormId">
 							<ui:fragment
 								rendered="#{searchGroupAction.groupList.size() eq 0}">
-								<p:spacer height="30" />
+								<gluuext:spacer height="30" />
 								<h:outputText value="#{msgs['group.noSearchResultFound']}" />
 							</ui:fragment>
 							<b:dataTable id="groupsListId" style="text-align:center; width:100%;"

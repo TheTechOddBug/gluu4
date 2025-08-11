@@ -29,9 +29,9 @@
                 </ui:define>
             </ui:decorate>
 
-            <ox:inputTextDialog acceptMethod="#{updateSectorIdentifierAction.acceptSelectLoginUri}"
+            <ox:inputTextDialog dialogId="loginRedirect" acceptMethod="#{updateSectorIdentifierAction.acceptSelectLoginUri}"
                                 cancelMethod="#{updateSectorIdentifierAction.cancelSelectLoginUri}" dialogWidth="600"
-                                id="loginRedirect" inputLabel="#{msgs['sectorIdentifier.loginRedirectURI']}"
+                                inputLabel="#{msgs['sectorIdentifier.loginRedirectURI']}"
                                 inputWidth="80" label="#{msgs['sectorIdentifier.selectLoginRedirectURI']}"
                                 maxLength="256" queue="sectorIdentifierQueue" render="selectedLoginURIsId"
                                 text="#{updateSectorIdentifierAction.availableLoginUri}" textId="loginTextId"/>

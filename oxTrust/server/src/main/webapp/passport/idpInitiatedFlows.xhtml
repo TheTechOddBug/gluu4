@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:a4j="http://richfaces.org/a4j"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:b="http://bootsfaces.net/ui"
 	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
 	xmlns:ox="http://xmlns.jcp.org/jsf/composite/ox"
-	xmlns:rich="http://richfaces.org/rich"
-	xmlns:richext="http://xmlns.jcp.org/jsf/composite/richext"
+	xmlns:gluuext="http://xmlns.jcp.org/jsf/composite/gluuext"
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	template="/WEB-INF/incl/layout/newtemplate.xhtml">
@@ -56,7 +54,7 @@
 														style="width:100%" required="true"
 														value="#{passportIdpInitiatedAction.iiConfiguration.openidclient.authorizationEndpoint}"
 														id="AuthorizationEndPointID" rendered="true">
-														<rich:validator event="blur" />
+														<f:ajax event="blur"/>
 													</h:inputText>
 												</ox:decorate>
 												<ox:decorate
@@ -100,11 +98,13 @@
 										<h:panelGroup columns="1" width="100%" id="AuthParamsSection">
 											<!-- AuthorizationParams List section-->
 											<div class="row" style="margin-left: 5px; margin-right: 5px;">
-												<a4j:commandButton styleClass="btn btn-primary addNewParam"
-													value="Add"
+												<h:panelGroup style="block">
+												<b:commandButton styleClass="btn btn-primary addNewParam"
+													value="Add" ajax="true" look="primary"
 													action="#{passportIdpInitiatedAction.activateForm}"
-													render="IdpInitiatedForm,AuthZParamFormId,AuthParametersListID"
-													execute="@this" />
+													update="IdpInitiatedForm AuthZParamFormId"
+													process="@this" />
+												</h:panelGroup>
 											</div>
 											<b:dataTable id="paramsTableId"
 												value="#{passportIdpInitiatedAction.authzParams}" var="c"
@@ -121,16 +121,17 @@
 												<b:dataTableColumn value="#{c.redirectUri}" order="asc"
 													label="#{msgs['passport.idpinitiated.authParams.redirectUri']}" />
 												<b:dataTableColumn label="Actions">
+
 													<b:commandButton
 														styleClass="btn btn-primary cancelAuthParamId"
 														value="" style="margin-left: 5px;" iconAwesome="edit"
 														action="#{passportIdpInitiatedAction.editAuthParam(c)}"
-														render="IdpInitiatedForm,AuthZParamFormId" execute="@this" />
+														update="IdpInitiatedForm AuthZParamFormId" process="@this" />
 													<b:commandButton
 														styleClass="btn btn-danger deleteParamId" value=""
 														style="margin-left: 5px;" iconAwesome="minus"
 														action="#{passportIdpInitiatedAction.removeAuthParam(c)}"
-														render="IdpInitiatedForm" execute="@this" />
+														update="IdpInitiatedForm" process="@this" />
 												</b:dataTableColumn>
 											</b:dataTable>
 										</h:panelGroup>
@@ -190,34 +191,33 @@
 													label="#{msgs['passport.idpinitiated.authParams.responseType']}">
 													<h:panelGroup id="selectedResponseTypesId">
 														<h:panelGroup>
-															<a4j:repeat
+															<ui:repeat
 																value="#{passportIdpInitiatedAction.responseTypes}"
-																rowKeyVar="_responseTypeIdx" var="_responseType"
-																iterationStatusVar="loop">
+																var="_responseType" varStatus="_responseTypeStatus">
 																<div class="row-fluid">
-																	<div class="#{(loop.index % 2 == 0) ?'odd':'even'}">
+																	<div class="#{(_responseTypeStatusindex % 2 == 0) ?'odd':'even'}">
 																		<h:outputText value="#{_responseType}" />
-																		<h:outputText value="&#160;" />
+																		<gluuext:spacer width="8px"/>
 																		<div class="span6 pull-right">
-																			<a4j:commandLink
-																				styleClass="glyphicon glyphicon-remove"
+																			<b:commandLink ajax="true"
+																				icon="glyphicon-remove"
 																				style="margin-top:-20px;"
 																				action="#{passportIdpInitiatedAction.removeResponseType(_responseType)}"
-																				execute="@this" render="selectedResponseTypesId"
+																				process="@this" update="AuthZParamFormId:responseTypes:selectedResponseTypesId"
 																				eventsQueue="providerQueue">
-																			</a4j:commandLink>
+																			</b:commandLink>
 																		</div>
 																	</div>
 																</div>
 																<br />
-															</a4j:repeat>
-															<p:spacer height="16" />
-															<a4j:commandButton
+															</ui:repeat>
+															<gluuext:spacer height="16" />
+															<b:commandButton ajax="true" look="primary"
 																styleClass="btn btn-primary AddResponseTypeButton"
 																style="margin-top:5px"
 																value="#{msgs['clientForm.addResponseType']}"
-																oncomplete="#{rich:component('responseType:selectEntityModalPanel')}.show();"
-																execute="@this" eventsQueue="clientQueue" />
+																oncomplete="$('.responseTypeClass').modal('show');"
+																process="@this" />
 														</h:panelGroup>
 													</h:panelGroup>
 												</ox:decorate>
@@ -227,33 +227,31 @@
 													label="#{msgs['passport.idpinitiated.authParams.scope']}">
 													<h:panelGroup id="selectedScopesId">
 														<h:panelGroup>
-															<a4j:repeat value="#{passportIdpInitiatedAction.scopes}"
-																rowKeyVar="_scopeIdx" var="_scope"
-																iterationStatusVar="loop">
+															<ui:repeat value="#{passportIdpInitiatedAction.scopes}" var="_scope" varStatus="_scopeStatus">
 																<div class="row-fluid">
-																	<div class="#{(loop.index % 2 == 0) ?'odd':'even'}">
+																	<div class="#{(_scopeStatus.index % 2 == 0) ?'odd':'even'}">
 																		<h:outputText value="#{_scope}" />
-																		<h:outputText value="&#160;" />
+																		<gluuext:spacer width="8px"/>
 																		<div class="span6 pull-right">
-																			<a4j:commandLink
-																				styleClass="glyphicon glyphicon-remove"
+																			<b:commandLink ajax="true"
+																				icon="glyphicon-remove"
 																				style="margin-top:-20px;"
 																				action="#{passportIdpInitiatedAction.removeScope(_scope)}"
-																				execute="@this" render="selectedScopesId"
+																				process="@this" update="AuthZParamFormId:scopes:selectedScopesId"
 																				eventsQueue="clientQueue">
-																			</a4j:commandLink>
+																			</b:commandLink>
 																		</div>
 																	</div>
 																</div>
 																<br />
-															</a4j:repeat>
-															<p:spacer height="16" />
-															<a4j:commandButton
+															</ui:repeat>
+															<gluuext:spacer height="16" />
+															<b:commandButton ajax="true" look="primary"
 																styleClass="btn btn-primary AddScopeButton"
 																style="margin-top:5px"
 																value="#{msgs['clientForm.addScope']}"
-																oncomplete="#{rich:component('scope:selectEntityModalPanel')}.show();"
-																execute="@this" eventsQueue="providerQueue" />
+																oncomplete="$('.scopeClass').modal('show');"
+																process="@this" eventsQueue="providerQueue" />
 														</h:panelGroup>
 													</h:panelGroup>
 												</ox:decorate>
@@ -275,17 +273,17 @@
 										<div class="row"
 											style="margin-left: 50px; margin-right: 5px; margin-bottom: 20px;">
 											<div id="updateButtons">
-												<a4j:commandButton
+												<b:commandButton ajax="true" look="primary"
 													styleClass="btn btn-primary saveAuthParamId"
 													onclick="submit();" value="Save"
 													style="margin-left: 5px;"
 													action="#{passportIdpInitiatedAction.addAuthParam}"
-													render="AuthZParamFormId" execute="@this" />
-												<a4j:commandButton
+													update="AuthZParamFormId" process="@this" />
+												<b:commandButton ajax="true" look="primary"
 													styleClass="btn btn-primary cancelAuthParamId"
 													value="#{msgs['client.cancel']}" style="margin-left: 5px;"
 													action="#{passportIdpInitiatedAction.cancelParamAdd}"
-													render="AuthZParamFormId,IdpInitiatedForm" execute="@this" />
+													update="AuthZParamFormId,IdpInitiatedForm" process="@this" />
 											</div>
 										</div>
 									</h:panelGroup>
@@ -300,7 +298,7 @@
 				cancelMethod="#{passportIdpInitiatedAction.cancelSelectResponseTypes}"
 				displayNameProperty="entity" displaySearchForm="false"
 				id="responseType" label="#{msgs['client.addResponseType']}"
-				nameProperty="entity" render="selectedResponseTypesId"
+				nameProperty="entity" render="AuthZParamFormId:responseTypes:selectedResponseTypesId"
 				searchMethod="#{passportIdpInitiatedAction.searchAvailableResponseTypes}"
 				searchResult="#{passportIdpInitiatedAction.availableResponseTypes}" />
 			<ox:selectSelectableEntityDialog
@@ -308,7 +306,7 @@
 				cancelMethod="#{passportIdpInitiatedAction.cancelSelectScopes()}"
 				displayNameProperty="entity" displaySearchForm="false" id="scope"
 				label="#{msgs['client.scopes']}" nameProperty="entity"
-				render="selectedScopesId"
+				render="AuthZParamFormId:responseTypes:scopes:selectedScopesId"
 				searchMethod="#{passportIdpInitiatedAction.searchAvailableScopes}"
 				searchResult="#{passportIdpInitiatedAction.availableScopes}" />
 		</section>

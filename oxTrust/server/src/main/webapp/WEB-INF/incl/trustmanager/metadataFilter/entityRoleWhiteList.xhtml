@@ -4,9 +4,8 @@
     xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
     xmlns:f="http://xmlns.jcp.org/jsf/core"
     xmlns:h="http://xmlns.jcp.org/jsf/html"
-    xmlns:a4j="http://richfaces.org/a4j"
-    xmlns:rich="http://richfaces.org/rich"
-    xmlns:richext="http://xmlns.jcp.org/jsf/composite/richext"
+    xmlns:b="http://bootsfaces.net/ui"
+    xmlns:gluuext="http://xmlns.jcp.org/jsf/composite/gluuext"
     xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
 
     <h:panelGrid columns="2" id="EntityRoleWhiteListFilter" columnClasses="half,half"
@@ -14,16 +13,12 @@
 
         <ui:param name="_metadataFilterSelected" value="#{_metadataFiltersAction.getMetadataFilter('entityRoleWhiteList')}" />
 
-        <rich:panel id="EntityRoleWhiteListFilterDescription" bodyClass="inpanelBody">
-            <f:facet name="header">
-                <h:outputText value="#{msgs['trustmanager.entityRoleWhiteListFilterHelp']}" />
-            </f:facet>
+        <b:panel look="primary" iconAwesome="fa-th-large" collapsible="false" id="EntityRoleWhiteListFilterDescription" styleClass="inpanelBody"
+        	title="#{msgs['trustmanager.entityRoleWhiteListFilterHelp']}">
             #{msgs['trustmanager.metadataFilesCanGrowQuiteLarge']}
-        </rich:panel>
-        <rich:panel id="EntityRoleWhiteListFilterMenu" bodyClass="inpanelBody">
-            <f:facet name="header">
-                <h:outputText value="#{msgs['trustmanager.entityRoleWhiteListFilterConfiguration']}" />
-            </f:facet>
+        </b:panel>
+        <b:panel look="primary" iconAwesome="fa-th-large" collapsible="false" id="EntityRoleWhiteListFilterMenu"
+        	title="#{msgs['trustmanager.entityRoleWhiteListFilterConfiguration']}" styleClass="inpanelBody">
             <h:panelGrid columns="2">
                 <h:outputText value="#{msgs['trustmanager.removeRolelessEntityDescriptors']} " />
                 <h:selectBooleanCheckbox value="#{_metadataFilterSelected.removeRolelessEntityDescriptors}" />
@@ -31,20 +26,23 @@
                 <h:selectBooleanCheckbox value="#{_metadataFilterSelected.removeEmptyEntitiesDescriptors}" />
             </h:panelGrid>
             <h:outputText value="#{msgs['trustmanager.retainedRolesWhiteList']}" />
-            <rich:list var="_retainedRole" value="#{_metadataFilterSelected.retainedRoles}" id="roleList">
-                <h:outputText value="#{_retainedRole}" />
-                <h:outputText value="&#160;">
-                    <a4j:commandLink action="#{_metadataFilterSelected.retainedRoles.remove(_retainedRole)}" limitRender="true" render="EntityRoleWhiteListFilterMenu" execute="@this">
-                        <h:graphicImage value="/img/remove.gif" />
-                    </a4j:commandLink>
-                </h:outputText>
-            </rich:list>
+
+			<ui:repeat var="_retainedRole" value="#{_metadataFilterSelected.retainedRoles}" id="roleList">
+				<h:panelGrid border="0" cellpadding="0" cellspacing="0" columnClasses="alignTop" columns="1" width="100%">
+	                <h:outputText value="#{_retainedRole}" />
+	                <h:outputText value="&#160;">
+	                    <b:commandLink ajax="true" action="#{_metadataFilterSelected.retainedRoles.remove(_retainedRole)}" limitRender="true" render="@form:EntityRoleWhiteListFilterMenu" process="@this">
+	                        <h:graphicImage value="/img/remove.gif" />
+	                    </b:commandLink>
+	                </h:outputText>
+                </h:panelGrid>
+            </ui:repeat>
             <h:panelGrid>
                 <h:outputText value="#{msgs['trustmanager.enterNewRetainedRole']}" />
-                <rich:inplaceInput defaultLabel="click to enter RetainedRole" value="#{_metadataFilterSelected.retainedRole}">
-                    <a4j:ajax event="change" render="EntityRoleWhiteListFilterMenu" />
-                </rich:inplaceInput>
+                 <h:inputText requiredMessage="click to enter RetainedRole" value="#{_metadataFilterSelected.retainedRole}">
+                    <f:ajax event="change" render="@form:EntityRoleWhiteListFilterMenu" />
+                </h:inputText>
             </h:panelGrid>
-        </rich:panel>
+        </b:panel>
     </h:panelGrid>
 </ui:composition>

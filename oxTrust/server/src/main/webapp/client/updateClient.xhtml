@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:a4j="http://richfaces.org/a4j"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:b="http://bootsfaces.net/ui"
 	xmlns:ox="http://xmlns.jcp.org/jsf/composite/ox"
-	xmlns:rich="http://richfaces.org/rich"
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	template="/WEB-INF/incl/layout/newtemplate.xhtml">
 	<f:metadata>
@@ -74,156 +72,128 @@
 				_client="#{updateClientAction.client}" id="summary"
 				_markdown="#{updateClientAction.markDown}" />
 
-			<ox:inputTextDialog
+			<ox:inputTextDialog dialogId="loginRedirect"
 				acceptMethod="#{updateClientAction.acceptSelectLoginUri}"
 				cancelMethod="#{updateClientAction.cancelSelectLoginUri}"
-				dialogWidth="600" id="loginRedirect"
+				dialogWidth="600"
 				inputLabel="#{msgs['client.loginRedirectURI']}" inputWidth="80"
 				label="#{msgs['client.selectLoginRedirectURI']}" maxLength="256"
-				queue="clientQueue" render="selectedLoginURIsId"
+				queue="clientQueue" render="clientForm:selectedLoginURIsId"
 				text="#{updateClientAction.availableLoginUri}" textId="loginTextId" />
-
-			<ox:inputTextDialog
-				acceptMethod="#{updateClientAction.acceptSelectLogoutUri}"
-				cancelMethod="#{updateClientAction.cancelSelectLogoutUri}"
-				dialogWidth="600" id="logoutRedirect"
-				inputLabel="#{msgs['client.logoutRedirectURI']}" inputWidth="80"
-				label="#{msgs['client.selectLogoutRedirectURI']}" maxLength="256"
-				queue="clientQueue" render="selectedLogoutURIsId"
-				text="#{updateClientAction.availableLogoutUri}"
-				textId="logoutTextId" />
-
-			<ox:selectClaimDialog
-				acceptMethod="#{updateClientAction.acceptSelectClaims}"
-				cancelMethod="#{updateClientAction.cancelSelectClaims}" id="claim"
-				queue="clientQueue" render="selectedClaimsId"
-				searchMethod="#{updateClientAction.searchAvailableClaims}"
-				searchPattern="#{updateClientAction.searchAvailableClaimPattern}"
-				searchResult="#{updateClientAction.availableClaims}"
-				updateSelectionMethod="#{updateClientAction.selectAddedClaims}" />
 
 			<ox:selectSelectableEntityDialog
 				acceptMethod="#{updateClientAction.acceptSelectScopes()}"
 				cancelMethod="#{updateClientAction.cancelSelectScopes()}"
 				displayNameProperty="entity.description" displaySearchForm="true"
 				id="scope" label="#{msgs['client.scopes']}" nameProperty="entity.id"
-				render="selectedScopesId"
+				render="clientForm:selectedScopesId"
 				searchMethod="#{updateClientAction.searchAvailableScopes}"
 				searchResult="#{updateClientAction.availableScopes}" 
 				searchPattern="#{updateClientAction.scopePattern}"/>
 
-      <ox:selectSelectableEntityDialog
+			<ox:selectSelectableEntityDialog
 				acceptMethod="#{updateClientAction.acceptSelectResponseTypes}"
 				cancelMethod="#{updateClientAction.cancelSelectResponseTypes}"
 				displayNameProperty="entity.value" displaySearchForm="false"
 				id="responseType" label="#{msgs['client.addResponseType']}"
-				nameProperty="entity.value" render="selectedResponseTypesId"
+				nameProperty="entity.value" render="clientForm:selectedResponseTypesId"
 				searchMethod="#{updateClientAction.searchAvailableResponseTypes}"
 				searchResult="#{updateClientAction.availableResponseTypes}" />
-
-			<ox:selectSelectableEntityDialog
-				acceptMethod="#{updateClientAction.acceptSelectCustomScripts}"
-				cancelMethod="#{updateClientAction.cancelSelectCustomScripts}"
-				displayNameProperty="entity.description" displaySearchForm="false"
-				id="defaultAcr" label="#{msgs['client.defaultAcrValue']}"
-				nameProperty="entity.name" render="selectedCustomScriptAcrsId"
-				searchMethod="#{updateClientAction.searchAvailableCustomScripts}"
-				searchResult="#{updateClientAction.availableCustomScripts}" />
 
 			<ox:selectSelectableEntityDialog
 				acceptMethod="#{updateClientAction.acceptSelectGrantTypes}"
 				cancelMethod="#{updateClientAction.cancelSelectGrantTypes}"
 				displayNameProperty="entity.value" displaySearchForm="false"
 				id="grantType" label="#{msgs['client.addGrantType']}"
-				nameProperty="entity.value" render="selectedGrantTypesId"
+				nameProperty="entity.value" render="clientForm:clientForm:selectedGrantTypesId"
 				searchMethod="#{updateClientAction.searchAvailableGrantTypes}"
 				searchResult="#{updateClientAction.availableGrantTypes}" />
 
-			<ox:inputTextDialog
+			<ox:inputTextDialog dialogId="contact"
 				acceptMethod="#{updateClientAction.acceptSelectContact()}"
 				cancelMethod="#{updateClientAction.cancelSelectContact()}"
-				dialogWidth="600" id="contact"
+				dialogWidth="600"
 				inputLabel="#{msgs['client.contactEmailAddress']}" inputWidth="80"
 				label="Select Contact" maxLength="256" queue="clientQueue"
-				render="selectedContactsId"
+				render="clientForm:selectedContactsId"
 				text="#{updateClientAction.availableContact}" textId="contactTextId" />
 
-			<ox:inputTextDialog
+			<ox:inputTextDialog dialogId="requestUri"
 				acceptMethod="#{updateClientAction.acceptSelectRequestUri()}"
 				cancelMethod="#{updateClientAction.cancelSelectRequestUri()}"
-				dialogWidth="600" id="requestUri"
+				dialogWidth="600"
 				inputLabel="#{msgs['client.requestURI']}" inputWidth="80"
 				label="Select Request URI" maxLength="256" queue="clientQueue"
-				render="selectedRequestUrisId"
+				render="clientForm:selectedRequestUrisId"
 				text="#{updateClientAction.availableRequestUri}"
 				textId="requestUriTextId" />
 
-			<ox:inputTextDialog
+			<ox:inputTextDialog dialogId="authorizedOrigin"
 				acceptMethod="#{updateClientAction.acceptSelectAuthorizedOrigin()}"
 				cancelMethod="#{updateClientAction.cancelSelectAuthorizedOrigin()}"
-				dialogWidth="600" id="authorizedOrigin"
+				dialogWidth="600"
 				inputLabel="#{msgs['client.authorizedOrigin']}" inputWidth="80"
 				label="#{msgs['client.selectAuthorizedOrigin']}" maxLength="256"
-				queue="clientQueue" render="selectedAuthorizedOriginsId"
+				queue="clientQueue" render="clientForm:selectedAuthorizedOriginsId"
 				text="#{updateClientAction.availableAuthorizedOrigin}"
 				textId="authorizedOriginTextId" />
 
-			<ox:inputTextDialog
+			<ox:inputTextDialog dialogId="clientLogoutUri"
 				acceptMethod="#{updateClientAction.acceptSelectClientLogoutUri()}"
 				cancelMethod="#{updateClientAction.cancelClientLogoutUri()}"
-				dialogWidth="600" id="clientLogoutUri"
+				dialogWidth="600"
 				inputLabel="#{msgs['client.logoutURI']}" inputWidth="80"
 				label="Logout URI" maxLength="256" queue="clientQueue"
-				render="selectedClientUrisId"
+				render="clientForm:selectedClientUrisId"
 				text="#{updateClientAction.availableClientlogoutUri}"
 				textId="clientLogoutTextId" />
 				
-			<ox:inputTextDialog
+			<ox:inputTextDialog dialogId="redirectLogoutUrlsId"
 					acceptMethod="#{updateClientAction.acceptSelectRedirectLogoutUrl()}"
 					cancelMethod="#{updateClientAction.cancelRedirectLogoutUrl()}"
-					dialogWidth="600" id="redirectLogoutUrlsId"
+					dialogWidth="600"
 					inputLabel="Add #{msgs['clientForm.redirectLogoutURIs']}" inputWidth="80"
 					label="#{msgs['clientForm.redirectLogoutURIs']}" maxLength="256"
-					queue="clientQueue" render="selectedRedirectLogoutUrlId"
+					queue="clientQueue" render="clientForm:selectedRedirectLogoutUrlId"
 					text="#{updateClientAction.availableRedirectLogoutUrl}"
 					textId="redirectLogoutURIstextId" />
 			
-			<ox:inputTextDialog
+			<ox:inputTextDialog dialogId="backchannelLogoutUris"
 					acceptMethod="#{updateClientAction.acceptSelectClientBackLogoutUri()}"
 					cancelMethod="#{updateClientAction.cancelClientBackLogoutUri()}"
-					dialogWidth="600" id="backchannelLogoutUris"
+					dialogWidth="600"
 					inputLabel="#{msgs['client.logoutURI']}" inputWidth="80"
 					label="#{msgs['client.logoutURI']}" maxLength="256"
-					queue="clientQueue" render="selectedClientBackLogoutUrisId"
+					queue="clientQueue" render="clientForm:selectedClientBackLogoutUrisId"
 					text="#{updateClientAction.availableClientBacklogoutUri}"
 					textId="clientBackLogoutTextId" />
 
-			<ox:changeClientPasswordDialog id="clientPassword"
+			<ox:changePasswordDialog id="clientPassword"
 				label="#{msgs['client.changeClientSecret']}"
-				password="#{clientPasswordAction.newPassword}"
-				setPasswordMethod="#{clientPasswordAction.update}" />
+				setPasswordMethod="#{updateClientAction.updateClientPassword}"
+				cancelPasswordMethod="#{updateClientAction.cancelClientPassword}" />
 
 			<ox:acceptRemovalDialog deleteMethod="#{updateClientAction.delete}"
-				id="deleteConfirmation" queue="clientQueue" subject="client"
+				dialogId="deleteConfirmation" queue="clientQueue" subject="client"
 				value="#{updateClientAction.client.displayName}" />
 
-			<ox:inputTextDialog
+			<ox:inputTextDialog dialogId="claimRedirectUri"
 				acceptMethod="#{updateClientAction.acceptSelectClaimRedirectUri()}"
 				cancelMethod="#{updateClientAction.cancelClaimRedirectUri()}"
-				dialogWidth="600" id="claimRedirectUri"
+				dialogWidth="600"
 				inputLabel="#{msgs['client.claimRedirect']}" inputWidth="80"
 				label="#{msgs['client.claimRedirect']}" maxLength="256"
-				queue="clientQueue" render="selectedClaimRedirectURIIsId"
+				queue="clientQueue" render="clientForm:selectedClaimRedirectURIIsId"
 				text="#{updateClientAction.availableClaimRedirectUri}"
 				textId="claimRedirectTextId" />
 				
-			<ox:inputTextDialog
+			<ox:inputTextDialog dialogId="AdditionalAudience"
 					acceptMethod="#{updateClientAction.acceptselectedAdditionalAudiences()}"
 					cancelMethod="#{updateClientAction.cancelAdditionalAudience()}"
-					dialogWidth="600" id="AdditionalAudience"
+					dialogWidth="600"
 					inputLabel="#{msgs['client.AdditionalAudience']}" inputWidth="80"
 					label="#{msgs['client.AdditionalAudience']}" maxLength="256"
-					queue="audienceQueue" render="selectedAdditionalAudiencesId"
+					queue="audienceQueue" render="clientForm:selectedAdditionalAudiencesId"
 					text="#{updateClientAction.availableAdditionalAudience}"
 					textId="additionalAudienceTextId" />
 		</div>

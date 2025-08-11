@@ -3,8 +3,10 @@
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:ox="http://xmlns.jcp.org/jsf/composite/ox"
-	xmlns:b="http://bootsfaces.net/ui" xmlns:p="http://primefaces.org/ui"
+	xmlns:b="http://bootsfaces.net/ui"
+	xmlns:p="http://primefaces.org/ui"
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:gluuext="http://xmlns.jcp.org/jsf/composite/gluuext"
 	template="/WEB-INF/incl/layout/newtemplate.xhtml">
 	<f:metadata>
 		<f:viewAction
@@ -86,7 +88,7 @@
 											<ui:param name="saveBtnLabel"
 												value="#{msgs['updateConfiguration.saveConfiguration']}" />
 										</ui:decorate>
-										<p:spacer width="10" height="10" />
+										<gluuext:spacer width="10px" height="10px"/>
 										<h:commandButton
 											action="#{jsonConfigAction.saveOxTrustConfigJson}"
 											id="saveOxTrustConfigBtn" prependId="false"
@@ -113,7 +115,7 @@
 											<ui:param name="saveBtnLabel"
 												value="#{msgs['updateConfiguration.saveConfiguration']}" />
 										</ui:decorate>
-										<p:spacer width="10" height="10" />
+										<gluuext:spacer width="10px" height="10px"/>
 										<h:commandButton
 											action="#{jsonConfigAction.saveOxAuthDynamicConfigJson}"
 											id="saveOxAuthConfigBtn" prependId="false"
@@ -140,7 +142,7 @@
 											<ui:param name="saveBtnLabel"
 												value="#{msgs['updateConfiguration.saveConfiguration']}" />
 										</ui:decorate>
-										<p:spacer width="10" height="10" />
+										<gluuext:spacer width="10px" height="10px"/>
 										<h:commandButton
 											action="#{jsonConfigAction.saveFido2ConfigJson}"
 											id="saveFido2ConfigBtn" prependId="false"
@@ -168,7 +170,7 @@
 											<ui:param name="saveBtnLabel"
 												value="#{msgs['updateConfiguration.saveConfiguration']}" />
 										</ui:decorate>
-										<p:spacer width="10" height="10" />
+										<gluuext:spacer width="10px" height="10px"/>
 										<h:commandButton
 											action="#{jsonConfigAction.saveOxTrustImportPersonConfigJson}"
 											id="saveOxTrustImportPersonConfigBtn" prependId="false"
@@ -199,7 +201,7 @@
 											<ui:param name="saveBtnLabel"
 												value="#{msgs['updateConfiguration.saveConfiguration']}" />
 										</ui:decorate>
-										<p:spacer width="10" height="10" />
+										<gluuext:spacer width="10px" height="10px"/>
 										<h:commandButton
 											action="#{jsonConfigAction.saveOxMemCacheConfigJson}"
 											id="saveOxMemcacheConfigBtn" prependId="false"
@@ -230,7 +232,7 @@
 											<ui:param name="saveBtnLabel"
 												value="#{msgs['updateConfiguration.saveConfiguration']}" />
 										</ui:decorate>
-										<p:spacer width="10" height="10" />
+										<gluuext:spacer width="10px" height="10px"/>
 										<h:commandButton
 											action="#{jsonConfigAction.saveStoreConfigJson}"
 											id="saveOxStoreConfigBtn" prependId="false"

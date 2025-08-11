@@ -1,14 +1,17 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:a4j="http://richfaces.org/a4j" xmlns:p="http://primefaces.org/ui"
-	xmlns:rich="http://richfaces.org/rich"
-	xmlns:richext="http://xmlns.jcp.org/jsf/composite/richext"
+	xmlns:b="http://bootsfaces.net/ui"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:gluuext="http://xmlns.jcp.org/jsf/composite/gluuext"
 	xmlns:ox="http://xmlns.jcp.org/jsf/composite/ox"
 	xmlns:cc="http://xmlns.jcp.org/jsf/composite">
 <cc:interface>
+    <cc:attribute name="id" required="true" type="java.lang.String" />
+	<cc:attribute name="label" default="Client Config Summary" required="false" type="java.lang.String" />
 	<cc:attribute name="_clientAction" required="true"
 		type="org.gluu.oxtrust.action.UpdateClientAction" />
 	<cc:attribute name="_client" required="false"
@@ -39,19 +42,8 @@
 	  }
    </script>
 
-
-
-	<rich:popupPanel id="clientSummary"
-		onmaskclick="#{rich:component('clientSummary')}.hide()" zindex="2000"
-		moveable="true" autosized="true" width="400" keepVisualState="true">
-		<f:facet name="header">
-			<h:outputText value="Client Config Summary" />
-		</f:facet>
-		<f:facet name="controls">
-			<h:graphicImage value="/img/close.gif" styleClass="hidelink"
-				style="cursor:pointer"
-				onclick="#{rich:component('clientSummary')}.hide(); return false;" />
-		</f:facet>
+	<b:modal id="clientSummary" styleClass="#{cc.attrs.id}Class"
+		title="#{cc.attrs.label}" size="modal-lg">
 		<div class="container"
 			style="overflow-y: scroll; height: 470px; margin-bottom: 20px;">
 			<div class="row">
@@ -132,18 +124,16 @@
 							label="#{msgs['clientForm.responseTypes']}">
 							<h:panelGroup id="selectedResponseTypesId">
 								<h:panelGroup>
-									<a4j:repeat value="#{cc.attrs._clientAction.responseTypes}"
-										rowKeyVar="_responseTypeIdx" var="_responseType"
-										iterationStatusVar="loop">
+									<ui:repeat value="#{cc.attrs._clientAction.responseTypes}" var="_responseType" varStatus="_responseTypeStatus">
 										<div class="row-fluid">
-											<div class="#{(loop.index % 2 == 0) ?'odd':'even'}">
+											<div class="#{(_responseTypeStatus.index % 2 == 0) ?'odd':'even'}">
 												<h:outputText value="#{_responseType.value}" />
 
 											</div>
 										</div>
 										<br />
-									</a4j:repeat>
-									<p:spacer height="16" />
+									</ui:repeat>
+									<gluuext:spacer height="16" />
 								</h:panelGroup>
 							</h:panelGroup>
 						</ox:decorate>
@@ -153,18 +143,16 @@
 							label="#{msgs['clientForm.grantTypes']}">
 							<h:panelGroup id="selectedGrantTypesId">
 								<h:panelGroup>
-									<a4j:repeat value="#{cc.attrs._clientAction.grantTypes}"
-										rowKeyVar="_grantTypeIdx" var="_grantType"
-										iterationStatusVar="loop">
+									<ui:repeat value="#{cc.attrs._clientAction.grantTypes}" var="_grantType" varStatus="_grantTypeStatus">
 										<div class="row-fluid">
-											<div class="#{(loop.index % 2 == 0) ?'odd':'even'}">
+											<div class="#{(_grantTypeStatus.index % 2 == 0) ?'odd':'even'}">
 												<h:outputText value="#{_grantType.value}" />
 
 											</div>
 										</div>
 										<br />
-									</a4j:repeat>
-									<p:spacer height="16" />
+									</ui:repeat>
+									<gluuext:spacer height="16" />
 								</h:panelGroup>
 							</h:panelGroup>
 						</ox:decorate>
@@ -175,20 +163,18 @@
 							<h:panelGroup id="selectedContactsId">
 								<h:panelGroup columns="1" width="100%" border="0"
 									cellpadding="0" cellspacing="0">
-									<a4j:repeat value="#{cc.attrs._clientAction.contacts}"
-										rowKeyVar="_contactsIdx" var="_contact"
-										iterationStatusVar="loop">
+									<ui:repeat value="#{cc.attrs._clientAction.contacts}" var="_contact" varStatus="_contactStatus">
 										<div class="row-fluid">
-											<div class="#{(loop.index % 2 == 0) ?'odd':'even'}">
+											<div class="#{(_contactStatus.index % 2 == 0) ?'odd':'even'}">
 												<h:outputText
 													value="#{empty _contact ? _contact : _contact}" />
-												<h:outputText value="&#160;" />
+												<gluuext:spacer width="8px"/>
 
 											</div>
 										</div>
 										<br />
-									</a4j:repeat>
-									<p:spacer height="16" />
+									</ui:repeat>
+									<gluuext:spacer height="16" />
 								</h:panelGroup>
 							</h:panelGroup>
 						</ox:decorate>
@@ -198,16 +184,15 @@
 							label="#{msgs['clientForm.defaultRequestedAuthenticationContextClass']}">
 							<h:panelGroup id="selectedDefaultAcrValuesId">
 								<h:panelGroup>
-									<a4j:repeat value="#{cc.attrs._clientAction.customScripts}"
-										rowKeyVar="_acrIdx" var="_acr" iterationStatusVar="loop">
+									<ui:repeat value="#{cc.attrs._clientAction.customScripts}" var="_customScript" varStatus="_customScriptStatus">
 										<div class="row-fluid">
-											<div class="#{(loop.index % 2 == 0) ?'odd':'even'}">
-												<h:outputText value="#{_acr.name}" />
+											<div class="#{(_customScriptStatus.index % 2 == 0) ?'odd':'even'}">
+												<h:outputText value="#{_customScript.name}" />
 											</div>
 										</div>
 										<br />
-									</a4j:repeat>
-									<p:spacer height="16" />
+									</ui:repeat>
+									<gluuext:spacer height="16" />
 								</h:panelGroup>
 							</h:panelGroup>
 						</ox:decorate>
@@ -225,18 +210,16 @@
 							<h:panelGroup id="selectedRequestUrisId">
 								<h:panelGroup columns="1" width="100%" border="0"
 									cellpadding="0" cellspacing="0">
-									<a4j:repeat value="#{cc.attrs._clientAction.requestUris}"
-										rowKeyVar="_requestUrisIdx" var="_requestUri"
-										iterationStatusVar="loop">
+									<ui:repeat value="#{cc.attrs._clientAction.requestUris}" var="_requestUri" varStatus="_requestUriStatus">
 										<div class="row-fluid">
-											<div class="#{(loop.index % 2 == 0) ?'odd':'even'}">
-												<h:outputText value="#{_requestUri}" />
+											<div class="#{(_requestUriStatus.index % 2 == 0) ?'odd':'even'}">
+												<h:outputText value="_requestUri" />
 
 											</div>
 										</div>
 										<br />
-									</a4j:repeat>
-									<p:spacer height="16" />
+									</ui:repeat>
+									<gluuext:spacer height="16" />
 								</h:panelGroup>
 							</h:panelGroup>
 						</ox:decorate>
@@ -247,18 +230,16 @@
 							<h:panelGroup id="selectedAuthorizedOriginsId">
 								<h:panelGroup columns="1" width="100%" border="0"
 									cellpadding="0" cellspacing="0">
-									<a4j:repeat value="#{cc.attrs._clientAction.authorizedOrigins}"
-										rowKeyVar="_authorizedOriginsIdx" var="_authorizedOrigin"
-										iterationStatusVar="loop">
+									<ui:repeat value="#{cc.attrs._clientAction.authorizedOrigins}" var="_authorizedOrigin" varStatus="_authorizedOriginStatus">
 										<div class="row-fluid">
-											<div class="#{(loop.index % 2 == 0) ?'odd':'even'}">
-												<h:outputText value="#{_authorizedOrigin}" />
+											<div class="#{(_authorizedOriginStatus.index % 2 == 0) ?'odd':'even'}">
+												<h:outputText value="_authorizedOrigin" />
 
 											</div>
 										</div>
 										<br />
-									</a4j:repeat>
-									<p:spacer height="16" />
+									</ui:repeat>
+									<gluuext:spacer height="16" />
 								</h:panelGroup>
 							</h:panelGroup>
 						</ox:decorate>
@@ -267,17 +248,16 @@
 							label="#{msgs['clientForm.scopes']}">
 							<h:panelGroup id="selectedScopesId">
 								<h:panelGroup>
-									<a4j:repeat value="#{cc.attrs._clientAction.scopes}"
-										rowKeyVar="_scopeIdx" var="_scope" iterationStatusVar="loop">
+									<ui:repeat value="#{cc.attrs._clientAction.scopes}" var="_scope" varStatus="_scopeStatus">
 										<div class="row-fluid">
-											<div class="#{(loop.index % 2 == 0) ?'odd':'even'}">
+											<div class="#{(_scopeStatus.index % 2 == 0) ?'odd':'even'}">
 												<h:outputText
 													value="#{empty _scope.id ? _scope.id : _scope.id}" />
 											</div>
 										</div>
 										<br />
-									</a4j:repeat>
-									<p:spacer height="16" />
+									</ui:repeat>
+									<gluuext:spacer height="16" />
 								</h:panelGroup>
 							</h:panelGroup>
 						</ox:decorate>
@@ -287,45 +267,35 @@
 							label="#{msgs['clientForm.claims']}">
 							<h:panelGroup id="selectedClaimsId">
 								<h:panelGroup>
-									<a4j:repeat value="#{cc.attrs._clientAction.claims}"
-										rowKeyVar="_claimIdx" var="_claim" iterationStatusVar="loop">
+									<ui:repeat value="#{cc.attrs._clientAction.claims}" var="_claim" varStatus="_claimStatus">
 										<div class="row-fluid">
-											<div class="#{(loop.index % 2 == 0) ? 'odd' : 'even'}">
+											<div class="#{(_claimStatus.index % 2 == 0) ? 'odd' : 'even'}">
 												<h:outputText value="#{_claim.displayName}" />
 
 											</div>
 										</div>
 										<br />
-									</a4j:repeat>
-									<p:spacer height="16" />
+									</ui:repeat>
+									<gluuext:spacer height="16" />
 								</h:panelGroup>
 							</h:panelGroup>
 						</ox:decorate>
-
-
-
-						<!-- <ox:decorate id="logoutUri" label="Logout URI">
-                                    <rich:inplaceInput value="#{cc.attrs._client.logoutUri}" defaultLabel="click to enter a logout URI" maxlength="60" inputWidth="695" required="false" id="logoutUriId" />
-                                </ox:decorate> -->
-
-
 						<ox:decorate id="clientLogoutUrls"
 							rendered="#{!empty cc.attrs._clientAction.clientlogoutUris and cc.attrs._clientAction.clientlogoutUris ne null  }"
 							label="#{msgs['clientForm.frontChannelLogoutURI']}">
 							<h:panelGroup id="selectedClientUrisId">
 								<h:panelGroup columns="1" width="100%" border="0"
 									cellpadding="0" cellspacing="0">
-									<a4j:repeat value="#{cc.attrs._clientAction.clientlogoutUris}"
-										rowKeyVar="_urisIdx" var="_uri" iterationStatusVar="loop">
+									<ui:repeat value="#{cc.attrs._clientAction.clientlogoutUris}" var="_clientlogoutUri" varStatus="_clientlogoutUriStatus">
 										<div class="row-fluid">
-											<div class="#{(loop.index % 2 == 0) ?'odd':'even'}">
-												<h:outputText value="#{empty _uri ? _uri : _uri}" />
+											<div class="#{(_clientlogoutUriStatus.index % 2 == 0) ?'odd':'even'}">
+												<h:outputText value="#{empty _clientlogoutUri ? _clientlogoutUri : _clientlogoutUri}" />
 
 											</div>
 										</div>
 										<br />
-									</a4j:repeat>
-									<p:spacer height="16" />
+									</ui:repeat>
+									<gluuext:spacer height="16" />
 								</h:panelGroup>
 							</h:panelGroup>
 						</ox:decorate>
@@ -335,17 +305,15 @@
 							<h:panelGroup id="selectedClaimRedirectURIIsId">
 								<h:panelGroup columns="1" width="100%" border="0"
 									cellpadding="0" cellspacing="0">
-									<a4j:repeat
-										value="#{cc.attrs._clientAction.claimRedirectURIList}"
-										rowKeyVar="_urisIdx" var="_uri" iterationStatusVar="loop">
+									<ui:repeat value="#{cc.attrs._clientAction.claimRedirectURIList}" var="_uri" varStatus="_uriStatus">
 										<div class="row-fluid">
-											<div class="#{(loop.index % 2 == 0) ?'odd':'even'}">
+											<div class="#{(_uriStatus.index % 2 == 0) ?'odd':'even'}">
 												<h:outputText value="#{empty _uri ? _uri : _uri}" />
 											</div>
 										</div>
 										<br />
-									</a4j:repeat>
-									<p:spacer height="16" />
+									</ui:repeat>
+									<gluuext:spacer height="16" />
 								</h:panelGroup>
 							</h:panelGroup>
 						</ox:decorate>
@@ -361,15 +329,12 @@
 
 						</ox:decorate>
 
-						<a4j:outputPanel>
-							<ox:decorate id="includeClaimsInIdToken"
-								rendered="#{!empty cc.attrs._client.oxIncludeClaimsInIdToken and cc.attrs._client.oxIncludeClaimsInIdToken ne null }"
-								label="#{msgs['clientForm.includeClaimsInIdToken']}">
-								<h:outputText
-									value="#{cc.attrs._client.oxIncludeClaimsInIdToken}" />
-							</ox:decorate>
-
-						</a4j:outputPanel>
+						<ox:decorate id="includeClaimsInIdToken"
+							rendered="#{!empty cc.attrs._client.oxIncludeClaimsInIdToken and cc.attrs._client.oxIncludeClaimsInIdToken ne null }"
+							label="#{msgs['clientForm.includeClaimsInIdToken']}">
+							<h:outputText
+								value="#{cc.attrs._client.oxIncludeClaimsInIdToken}" />
+						</ox:decorate>
 
 						<ox:decorate id="oxRefreshTokenLifetime"
 							rendered="#{!empty cc.attrs._client.oxRefreshTokenLifetime and cc.attrs._client.oxRefreshTokenLifetime ne null }"
@@ -518,15 +483,13 @@
 							<h:panelGroup id="selectedLoginURIsId">
 								<h:panelGroup columns="1" width="100%" border="0"
 									cellpadding="0" cellspacing="0">
-									<a4j:repeat value="#{cc.attrs._clientAction.loginUris}"
-										rowKeyVar="_urisIdx" var="_uri" iterationStatusVar="loop">
-										<div class="#{(loop.index % 2 == 0) ?'odd':'even'}">
+									<ui:repeat value="#{cc.attrs._clientAction.loginUris}" var="_uri" varStatus="_uriStatus">
+										<div class="#{(_uriStatus.index % 2 == 0) ? 'odd':'even'}">
 											<h:outputText value="#{empty _uri ? _uri : _uri}" />
-
 											<br />
 										</div>
-									</a4j:repeat>
-									<p:spacer height="16" />
+									</ui:repeat>
+									<gluuext:spacer height="16" />
 								</h:panelGroup>
 							</h:panelGroup>
 						</ox:decorate>
@@ -537,16 +500,15 @@
 							<h:panelGroup id="selectedLogoutURIsId">
 								<h:panelGroup columns="1" width="100%" border="0"
 									cellpadding="0" cellspacing="0">
-									<a4j:repeat value="#{cc.attrs._clientAction.logoutUris}"
-										rowKeyVar="_urisIdx" var="_uri" iterationStatusVar="loop">
+									<ui:repeat value="#{cc.attrs._clientAction.logoutUris}" var="_uri" varStatus="_uriStatus">
 										<div class="row-fluid">
-											<div class="#{(loop.index % 2 == 0) ?'odd':'even'}">
+											<div class="#{(_uriStatus.index % 2 == 0) ? 'odd':'even'}">
 												<h:outputText value="#{empty _uri ? _uri : _uri}" />
 											</div>
 										</div>
 										<br />
-									</a4j:repeat>
-									<p:spacer height="16" />
+									</ui:repeat>
+									<gluuext:spacer height="16" />
 								</h:panelGroup>
 							</h:panelGroup>
 						</ox:decorate>
@@ -598,7 +560,7 @@
 				</div>
 			</h:panelGroup>
 		</div>
-	</rich:popupPanel>
+	</b:modal>
 </cc:implementation>
 
 </html>

@@ -3,9 +3,8 @@
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:ox="http://xmlns.jcp.org/jsf/composite/ox"
-	xmlns:rich="http://richfaces.org/rich"
-	xmlns:b="http://bootsfaces.net/ui" xmlns:a4j="http://richfaces.org/a4j"
-	xmlns:richext="http://xmlns.jcp.org/jsf/composite/richext"
+	xmlns:b="http://bootsfaces.net/ui"
+	xmlns:gluuext="http://xmlns.jcp.org/jsf/composite/gluuext"
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	template="/WEB-INF/incl/layout/newtemplate.xhtml">
 	<f:metadata>
@@ -80,9 +79,8 @@
 															onchange="displayButton();" value="#{clt.selected}" />
 													</b:dataTableColumn>
 												</b:dataTable>
-												<a4j:commandButton ajaxSingle="true" id="deleteId"
-													eventsQueue="trustedIdpQueue"
-													onclick="#{rich:component('deleteConfirmation:acceptRemovalModalPanel')}.show();"
+												<b:commandButton ajax="true" id="deleteId" look="primary"
+													oncomplete="$('.deleteConfirmationClass').modal('show')"
 													styleClass="btn btn-primary DeleteBulkClients"
 													style="float:left;margin-left :3px;" value="Delete" />
 											</h:form>
@@ -98,7 +96,7 @@
 				</div>
 				<ox:acceptRemovalDialog
 					deleteMethod="#{searchTrustedIdpAction.deleteTrustedIdps}"
-					render="trustedIdpsTable" id="deleteConfirmation"
+					render="trustedIdpsTable" dialogId="deleteConfirmation"
 					queue="trustedIdpQueue" subject="TrustedIdp" value="all selected TrustedIdp" />
 		<h:outputScript> 
 	    	function displayButton() {  	

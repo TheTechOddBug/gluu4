@@ -1,16 +1,17 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:b="http://bootsfaces.net/ui" xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:b="http://bootsfaces.net/ui"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:rich="http://richfaces.org/rich"
-	xmlns:richext="http://xmlns.jcp.org/jsf/composite/richext"
+	xmlns:gluuext="http://xmlns.jcp.org/jsf/composite/gluuext"
 	xmlns:ox="http://xmlns.jcp.org/jsf/composite/ox"
 	xmlns:cc="http://xmlns.jcp.org/jsf/composite">
 
 <cc:interface>
+    <cc:attribute name="id" required="true" type="java.lang.String" />
 	<cc:attribute name="label" default="Add Attribute" required="false"
 		type="java.lang.String" />
 	<cc:attribute name="searchPattern" required="true"
@@ -27,18 +28,9 @@
 		type="java.lang.String" />
 </cc:interface>
 <cc:implementation>
-	<rich:popupPanel id="selectAttributeModalPanel"
-		onmaskclick="#{rich:component('selectAttributeModalPanel')}.hide()"
-		zindex="2000" moveable="true" autosized="true" width="725"
-		height="460">
-		<f:facet name="header">
-			<h:outputText value="#{cc.attrs.label}" />
-		</f:facet>
-		<f:facet name="controls">
-			<h:graphicImage value="/img/close.gif" styleClass="hidelink"
-				style="cursor:pointer"
-				onclick="#{rich:component('selectAttributeModalPanel')}.hide(); return false;" />
-		</f:facet>
+	<b:modal id="selectAttributeModalPanel" styleClass="#{cc.attrs.id}Class"
+		title="#{cc.attrs.label}" size="modal-lg">
+
 		<b:form id="myForm" appendId="false">
 			<h:panelGroup id="attributePanelId" styleClass="attributePanelId"
 				columns="1" border="0" cellpadding="0" cellspacing="0" width="100%"
@@ -52,10 +44,9 @@
 					</div>
 					<div class="row"
 						style="float: left; margin-left: 20px; margin-top: -5px;">
-						<a4j:commandButton value="Search" style="margin-top:5px;"
+						<b:commandButton ajax="true" look="primary" value="Search" style="margin-top:5px;"
 							styleClass="btn btn-primary searchButtonClass"
-							action="#{cc.attrs.searchMethod}" render="attributePanelId"
-							eventsQueue="#{cc.attrs.queue}" />
+							action="#{cc.attrs.searchMethod}" update="@form:attributePanelId" />
 					</div>
 				</ox:decorate>
 				<h:panelGroup id="attributeNoResultId"
@@ -89,29 +80,28 @@
 						</p:column>
 					</p:dataTable>
 				</h:panelGroup>
-				<p:spacer height="16" />
+				<gluuext:spacer height="16" />
 				<div class="box-footer">
 					<h:panelGroup>
 						<div class="row" style="margin-left: -4px !important">
-							<a4j:commandButton styleClass="btn btn-primary"
+							<b:commandButton ajax="true" look="primary" styleClass="btn btn-primary"
 								action="#{cc.attrs.acceptMethod}" value="Ok"
-								oncomplete="#{rich:component('selectAttributeModalPanel')}.hide();"
-								render="myForm attributeSecondPanelId attributeListId #{cc.attrs.render}"
+								oncomplete="$('.#{cc.attrs.id}Class').modal('hide');"
+								update="@form @form:attributeSecondPanelId @form:attributeListId #{cc.attrs.render}"
 								style="min-width:70px;" />
-							&nbsp;
-							<a4j:commandButton styleClass="btn btn-primary"
+							<gluuext:spacer width="8px"/>
+							<b:commandButton ajax="true" look="primary" styleClass="btn btn-primary"
 								action="#{cc.attrs.cancelMethod}" value="Cancel"
-								render="myForm attributeSecondPanelId attributeListId #{cc.attrs.render}"
-								oncomplete="#{rich:component('selectAttributeModalPanel')}.hide();return false;"
-								eventsQueue="#{cc.attrs.queue}" />
-							&nbsp;
-							<a4j:status startText="Request in progress please wait......"
-								stopText="" startStyle="color:red" />
+								update="@form @form:attributeSecondPanelId @form:attributeListId #{cc.attrs.render}"
+								oncomplete="$('.#{cc.attrs.id}Class').modal('hide'); return false;" />
+
+			<gluuext:spacer width="8px" height="8px"/>
+			<gluuext:status startText="Request in progress please wait......" />
 						</div>
 					</h:panelGroup>
 				</div>
 			</h:panelGroup>
 		</b:form>
-	</rich:popupPanel>
+	</b:modal>
 </cc:implementation>
 </html>

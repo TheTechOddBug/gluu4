@@ -1,16 +1,17 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:a4j="http://richfaces.org/a4j"
-      xmlns:rich="http://richfaces.org/rich"
+      xmlns:b="http://bootsfaces.net/ui"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:richext="http://xmlns.jcp.org/jsf/composite/richext"
+      xmlns:gluuext="http://xmlns.jcp.org/jsf/composite/gluuext"
       xmlns:ox="http://xmlns.jcp.org/jsf/composite/ox"
       xmlns:cc="http://xmlns.jcp.org/jsf/composite">
 
 <cc:interface>
+    <cc:attribute name="id" required="true" type="java.lang.String" />
     <cc:attribute name="label" default="Add Claim" required="false" type="java.lang.String" />
     <cc:attribute name="searchPattern" required="true" type="java.lang.String" />
     <cc:attribute name="searchMethod" required="true" method-signature="void action()" />
@@ -22,16 +23,15 @@
 </cc:interface>
 
 <cc:implementation>
-    <rich:popupPanel id="selectClaimModalPanel" onmaskclick="#{rich:component('selectClaimModalPanel')}.hide()" zindex="2000" moveable="true" autosized="true" width="725" height="460" top="22" onbeforeshow="if (#{cc.attrs.updateSelectionMethod != null}) {executeUpdateSelection();}">
-        <f:facet name="header">
-            <h:outputText value="#{cc.attrs.label}" />
-        </f:facet>
-        <f:facet name="controls">
-            <h:graphicImage value="/img/close.gif" styleClass="hidelink" style="cursor:pointer" onclick="#{rich:component('selectClaimModalPanel')}.hide(); return false;" />
-        </f:facet>
+    <b:modal id="selectClaimModalPanel" styleClass="#{cc.attrs.id}Class"
+    	title="#{cc.attrs.label}" size="modal-lg">
+	<h:outputScript rendered="#{cc.attrs.updateSelectionMethod != null}">
+		$('.#{cc.attrs.id}Class').on('show.bs.modal', function (event) {
+			executeUpdateSelection();
+	    });
+	</h:outputScript>
 
         <h:form>
-
             <h:panelGroup id = "claimPanelId">
 
                 <ox:decorate id="searchPattern" hideLabel="true">
@@ -39,7 +39,7 @@
                     <h:inputText  value="#{cc.attrs.searchPattern}" size="20" maxlength="30" id="searchClaimPatternId" styleClass="searchParameters form-control"
                                   alt="Search parameters like iNum, Name, Display Name" />
 
-                    <a4j:commandButton style = "margin-top:5px;" styleClass = "btn btn-primary" value="Search" action="#{cc.attrs.searchMethod}" render="claimPanelId"  />
+                    <b:commandButton ajax="true" look="primary" style="margin-top:5px;" styleClass="btn btn-primary" value="Search" action="#{cc.attrs.searchMethod}" update="@form:claimPanelId" />
                 </ox:decorate>
 
                 <h:panelGroup id="claimNoResultId" rendered="#{cc.attrs.searchResult.size() eq 0}">
@@ -47,7 +47,7 @@
                 </h:panelGroup>
 
                 <ui:fragment rendered="#{cc.attrs.updateSelectionMethod != null}">
-                    <a4j:jsFunction name="executeUpdateSelection" action="#{cc.attrs.updateSelectionMethod}" render="claimPanelId"/>
+                    <b:remoteCommand name="executeUpdateSelection" action="#{cc.attrs.updateSelectionMethod}" update="@form:claimPanelId"/>
                 </ui:fragment>
 
                 <h:panelGroup style="overflow-y:auto; width:815px;#{cc.attrs.searchResult.size() gt 5 ? ' height:310px;' : ''}" layout="block" rendered="#{cc.attrs.searchResult.size() gt 0}">
@@ -71,21 +71,23 @@
                     </h:dataTable>
                 </h:panelGroup>
 
-                <p:spacer height="16" />
+                <gluuext:spacer height="16" />
                 <div class="box-footer" >
 
                     <h:panelGroup>
                         <div class="row" style="margin-left:-4px !important">
-                            <a4j:commandButton  styleClass="btn btn-primary" action="#{cc.attrs.acceptMethod}" value="Ok" oncomplete="#{rich:component('selectClaimModalPanel')}.hide();" render="claimListId #{cc.attrs.render}"/>&nbsp;
-                            <a4j:commandButton  styleClass="btn btn-primary" action="#{cc.attrs.cancelMethod}" value="Cancel" oncomplete="#{rich:component('selectClaimModalPanel')}.hide(); return false;" render="claimListId"/>&nbsp;
-                            <a4j:status startText="Request in progress please wait......" stopText="" startStyle="color:red" /></div>
+                            <b:commandButton ajax="true" look="primary" styleClass="btn btn-primary" action="#{cc.attrs.acceptMethod}" value="Ok" oncomplete="$('.#{cc.attrs.id}Class').modal('hide');" updater="claimListId #{cc.attrs.render}"/><gluuext:spacer width="8px"/>
+                            <b:commandButton ajax="true" look="primary" styleClass="btn btn-primary" action="#{cc.attrs.cancelMethod}" value="Cancel" oncomplete="$('.#{cc.attrs.id}Class').modal('hide'); return false;" update="@form:claimListId"/>
+
+			<gluuext:spacer width="8px" height="8px"/>
+			<gluuext:status startText="Request in progress please wait......" />
                     </h:panelGroup>
 
                 </div>
 
             </h:panelGroup>
         </h:form>
-    </rich:popupPanel>
+    </b:modal>
 </cc:implementation>
 
 </html>

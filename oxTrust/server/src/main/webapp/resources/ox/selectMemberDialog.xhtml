@@ -1,15 +1,17 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:a4j="http://richfaces.org/a4j" xmlns:p="http://primefaces.org/ui"
-	xmlns:rich="http://richfaces.org/rich"
-	xmlns:richext="http://xmlns.jcp.org/jsf/composite/richext"
+	xmlns:b="http://bootsfaces.net/ui"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:gluuext="http://xmlns.jcp.org/jsf/composite/gluuext"
 	xmlns:ox="http://xmlns.jcp.org/jsf/composite/ox"
 	xmlns:cc="http://xmlns.jcp.org/jsf/composite">
 
 <cc:interface>
+    <cc:attribute name="id" required="true" type="java.lang.String" />
 	<cc:attribute name="label" default="Add Members" required="false"
 		type="java.lang.String" />
 	<cc:attribute name="searchPattern" required="true"
@@ -27,21 +29,15 @@
 </cc:interface>
 
 <cc:implementation>
-	<rich:popupPanel id="selectMemberModalPanel"
-		onmaskclick="#{rich:component('selectMemberModalPanel')}.hide()"
-		top="100" zindex="2000" moveable="true" autosized="true" width="725"
-		height="460"
-		onbeforeshow="if (#{cc.attrs.updateSelectionMethod != null}) {executeUpdateSelection();}">
-		<f:facet name="header">
-			<h:outputText value="#{cc.attrs.label}" />
-		</f:facet>
-		<f:facet name="controls">
-			<h:graphicImage value="/img/close.gif" styleClass="hidelink"
-				style="cursor:pointer"
-				onclick="#{rich:component('selectMemberModalPanel')}.hide(); return false;" />
-		</f:facet>
+	<b:modal id="selectMemberModalPanel" styleClass="#{cc.attrs.id}Class"
+		title="#{cc.attrs.label}" size="modal-lg">
+		<h:outputScript rendered="#{cc.attrs.updateSelectionMethod != null}">
+			$('.#{cc.attrs.id}Class').on('show.bs.modal', function (event) {
+				executeUpdateSelection();
+		    });
+		</h:outputScript>
 
-		<h:form id="fff" prepend="false">
+		<h:form id="memberFormId" prepend="false">
 			<h:panelGrid id="memberPanelId" columns="1" border="0"
 				cellpadding="0" cellspacing="0" width="100%"
 				columnClasses="alignLeft"
@@ -54,9 +50,9 @@
 							styleClass="searchParameters form-control"
 							alt="Search parameters like iNum, Display Name" />
 
-						<a4j:commandButton style="float: left;margin-left: 5px;"
+						<b:commandButton ajax="true" look="primary" style="float: left;margin-left: 5px;"
 							value="Search" action="#{cc.attrs.searchMethod}"
-							render="memberPanelId" styleClass="btn btn-primary" />
+							update="@form:memberPanelId" styleClass="btn btn-primary" />
 					</div>
 				</ox:decorate>
 
@@ -66,8 +62,7 @@
 				</h:panelGroup>
 
 				<ui:fragment rendered="#{cc.attrs.updateSelectionMethod != null}">
-					<a4j:jsFunction name="executeUpdateSelection"
-						action="#{cc.attrs.updateSelectionMethod}" render="memberPanelId" />
+					<b:remoteCommand name="executeUpdateSelection" action="#{cc.attrs.updateSelectionMethod}" update="@form:memberPanelId" />
 				</ui:fragment>
 
 				<h:panelGroup
@@ -103,25 +98,24 @@
 					</p:dataTable>
 				</h:panelGroup>
 
-				<p:spacer height="16" />
+				<gluuext:spacer height="16" />
 
 				<h:panelGroup>
-					<a4j:commandButton styleClass="btn btn-primary"
+					<b:commandButton ajax="true" look="primary" styleClass="btn btn-primary"
 						action="#{cc.attrs.acceptMethod}" value="Ok"
-						oncomplete="#{rich:component('selectMemberModalPanel')}.hide();"
-						render="#{cc.attrs.render}" />
-                    &nbsp;
-                    <a4j:commandButton styleClass="btn btn-primary"
+						oncomplete="$('.#{cc.attrs.id}Class').modal('hide');"
+						update="#{cc.attrs.render}" />
+                    <gluuext:spacer width="8px"/>
+                    <b:commandButton ajax="true" look="primary" styleClass="btn btn-primary"
 						action="#{cc.attrs.cancelMethod}" value="Cancel"
-						oncomplete="#{rich:component('selectMemberModalPanel')}.hide(); return false;" />
-                    &nbsp;
-                    <a4j:status
-						startText="Request in progress please wait......" stopText=""
-						startStyle="color:red" />
+						oncomplete="$('.#{cc.attrs.id}Class').modal('hide'); return false;" />
+
+			<gluuext:spacer width="8px" height="8px"/>
+			<gluuext:status startText="Request in progress please wait......" />
 				</h:panelGroup>
 			</h:panelGrid>
 		</h:form>
-	</rich:popupPanel>
+	</b:modal>
 </cc:implementation>
 
 </html>

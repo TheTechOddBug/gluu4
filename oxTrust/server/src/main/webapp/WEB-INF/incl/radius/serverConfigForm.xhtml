@@ -4,10 +4,9 @@
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:b="http://bootsfaces.net/ui" xmlns:a4j="http://richfaces.org/a4j"
-	xmlns:rich="http://richfaces.org/rich"
+	xmlns:b="http://bootsfaces.net/ui"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:richext="http://xmlns.jcp.org/jsf/composite/richext"
+	xmlns:gluuext="http://xmlns.jcp.org/jsf/composite/gluuext"
 	xmlns:ox="http://xmlns.jcp.org/jsf/composite/ox">
 	<style type="text/css">
 .odd {
@@ -100,27 +99,25 @@
 								<b:panel title="#{msgs['radius.config.scopes.label']}"
 									look="primary" collapsible="false">
 									<h:panelGroup id="openid-scopes">
-										<a4j:repeat value="#{_scopes}" rowKeyVar="_scopesIdx"
-											var="_scope" iterationStatusVar="loop">
-											<div class="#{(loop.index % 2 == 0)?'odd':'even'}">
+										<ui:repeat value="#{_scopes}" var="_scope" varStatus="_scopesStatus">
+											<div class="#{(_scopesStatusindex % 2 == 0)?'odd':'even'}">
 												<h:outputText
 													value="#{_scope.id eq null ? _scope.displayName : _scope.id}&#160;" />
 												<div class="span4 pull-right">
-													<a4j:commandLink styleClass="glyphicon glyphicon-remove"
+													<b:commandLink ajax="true" icon="glyphicon-remove"
 														style="margin-right:10px;"
-														action="#{_action.removeScope(_scope.dn)}" execute="@this"
-														render="openid-scopes" eventQueue="scopeQueue" />
+														action="#{_action.removeScope(_scope.dn)}" process="@this"
+														update="@form:openid-scopes" />
 												</div>
 												<br />
 											</div>
-										</a4j:repeat>
-										<p:spacer height="16" />
-										<a4j:commandButton styleClass="btn btn-primary"
+										</ui:repeat>
+										<gluuext:spacer height="16" />
+										<b:commandButton ajax="true" look="primary" styleClass="btn btn-primary"
 											style="margin-top: 5px;"
 											value="#{msgs['radius.config.scopes.add.label']}"
-											execute="@this"
-											oncomplete="#{rich:component('scopedialog:selectEntityModalPanel')}.show();"
-											eventsQueue="scopeQueue" />
+											process="@this"
+											oncomplete="$('.scopedialogClass').modal('show')" />
 									</h:panelGroup>
 								</b:panel>
 							</div>

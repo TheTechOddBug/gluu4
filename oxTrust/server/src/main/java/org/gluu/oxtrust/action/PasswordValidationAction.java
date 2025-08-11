@@ -22,6 +22,7 @@ import javax.validation.constraints.AssertTrue;
 import org.gluu.jsf2.message.FacesMessages;
 import org.gluu.jsf2.service.FacesService;
 import org.gluu.model.attribute.AttributeValidation;
+import org.gluu.model.ldap.GluuLdapConfiguration;
 import org.gluu.oxtrust.exception.DuplicateEmailException;
 import org.gluu.oxtrust.model.GluuCustomPerson;
 import org.gluu.oxtrust.security.Identity;
@@ -154,14 +155,6 @@ public class PasswordValidationAction implements Cloneable, Serializable {
 				facesMessages.add(FacesMessage.SEVERITY_ERROR, "Password and confirm password value don't match");
 			}
 		}
-	}
-
-	public void notifyBindPasswordChange() {
-		facesMessages.add(FacesMessage.SEVERITY_INFO, "Bind password successfully changed!");
-	}
-
-	public void notifyClientPasswordChange() {
-		facesMessages.add(FacesMessage.SEVERITY_INFO, "Client secret successfully changed!");
 	}
 
 	public UIComponent getGraphValidator() {

@@ -6,9 +6,8 @@
 	xmlns:b="http://bootsfaces.net/ui"
 	xmlns:ox="http://xmlns.jcp.org/jsf/composite/ox"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:p="http://primefaces.org/ui" xmlns:a4j="http://richfaces.org/a4j"
-	xmlns:rich="http://richfaces.org/rich"
-	xmlns:richext="http://xmlns.jcp.org/jsf/composite/richext">
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:gluuext="http://xmlns.jcp.org/jsf/composite/gluuext">
 	<div class="row"
 		style="padding-left: 5px; padding-right: 5px; max-height: 300px; overflow-x: scroll;">
 		<h4 style="text-align: center;">#{msgs['trustmanager.saml2SSOProfileHelp']}</h4>
@@ -121,23 +120,19 @@
 						value="#{_relyingPartyAction.unspecifiedNameIDFormatSupported}"
 						valueChangeListener="#{_relyingPartyAction.handleUnspecifiedNameIDFormatSupportedCheckBox}"
 						style="margin-left:10px;float:right;">
-						<a4j:ajax event="click" render="samlNameIdFormatPickList"
+						<f:ajax event="click" render="samlNameIdFormatPickList"
 							execute="@this" limitRender="true" />
 					</h:selectBooleanCheckbox>
 				</div>
 			</b:formGroup>
 		</div>
 		<b:formGroup styleClass="NameIDPickingList">
-			<rich:pickList id="samlNameIdFormatPickList" orderable="true"
-				sourceCaption="Available NamedId Formats" listWidth="330"
-				targetCaption="Selected NamedId Formats(in order of preference)"
-				value="#{_ssoProfile.nameIDFormatPrecedenceList}">
-				<f:selectItems
-					itemLabel="#{nameIdFormat.substring(19,nameIdFormat.length())}"
-					itemValue="#{nameIdFormat}"
-					value="#{_relyingPartyAction.getSupportedNameIdFormats()}"
-					var="nameIdFormat" />
-			</rich:pickList>
+			<ox:pickList listId="samlNameIdFormatPickList" sourceList="#{_relyingPartyAction.supportedNameIdFormats}"
+				targetList="#{_ssoProfile.nameIDFormatPrecedenceList}"
+				converterId="stringConverter"
+				update="@this"
+				sourceCaption="Available NamedId Formats" targetCaption="Selected NamedId Formats(in order of preference)"
+				listHeight="200" listWidth="330"/>
 		</b:formGroup>
 	</div>
 </ui:composition>

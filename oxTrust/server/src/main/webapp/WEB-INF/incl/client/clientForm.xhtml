@@ -4,9 +4,8 @@
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:b="http://bootsfaces.net/ui" xmlns:a4j="http://richfaces.org/a4j"
-	xmlns:rich="http://richfaces.org/rich"
-	xmlns:richext="http://xmlns.jcp.org/jsf/composite/richext"
+	xmlns:b="http://bootsfaces.net/ui"
+	xmlns:gluuext="http://xmlns.jcp.org/jsf/composite/gluuext"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:ox="http://xmlns.jcp.org/jsf/composite/ox">
 	<style type="text/css">
@@ -78,15 +77,14 @@
 			<div class="row">
 				<div class="col-xs-12 col-sm-12 col-lg-12" style="margin-top: 5px;">
 					<div class="box-header">
-						<a4j:commandButton
+						<b:commandButton
+							oncomplete="$('.summaryClass').modal('show');"
+							rendered="#{not _new}" ajax="true" process="@form"
 							styleClass="btn btn-primary showOIDCSummaryButton"
 							style="float: right; margin-right:1%; width:180px; border:none !important;"
-							rendered="#{not _new}"
-							value="#{msgs['clientForm.clientSummary']}"
-							onclick="#{rich:component('summary:clientSummary')}.show();"
-							eventsQueue="clientQueue" />
-						<a4j:commandButton ajaxSingle="true" eventsQueue="clientQueue"
-							onclick="#{rich:component('deleteConfirmation:acceptRemovalModalPanel')}.show();"
+							value="#{msgs['clientForm.clientSummary']}"/>
+						<b:commandButton immediate="true" ajax="true" look="primary"
+							oncomplete="$('.deleteConfirmationClass').modal('show');"
 							rendered="#{not _new}"
 							styleClass="btn btn-primary deleteOIDCButton"
 							style="float: right; margin-right:1%; width:150px; border:none !important; background: #d62728 !important; background-color: #d62728 !important;"
@@ -137,7 +135,7 @@
 										</div>
 									</div>
 									<div class="row" style="margin-left: 5px; margin-right: 5px;">
-										<div class="col-sm-6 col-lg-6" style="padding: 0px;">
+										<h:panelGroup layout="block" styleClass="col-sm-6 col-lg-6" style="padding: 0px;">
 											<ox:decorate id="clientSecret"
 												label="#{msgs['clientForm.clientSecret']}"
 												leftClass="col-sm-3" rightClass="col-sm-6">
@@ -156,23 +154,23 @@
 													id="hidePassword" onmouseover="takeFocus(this);"
 													onclick="hideClientSecret(); return false;" />
 											</ox:decorate>
-										</div>
+										</h:panelGroup>
 										<div class="col-sm-6 col-lg-6" style="padding: 0px;">
-											<a4j:commandLink render="clientSecretId1" rendered="#{_new}"
+											<b:commandLink ajax="true" update="@form:clientSecret:clientSecretId1" rendered="#{_new}"
 												styleClass="btn btn-primary generateClientSecretButton"
 												value="Generate Client Secret" style="margin-left: 10px;"
-												action="#{_clientAction.generatePassword()}" execute="@this"
+												action="#{_clientAction.generatePassword()}" process="@this"
 												oncomplete="return valuesDisplay(this);" />
-											<a4j:commandLink rendered="#{_new}"
+											<b:commandLink ajax="true" rendered="#{_new}"
 												style="margin-left: 10px;"
 												styleClass="btn btn-primary lockClientSecretField"
 												value="Lock Secret Field" />
-											<a4j:commandButton rendered="#{not _new}"
+											<b:commandButton rendered="#{not _new}"
+												ajax="true" process="@this"
+												oncomplete="$('.clientPasswordClass').modal('show');"
 												style="margin-left:15px;"
-												onclick="#{rich:component('clientPassword:changePasswordModalPanel')}.show();"
 												styleClass="btn btn-primary changeClientSecretButton"
 												value="#{msgs['client.changeClientSecret']}" />
-
 										</div>
 									</div>
 									<!-- First row -->
@@ -185,6 +183,7 @@
 													styleClass="form-control clientNameTextBox"
 													requiredMessage="Please Enter the Client Name"
 													required="true" id="displayNameId" />
+												<b:message for="@previous" autoUpdate="true"/>
 											</ox:decorate>
 											<ox:decorate id="description"
 												label="#{msgs['clientForm.clientDescription']}"
@@ -204,97 +203,90 @@
 												<b:panel title="#{msgs['clientForm.redirectLoginURIs']}"
 													id="redirectLoginUrls" look="primary">
 													<h:panelGroup id="selectedLoginURIsId">
-														<a4j:repeat value="#{_clientAction.loginUris}"
-															rowKeyVar="_urisIdx" var="_uri" iterationStatusVar="loop">
-															<div class="#{(loop.index % 2 == 0) ?'odd':'even'}"
+														<ui:repeat value="#{_clientAction.loginUris}" var="_loginUri" varStatus="_loginUrisStatus">
+															<div class="#{(_loginUrisStatus.index % 2 == 0) ?'odd':'even'}"
 																style="overflow-x: scroll;">
-																<h:outputText value="#{empty _uri ? _uri : _uri}" />
-																<h:outputText value="&#160;" />
+																<h:outputText value="#{empty _loginUri ? _loginUri : _loginUri}" />
+																<gluuext:spacer width="8px"/>
 																<div>
-																	<a4j:commandLink
-																		styleClass="glyphicon glyphicon-remove"
+																	<b:commandLink ajax="true"
+																		icon="glyphicon glyphicon-remove"
 																		style="margin-top:-20px; float:right;"
-																		action="#{_clientAction.removeLoginURI(_uri)}"
-																		execute="@this" render="selectedLoginURIsId"
-																		eventsQueue="clientQueue">
-																	</a4j:commandLink>
+																		action="#{_clientAction.removeLoginURI(_loginUri)}"
+																		process="@this" update="@form:selectedLoginURIsId">
+																	</b:commandLink>
 																</div>
 															</div>
 															<br />
-														</a4j:repeat>
-														<p:spacer height="16" />
-														<a4j:commandButton
+														</ui:repeat>
+														<gluuext:spacer height="16" />
+														<b:commandButton
 															styleClass="btn btn-primary AddRedirectLoginUriButton"
 															style="margin-top: 5px;"
 															value="#{msgs['clientForm.addLoginReiderctURI']}"
-															oncomplete="#{rich:component('loginRedirect:inputText')}.show();"
-															execute="@this" eventsQueue="clientQueue" />
-
+															oncomplete="$('.loginRedirectClass').modal('show');"
+															ajax="true"/>
 													</h:panelGroup>
 												</b:panel>
 												<b:panel title="#{msgs['clientForm.scopes']}" id="scopes"
 													look="primary">
 													<h:panelGroup id="selectedScopesId">
-														<a4j:repeat value="#{_clientAction.scopes}"
-															rowKeyVar="_scopeIdx" var="_scope"
-															iterationStatusVar="loop">
+														<ui:repeat value="#{_clientAction.scopes}" var="_scope"
+															varStatus="_scopeStatus">
 															<div class="row-fluid">
-																<div class="#{(loop.index % 2 == 0) ?'odd':'even'}">
+																<div class="#{(_scopeStatus.index % 2 == 0) ?'odd':'even'}">
 																	<h:outputText
 																		value="#{_scope.id eq null ? _scope.displayName : _scope.id}" />
-																	<h:outputText value="&#160;" />
+																	<gluuext:spacer width="8px"/>
 																	<div>
-																		<a4j:commandLink
-																			styleClass="glyphicon glyphicon-remove"
+																		<b:commandLink ajax="true"
+																			icon="glyphicon glyphicon-remove"
 																			style="margin-top:-20px; float:right;"
 																			action="#{_clientAction.removeScope(_scope.inum)}"
-																			execute="@this" render="selectedScopesId"
-																			eventsQueue="clientQueue">
-																		</a4j:commandLink>
+																			process="@this" update="@form:selectedScopesId">
+																		</b:commandLink>
 																	</div>
 																</div>
 															</div>
 															<br />
-														</a4j:repeat>
-														<p:spacer height="16" />
-														<a4j:commandButton
+														</ui:repeat>
+														<gluuext:spacer height="16" />
+														<b:commandButton
 															styleClass="btn btn-primary AddScopeButton"
 															style="margin-top:5px"
 															value="#{msgs['clientForm.addScope']}"
-															oncomplete="#{rich:component('scope:selectEntityModalPanel')}.show();"
-															execute="@this" eventsQueue="clientQueue" />
+															oncomplete="$('.scopeClass').modal('show');"
+															ajax="true" process="@this"/>
 													</h:panelGroup>
 												</b:panel>
 												<b:panel title="#{msgs['clientForm.responseTypes']}"
 													id="responseTypes" look="primary">
 													<h:panelGroup id="selectedResponseTypesId">
-														<a4j:repeat value="#{_clientAction.responseTypes}"
-															rowKeyVar="_responseTypeIdx" var="_responseType"
-															iterationStatusVar="loop">
+														<ui:repeat value="#{_clientAction.responseTypes}"
+															var="_responseType"
+															varStatus="_responseTypeStatus">
 															<div class="row-fluid">
-																<div class="#{(loop.index % 2 == 0) ?'odd':'even'}">
+																<div class="#{(_responseTypeStatus.index % 2 == 0) ?'odd':'even'}">
 																	<h:outputText value="#{_responseType.value}" />
-																	<h:outputText value="&#160;" />
+																	<gluuext:spacer width="8px"/>
 																	<div>
-																		<a4j:commandLink
-																			styleClass="glyphicon glyphicon-remove"
+																		<b:commandLink ajax="true"
+																			icon="glyphicon glyphicon-remove"
 																			style="margin-top:-20px;float:right;"
 																			action="#{_clientAction.removeResponseType(_responseType.value)}"
-																			execute="@this" render="selectedResponseTypesId"
-																			eventsQueue="clientQueue">
-																		</a4j:commandLink>
+																			process="@this" update="@form:selectedResponseTypesId"/>
 																	</div>
 																</div>
 															</div>
 															<br />
-														</a4j:repeat>
-														<p:spacer height="16" />
-														<a4j:commandButton
+														</ui:repeat>
+														<gluuext:spacer height="16" />
+														<b:commandButton
 															styleClass="btn btn-primary AddResponseTypeButton"
 															style="margin-top:5px"
 															value="#{msgs['clientForm.addResponseType']}"
-															oncomplete="#{rich:component('responseType:selectEntityModalPanel')}.show();"
-															execute="@this" eventsQueue="clientQueue" />
+															oncomplete="$('.responseTypeClass').modal('show');"
+															ajax="true" process="@this"/>
 													</h:panelGroup>
 												</b:panel>
 											</h:panelGroup>
@@ -328,6 +320,7 @@
 													<f:converter
 														converterId="org.gluu.jsf2.converter.EnumConverter" />
 												</h:selectOneMenu>
+												<b:message for="@previous" autoUpdate="true"/>
 											</ox:decorate>
 											<ox:decorate id="oxAuthTrustedClientBox"
 												label="#{msgs['clientForm.preAuthorization']}"
@@ -336,6 +329,7 @@
 													value="#{_client.oxAuthTrustedClient}" id="trustedClientId"
 													styleClass="oxAuthTrustedClientSelectBox rounded"
 													onchange="togglePersistAuthorization()" required="true" />
+												<b:message for="@previous" autoUpdate="true"/>
 											</ox:decorate>
 											
 											<ox:decorate id="applicatonType"
@@ -351,41 +345,39 @@
 													<f:converter
 														converterId="org.gluu.jsf2.converter.EnumConverter" />
 												</h:selectOneMenu>
-
+												<b:message for="@previous" autoUpdate="true"/>
 											</ox:decorate>					
 											
 											<div class="row" style="padding-left: 25px;">
 												<b:panel title="#{msgs['clientForm.grantTypes']}"
 													id="grantTypes" look="primary">
 													<h:panelGroup id="selectedGrantTypesId">
-														<a4j:repeat value="#{_clientAction.grantTypes}"
-															rowKeyVar="_grantTypeIdx" var="_grantType"
-															iterationStatusVar="loop">
+														<ui:repeat value="#{_clientAction.grantTypes}"
+															var="_grantType"
+															varStatus="_grantTypeStatus">
 															<div class="row-fluid">
 																<div class="#{(loop.index % 2 == 0) ?'odd':'even'}"
 																	style="overflow-x: scroll;">
 																	<h:outputText value="#{_grantType.value}" />
-																	<h:outputText value="&#160;" />
+																	<gluuext:spacer width="8px"/>
 																	<div>
-																		<a4j:commandLink
-																			styleClass="glyphicon glyphicon-remove"
+																		<b:commandLink ajax="true"
+																			icon="glyphicon glyphicon-remove"
 																			style="margin-top:-20px; float:right;"
 																			action="#{_clientAction.removeGrantType(_grantType.value)}"
-																			execute="@this" render="selectedGrantTypesId"
-																			eventsQueue="clientQueue">
-																		</a4j:commandLink>
+																			process="@this" update="@form:selectedGrantTypesId"/>
 																	</div>
 																</div>
 															</div>
 															<br />
-														</a4j:repeat>
-														<p:spacer height="16" />
-														<a4j:commandButton
+														</ui:repeat>
+														<gluuext:spacer height="16" />
+														<b:commandButton
 															styleClass="btn btn-primary AddGrantTypeButton"
 															style="margin-top:5px"
 															value="#{msgs['clientForm.addGrantType']}"
-															oncomplete="#{rich:component('grantType:selectEntityModalPanel')}.show();"
-															execute="@this" eventsQueue="clientQueue" />
+															oncomplete="$('.grantTypeClass').modal('show');"
+															ajax="true" process="@this" />
 													</h:panelGroup>
 												</b:panel>
 											</div>
@@ -418,25 +410,18 @@
 											
 										</div>
 										<div class="col-sm-6 col-lg-6" style="padding: 0px;">
-											
-											<a4j:outputPanel>
-												<ox:decorate id="includeClaimsInIdToken"
-													label="#{msgs['clientForm.includeClaimsInIdToken']}"
-													leftClass="col-sm-6" rightClass="col-sm-6">
-													<h:selectBooleanCheckbox
-														value="#{_client.oxIncludeClaimsInIdToken}"
-														id="includeClaimsInIdTokenId"
-														styleClass="col-sm-9 rounded"
-														disabled="#{!jsonConfigurationService.getOxauthAppConfiguration().legacyIdTokenClaims}"
-														required="true" />
-												</ox:decorate>
-												<rich:tooltip
-													rendered="#{!jsonConfigurationService.getOxauthAppConfiguration().legacyIdTokenClaims}">
-													<span style="white-space: nowrap">
-														#{msgs['clientForm.includeClaimsInIdTokenTooltip']} </span>
-												</rich:tooltip>									
-											
-											</a4j:outputPanel>											
+												#{_client.oxIncludeClaimsInIdToken}
+											<ox:decorate id="includeClaimsInIdToken"
+												label="#{msgs['clientForm.includeClaimsInIdToken']}"
+												leftClass="col-sm-6" rightClass="col-sm-6">
+												<h:selectBooleanCheckbox
+													value="#{_client.oxIncludeClaimsInIdToken}"
+													id="includeClaimsInIdTokenId"
+													styleClass="col-sm-9 rounded"
+													disabled="#{!jsonConfigurationService.getOxauthAppConfiguration().legacyIdTokenClaims}"
+													required="true" tooltip="#{msgs['clientForm.includeClaimsInIdTokenTooltip']}"/>
+												<b:message for="@previous" autoUpdate="true"/>
+											</ox:decorate>
 										</div>
 									</div>
 									<div class="row" style="margin-left: 5px; margin-right: 5px;">										
@@ -458,34 +443,33 @@
 														<h:panelGroup id="selectedAdditionalAudiencesId">
 															<h:panelGroup columns="1" width="100%" border="0"
 																cellpadding="0" cellspacing="0">
-																<a4j:repeat value="#{_clientAction.additionalAudienceList}"
-																	rowKeyVar="_urisIdx" var="_uri" iterationStatusVar="loop">
+																<ui:repeat value="#{_clientAction.additionalAudienceList}"
+																	var="_uri" varStatus="_uriStatus">
 																	<div class="row-fluid">
-																		<div class="#{(loop.index % 2 == 0) ?'odd':'even'}"
+																		<div class="#{(_uriStatus.index % 2 == 0) ?'odd':'even'}"
 																			style="overflow-x: scroll;">
 																			<h:outputText value="#{empty _uri ? _uri : _uri}" />
-																			<h:outputText value="&#160;" />
+																			<gluuext:spacer width="8px"/>
 																			<div>
-																				<a4j:commandLink
-																					styleClass="glyphicon glyphicon-remove"
+																				<b:commandLink ajax="true"
+																					icon="glyphicon glyphicon-remove"
 																					style="margin-top:-20px; float:right;"
 																					action="#{_clientAction.removeAdditionalAudience(_uri)}"
-																					execute="@this" render="selectedAdditionalAudiencesId"
-																					eventsQueue="clientQueue">
+																					process="@this" update="@form:selectedAdditionalAudiencesId">
 																					<!-- <h:graphicImage value="/img/remove.gif" /> -->
-																				</a4j:commandLink>
+																				</b:commandLink>
 																			</div>
 																		</div>
 																	</div>
 																	<br />
-																</a4j:repeat>
-																<p:spacer height="16" />
-																<a4j:commandButton
+																</ui:repeat>
+																<gluuext:spacer height="16" />
+																<b:commandButton
 																	styleClass="btn btn-primary AddAdditionalAudiencesButton"
 																	style="margin-top:5px"
 																	value="#{msgs['clientForm.addAdditionalAudiences']}"
-																	oncomplete="#{rich:component('AdditionalAudience:inputText')}.show();"
-																	execute="@this" eventsQueue="audienceQueue" />
+																	oncomplete="$('.AdditionalAudienceClass').modal('show');"
+																	ajax="true" process="@this" />
 															</h:panelGroup>
 														</h:panelGroup>
 												</b:panel>
@@ -573,34 +557,31 @@
 												<h:panelGroup id="selectedRequestUrisId">
 													<h:panelGroup columns="1" width="100%" border="0"
 														cellpadding="0" cellspacing="0">
-														<a4j:repeat value="#{_clientAction.requestUris}"
-															rowKeyVar="_requestUrisIdx" var="_requestUri"
-															iterationStatusVar="loop">
+														<ui:repeat value="#{_clientAction.requestUris}" var="_requestUri"
+															varStatus="_requestUriStatus">
 															<div class="row-fluid">
-																<div class="#{(loop.index % 2 == 0) ?'odd':'even'}"
+																<div class="#{(_requestUriStatus.index % 2 == 0) ?'odd':'even'}"
 																	style="overflow-x: scroll;">
 																	<h:outputText value="#{_requestUri}" />
-																	<h:outputText value="&#160;" />
+																	<gluuext:spacer width="8px"/>
 																	<div>
-																		<a4j:commandLink
-																			styleClass="glyphicon glyphicon-remove"
+																		<b:commandLink ajax="true"
+																			icon="glyphicon glyphicon-remove"
 																			style="margin-top:-20px; float:right;"
 																			action="#{_clientAction.removeRequestUri(_requestUri)}"
-																			execute="@this" render="selectedRequestUrisId"
-																			eventsQueue="clientQueue">
-																		</a4j:commandLink>
+																			process="@this" update="@form:selectedRequestUrisId"/>
 																	</div>
 																</div>
 															</div>
 															<br />
-														</a4j:repeat>
-														<p:spacer height="16" />
-														<a4j:commandButton
+														</ui:repeat>
+														<gluuext:spacer height="16" />
+														<b:commandButton
 															styleClass="btn btn-primary AddRequestUriButton"
 															style="margin-top:5px"
 															value="#{msgs['clientForm.addRequestURI']}"
-															oncomplete="#{rich:component('requestUri:inputText')}.show();"
-															execute="@this" eventsQueue="clientQueue" />
+															oncomplete="$('.requestUriClass').modal('show');"
+															ajax="true" process="@this"/>
 													</h:panelGroup>
 												</h:panelGroup>
 							</b:panel>
@@ -637,8 +618,8 @@
 													<h:selectBooleanCheckbox value="#{_client.deletable}"
 														id="expirableClientID" styleClass="col-sm-9 rounded"
 														required="false">
-														<a4j:ajax event="click" render="expirationBlockId"
-															execute="@this" limitRender="true" />
+														<f:ajax event="click" render="expirationBlockId"
+															process="@this" limitRender="true" />
 													</h:selectBooleanCheckbox>
 												</ox:decorate>
 												<ox:decorate id="clientExpirationId" leftClass="col-sm-6"
@@ -663,32 +644,31 @@
 										<h:panelGroup id="selectedClientUrisId">
 											<h:panelGroup columns="1" width="100%" border="0"
 												cellpadding="0" cellspacing="0">
-												<a4j:repeat value="#{_clientAction.clientlogoutUris}"
-													rowKeyVar="_urisIdx" var="_uri" iterationStatusVar="loop">
+												<ui:repeat value="#{_clientAction.clientlogoutUris}"
+													var="_uri" varStatus="_uriStatus">
 													<div class="row-fluid">
-														<div class="#{(loop.index % 2 == 0) ?'odd':'even'}"
+														<div class="#{(_uriStatus.index % 2 == 0) ?'odd':'even'}"
 															style="overflow-x: scroll;">
 															<h:outputText value="#{empty _uri ? _uri : _uri}" />
-															<h:outputText value="&#160;" />
+															<gluuext:spacer width="8px"/>
 															<div class="span6 pull-right">
-																<a4j:commandLink
-																	styleClass="glyphicon glyphicon-remove"
+																<b:commandLink ajax="true"
+																	icon="glyphicon glyphicon-remove"
 																	action="#{_clientAction.removeClientLogoutURI(_uri)}"
-																	execute="@this" render="selectedClientUrisId"
-																	eventsQueue="clientQueue">
+																	process="@this" update="@form:selectedClientUrisId">
 																	<!-- <h:graphicImage value="/img/remove.gif" /> -->
-																</a4j:commandLink>
+																</b:commandLink>
 															</div>
 														</div>
 													</div>
 													<br />
-												</a4j:repeat>
-												<p:spacer height="16" />
-												<a4j:commandButton
+												</ui:repeat>
+												<gluuext:spacer height="16" />
+												<b:commandButton
 													styleClass="btn btn-primary addLogoutUriButton"
 													style="margin-top:5px" value="Add Frontchannel Logout URI"
-													oncomplete="#{rich:component('clientLogoutUri:inputText')}.show();"
-													execute="@this" eventsQueue="clientQueue" />
+													oncomplete="$('.clientLogoutUriClass').modal('show');"
+													ajax="true" process="@this"/>
 											</h:panelGroup>
 										</h:panelGroup>
 									</b:panel>
@@ -698,32 +678,31 @@
 										<h:panelGroup id="selectedRedirectLogoutUrlId">
 											<h:panelGroup columns="1" width="100%" border="0"
 												cellpadding="0" cellspacing="0">
-												<a4j:repeat value="#{_clientAction.redirectLogoutUrl}"
-													rowKeyVar="_urisIdx" var="_uri" iterationStatusVar="loop">
+												<ui:repeat value="#{_clientAction.redirectLogoutUrl}"
+													var="_uri" varStatus="_uriStatus">
 													<div class="row-fluid">
-														<div class="#{(loop.index % 2 == 0) ?'odd':'even'}"
+														<div class="#{(_uriStatus.index % 2 == 0) ?'odd':'even'}"
 															style="overflow-x: scroll;">
 															<h:outputText value="#{empty _uri ? _uri : _uri}" />
-															<h:outputText value="&#160;" />
+															<gluuext:spacer width="8px"/>
 															<div class="span6 pull-right">
-																<a4j:commandLink
-																	styleClass="glyphicon glyphicon-remove"
+																<b:commandLink ajax="true"
+																	icon="glyphicon glyphicon-remove"
 																	action="#{_clientAction.removeRedirectLogoutUrl(_uri)}"
-																	execute="@this" render="selectedRedirectLogoutUrlId"
-																	eventsQueue="clientQueue">
+																	process="@this" update="@form:selectedRedirectLogoutUrlId">
 																	<!-- <h:graphicImage value="/img/remove.gif" /> -->
-																</a4j:commandLink>
+																</b:commandLink>
 															</div>
 														</div>
 													</div>
 													<br />
-												</a4j:repeat>
-												<p:spacer height="16" />
-												<a4j:commandButton
+												</ui:repeat>
+												<gluuext:spacer height="16" />
+												<b:commandButton
 													styleClass="btn btn-primary addLogoutUriButton"
 													style="margin-top:5px" value="Add Post Logout Redirect URI"
-													oncomplete="#{rich:component('redirectLogoutUrlsId:inputText')}.show();"
-													execute="@this" eventsQueue="clientQueue" />
+													oncomplete="$('.redirectLogoutUrlsIdClass').modal('show');"
+													ajax="true" process="@this"/>
 											</h:panelGroup>
 										</h:panelGroup>
 									</b:panel>									
@@ -733,38 +712,37 @@
 											<h:panelGroup id="selectedClientBackLogoutUrisId">
 												<h:panelGroup columns="1" width="100%" border="0"
 													cellpadding="0" cellspacing="0">
-													<a4j:repeat
+													<ui:repeat
 														value="#{_clientAction.clientBackChannellogoutUris}"
-														rowKeyVar="_urisIdx" var="_uri" iterationStatusVar="loop">
+														var="_uri" varStatus="_uriStatus">
 														<div class="row-fluid">
 															<div class="#{(loop.index % 2 == 0) ?'odd':'even'}"
 																style="overflow-x: scroll;">
 																<h:outputText value="#{empty _uri ? _uri : _uri}" />
-																<h:outputText value="&#160;" />
+																<gluuext:spacer width="8px"/>
 																<div class="span6 pull-right">
-																	<a4j:commandLink
-																		styleClass="glyphicon glyphicon-remove"
+																	<b:commandLink ajax="true"
+																		icon="glyphicon glyphicon-remove"
 																		action="#{_clientAction.removeClientBackLogoutURI(_uri)}"
-																		execute="@this"
-																		render="selectedClientBackLogoutUrisId"
-																		eventsQueue="clientQueue">
+																		process="@this"
+																		update="@form:selectedClientBackLogoutUrisId">
 																		<!-- <h:graphicImage value="/img/remove.gif" /> -->
-																	</a4j:commandLink>
+																	</b:commandLink>
 																</div>
 															</div>
 														</div>
 														<br />
-													</a4j:repeat>
-													<p:spacer height="16" />
-													<a4j:commandButton
+													</ui:repeat>
+													<gluuext:spacer height="16" />
+													<b:commandButton
 														styleClass="btn btn-primary addLogoutUriButton"
 														style="margin-top:5px" value="Add Back channel Logout URI"
-														oncomplete="#{rich:component('backchannelLogoutUris:inputText')}.show();"
-														execute="@this" eventsQueue="clientQueue" />
+														oncomplete="$('.backchannelLogoutUrisClass').modal('show');"
+														ajax="true" process="@this"/>
 												</h:panelGroup>
 											</h:panelGroup>
 										</b:panel>
-										<p:spacer height="16" />
+										<gluuext:spacer height="16" />
 										<ox:decorate id="backChannellogoutSessionRequired"
 												label="Back Channel logout Session Required"
 												leftClass="col-sm-6" rightClass="col-sm-6">
@@ -772,6 +750,7 @@
 													value="#{_client.attributes.backchannelLogoutSessionRequired}"
 													id="backChannellogoutSessionRequiredId" styleClass="col-sm-9 rounded"
 													required="true" />
+												<b:message for="@previous" autoUpdate="true"/>
 									</ox:decorate>
 									
 									<ox:decorate id="logoutSessionRequired"
@@ -781,6 +760,7 @@
 													value="#{_client.logoutSessionRequired}"
 													id="logoutSessionRequiredId" styleClass="col-sm-9 rounded"
 													required="true" />
+												<b:message for="@previous" autoUpdate="true"/>
 									</ox:decorate>
 									</div>									
 								</h:panelGroup>
@@ -823,34 +803,32 @@
 												<h:panelGroup id="selectedContactsId">
 													<h:panelGroup columns="1" width="100%" border="0"
 														cellpadding="0" cellspacing="0">
-														<a4j:repeat value="#{_clientAction.contacts}"
-															rowKeyVar="_contactsIdx" var="_contact"
-															iterationStatusVar="loop">
+														<ui:repeat value="#{_clientAction.contacts}"
+															var="_contact"
+															varStatus="_contactStatus">
 															<div class="row-fluid">
-																<div class="#{(loop.index % 2 == 0) ?'odd':'even'}">
+																<div class="#{(_contactStatus.index % 2 == 0) ?'odd':'even'}">
 																	<h:outputText
 																		value="#{empty _contact ? _contact : _contact}" />
-																	<h:outputText value="&#160;" />
+																	<gluuext:spacer width="8px"/>
 																	<div>
-																		<a4j:commandLink
-																			styleClass="glyphicon glyphicon-remove"
+																		<b:commandLink ajax="true"
+																			icon="glyphicon glyphicon-remove"
 																			style="margin-top:-20px; float:right;"
 																			action="#{_clientAction.removeContact(_contact)}"
-																			execute="@this" render="selectedContactsId"
-																			eventsQueue="clientQueue">
-																		</a4j:commandLink>
+																			process="@this" update="@form:selectedContactsId"/>
 																	</div>
 																</div>
 															</div>
 															<br />
-														</a4j:repeat>
-														<p:spacer height="16" />
-														<a4j:commandButton
+														</ui:repeat>
+														<gluuext:spacer height="16" />
+														<b:commandButton
 															styleClass="btn btn-primary AddContactButton"
 															style="margin-top:5px"
 															value="#{msgs['clientForm.addContact']}"
-															oncomplete="#{rich:component('contact:inputText')}.show();"
-															execute="@this" eventsQueue="clientQueue" />
+															oncomplete="$('.inputModalTextClass').modal('show');"
+															ajax="true" process="@this"/>
 													</h:panelGroup>
 												</h:panelGroup>
 									</b:panel>
@@ -861,34 +839,32 @@
 												<h:panelGroup id="selectedAuthorizedOriginsId">
 													<h:panelGroup columns="1" width="100%" border="0"
 														cellpadding="0" cellspacing="0">
-														<a4j:repeat value="#{_clientAction.authorizedOrigins}"
-															rowKeyVar="_authorizedOriginsIdx" var="_authorizedOrigin"
-															iterationStatusVar="loop">
+														<ui:repeat value="#{_clientAction.authorizedOrigins}"
+															var="_authorizedOrigin"
+															varStatus="_authorizedOriginStatus">
 															<div class="row-fluid">
-																<div class="#{(loop.index % 2 == 0) ?'odd':'even'}"
+																<div class="#{(_authorizedOriginStatus.index % 2 == 0) ?'odd':'even'}"
 																	style="overflow-x: scroll;">
 																	<h:outputText value="#{_authorizedOrigin}" />
-																	<h:outputText value="&#160;" />
+																	<gluuext:spacer width="8px"/>
 																	<div>
-																		<a4j:commandLink
-																			styleClass="glyphicon glyphicon-remove"
+																		<b:commandLink ajax="true"
+																			icon="glyphicon glyphicon-remove"
 																			style="margin-top:-20px; float:right;"
 																			action="#{_clientAction.removeAuthorizedOrigin(_authorizedOrigin)}"
-																			execute="@this" render="selectedAuthorizedOriginsId"
-																			eventsQueue="clientQueue">
-																		</a4j:commandLink>
+																			process="@this" update="@form:selectedAuthorizedOriginsId"/>
 																	</div>
 																</div>
 															</div>
 															<br />
-														</a4j:repeat>
-														<p:spacer height="16" />
-														<a4j:commandButton
+														</ui:repeat>
+														<gluuext:spacer height="16" />
+														<b:commandButton
 															styleClass="btn btn-primary AddAuthorizeOriginButton"
 															style="margin-top:5px"
 															value="#{msgs['clientForm.addAuthorizedOrigin']}"
-															oncomplete="#{rich:component('authorizedOrigin:inputText')}.show();"
-															execute="@this" eventsQueue="clientQueue" />
+															oncomplete="$('.authorizedOriginClass').modal('show');"
+															ajax="true" process="@this"/>
 													</h:panelGroup>
 												</h:panelGroup>
 									</b:panel>
@@ -1000,34 +976,32 @@
 												<h:panelGroup id="selectedClaimRedirectURIIsId">
 													<h:panelGroup columns="1" width="100%" border="0"
 														cellpadding="0" cellspacing="0">
-														<a4j:repeat value="#{_clientAction.claimRedirectURIList}"
-															rowKeyVar="_urisIdx" var="_uri" iterationStatusVar="loop">
+														<ui:repeat value="#{_clientAction.claimRedirectURIList}"
+															var="_uri" varStatus="_uriStatus">
 															<div class="row-fluid">
-																<div class="#{(loop.index % 2 == 0) ?'odd':'even'}"
+																<div class="#{(_uriStatus.index % 2 == 0) ?'odd':'even'}"
 																	style="overflow-x: scroll;">
 																	<h:outputText value="#{empty _uri ? _uri : _uri}" />
-																	<h:outputText value="&#160;" />
+																	<gluuext:spacer width="8px"/>
 																	<div>
-																		<a4j:commandLink
-																			styleClass="glyphicon glyphicon-remove"
+																		<b:commandLink ajax="true"
+																			icon="glyphicon glyphicon-remove"
 																			style="margin-top:-20px; float:right;"
 																			action="#{_clientAction.removeClaimRedirectURI(_uri)}"
-																			execute="@this" render="selectedClaimRedirectURIIsId"
-																			eventsQueue="clientQueue">
+																			process="@this" update="@form:selectedClaimRedirectURIIsId"/>
 																			<!-- <h:graphicImage value="/img/remove.gif" /> -->
-																		</a4j:commandLink>
 																	</div>
 																</div>
 															</div>
 															<br />
-														</a4j:repeat>
-														<p:spacer height="16" />
-														<a4j:commandButton
+														</ui:repeat>
+														<gluuext:spacer height="16" />
+														<b:commandButton
 															styleClass="btn btn-primary AddClaimRedirectUriButton"
 															style="margin-top:5px"
 															value="#{msgs['clientForm.addClaimRedirectURI']}"
-															oncomplete="#{rich:component('claimRedirectUri:inputText')}.show();"
-															execute="@this" eventsQueue="clientQueue" />
+															oncomplete="$('.claimRedirectUriClass').modal('show');"
+															ajax="true" process="@this"/>
 													</h:panelGroup>
 												</h:panelGroup>
 											</b:panel>
@@ -1036,27 +1010,26 @@
 												render="#{_clientAction.claims.size() > 0}">
 												<h:panelGroup id="selectedClaimsId">
 													<h:panelGroup>
-														<a4j:repeat value="#{_clientAction.claims}"
-															rowKeyVar="_claimIdx" var="_claim"
-															iterationStatusVar="loop">
+														<ui:repeat value="#{_clientAction.claims}"
+															var="_claim"
+															varStatus="_claimStatus">
 															<div class="row-fluid">
 																<div class="#{(loop.index % 2 == 0) ? 'odd' : 'even'}"
 																	style="overflow-x: scroll;">
 																	<h:outputText value="#{_claim.displayName}" />
-																	<h:outputText value="&#160;" />
+																	<gluuext:spacer width="8px"/>
 																	<div>
-																		<a4j:commandLink
-																			styleClass="glyphicon glyphicon-remove"
+																		<b:commandLink ajax="true"
+																			icon="glyphicon glyphicon-remove"
 																			style="margin-top: -20px; float:right;"
 																			action="#{_clientAction.removeClaim(_claim.inum)}"
-																			execute="@this" render="selectedClaimsId"
-																			eventsQueue="clientQueue"></a4j:commandLink>
+																			process="@this" update="@form:selectedClaimsId"/>
 																	</div>
 																</div>
 															</div>
 															<br />
-														</a4j:repeat>
-														<p:spacer height="16" />
+														</ui:repeat>
+														<gluuext:spacer height="16" />
 													</h:panelGroup>
 												</h:panelGroup>
 											</ox:decorate>
@@ -1065,32 +1038,31 @@
 												<h:panelGroup id="ResourcesUrlsId">
 													<h:panelGroup columns="1" width="100%" border="0"
 														cellpadding="0" cellspacing="0">
-														<a4j:repeat value="#{_clientAction.resources}"
-															rowKeyVar="_urisIdx" var="_uri" iterationStatusVar="loop">
+														<ui:repeat value="#{_clientAction.resources}"
+															var="_uri" varStatus="_uriStatus">
 															<div class="row-fluid">
-																<div class="#{(loop.index % 2 == 0) ?'odd':'even'}"
+																<div class="#{(_uriStatus.index % 2 == 0) ?'odd':'even'}"
 																		style="overflow-x: scroll;">
 																<h:link 
 																	outcome="/uma/resource/modifyResource.htm?resource=#{_uri.id}" 
 																	value="#{_uri.name}">
 																</h:link>
 																	
-																	<h:outputText value="&#160;" />
+																	<gluuext:spacer width="8px"/>
 																	<div>
-																		<a4j:commandLink
-																			styleClass="glyphicon glyphicon-remove"
+																		<b:commandLink ajax="true"
+																			icon="glyphicon glyphicon-remove"
 																			style="margin-top:-20px; float:right;"
 																			action="#{_clientAction.removeClientResource(_uri.id)}"
-																			execute="@this"  render="ResourcesUrlsId"
-																			eventsQueue="clientQueue">
+																			process="@this"  update="@form:ResourcesUrlsId">
 																			<!-- <h:graphicImage value="/img/remove.gif" /> -->
-																		</a4j:commandLink>
+																		</b:commandLink>
 																	</div>
 																</div>
 															</div>
 															<br />
-														</a4j:repeat>
-														<p:spacer height="16" />
+														</ui:repeat>
+														<gluuext:spacer height="16" />
 														
 													</h:panelGroup>
 												</h:panelGroup>
@@ -1331,8 +1303,7 @@
 															value="#{_clientAction.searchAvailableCustomScriptsforPostAuthn()}" 
 															var="script" 
 															itemLabel="#{script.name}"
-															itemValue="#{script.dn}"
-															/>
+															itemValue="#{script.dn}"/>
 													</h:selectOneMenu>
 									</ox:decorate>
 									<ox:decorate id="spontaneousScopeScripts" label="#{msgs['clientForm.spontaneousScopeScripts']}"
@@ -1346,8 +1317,7 @@
 															value="#{_clientAction.searchAvailableCustomScriptsforSpontaneousScope()}" 
 															var="script" 
 															itemLabel="#{script.name}"
-															itemValue="#{script.dn}"
-															/>
+															itemValue="#{script.dn}"/>
 													</h:selectOneMenu>
 									</ox:decorate>
 									<ox:decorate id="introspectionScripts" label="#{msgs['clientForm.introspectionScripts']}"
@@ -1361,8 +1331,7 @@
 															value="#{_clientAction.searchAvailableCustomScriptsforintrospection()}" 
 															var="script" 
 															itemLabel="#{script.name}"
-															itemValue="#{script.dn}"
-															/>
+															itemValue="#{script.dn}"/>
 													</h:selectOneMenu>
 									</ox:decorate>
 								</div>								
@@ -1376,51 +1345,6 @@
 			</div>
 		</b:panel>
 	</h:form>
-	<ox:selectSelectableEntityDialog
-		acceptMethod="#{_clientAction.acceptRptClaimsScripts}"
-		cancelMethod="#{_clientAction.cancelRptClaimsScripts}"
-		displayNameProperty="entity.description" displaySearchForm="false"
-		id="rptClaimsDialog" label="#{msgs['clientForm.rptClaimsScripts']}"
-		nameProperty="entity.name" render="selectedRptClaimsScriptsId"
-		searchMethod="#{_clientAction.searchAvailableRptClaimsCustomScripts}"
-		searchResult="#{_clientAction.availableRptClaimsScripts}" />
-	<ox:selectSelectableEntityDialog
-		acceptMethod="#{_clientAction.acceptPostAuthnScripts}"
-		cancelMethod="#{_clientAction.cancelPostAuthnScripts}"
-		displayNameProperty="entity.description" displaySearchForm="false"
-		id="postAuthnDialog" label="#{msgs['clientForm.postAuthnScripts']}"
-		nameProperty="entity.name" render="selectedPostAuthnScriptsId"
-		searchMethod="#{_clientAction.searchAvailablePostAuthnCustomScripts}"
-		searchResult="#{_clientAction.availablePostAuthnScripts}" />
-	<ox:selectSelectableEntityDialog
-		acceptMethod="#{_clientAction.acceptConsentScripts}"
-		cancelMethod="#{_clientAction.cancelConsentScripts}"
-		displayNameProperty="entity.description" displaySearchForm="false"
-		id="consentDialog"
-		label="#{msgs['clientForm.consentGatheringScripts']}"
-		nameProperty="entity.name" render="selectedConsentScriptsId"
-		searchMethod="#{_clientAction.searchAvailableConsentCustomScripts}"
-		searchResult="#{_clientAction.availableConsentScripts}" />
-
-	<ox:selectSelectableEntityDialog
-		acceptMethod="#{_clientAction.acceptSpontaneousScopesScripts}"
-		cancelMethod="#{_clientAction.cancelSpontaneousScopesScripts}"
-		displayNameProperty="entity.description" displaySearchForm="false"
-		id="spontaneousScopeDialog"
-		label="#{msgs['clientForm.spontaneousScopeScripts']}"
-		nameProperty="entity.name"
-		render="selectedSpontaneousScopeScriptDnsId"
-		searchMethod="#{_clientAction.searchAvailableSpontaneousScopeScripts}"
-		searchResult="#{_clientAction.availableSpontaneousScripts}" />
-	<ox:selectSelectableEntityDialog
-		acceptMethod="#{_clientAction.acceptIntrospectionScripts}"
-		cancelMethod="#{_clientAction.cancelIntrospectionScripts}"
-		displayNameProperty="entity.description" displaySearchForm="false"
-		id="introspectionDialog"
-		label="#{msgs['clientForm.introspectionScripts']}"
-		nameProperty="entity.name" render="selectedIntrospectionScriptsId"
-		searchMethod="#{_clientAction.searchAvailableIntrospectionCustomScripts}"
-		searchResult="#{_clientAction.availableIntrospectionScripts}" />
 	<script>
 	    $('#oidctab a').click(function(e) {
 		  e.preventDefault();

@@ -22,11 +22,11 @@
 				<ui:define name="controlButttons">
 					<div id="updateButtons">
 						<b:commandButton action="#{updateGroupAction.save}"
-						     ajax="true" update="@form"
+							ajax="true" update="@form"
 							styleClass="btn btn-primary" value="Add" />
-						<b:commandButton action="#{updateGroupAction.cancel}"
-							immediate="true" style="margin-left: 5px;"
-							 ajax="true" update="@form"
+						<h:commandButton action="#{updateGroupAction.cancel}"
+							immediate="true"
+							style="margin-left: 5px;"
 							styleClass="btn btn-primary" value="Cancel" />
 					</div>
 				</ui:define>
@@ -34,7 +34,7 @@
 			<ox:selectMemberDialog
 				acceptMethod="#{updateGroupAction.acceptSelectMembers}"
 				cancelMethod="#{updateGroupAction.cancelSelectMembers}" id="member"
-				render="selectedMembersId"
+				render="groupForm:selectedMembersId"
 				searchMethod="#{updateGroupAction.searchAvailableMembers}"
 				searchPattern="#{updateGroupAction.searchAvailableMemberPattern}"
 				searchResult="#{updateGroupAction.availableMembers}" />

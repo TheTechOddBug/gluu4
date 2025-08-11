@@ -4,8 +4,7 @@
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:b="http://bootsfaces.net/ui"
 	xmlns:ox="http://xmlns.jcp.org/jsf/composite/ox"
-	xmlns:rich="http://richfaces.org/rich"
-	xmlns:richext="http://xmlns.jcp.org/jsf/composite/richext"
+	xmlns:gluuext="http://xmlns.jcp.org/jsf/composite/gluuext"
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	template="/WEB-INF/incl/layout/newtemplate.xhtml">
@@ -47,7 +46,7 @@
 								style="margin-left:5px !important;"
 								value="#{msgs['sectorIdentifier.addSectorIdentifiers']}"
 								includeViewParams="false" />
-							<p:spacer height="16" />
+							<gluuext:spacer height="16" />
 							<h:form>
 								<ox:decorate hideLabel="true" id="searchPattern">
 									<h:inputText
@@ -62,7 +61,7 @@
 										value="#{msgs['sectorIdentifier.search']}" iconAwesome="fa-search"/>
 								</ox:decorate>
 							</h:form>
-							<p:spacer height="16" />
+							<gluuext:spacer height="16" />
 							<h:form id="sectorIdentifiersFormId">
 								<b:dataTable id="sectorIdentifierListId"
 									style="text-align:center;width:100%;"

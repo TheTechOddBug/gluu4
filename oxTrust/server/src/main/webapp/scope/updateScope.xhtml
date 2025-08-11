@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:a4j="http://richfaces.org/a4j"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:b="http://bootsfaces.net/ui"
 	xmlns:ox="http://xmlns.jcp.org/jsf/composite/ox"
-	xmlns:rich="http://richfaces.org/rich"
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	template="/WEB-INF/incl/layout/newtemplate.xhtml">
 	<f:metadata>
@@ -56,8 +54,8 @@
 								styleClass="btn btn-primary updateScopeButtonId" ajax="true" update="@form"
 								onclick="saveScopeAttributes()"
 								value="#{msgs['scope.update']}" />
-							<a4j:commandButton ajaxSingle="true" eventsQueue="scopeQueue"
-								onclick="#{rich:component('deleteConfirmation:acceptRemovalModalPanel')}.show();"
+							<b:commandButton ajax="true" look="primary"
+								oncomplete="$('.deleteConfirmationClass').modal('show')"
 								rendered="#{not _new}" style="margin-left:3px;"
 								styleClass="btn btn-primary" value="#{msgs['scope.delete']}" />
 							<b:commandButton action="#{updateScopeAction.cancel}"
@@ -71,12 +69,12 @@
 					acceptMethod="#{updateScopeAction.acceptSelectClaims}"
 					cancelMethod="#{updateScopeAction.cancelSelectClaims}" id="claim"
 					label="#{msgs['scope.addClaim']}" queue="scopeQueue"
-					render="selectedClaimsId"
+					render="scopeForm:selectedClaimsId"
 					searchMethod="#{updateScopeAction.searchAvailableClaims}"
 					searchPattern="#{updateScopeAction.searchAvailableClaimPattern}"
 					searchResult="#{updateScopeAction.availableClaims}" />
 				<ox:acceptRemovalDialog deleteMethod="#{updateScopeAction.delete}"
-					id="deleteConfirmation" queue="scopeQueue" subject="scope"
+					dialogId="deleteConfirmation" queue="scopeQueue" subject="scope"
 					value="#{updateScopeAction.scope.displayName}" />
 			</h:panelGroup>
 		</section>

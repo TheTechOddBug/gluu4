@@ -4,9 +4,8 @@
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:a4j="http://richfaces.org/a4j" xmlns:b="http://bootsfaces.net/ui"
-	xmlns:rich="http://richfaces.org/rich"
-	xmlns:richext="http://xmlns.jcp.org/jsf/composite/richext"
+	xmlns:b="http://bootsfaces.net/ui"
+	xmlns:gluuext="http://xmlns.jcp.org/jsf/composite/gluuext"
 	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
 
 	<h:panelGrid columns="2" id="saml2aq" columnClasses="half,half"
@@ -16,19 +15,12 @@
 		<ui:param name="_profileConfigurationSelected"
 			value="#{_relyingPartyAction.getProfileConfiguration('SAML2AttributeQuery')}" />
 
-		<rich:panel id="SAML2AttributeQueryDescription"
-			bodyClass="inpanelBody">
-			<f:facet name="header">
-				<h:outputText
-					value="#{msgs['trustmanager.saml2AttributeQueryProfileHelp']}" />
-			</f:facet>
+		<b:panel id="SAML2AttributeQueryDescription" look="primary" iconAwesome="fa-th-large" collapsible="false"
+        	title="#{msgs['trustmanager.saml2AttributeQueryProfileHelp']}" styleClass="inpanelBody">
             #{msgs['trustmanager.thisProfileConfigurationEnablesAndConfigures']}
-        </rich:panel>
-		<rich:panel id="SAML2AttributeQueryMenu" bodyClass="inpanelBody">
-			<f:facet name="header">
-				<h:outputText
-					value="#{msgs['trustmanager.saml2AttributeQueryProfileConfiguration']}" />
-			</f:facet>
+        </b:panel>
+		<b:panel id="SAML2AttributeQueryMenu" look="primary" iconAwesome="fa-th-large" collapsible="false"
+        	title="#{msgs['trustmanager.saml2AttributeQueryProfileConfiguration']}" styleClass="inpanelBody">
 			<h:panelGrid columns="2">
 				<h:outputText value="#{msgs['trustmanager.assertionLifetime']} " />
 				<b:touchSpin col-md="6" min="0" max="2147483647"
@@ -93,15 +85,15 @@
 				<h:outputText
 					value="#{_profileConfigurationSelected.profileConfigurationCertFileName}"
 					rendered="#{not empty _profileConfigurationSelected.profileConfigurationCertFileName}" />
-				<a4j:commandLink
+				<b:commandLink ajax="true"
 					action="#{_profileConfigurationSelected.setProfileConfigurationCertFileName('')}"
-					limitRender="true" render="SAML2AttributeQueryMenu"
+					limitRender="true" update="@form:SAML2AttributeQueryMenu"
 					rendered="#{not empty _profileConfigurationSelected.profileConfigurationCertFileName}"
-					execute="@this">
+					process="@this">
 					<h:graphicImage value="/img/remove.gif" />
-				</a4j:commandLink>
+				</b:commandLink>
 			</h:panelGrid>
 
-		</rich:panel>
+		</b:panel>
 	</h:panelGrid>
 </ui:composition>

@@ -4,8 +4,7 @@
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:b="http://bootsfaces.net/ui" xmlns:a4j="http://richfaces.org/a4j"
-	xmlns:rich="http://richfaces.org/rich"
+	xmlns:b="http://bootsfaces.net/ui"
 	xmlns:ox="http://xmlns.jcp.org/jsf/composite/ox"
 	xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions">
 	<h:form>
@@ -68,12 +67,11 @@
 								itemValue="#{_type}" />
 						</h:selectManyListbox>
 						<ui:fragment rendered="#{not _attributeAction.canEdit()}">
-							<a4j:repeat value="#{_attribute.editType}" var="_type"
-								rowKeyVar="_idx">
+							<ui:repeat value="#{_attribute.editType}" var="_type" varStatus="_editTypeStatus">
 								<h:outputText value="#{_type.displayName}" />
 								<h:outputText value=", "
-									rendered="#{_idx lt fn:length(_attribute.editType) - 1}" />
-							</a4j:repeat>
+									rendered="#{_editTypeStatus.index lt fn:length(_attribute.editType) - 1}" />
+							</ui:repeat>
 						</ui:fragment>
 					</ox:decorate>
 					<ox:decorate id="viewType" rendered="#{_attributeAction.canEdit()}"
@@ -86,12 +84,11 @@
 								itemValue="#{_type}" />
 						</h:selectManyListbox>
 						<ui:fragment rendered="#{not _attributeAction.canEdit()}">
-							<a4j:repeat value="#{_attribute.viewType}" var="_type"
-								rowKeyVar="_idx">
+							<ui:repeat value="#{_attribute.viewType}" var="_type" varStatus="_viewTypeStatus">
 								<h:outputText value="#{_type.displayName}" />
 								<h:outputText value=", "
-									rendered="#{_idx lt fn:length(_attribute.viewType) - 1}" />
-							</a4j:repeat>
+									rendered="#{_viewTypeStatus.index lt fn:length(_attribute.viewType) - 1}" />
+							</ui:repeat>
 						</ui:fragment>
 					</ox:decorate>
 					<ox:decorate id="usageType" label="#{msgs['attribute.usageType']}">
@@ -104,12 +101,11 @@
 								itemValue="#{_type}" />
 						</h:selectManyListbox>
 						<ui:fragment rendered="#{not _attributeAction.canEdit()}">
-							<a4j:repeat value="#{_attribute.usageType}" var="_type"
-								rowKeyVar="_idx">
+							<ui:repeat value="#{_attribute.usageType}" var="_type" varStatus="_usageTypeStatus">
 								<h:outputText value="#{_type.displayName}" />
 								<h:outputText value=", "
-									rendered="#{_idx lt fn:length(_attribute.usageType) - 1}" />
-							</a4j:repeat>
+									rendered="#{_usageTypeStatus.index lt fn:length(_attribute.usageType) - 1}" />
+							</ui:repeat>
 						</ui:fragment>
 					</ox:decorate>
 					<ox:decorate id="multivalued"
@@ -118,7 +114,7 @@
 							value="#{_attribute.oxMultiValuedAttribute}" id="multivaluedId"
 							styleClass="form-control multivaluedField"
 							disabled="#{not _attributeAction.canEdit() or _attributeAction.persistenceType eq 'sql'}">
-							<a4j:ajax event="click" render="validation" />
+							<f:ajax event="click" render="validation" />
 						</h:selectBooleanCheckbox>
 					</ox:decorate>
 					<ox:decorate
@@ -146,7 +142,7 @@
 							id="scimExtendedAttributeId"
 							styleClass="form-control scimExtendedAttributeField"
 							disabled="#{not _attributeAction.canEdit()}">
-							<a4j:ajax event="click" render="validation" />
+							<f:ajax event="click" render="validation" />
 						</h:selectBooleanCheckbox>
 						<h:outputText style="margin-left:5px;"
 							value="Signals whether this attribute is part of the SCIM user extension or not." />
@@ -168,7 +164,7 @@
 							value="#{_attributeAction.validationToggle}"
 							id="validationToggleId" styleClass="enableCustomValidationValue"
 							disabled="#{not _attributeAction.canEdit()}">
-							<a4j:ajax event="click" render="validation" />
+							<f:ajax event="click" render="validation" />
 						</h:selectBooleanCheckbox>
 					</ox:decorate>
 					<h:panelGroup id="validation">
@@ -189,7 +185,7 @@
 						<h:selectBooleanCheckbox value="#{_attributeAction.tooltipToggle}"
 							id="tooltipToggleId" styleClass="enableTooltipField"
 							disabled="#{not _attributeAction.canEdit()}">
-							<a4j:ajax event="click" render="tooltip" />
+							<f:ajax event="click" render="tooltip" />
 						</h:selectBooleanCheckbox>
 					</ox:decorate>
 					<h:panelGroup id="tooltip">

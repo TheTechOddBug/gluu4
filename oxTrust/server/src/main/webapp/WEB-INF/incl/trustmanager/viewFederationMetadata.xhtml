@@ -4,24 +4,18 @@
     xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
     xmlns:f="http://xmlns.jcp.org/jsf/core"
     xmlns:h="http://xmlns.jcp.org/jsf/html"
-    xmlns:a4j="http://richfaces.org/a4j"
-    xmlns:rich="http://richfaces.org/rich"
-    xmlns:richext="http://xmlns.jcp.org/jsf/composite/richext"
+    xmlns:b="http://bootsfaces.net/ui"
+    xmlns:gluuext="http://xmlns.jcp.org/jsf/composite/gluuext"
     xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
 
     <h:outputStylesheet>
         .dr-mpnl-pnl {overflow:auto!important}
     </h:outputStylesheet>
 
-    <rich:popupPanel id="spMetadataPanel" onmaskclick="#{rich:component('spMetadataPanel')}.hide()" keepVisualState="true" width="500" height="500"
-        rendered="#{not empty joinFederationAction.metadata}">
-        <f:facet name="controls">
-            <h:graphicImage value="/img/close.gif" styleClass="hidelink" style="cursor:pointer" onclick="#{rich:component('spMetadataPanel')}.hide(); return false;" />
-        </f:facet>
-
+    <b:modal id="spMetadataPanel" styleClass="spMetadataPanelClass" rendered="#{not empty joinFederationAction.metadata}" size="modal-xl">
         <pre>
             <h:outputText value="#{joinFederationAction.metadata}" />
         </pre>
-        <a4j:commandButton value="#{msgs['trustmanager.back']}" onclick="#{rich:component('spMetadataPanel')}.hide()" />
-    </rich:popupPanel>
+        <b:commandButton ajax="true" look="primary" value="#{msgs['trustmanager.back']}" oncomplete="$('.spMetadataPanelClass').modal('hide');"/>
+    </b:modal>
 </ui:composition>

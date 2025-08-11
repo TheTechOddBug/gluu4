@@ -3,10 +3,9 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:pp="http://primefaces.org/ui"
-                xmlns:rich="http://richfaces.org/rich"
-                xmlns:h="http://xmlns.jcp.org/jsf/html"
-                xmlns:a4j="http://richfaces.org/a4j" xmlns:b="http://bootsfaces.net/ui"
-                xmlns:richext="http://xmlns.jcp.org/jsf/composite/richext"
+                          xmlns:h="http://xmlns.jcp.org/jsf/html"
+				xmlns:b="http://bootsfaces.net/ui"
+                xmlns:gluuext="http://xmlns.jcp.org/jsf/composite/gluuext"
                 xmlns:gluufn="http://www.gluu.org/jsf/functions"
                 xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
                 xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions"
@@ -67,29 +66,28 @@
 
 
                         </script>
-                        <a4j:repeat id="L"
+                        <ui:repeat id="L"
                                     value="#{_customAttributeAction.customAttributes}"
-                                    var="_custAttr" rowKeyVar="_custAttrIdx">
+                                    var="_custAttr" varStatus="_custAttrIdx">
                             <h:panelGroup rendered="#{_custAttr.metadata != null}" id="mF">
                                 <ui:param name="_mandatory" value="#{_custAttr.mandatory}"/>
                                 <ui:param name="_mustEnter" value="#{_mandatory}"/>
-                                <a4j:repeat id="IL" value="#{_custAttr.values}" var="_value"
-                                            rowKeyVar="_valueIdx">
+                                <ui:repeat id="IL" value="#{_custAttr.values}" var="_value" varStatus="_valueStatus">
                                     <f:event type="postValidate"
                                              listener="#{_customAttributeAction.validateAttributeValues}"/>
                                     <ui:param name="_aid"
                                               value="#{_customAttributeAction.attributeIds[_custAttr.metadata]}"/>
                                     <ox:decorate id="D"
-                                                 label="#{_custAttr.metadata.displayName eq 'Gender, male or female' ? 'Gender' : _custAttr.metadata.displayName } #{_valueIdx == 0 ? '' : _valueIdx}"
+                                                 label="#{_custAttr.metadata.displayName eq 'Gender, male or female' ? 'Gender' : _custAttr.metadata.displayName } #{_valueStatus.index == 0 ? '' : _valueStatus.index}"
                                                  rendered="#{(_custAttr.adminCanEdit or _mustEnter) and (_custAttr.metadata.displayName ne 'Password') and (_custAttr.metadata.name ne 'oxTrustActive')}"
                                                  leftClass="col-sm-3" rightClass="col-sm-9">
                                         <div class="col-xs-10" id="attributeID">
                                             <h:inputText
                                                     styleClass="form-control #{_custAttr.metadata.displayName}"
-                                                    p:placeholder="#{msgs['person.clickToEnter']} #{_custAttr.metadata.displayName} #{_valueIdx == 0 ? '' : _valueIdx}"
-                                                    style="width:100%" value="#{_custAttr.values[_valueIdx]}"
+                                                    p:placeholder="#{msgs['person.clickToEnter']} #{_custAttr.metadata.displayName} #{_valueStatus.index == 0 ? '' : _valueStatus.index}"
+                                                    style="width:100%" value="#{_custAttr.values[_valueStatus.index]}"
                                                     id="custId_text_#{_custAttrIdx}" require="#{_mustEnter}"
-                                                    requiredMessage="#{msgs['person.pleaseEnter']} #{_custAttr.metadata.displayName} #{_valueIdx == 0 ? '' : _valueIdx}. "
+                                                    requiredMessage="#{msgs['person.pleaseEnter']} #{_custAttr.metadata.displayName} #{_valueStatus.index == 0 ? '' : _valueStatus.index}. "
                                                     validator="gluuAttributeValidator" autocomplete="off"
                                                     rendered="#{(_custAttr.adminCanEdit or _mustEnter) and
 			                                                            (_custAttr.metadata.dataType.value ne 'boolean') and 
@@ -100,7 +98,7 @@
 			                                                            (_custAttr.metadata.displayName ne 'User Status') and 
 			                                                            (_custAttr.metadata.displayName ne 'Birthdate')}">
 
-                                                <rich:validator event="blur"/>
+                                                <f:ajax event="blur" />
                                             </h:inputText>
                                             <b:message
                                                     rendered="#{(_custAttr.adminCanEdit or _mustEnter) and
@@ -114,7 +112,7 @@
                                             <h:inputText
                                                     styleClass="form-control #{_custAttr.metadata.displayName}"
                                                     p:placeholder="#{msgs['person.clickToEnter']} email"
-                                                    style="width:100%" value="#{_custAttr.values[_valueIdx]}"
+                                                    style="width:100%" value="#{_custAttr.values[_valueStatus.index]}"
                                                     id="Email" required="#{_mustEnter}" p:type="email"
                                                     prependId="false" maxlength="100"
                                                     validator="gluuAttributeValidator" autocomplete="off"
@@ -128,7 +126,7 @@
 			                                                            (_custAttr.metadata.displayName eq 'Email')}">
                                                 <f:validateRegex
                                                 		pattern="^[a-zA-Z0-9_!#$%&amp;'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$"/>
-                                                <rich:validator event="blur"/>
+                                                <f:ajax event="blur"/>
                                             </h:inputText>
                                             <b:message
                                                     rendered="#{(_custAttr.adminCanEdit or _mustEnter) and
@@ -137,12 +135,12 @@
 			                                                            (_custAttr.metadata.displayName ne 'Gender, male or female') and
 			                                                            (_custAttr.metadata.dataType.value ne 'certificate') and
 			                                                            (_custAttr.metadata.displayName ne 'Birthdate') and
-			                                                            (_custAttr.metadata.displayName eq 'Email')}"/>
+			                                                            (_custAttr.metadata.displayName eq 'Email')}" for="Email"/>
                                             <b:dateTimePicker id="calendar" renderLabel="false"
                                                               mode="toggle-icon"
                                                               rendered="#{(_custAttr.adminCanEdit or _mustEnter) and
 			                                                            (_custAttr.metadata.displayName eq 'Birthdate')}"
-                                                              value="#{_custAttr.values[_valueIdx]}"
+                                                              value="#{_custAttr.values[_valueStatus.index]}"
                                                               format="DD.MM.YYYY">
                                                 <f:converter
                                                         converterId="org.gluu.jsf2.converter.UserDateConverter"/>
@@ -166,7 +164,7 @@
                                             </h:selectOneMenu>
                                             <h:selectOneMenu
                                                     styleClass="rounded form-control #{_custAttr.metadata.displayName}"
-                                                    value="#{_custAttr.booleanValues[_valueIdx]}"
+                                                    value="#{_custAttr.booleanValues[_valueStatus.index]}"
                                                     required="#{_mustEnter}" id="custId_boolean#{_custAttrIdx}"
                                                     rendered="#{((_custAttr.adminCanEdit or _mustEnter) and (_custAttr.metadata.dataType.value eq 'boolean') and (_custAttr.metadata.displayName ne 'User Status') and (_custAttr.metadata.name ne 'oxTrustActive')) }">
                                                 <f:selectItems
@@ -177,44 +175,44 @@
                                             </h:selectOneMenu>
                                             <h:inputTextarea cols="40" rows="3"
                                                              styleClass="form-control #{_custAttr.metadata.displayName}"
-                                                             value="#{_custAttr.values[_valueIdx]}"
+                                                             value="#{_custAttr.values[_valueStatus.index]}"
                                                              required="#{_mustEnter}"
-                                                             requiredMessage="#{msgs['person.pleaseEnter']} #{_custAttr.metadata.displayName} #{_valueIdx == 0 ? '' : _valueIdx}. "
+                                                             requiredMessage="#{msgs['person.pleaseEnter']} #{_custAttr.metadata.displayName} #{_valueStatus.index == 0 ? '' : _valueStatus.index}. "
                                                              rendered="#{(_custAttr.adminCanEdit or _mustEnter) and (_custAttr.metadata.dataType.value eq 'certificate')}">
                                             </h:inputTextarea>
                                         </div>
                                         <h:outputText value="&#160;"/>
                                         <div class="col-xs-2" style="margin-top: -15px;">
-                                            <a4j:commandLink
+                                            <b:commandLink ajax="true"
                                                     action="#{_customAttributeAction.removeCustomAttribute(_custAttr.metadata.inum)}"
-                                                    render="selectedCustomAttributesId"
-                                                    styleClass="glyphicon glyphicon-remove removeAttributeButton iconButtonRemove"
+                                                    update="PForm:selectedCustomAttributesId"
+                                                    icon="glyphicon glyphicon-remove removeAttributeButton iconButtonRemove"
                                                     onbegin="changeAttributeVisibility('#{_aid}', true);"
                                                     rendered="#{_custAttr.adminCanEdit and not _mandatory and not _custAttr.metadata.oxMultiValuedAttribute and _custAttr.metadata.displayName ne 'Username' and _custAttr.metadata.displayName ne 'Email' and _custAttr.metadata.displayName ne 'Inum'}"
-                                                    execute="@this">
-                                            </a4j:commandLink>
-                                            <a4j:commandLink
+                                                    process="@this">
+                                            </b:commandLink>
+                                            <b:commandLink ajax="true"
                                                     action="#{_customAttributeAction.removeCustomAttribute(_custAttr.metadata.inum)}"
-                                                    render="selectedCustomAttributesId"
-                                                    styleClass="glyphicon glyphicon-remove removeAttributeButton iconButtonRemove"
+                                                    update="PForm:selectedCustomAttributesId"
+                                                    icon="glyphicon glyphicon-remove removeAttributeButton iconButtonRemove"
                                                     onbegin="changeAttributeVisibility('#{_aid}', true);"
                                                     rendered="#{_custAttr.adminCanEdit and not _mandatory and _custAttr.metadata.oxMultiValuedAttribute and fn:length(_custAttr.values) eq 1 }"
-                                                    execute="@this">
-                                            </a4j:commandLink>
-                                            <a4j:commandLink
-                                                    action="#{_customAttributeAction.removeMultiValuesInAttributes(_custAttr.metadata.inum,_mandatory,_custAttr.values[_valueIdx])}"
-                                                    render="selectedCustomAttributesId"
-                                                    styleClass="glyphicon glyphicon-remove removeMultiValueAttributeButton iconButtonRemove"
+                                                    process="@this">
+                                            </b:commandLink>
+                                            <b:commandLink ajax="true"
+                                                    action="#{_customAttributeAction.removeMultiValuesInAttributes(_custAttr.metadata.inum,_mandatory,_custAttr.values[_valueStatus.index])}"
+                                                    update="PForm:selectedCustomAttributesId"
+                                                    icon="glyphicon glyphicon-remove removeMultiValueAttributeButton iconButtonRemove"
                                                     rendered="#{_custAttr.adminCanEdit and not _mandatory and _custAttr.metadata.oxMultiValuedAttribute and fn:length(_custAttr.values) gt 1 }"
-                                                    execute="@this">
-                                            </a4j:commandLink>
-                                            <a4j:commandLink
+                                                    process="@this">
+                                            </b:commandLink>
+                                            <b:commandLink ajax="true"
                                                     action="#{_customAttributeAction.addMultiValuesInAttributes(_custAttr.metadata.inum,_mandatory)}"
-                                                    render="selectedCustomAttributesId"
-                                                    styleClass="glyphicon glyphicon-plus addMultiValueAttributeButton iconButtonAdd"
-                                                    rendered="#{_custAttr.adminCanEdit and _custAttr.metadata.oxMultiValuedAttribute and _valueIdx == 0}"
-                                                    execute="@this">
-                                            </a4j:commandLink>
+                                                    update="PForm:selectedCustomAttributesId"
+                                                    icon="glyphicon glyphicon-plus addMultiValueAttributeButton iconButtonAdd"
+                                                    rendered="#{_custAttr.adminCanEdit and _custAttr.metadata.oxMultiValuedAttribute and _valueStatus.index == 0}"
+                                                    process="@this">
+                                            </b:commandLink>
 
                                         </div>
                                     </ox:decorate>
@@ -223,20 +221,20 @@
                                             label="#{_custAttr.metadata.displayName}" leftClass="col-sm-3"
                                             rightClass="col-sm-9">
                                         <h:outputText style="margin-left:19px;"
-                                                      value="#{_custAttr.values[_valueIdx]}"
+                                                      value="#{_custAttr.values[_valueStatus.index]}"
                                                       rendered="#{not (_custAttr.adminCanEdit or _mustEnter) and (_custAttr.metadata.displayName ne 'memberOf')}"/>
                                         <h:outputText style="margin-left:19px;"
-                                                      value="#{updatePersonAction.getGroupName(_custAttr.values[_valueIdx])}"
+                                                      value="#{updatePersonAction.getGroupName(_custAttr.values[_valueStatus.index])}"
                                                       rendered="#{not (_custAttr.adminCanEdit or _mustEnter) and (_custAttr.metadata.displayName eq 'memberOf')}"/>
                                         <h:outputText value="&#160;"/>
-                                        <a4j:commandLink
+                                        <b:commandLink ajax="true"
                                                 action="#{_customAttributeAction.removeCustomAttribute(_custAttr.metadata.inum)}"
-                                                render="selectedCustomAttributesId"
+                                                update="PForm:selectedCustomAttributesId"
                                                 onbegin="changeAttributeVisibility('#{_aid}', true);"
                                                 rendered="#{_custAttr.adminCanEdit and not _mandatory}"
-                                                execute="@this">
+                                                process="@this">
                                             <h:graphicImage value="/img/remove.gif"/>
-                                        </a4j:commandLink>
+                                        </b:commandLink>
                                     </ox:decorate>
                                     <ox:decorate label="#{msgs['person.password']}" id="P"
                                                  rendered="#{(_custAttr.adminCanEdit or _mustEnter) and (_custAttr.metadata.displayName eq 'Password')}"
@@ -250,7 +248,7 @@
                                                     id="custpasswordId" require="#{_mustEnter}"
                                                     requiredMessage="Password is required" autocomplete="off"
                                                     rendered="#{(_custAttr.adminCanEdit or _mustEnter) and (_custAttr.metadata.displayName eq 'Password')}">
-                                                <rich:validator event="blur"/>
+                                                <f:ajax event="blur" />
                                             </h:inputSecret>
                                             <h:graphicImage value="/img/eye.png" id="viewPassword"
                                                             styleClass="FirstPasswordFieldShow"
@@ -276,7 +274,7 @@
                                                            requiredMessage="Confirm password is required"
                                                            autocomplete="off"
                                                            rendered="#{(_custAttr.adminCanEdit or _mustEnter) and (_custAttr.metadata.displayName eq 'Password')}">
-                                                <rich:validator event="blur"/>
+                                                <f:ajax event="blur" />
                                             </h:inputSecret>
                                             <h:graphicImage value="/img/eye.png"
                                                             styleClass="SecondPasswordFieldShow"
@@ -290,9 +288,9 @@
                                             <b:message/>
                                         </div>
                                     </ox:decorate>
-                                </a4j:repeat>
+                                </ui:repeat>
                             </h:panelGroup>
-                        </a4j:repeat>
+                        </ui:repeat>
                     </h:panelGroup>
                 </div>
                 <div class="col-sm-5 col-lg-5" style="padding: 0px;">
@@ -311,16 +309,16 @@
                                             <div>
                                                 <ui:param name="_aid"
                                                           value="#{_customAttributeAction.attributeIds[attr]}"/>
-                                                <a4j:commandLink p:aid="#{_aid}" value="#{attr.displayName}"
+                                                <b:commandLink ajax="true" p:aid="#{_aid}" value="#{attr.displayName}"
                                                                  action="#{_customAttributeAction.addCustomAttribute(attr.inum)}"
-                                                                 render="selectedCustomAttributesId"
+                                                                 update="PForm:selectedCustomAttributesId"
                                                                  oncomplete="changeAttributeVisibility('${component.clientId}', false);"
                                                                  style="#{_customAttributeAction.containsCustomAttribute(attr) ? 'display: none;' : ''}"
-                                                                 execute="@this">
+                                                                 process="@this">
                                                     <f:event
                                                             listener="#{_customAttributeAction.renderAttribute}"
                                                             type="preRenderComponent"/>
-                                                </a4j:commandLink>
+                                                </b:commandLink>
                                             </div>
                                         </ui:fragment>
                                     </ui:repeat>
@@ -342,13 +340,13 @@
                                  select="true" responsive="true" searching="false">
                         <b:dataTableColumn label="ID">
                             <h:panelGroup id="U2fPanelid">
-                                <a4j:commandLink id="u2fConfig"
+                                <b:commandLink ajax="true" id="u2fConfig"
                                                  action="#{updatePersonAction.fetchFidoRecord(_value.id)}"
                                                  value="#{_value.id}"
                                                  rendered="#{(not _value.id.contains(':')) and (_value.modality ne 'OTP Device') and ( _value.modality ne 'FIDO2') and ( _value.modality ne 'Mobile Device') and ( _value.modality ne 'Passport')}"
-                                                 render=":U2fPanel"
-                                                 oncomplete="#{rich:component('U2fPanel')}.show();"
-                                                 execute="@this"/>
+                                                 update=":U2fPanel"
+                                                 oncomplete="$('.U2fPanelClass').modal('show');"
+                                                 process="@this"/>
                             </h:panelGroup>
                             <h:panelGroup id="NoU2fPanelid"
                                           rendered="#{(_value.modality eq 'OTP Device') or ( _value.modality eq 'Mobile Device')}">
@@ -368,12 +366,12 @@
                         <b:dataTableColumn value="#{_value.creationDate}"
                                            label="Date Added"/>
                         <b:dataTableColumn label="Remove">
-                            <a4j:commandLink render="PForm"
+                            <b:commandLink ajax="true" update="PForm"
                                              action="#{updatePersonAction.setDeviceToBeRemove(_value)}"
-                                             onclick="#{rich:component('deleteDevice:acceptRemovalModalPanel')}.show();"
-                                             execute="@this" eventsQueue="personQueue"
-                                             styleClass="glyphicon glyphicon-remove">
-                            </a4j:commandLink>
+                                             oncomplete="$('.deleteDeviceClass').modal('show')"
+                                             process="@this" eventsQueue="personQueue"
+                                             icon="glyphicon glyphicon-remove">
+                            </b:commandLink>
                         </b:dataTableColumn>
                     </b:dataTable>
                 </b:panel>
@@ -390,12 +388,12 @@
                                 label="Client"/>
                         <b:dataTableColumn value="#{_value.sp}" label="Hostname"/>
                         <b:dataTableColumn label="Actions">
-                            <a4j:commandLink value="Remove" render="PForm"
-                                             onclick="#{rich:component('deletePairWise:acceptRemovalModalPanel')}.show();"
+                            <b:commandLink ajax="true" value="Remove" update="PForm"
+                                             oncomplete="$('.acceptRemovalModalPanelClass').modal('show')"
                                              action="#{updatePersonAction.setPwiToBeRemove(_value)}"
-                                             execute="@this" eventsQueue="personQueue"
-                                             styleClass="btn-primary">
-                            </a4j:commandLink>
+                                             process="@this" eventsQueue="personQueue"
+                                             icon="btn-primary">
+                            </b:commandLink>
                         </b:dataTableColumn>
                     </b:dataTable>
                 </b:panel>

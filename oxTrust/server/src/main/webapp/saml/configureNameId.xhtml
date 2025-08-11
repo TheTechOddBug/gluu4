@@ -3,8 +3,7 @@
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-	xmlns:b="http://bootsfaces.net/ui" xmlns:a4j="http://richfaces.org/a4j"
-	xmlns:rich="http://richfaces.org/rich"
+	xmlns:b="http://bootsfaces.net/ui"
 	xmlns:ox="http://xmlns.jcp.org/jsf/composite/ox"
 	template="/WEB-INF/incl/layout/newtemplate.xhtml">
 	<f:metadata>
@@ -32,19 +31,22 @@
 			<b:panel title="NameIds" look="primary" iconAwesome="fa-list"
 				collapsible="false">
 				<div id="formArea">
-					<h:form>
+					<h:form id="nameIdFormId">
 						<div class="row" style="padding-left: 5px; padding-right: 5px;">
-							<a4j:region>
-								<rich:dataGrid id="nameIdConfigsId"
+							<h:panelGroup id="nameIdConfigsRegionId">
+								<ui:repeat id="nameIdConfigsId"
 									value="#{configureNameIdAction.nameIdConfigs}"
-									var="_nameIdConfig" columns="1" style="width: 100%;" border="0"
-									columnClasses="noBorder">
+									var="_nameIdConfig" varStatus="_nameIdConfigStatus">
+									<h:panelGroup layout="block" style="width: 100%;" border="0" stylelasses="noBorder">
 									<div style="display: inline-block; width: 100% !important;">
 										<h:panelGroup layout="block" style="border-raduis:5px;"
 											class="card-body #{_nameIdConfig.nameIdType eq null ? 'NewNamedID' : _nameIdConfig.nameIdType}">
-											<a4j:commandLink value="Delete NameId"
-												onclick="#{rich:component('deleteConfirmation:acceptRemovalModalPanel')}.show();"
-												execute="@region"
+											<ox:acceptRemovalDialog dialogId="deleteConfirmation#{_nameIdConfigStatus.index}"
+												subject="nameId" value="#{_nameIdConfig.nameIdType}"
+												deleteMethod="#{configureNameIdAction.removeNameIdConfig(_nameIdConfig)}"
+												render="@parent:@parent:@parent:@parent:@parent:@parent:@parent:@parent" />
+											<b:commandLink ajax="true" value="Delete NameId"
+												oncomplete="$('.deleteConfirmation#{_nameIdConfigStatus.index}Class').modal('show')"
 												styleClass="btn btn-danger deleteNameIDButton" />
 											<h:panelGroup layout="block" class="form-script">
 												<div class="form-group">
@@ -78,28 +80,25 @@
 											</h:panelGroup>
 										</h:panelGroup>
 									</div>
-									<ox:acceptRemovalDialog id="deleteConfirmation"
-										subject="nameId" value="#{_nameIdConfig.nameIdType}"
-										deleteMethod="#{configureNameIdAction.removeNameIdConfig(_nameIdConfig)}"
-										render="nameIdConfigsId" />
-								</rich:dataGrid>
-							</a4j:region>
+								</h:panelGroup>
+								</ui:repeat>
+							</h:panelGroup>
 							<h:panelGroup layout="block" styleClass="addConfig">
-								<a4j:commandLink styleClass="btn btn-primary addConfigButton"
+								<b:commandLink ajax="true" styleClass="btn btn-primary addConfigButton"
 									style="font-size:13px !important;"
 									value="#{msgs['nameId.addNameIdConfiguration']}"
 									action="#{configureNameIdAction.addNameIdConfig()}"
-									render="nameIdConfigsId" execute="@region" />
+									update="nameIdFormId:nameIdConfigsRegionId" process="@form:nameIdConfigsRegionId" />
 							</h:panelGroup>
 						</div>
 						<div id="updateButtons" style="margin: 10px;margin-top: 20px;">
-							<h:commandButton styleClass="btn btn-primary"
+							<b:commandButton ajax="true" styleClass="btn btn-primary"
 								value="#{msgs['nameId.update']}"
-								action="#{configureNameIdAction.save}" />
-							<h:commandButton styleClass="btn btn-success"
+								action="#{configureNameIdAction.save}" update="@form:nameIdConfigsRegionId" process="@form:nameIdConfigsRegionId"/>
+							<b:commandButton styleClass="btn btn-success"
 								value="#{msgs['nameId.cancel']}"
-								action="#{configureNameIdAction.cancel}" immediate="true"
-								style="margin-left:5px" />
+								action="#{configureNameIdAction.cancel}"
+								style="margin-left:5px" update="@form:nameIdConfigsRegionId" process="@form:nameIdConfigsRegionId"/>
 						</div>
 					</h:form>
 				</div>

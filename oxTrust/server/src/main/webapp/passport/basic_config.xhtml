@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:a4j="http://richfaces.org/a4j"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
-	xmlns:b="http://bootsfaces.net/ui" xmlns:p="http://primefaces.org/ui"
+	xmlns:b="http://bootsfaces.net/ui"
+	xmlns:p="http://primefaces.org/ui"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:ox="http://xmlns.jcp.org/jsf/composite/ox"
-	xmlns:rich="http://richfaces.org/rich"
-	xmlns:richext="http://xmlns.jcp.org/jsf/composite/richext"
+	xmlns:gluuext="http://xmlns.jcp.org/jsf/composite/gluuext"
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	template="/WEB-INF/incl/layout/newtemplate.xhtml">
 	<f:metadata>
@@ -54,7 +53,7 @@
 														style="width:100%" required="true"
 														value="#{passportConfigurationAction.configuration.serverURI}"
 														id="ServerURIId" rendered="true">
-														<rich:validator event="blur" />
+														<f:ajax event="blur"/>
 													</h:inputText>
 												</ox:decorate>
 											</div>
@@ -84,7 +83,7 @@
 													style="width:100%" required="true"
 													value="#{passportConfigurationAction.configuration.postProfileEndpoint}"
 													id="PostProfileEndpointID">
-													<rich:validator event="blur" />
+													<f:ajax event="blur"/>
 												</h:inputText>
 											</ox:decorate>
 										</div>
@@ -95,7 +94,7 @@
 												<h:inputText styleClass="rounded form-control SpTLSCertID"
 													id="SpTLSCertID" style="width:100%" required="true"
 													value="#{passportConfigurationAction.configuration.spTLSCert}">
-													<rich:validator event="blur" />
+													<f:ajax event="blur"/>
 												</h:inputText>
 											</ox:decorate>
 										</div>
@@ -107,7 +106,7 @@
 													styleClass="rounded form-control text-centered SpTLSCertKeyID"
 													id="SpTLSCertKeyID" style="width:100%" required="true"
 													value="#{passportConfigurationAction.configuration.spTLSKey}">
-													<rich:validator event="blur" />
+													<f:ajax event="blur"/>
 												</h:inputText>
 											</ox:decorate>
 										</div>
@@ -156,7 +155,7 @@
 																	style="width:100%"
 																	value="#{passportConfigurationAction.configuration.logging.activeMQConf.host}"
 																	id="MQServerHostID" rendered="true">
-																	<rich:validator event="blur" />
+																	<f:ajax event="blur"/>
 																</h:inputText>
 															</ox:decorate>
 															<ox:decorate id="MQServerHostPortID"
@@ -185,7 +184,7 @@
 																	style="width:100%"
 																	value="#{passportConfigurationAction.configuration.logging.activeMQConf.username}"
 																	id="UserNameID">
-																	<rich:validator event="blur" />
+																	<f:ajax event="blur"/>
 																</h:inputText>
 															</ox:decorate>
 															<ox:decorate
@@ -196,7 +195,7 @@
 																	style="width:100%"
 																	value="#{passportConfigurationAction.configuration.logging.activeMQConf.password}"
 																	id="PasswordID">
-																	<rich:validator event="blur" />
+																	<f:ajax event="blur"/>
 																</h:inputText>
 															</ox:decorate>
 														</div>

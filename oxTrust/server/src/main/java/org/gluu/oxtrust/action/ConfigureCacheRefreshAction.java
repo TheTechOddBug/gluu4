@@ -120,6 +120,9 @@ public class ConfigureCacheRefreshAction
 	@Inject
 	private ConfigurationFactory configurationFactory;
 
+	@Inject
+	private PasswordValidationAction passwordValidationAction;
+
 	private boolean cacheRefreshEnabled;
 	private int cacheRefreshEnabledIntervalMinutes;
 
@@ -581,6 +584,12 @@ public class ConfigureCacheRefreshAction
 	}
 
 	public void updateBindPassword() {
+		String pwd = passwordValidationAction.getPassword();
+
+		if (StringHelper.isEmpty(pwd) || (this.activeLdapConfig == null)) {
+			return;
+		}
+
 		if (this.activeLdapConfig == null) {
 			return;
 		}
@@ -590,6 +599,12 @@ public class ConfigureCacheRefreshAction
 		} catch (EncryptionException ex) {
 			log.error("Failed to encrypt password", ex);
 		}
+		
+		facesMessages.add(FacesMessage.SEVERITY_INFO, "Bind password successfully changed!");
+	}
+
+	public void cancelBindPassword() {
+		passwordValidationAction.reset();
 	}
 
 	@Override

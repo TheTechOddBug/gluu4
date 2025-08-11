@@ -4,9 +4,8 @@
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:a4j="http://richfaces.org/a4j" xmlns:b="http://bootsfaces.net/ui"
-	xmlns:rich="http://richfaces.org/rich"
-	xmlns:richext="http://xmlns.jcp.org/jsf/composite/richext"
+	xmlns:b="http://bootsfaces.net/ui"
+	xmlns:gluuext="http://xmlns.jcp.org/jsf/composite/gluuext"
 	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
 
 	<h:panelGrid columns="2" id="RequiredValidUntilFilter"
@@ -17,24 +16,18 @@
 		<ui:param name="_metadataFilterSelected"
 			value="#{_metadataFiltersAction.getMetadataFilter('requiredValidUntil')}" />
 
-		<rich:panel id="RequiredValidUntilFilterDescription"
-			bodyClass="inpanelBody">
-			<f:facet name="header">
-				<h:outputText value="RequiredValidUntil Filter help" />
-			</f:facet>
+		<b:panel look="primary" iconAwesome="fa-th-large" collapsible="false" id="RequiredValidUntilFilterDescription"
+			title="RequiredValidUntil Filter help" styleClass="inpanelBody">
             #{msgs['trustmanager.thisMetadataFilterRequiresThePresence']}
-        </rich:panel>
-		<rich:panel id="RequiredValidUntilFilterMenu" bodyClass="inpanelBody">
-			<f:facet name="header">
-				<h:outputText
-					value="#{msgs['trustmanager.requiredValidUntilFilter']}" />
-			</f:facet>
+        </b:panel>
+		<b:panel look="primary" iconAwesome="fa-th-large" collapsible="false" id="RequiredValidUntilFilterMenu"
+			title="#{msgs['trustmanager.requiredValidUntilFilter']}" styleClass="inpanelBody">
 			<h:panelGrid>
 				<h:outputText
 					value="#{msgs['trustmanager.enterMaxValidatyInternal']}" />
 				<b:touchSpin col-md="6" min="0" max="2147483647"
 					value="#{_metadataFilterSelected.maxValidityInterval}" step="86400" />
 			</h:panelGrid>
-		</rich:panel>
+		</b:panel>
 	</h:panelGrid>
 </ui:composition>

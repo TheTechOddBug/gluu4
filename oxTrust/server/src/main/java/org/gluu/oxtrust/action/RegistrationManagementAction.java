@@ -182,7 +182,13 @@ public class RegistrationManagementAction implements SimpleCustomPropertiesListM
 		conversationService.endConversation();
 		return OxTrustConstants.RESULT_SUCCESS;
 	}
-	
+	public String lookupAttributeData(String str){
+		GluuAttribute attribute = attributeService.getAttributeByName(attributeName);
+		attributeData = "Uid:\t" +  attributeName;
+		attributeData += "<br/>Description:\t" +  attribute.getDescription();
+		attributeData += "<br/>Origin:\t" +  attribute.getOrigin();
+		return OxTrustConstants.RESULT_SUCCESS;
+	}
 	public String lookupAttributeData(){
 		GluuAttribute attribute = attributeService.getAttributeByName(attributeName);
 		attributeData = "Uid:\t" +  attributeName;

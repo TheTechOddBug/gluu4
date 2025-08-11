@@ -403,7 +403,7 @@ public class UpdateGroupAction implements Serializable {
 				Boolean slaManager = isSLAManager(organizationGroups, person);
 				person.setSLAManager(slaManager);
 			}
-			List<String> personMemberOf = person.getMemberOf();
+			List<String> personMemberOf = new ArrayList<String>(person.getMemberOf());
 			personMemberOf.remove(groupDn);
 			person.setMemberOf(personMemberOf);
 			personService.updatePerson(person);

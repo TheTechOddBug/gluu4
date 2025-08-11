@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:a4j="http://richfaces.org/a4j"
 	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:b="http://bootsfaces.net/ui"
 	xmlns:ox="http://xmlns.jcp.org/jsf/composite/ox"
-	xmlns:richext="http://xmlns.jcp.org/jsf/composite/richext"
-	xmlns:rich="http://richfaces.org/rich"
+	xmlns:gluuext="http://xmlns.jcp.org/jsf/composite/gluuext"
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
 	xmlns:p="http://primefaces.org/ui"
@@ -69,7 +67,7 @@
 											styleClass="headertext" value="#{msgs['profile.myProfile']}">
 											<f:param value="#{organizationService.getOrgName()}" />
 										</h:outputFormat>
-										<p:spacer width="5" />
+										<gluuext:spacer width="5" />
 										<h:panelGroup id="configureListing">
 											<h:commandButton execute="@this" limitRender="true" type="button"
 												oncomplete="PF('configureListingOptions').show();"
@@ -82,8 +80,7 @@
 										value="#{userProfileAction.mandatoryAttributes}" />
 									<h:messages errorStyle="color:red;"  />
 									<h:panelGroup id="selectedCustomAttributesId">
-										<a4j:repeat rowKeyVar="_custAttrIdx"
-											value="#{_customAttributes}" var="_custAttr">
+										<ui:repeat value="#{_customAttributes}"  var="_custAttr" varStatus="_custAttrStatus">
 											<ui:param name="_aid"
 												value="#{customAttributeAction.attributeIds[_custAttr]}" />
 											<ui:param name="_mandatory"
@@ -100,7 +97,7 @@
 														rendered="#{_custAttr.userCanEdit and _custAttr.metadata.displayName ne 'Gender, male or female' and (_custAttr.metadata.displayName ne 'Email') and  permissionService.hasPermission(configurationService.configuration, 'profile_management')}"
 														value="#{_custAttr.value}"
 														validator="gluuAttributeValidator">
-                                                		<rich:validator event="blur"/>
+                                                		<f:ajax event="blur"/>
 												</h:inputText>
 												<h:inputText tabindex="1"
 														defaultLabel="click to enter #{_custAttr.metadata.displayName}"
@@ -111,7 +108,7 @@
 														validator="gluuAttributeValidator">
 														<f:validateRegex 
                                                         pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]"/>
-                                                		<rich:validator event="blur"/>
+                                                		<f:ajax event="blur"/>
 												</h:inputText>
 													<h:selectOneMenu value="#{_custAttr.value}"
 														styleClass="rounded form-control" tabindex="1"
@@ -124,31 +121,30 @@
 														value="#{_custAttr.value}" />
 													<h:outputText value=" " />
 												</div>
-												<a4j:commandLink
+												<b:commandLink ajax="true"
 													action="#{customAttributeAction.removeCustomAttribute(_custAttr.metadata.inum)}"
 													limitRender="true"
 													onbeforedomupdate="changeAttributeVisibility('#{_aid}', true);"
-													render="selectedCustomAttributesId"
+													update="selectedCustomAttributesId"
 													rendered="#{_custAttr.userCanEdit and (not _mandatory) and permissionService.hasPermission(configurationService.configuration, 'profile_management')}"
-													styleClass="glyphicon glyphicon-remove" execute="@this">
-												</a4j:commandLink>
+													icon="glyphicon glyphicon-remove" process="@this">
+												</b:commandLink>
 											</ox:decorate>
 											<ox:decorate
 												label="#{_custAttr.metadata.displayName eq 'Gender, male or female' ? 'Gender' : _custAttr.metadata.displayName }  "
 												rendered="#{_custAttr.userCanAccess and _custAttr.isMultiValued()}"
 												template="/WEB-INF/incl/layout/#{_custAttr.userCanEdit  ? 'edit' : 'view'}.xhtml">
-												<a4j:repeat value="#{_custAttr.values}" var="_item"
-													rowKeyVar="index">
+												<ui:repeat value="#{_custAttr.values}" var="_item" varStatus="_index">
 													<div class="col-sm-11" tabindex="0">
-														<h:outputText value="#{_custAttr.values[index]}" />
+														<h:outputText value="#{_custAttr.values[_index.status]}" />
 														<h:outputText value=" " />
 													</div>
-												</a4j:repeat>
+												</ui:repeat>
 											</ox:decorate>
-										</a4j:repeat>
+										</ui:repeat>
 									</h:panelGroup>
 								</h:panelGroup>
-								<p:spacer height="16" />
+								<gluuext:spacer height="16" />
 							</h:panelGroup>
 						</b:panel>
 					</h:panelGroup>
@@ -160,20 +156,19 @@
 							look="primary">
 							<div style="height: 400px; overflow-y: auto;">
 								<ul class="sidebar-menu">
-									<a4j:repeat value="#{customAttributeAction.attributes}"
-										var="attr">
+									<ui:repeat value="#{customAttributeAction.attributes}" var="_attr" varStatus="_attrStatus">
 										<ui:param name="_aid"
-											value="#{customAttributeAction.attributeIds[attr]}" />
+											value="#{customAttributeAction.attributeIds[_attr]}" />
 										<li class="treeview"
-											pt:id="#{customAttributeAction.attributeIds[attr]}"><a4j:commandLink
+											pt:id="#{customAttributeAction.attributeIds[_attr]}"><b:commandLink ajax="true"
 												action="#{customAttributeAction.addCustomAttribute(attr.inum)}"
 												pt:aid="#{_aid}"
 												oncomplete="changeAttributeVisibility('${component.clientId}', false);"
-												render="selectedCustomAttributesId"
+												update="selectedCustomAttributesId"
 												style="#{customAttributeAction.containsCustomAttribute(attr) ? 'display: none;' : ''}"
-												value="#{attr.displayName}" execute="@this">
-											</a4j:commandLink></li>
-									</a4j:repeat>
+												value="#{attr.displayName}" process="@this">
+											</b:commandLink></li>
+									</ui:repeat>
 								</ul>
 							</div>
 						</b:panel>
@@ -185,11 +180,11 @@
 						rendered="#{permissionService.hasPermission(configurationService.configuration, 'profile_management')}"
 						styleClass="btn btn-success changeUserPasswordButton"
 						value="#{msgs['profile.changePassword']}" />
-					<p:spacer width="10" height="10" />	
+					<gluuext:spacer width="10px" height="10px"/>	
 					<h:commandButton action="#{userProfileAction.update}"
 						rendered="#{permissionService.hasPermission(configurationService.configuration, 'profile_management')}"
 						styleClass="btn btn-success updateProfileButton" value="Update" />
-					<p:spacer width="10" height="10" />	
+					<gluuext:spacer width="10px" height="10px"/>	
 					<h:commandButton action="#{userProfileAction.cancel}"
 						immediate="true"
 						rendered="#{permissionService.hasPermission(configurationService.configuration, 'profile_management')}"
@@ -197,12 +192,12 @@
 				</div>
 			</h:form>
 		</section>
-		<ox:changePasswordDialog
+		<ox:changePasswordDialog id="personPassword"
 			label="#{msgs['profile.changePassword']}"
-			password="#{userPasswordAction.newPassword}"
-			person="#{userProfileAction.person}"
-			setPasswordMethod="#{userPasswordAction.update}"
+			setPasswordMethod="#{passwordValidationAction.storeNewPassword(userProfileAction.person, true)}"
+			cancelPasswordMethod="#{passwordValidationAction.reset}"
 			validatorBinding="#{passwordValidationAction.graphValidator}"
 			verifyOldPassword="true" />
+			
 	</ui:define>
 </ui:composition>

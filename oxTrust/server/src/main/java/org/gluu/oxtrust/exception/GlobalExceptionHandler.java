@@ -26,7 +26,13 @@ public class GlobalExceptionHandler extends ExceptionHandlerWrapper {
 
     private ExceptionHandler wrapped;
 
+	private boolean showJsfErrors = false;
+
     GlobalExceptionHandler(ExceptionHandler exception) {
+		String enableJsfErrors = System.getProperties().getProperty("gluu.enable.jsf.errors");
+		if ((enableJsfErrors != null) && Boolean.valueOf(enableJsfErrors)) {
+			this.showJsfErrors  = true;
+		}
         this.wrapped = exception;
     }
 
@@ -38,6 +44,7 @@ public class GlobalExceptionHandler extends ExceptionHandlerWrapper {
     public void handle() throws FacesException {
         final Iterator<ExceptionQueuedEvent> i = getUnhandledExceptionQueuedEvents().iterator();
 
+        boolean renderResponse = true;
         while (i.hasNext()) {
             ExceptionQueuedEvent event = i.next();
             ExceptionQueuedEventContext context = (ExceptionQueuedEventContext) event.getSource();
@@ -55,12 +62,19 @@ public class GlobalExceptionHandler extends ExceptionHandlerWrapper {
                     storeRequestURI();
                     performRedirect(externalContext, "/login.htm");
 				} else {
-					log.debug(t.getMessage(), t);
-					performRedirect(externalContext, "/error.htm");
+					if (this.showJsfErrors) {
+						renderResponse = false;
+					} else {
+						log.debug(t.getMessage(), t);
+						performRedirect(externalContext, "/error.htm");				}
+					}
+				if (renderResponse) {
+					fc.renderResponse();
 				}
-                fc.renderResponse();
             } finally {
-                i.remove();
+            	if (renderResponse) {
+            		i.remove();
+            	}
             }
         }
         getWrapped().handle();

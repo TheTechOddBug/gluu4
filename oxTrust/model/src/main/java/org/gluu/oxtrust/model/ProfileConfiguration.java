@@ -143,7 +143,7 @@ public class ProfileConfiguration implements Serializable {
 	
 	public List<String> getNameIDFormatPrecedenceList() {
 		if (this.nameIDFormatPrecedence != null) 
-			this.nameIDFormatPrecedenceList = Arrays.asList(nameIDFormatPrecedence.split(DELIMITER));
+			this.nameIDFormatPrecedenceList = new ArrayList<String>(Arrays.asList(nameIDFormatPrecedence.split(DELIMITER)));
 		return nameIDFormatPrecedenceList;
 	}
 

@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:a4j="http://richfaces.org/a4j"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:ox="http://xmlns.jcp.org/jsf/composite/ox"
 	xmlns:b="http://bootsfaces.net/ui"
-	xmlns:rich="http://richfaces.org/rich"
-	xmlns:richext="http://xmlns.jcp.org/jsf/composite/richext"
+	xmlns:gluuext="http://xmlns.jcp.org/jsf/composite/gluuext"
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	template="/WEB-INF/incl/layout/newtemplate.xhtml"
 	xmlns:p="http://primefaces.org/ui">
@@ -50,14 +48,12 @@
 							outcome="/trustmanager/addTrustRelationship"
 							value="#{msgs['trustmanager.addRelationship']}" propagation="none"
 							includeViewParams="false" />
-						<p:spacer height="50" />
-						<a4j:region>
-							<h:form>
-								<a4j:poll action="#{trustRelationshipInventoryAction.search()}"
-									enabled="true" id="poll" interval="30000"
-									render="poll, relationshipstable" />
-							</h:form>
-						</a4j:region>
+						<gluuext:spacer height="50" />
+						<h:form>
+							<b:poll action="#{trustRelationshipInventoryAction.search()}"
+								stop="false" id="poll" interval="30000"
+								update="trustRelationsshipList:relationshipstable" />
+						</h:form>
 						<div class="row">
 							<h:form>
 								<ox:decorate hideLabel="true" id="searchPattern">

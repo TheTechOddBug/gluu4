@@ -5,9 +5,8 @@
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:b="http://bootsfaces.net/ui" xmlns:a4j="http://richfaces.org/a4j"
-	xmlns:rich="http://richfaces.org/rich"
-	xmlns:richext="http://xmlns.jcp.org/jsf/composite/richext">
+	xmlns:b="http://bootsfaces.net/ui"
+	xmlns:gluuext="http://xmlns.jcp.org/jsf/composite/gluuext">
 
 	<h:panelGrid columns="2" id="saml2logout" columnClasses="half,half"
 		width="100%"
@@ -16,16 +15,12 @@
 		<ui:param name="_profileConfigurationSelected"
 			value="#{_relyingPartyAction.getProfileConfiguration('SAML2Logout')}" />
 
-		<rich:panel id="SAML2LogoutDescription" bodyClass="inpanelBody">
-			<f:facet name="header">
-				<h:outputText value="SAML 2 Logout Profile Help" />
-			</f:facet>
+		<b:panel id="SAML2LogoutDescription" look="primary" iconAwesome="fa-th-large" collapsible="false"
+        	title="SAML 2 Logout Profile Help" styleClass="inpanelBody">
             #{msgs['trustmanager.thisProfileConfiguration']}
-        </rich:panel>
-		<rich:panel id="SAML2LogoutMenu" bodyClass="inpanelBody">
-			<f:facet name="header">
-				<h:outputText value="SAML 2 Logout Profile Configuration" />
-			</f:facet>
+        </b:panel>
+		<b:panel id="SAML2LogoutMenu" look="primary" iconAwesome="fa-th-large" collapsible="false"
+        	title="SAML 2 Logout Profile Configuration" styleClass="inpanelBody">
 			<h:panelGrid columns="2">
 				<h:outputText value="#{msgs['trustmanager.assertionLifetime']} " />
 				<p:spinner id="assertionLifetimeSpinner"
@@ -80,15 +75,15 @@
 				<h:outputText
 					value="#{_profileConfigurationSelected.profileConfigurationCertFileName}"
 					rendered="#{not empty _profileConfigurationSelected.profileConfigurationCertFileName}" />
-				<a4j:commandLink
+				<b:commandLink ajax="true"
 					action="#{_profileConfigurationSelected.setProfileConfigurationCertFileName('')}"
-					limitRender="true" render="SAML2LogoutMenu"
+					limitRender="true" update="@form:SAML2LogoutMenu"
 					rendered="#{not empty _profileConfigurationSelected.profileConfigurationCertFileName}"
-					execute="@this">
+					process="@this">
 					<h:graphicImage value="/img/remove.gif" />
-				</a4j:commandLink>
+				</b:commandLink>
 			</h:panelGrid>
 
-		</rich:panel>
+		</b:panel>
 	</h:panelGrid>
 </ui:composition>

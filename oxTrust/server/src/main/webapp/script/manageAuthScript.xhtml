@@ -2,16 +2,16 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:b="http://bootsfaces.net/ui"
 	xmlns:ox="http://xmlns.jcp.org/jsf/composite/ox"
-	xmlns:a4j="http://richfaces.org/a4j"
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	template="/WEB-INF/incl/layout/newtemplate.xhtml">
 
 	<f:metadata>
 		<f:viewAction action="#{conversationService.initConversation}" />
-		<f:viewAction action="#{manageCustomScriptAction.initAcrs}"
+		<f:viewAction action="#{manageAuthScriptAction.initAcrs}"
 			onPostback="false" />
-		<f:viewAction action="#{manageCustomScriptAction.modify}"
+		<f:viewAction action="#{manageAuthScriptAction.modify}"
 			onPostback="false" />
 	</f:metadata>
 	<ui:define name="head">
@@ -33,16 +33,16 @@
 		<section class="content">
 			<div id="formArea">
 				<ui:decorate
-					template="/WEB-INF/incl/script/customScriptListForm.xhtml">
-					<ui:param name="_action" value="#{manageCustomScriptAction}" />
+					template="/WEB-INF/incl/script/customScriptListAuthForm.xhtml">
+					<ui:param name="_action" value="#{manageAuthScriptAction}" />
 					<ui:define name="controlButttons">
 						<div id="updateButtons" style="margin-top: 10px;">
-							<a4j:commandButton action="#{manageCustomScriptAction.save}"
+							<b:commandButton look="primary" action="#{manageAuthScriptAction.save}"
+								ajax="true" update="@form"
 								styleClass="btn btn-success"
-								oncomplete="document.location.reload(true);"
 								value="#{msgs['customScript.update']}" />
-							<h:commandButton action="#{manageCustomScriptAction.cancel}"
-								immediate="true" onclick="document.location.reload();"
+							<h:commandButton action="#{manageAuthScriptAction.cancel}"
+								immediate="true"
 								style="margin-left:5px !important;" styleClass="btn btn-success"
 								value="#{msgs['customScript.cancel']}" />
 						</div>

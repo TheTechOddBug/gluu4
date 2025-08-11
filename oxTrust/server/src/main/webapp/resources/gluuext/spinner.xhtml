@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:b="http://bootsfaces.net/ui"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:cc="http://xmlns.jcp.org/jsf/composite">
+
+<cc:interface>
+	<cc:attribute name="id" required="true" type="java.lang.String" />
+	<cc:attribute name="height" default="0" type="java.lang.Integer" />
+</cc:interface>
+
+<cc:implementation>
+	<span class="#{cc.attrs.id}Spinner" style="display: none;">
+		<b:spinner name="cog" size="1x" color="e" />
+	</span>
+	<h:outputScript>
+				jsf.ajax.addOnEvent(function (data) {
+			        if (data.status === 'begin') {
+			        	$('.#{cc.attrs.id}Spinner').show();
+			        }
+			        if (data.status === 'complete') {
+			        	$('.#{cc.attrs.id}Spinner').hide();
+			        }
+			    });
+			</h:outputScript>
+</cc:implementation>
+</html>

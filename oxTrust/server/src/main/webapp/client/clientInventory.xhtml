@@ -3,9 +3,8 @@
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:ox="http://xmlns.jcp.org/jsf/composite/ox"
-	xmlns:rich="http://richfaces.org/rich"
-	xmlns:b="http://bootsfaces.net/ui" xmlns:a4j="http://richfaces.org/a4j"
-	xmlns:richext="http://xmlns.jcp.org/jsf/composite/richext"
+	xmlns:b="http://bootsfaces.net/ui"
+	xmlns:gluuext="http://xmlns.jcp.org/jsf/composite/gluuext"
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	template="/WEB-INF/incl/layout/newtemplate.xhtml">
 	<f:metadata>
@@ -88,11 +87,9 @@
 															onchange="displayButton();" value="#{clt.selected}" />
 													</b:dataTableColumn>
 												</b:dataTable>
-												<a4j:commandButton ajaxSingle="true" id="deleteId"
-													eventsQueue="clientQueue"
-													onclick="#{rich:component('deleteConfirmation:acceptRemovalModalPanel')}.show();"
-													styleClass="btn btn-primary DeleteBulkClients"
-													style="float:left;margin-left :3px;" value="Delete" />
+												<b:commandButton id="deleteId" ajax="true" process="@form:clientsListId"
+													oncomplete="$('.deleteConfirmationClass').modal('show')"
+													styleClass="btn btn-primary DeleteBulkClients" style="float:left;margin-left :3px;"  value="Delete"/>
 											</h:form>
 										</div>
 									</div>
@@ -106,12 +103,12 @@
 				</div>
 				<ox:acceptRemovalDialog
 					deleteMethod="#{searchClientAction.deleteClients}"
-					render="oidcClientsTable" id="deleteConfirmation"
-					queue="clientQueue" subject="client" value="all selected clients" />
+					render="oidcClientsTable" dialogId="deleteConfirmation"
+					subject="client" value="all selected clients" />
 		<h:outputScript> 
 	    	function displayButton() {  	
 		    	var selectedIds = $("input[id$=selectId]:checked");
-		    	deleteBtn = $("input[id$=deleteId]");
+		    	deleteBtn = $('[id*="deleteId"]');
 		    	
 		    	if (selectedIds.length == 0) {
 		    		deleteBtn.attr("disabled", "disabled");
