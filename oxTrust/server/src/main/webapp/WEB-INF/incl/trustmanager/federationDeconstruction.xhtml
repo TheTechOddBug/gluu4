@@ -32,13 +32,13 @@
                 </h:panelGrid>
             </h:form>
 
-            <h:form>
+            <h:form id="federationDeconstructionForm">
 				<ox:pickList listId="federationDeconstructionSelection" sourceList="#{federationDeconstructionAction.bulkEntities}"
 					targetList="#{federationDeconstructionAction.managedEntities}"
 					converterId="stringConverter"
 					sourceCaption="#{msgs['trustmanager.availableFederationMembers']}" targetCaption="#{msgs['trustmanager.membersSelectedForIndividualsConfiguration']}"
 					listHeight="150" listWidth="230"
-					update="federationDeconstructionConfigMenu"/>
+					update="federationDeconstructionForm:federationDeconstructionConfigMenu"/>
                 <h:panelGroup id="federationDeconstructionConfigMenu">
                     <h:panelGrid columns="2" rendered="#{federationDeconstructionAction.selectedTR ne null}">
                                 Display Name
@@ -51,7 +51,7 @@
 
                 </h:panelGroup>
                 <div id="DeconstructionUpdate">
-                    <b:commandButton ajax="true" look="primary" value="Save" action="#{federationDeconstructionAction.saveEntityList()}" update="@form:attributes"
+                    <b:commandButton ajax="true" look="primary" value="Save" action="#{federationDeconstructionAction.saveEntityList()}" update=""
                         oncomplete="$('.federationDeconstructionClass').modal('hide');" />
                     <b:commandButton ajax="true" look="primary" value="Back" oncomplete="$('.federationDeconstructionClass').modal('hide'); return false;" />
                 </div>

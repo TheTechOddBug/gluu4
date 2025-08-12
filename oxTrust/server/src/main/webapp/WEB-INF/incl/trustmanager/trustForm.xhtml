@@ -263,7 +263,7 @@ input[submit] {
 													<b:commandLink ajax="true" style="margin-left:305px;"
 														icon="glyphicon-remove"
 														action="#{_trustRelationship.setSpMetaDataFN('')}"
-														limitRender="true" update="MetadataOperations"
+														limitRender="true" update="trustForm:formTabId:MetadataOperations"
 														rendered="#{not empty _trustRelationship.spMetaDataFN}">
 													</b:commandLink>
 												</ox:decorate>
@@ -283,7 +283,7 @@ input[submit] {
 											<ox:decorate id="certUpdate"
 												rendered="#{empty _trustRelationship.spMetaDataFN}"
 												label="
-                                        #{_trustRelationship.spMetaDataSourceType.value eq 'file' ? 'Update public certificate' : 'Public certificate'}">
+													#{_trustRelationship.spMetaDataSourceType.value eq 'file' ? 'Update public certificate' : 'Public certificate'}">
 
 												<h:inputFile id="certWrapperId"
 													value="#{_trustRelationshipAction.certWrapper}"

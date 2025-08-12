@@ -15,9 +15,11 @@
     </h:outputStylesheet>
 
     <b:modal id="spMetadataPanel" styleClass="spMetadataPanelClass" rendered="#{not empty _trustRelationshipAction.metadata}" size="modal-xl">
-        <pre>
-            <h:outputText value="#{_trustRelationshipAction.metadata}" />
-        </pre>
-        <b:commandButton value="#{msgs['trustmanager.back']}" oncomplete="$('.spMetadataPanelClass').modal('hide');" />
+        <b:form>
+            <pre>
+                <h:outputText value="#{_trustRelationshipAction.metadata}" />
+            </pre>
+            <b:commandButton value="#{msgs['trustmanager.back']}" oncomplete="$('.spMetadataPanelClass').modal('hide');" />
+        </b:form>
     </b:modal>
 </ui:composition>
