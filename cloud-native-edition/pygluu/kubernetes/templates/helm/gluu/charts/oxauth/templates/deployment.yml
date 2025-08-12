@@ -73,15 +73,15 @@ spec:
         env:
         - name: GLUU_JAVA_OPTIONS
           value: {{ include "oxauth.customJavaOptions" . | trim }}
-          {{- include "oxauth.usr-envs" . | indent 12 }}
-          {{- include "oxauth.usr-secret-envs" . | indent 12 }}
+        {{- include "oxauth.usr-envs" . | indent 8 }}
+        {{- include "oxauth.usr-secret-envs" . | indent 8 }}
         {{- if or (eq .Values.global.storageClass.provisioner "kubernetes.io/aws-ebs") (eq .Values.global.storageClass.provisioner "openebs.io/local") ( .Values.customScripts) }}
         command:
           - /bin/sh
           - -c
           - |
               {{- with .Values.customScripts }}
-              {{- toYaml . | replace "- " "" | nindent 14}}
+              {{- toYaml . | replace "- " "" | nindent 14 }}
               {{- end }}
               {{- if and (not .Values.global.isDomainRegistered ) (or (eq .Values.global.storageClass.provisioner "kubernetes.io/aws-ebs") (eq .Values.global.storageClass.provisioner "openebs.io/local")) }}
               /usr/bin/python3 /scripts/updatelbip.py &
@@ -103,7 +103,7 @@ spec:
             name: {{ .Release.Name }}-global-user-custom-envs
         {{- end }}
         lifecycle:
-{{- toYaml .Values.lifecycle | nindent 10 }}        
+{{- toYaml .Values.lifecycle | nindent 10 }}
         volumeMounts:
         {{- with .Values.volumeMounts }}
 {{- toYaml . | nindent 10 }}
@@ -143,7 +143,7 @@ spec:
             mountPath: "/etc/gluu/conf/couchbase_password"
             subPath: couchbase_password
           {{- if not .Values.global.istio.enabled }}
-          - name: cb-crt 
+          - name: cb-crt
             mountPath: "/etc/certs/couchbase.crt"
             subPath: couchbase.crt
           {{- end }}
@@ -210,7 +210,7 @@ spec:
           secret:
             secretName: {{ .Release.Name }}-cb-pass
         {{- if not .Values.global.istio.enabled }}
-        - name: cb-crt 
+        - name: cb-crt
           secret:
             secretName: {{ .Release.Name }}-cb-crt
         {{- end }}
@@ -220,4 +220,3 @@ spec:
           configMap:
             name: {{ .Release.Name }}-updatelbip
       {{- end }}
-      

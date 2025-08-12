@@ -60,7 +60,7 @@ spec:
       containers:
         - name: {{ include "oxd-server.name" . }}
           lifecycle:
-{{- toYaml .Values.lifecycle | nindent 12 }}          
+{{- toYaml .Values.lifecycle | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           {{- if and (and (eq .Values.global.isDomainRegistered "false") (eq .Values.global.enableSecurityContextWithNonRegisteredDomain "false" )) (or (eq .Values.global.storageClass.provisioner "kubernetes.io/aws-ebs") (eq .Values.global.storageClass.provisioner "openebs.io/local")) }}
           securityContext:
@@ -74,8 +74,8 @@ spec:
           env:
           - name: GLUU_JAVA_OPTIONS
             value: {{ include "oxd-server.customJavaOptions" . | trim }}
-            {{- include "oxd-server.usr-envs" . | indent 12 }}
-            {{- include "oxd-server.usr-secret-envs" . | indent 12 }}
+          {{- include "oxd-server.usr-envs" . | indent 10 }}
+          {{- include "oxd-server.usr-secret-envs" . | indent 10 }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           {{- if or (eq .Values.global.storageClass.provisioner "kubernetes.io/aws-ebs") (eq .Values.global.storageClass.provisioner "openebs.io/local") ( .Values.customScripts) }}
           command:
@@ -210,4 +210,3 @@ spec:
         hostnames:
         - {{ .Values.global.domain }}
       {{- end }}
-

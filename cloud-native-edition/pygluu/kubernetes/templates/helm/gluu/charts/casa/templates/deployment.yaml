@@ -65,7 +65,7 @@ spec:
       containers:
         - name: {{ include "casa.name" . }}
           lifecycle:
-{{- toYaml .Values.lifecycle | nindent 12 }}          
+{{- toYaml .Values.lifecycle | nindent 12 }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -81,8 +81,8 @@ spec:
           env:
           - name: GLUU_JAVA_OPTIONS
             value: {{ include "casa.customJavaOptions" . | trim }}
-            {{- include "casa.usr-envs" . | indent 12 }}
-            {{- include "casa.usr-secret-envs" . | indent 12 }}
+          {{- include "casa.usr-envs" . | indent 10 }}
+          {{- include "casa.usr-secret-envs" . | indent 10 }}
           {{- if or (eq .Values.global.storageClass.provisioner "kubernetes.io/aws-ebs") (eq .Values.global.storageClass.provisioner "openebs.io/local") ( .Values.customScripts) }}
           command:
             - /bin/sh
@@ -102,7 +102,7 @@ spec:
               containerPort: {{ .Values.service.port}}
               protocol: TCP
           envFrom:
-            - configMapRef: 
+            - configMapRef:
                 name: {{ .Release.Name }}-config-cm
             {{ if .Values.global.usrEnvs.secret }}
             - secretRef:

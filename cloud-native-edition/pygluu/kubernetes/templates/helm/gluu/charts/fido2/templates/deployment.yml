@@ -60,7 +60,7 @@ spec:
       containers:
       - name: {{ include "fido2.name" . }}
         lifecycle:
-{{- toYaml .Values.lifecycle | nindent 10 }}        
+{{- toYaml .Values.lifecycle | nindent 10 }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
         {{- if and (and (eq .Values.global.isDomainRegistered "false") (eq .Values.global.enableSecurityContextWithNonRegisteredDomain "false" )) (or (eq .Values.global.storageClass.provisioner "kubernetes.io/aws-ebs") (eq .Values.global.storageClass.provisioner "openebs.io/local")) }}
@@ -75,8 +75,8 @@ spec:
         env:
         - name: GLUU_JAVA_OPTIONS
           value: {{ include "fido2.customJavaOptions" . | trim }}
-          {{- include "fido2.usr-envs" . | indent 12 }}
-          {{- include "fido2.usr-secret-envs" . | indent 12 }}
+        {{- include "fido2.usr-envs" . | indent 8 }}
+        {{- include "fido2.usr-secret-envs" . | indent 8 }}
         {{- if and (eq .Values.global.isDomainRegistered "false") (or (eq .Values.global.storageClass.provisioner "kubernetes.io/aws-ebs") (eq .Values.global.storageClass.provisioner "openebs.io/local")) }}
         command:
           - /bin/sh
@@ -138,7 +138,7 @@ spec:
             mountPath: "/etc/gluu/conf/couchbase_password"
             subPath: couchbase_password
           {{- if not .Values.global.istio.enabled }}
-          - name: cb-crt 
+          - name: cb-crt
             mountPath: "/etc/certs/couchbase.crt"
             subPath: couchbase.crt
           {{- end }}
@@ -200,7 +200,7 @@ spec:
           secret:
             secretName: {{ .Release.Name }}-cb-pass
         {{- if not .Values.global.istio.enabled }}
-        - name: cb-crt 
+        - name: cb-crt
           secret:
             secretName: {{ .Release.Name }}-cb-crt
         {{- end }}
@@ -210,4 +210,3 @@ spec:
           configMap:
             name: {{ .Release.Name }}-updatelbip
       {{- end }}
-      
