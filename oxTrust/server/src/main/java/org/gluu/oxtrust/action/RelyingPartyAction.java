@@ -242,6 +242,7 @@ public class RelyingPartyAction implements Serializable {
 
 	public String updateProfileConfigurations() {
 		for (ProfileConfiguration profileConfiguration : savedProfileConfigurations) {
+			profileConfiguration.updateProfileConfiguration();
 			if (!profileConfigurationService.isProfileConfigurationPresent(trustRelationship, profileConfiguration)) {
 				this.getFileWrappers().put(profileConfiguration.getName(), new FileUploadWrapper());
 				profileConfigurationService.updateProfileConfiguration(trustRelationship, profileConfiguration);

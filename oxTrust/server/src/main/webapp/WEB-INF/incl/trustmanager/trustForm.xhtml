@@ -125,6 +125,24 @@ input[submit] {
 .ui-dialog .ui-dialog-titlebar {
 	background-color: #2e6da4 !important;
 }
+@media (min-width: 800px) {
+	.modal-xlg8 {
+		width: 800px; 
+	}
+}
+
+@media (min-width: 900px) {
+	.modal-xlg9 {
+		width: 900px; 
+	}
+}
+
+@media (min-width: 800px) {
+	.modal-xlg88 {
+		width: 800px;
+		heaight:800px; 
+	}
+}
 </style>
 		<h:form enctype="multipart/form-data" id="trustForm">
 
@@ -370,8 +388,9 @@ input[submit] {
 															styleClass="RelyingPartyConfigLink"
 															value="#{msgs['trustmanager.configureRelyingParty']}"
 															rendered="#{_trustRelationship.specificRelyingPartyConfig}"
-															onclick="$('.TRConfigPanelClass').modal('show');"
-															process="@this" />
+															proces="@this"
+															update="RelyingPartyForm:RelyingPartyMenu"
+															oncomplete="$('.TRConfigPanelClass').modal('show');"/>
 													</h:panelGroup>
 												</h:panelGrid>
 											</ox:decorate>
@@ -456,7 +475,9 @@ input[submit] {
 										id="additionalTRParams"
 										value="#{msgs['trustmanager.configureMetadataFilter']}"
 										rendered="#{(not _new) and (trustService.getTrustContainerFederation(_trustRelationship) eq null)}"
-										onclick="$('.additionalTRParamsPanelClass').modal('show');"
+										proces="@this"
+										update="MetadataFilterForm:MetadataFilterMenu"
+										oncomplete="$('.additionalTRParamsPanelClass').modal('show');"
 										process="@this" />
 									<h:panelGrid columns="1" width="100%" id="validattionLogId"
 										rendered="#{not (_new or empty _trustRelationship.validationLog)}">

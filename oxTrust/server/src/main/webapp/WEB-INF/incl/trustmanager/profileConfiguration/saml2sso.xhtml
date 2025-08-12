@@ -130,7 +130,6 @@
 			<ox:pickList listId="samlNameIdFormatPickList" sourceList="#{_relyingPartyAction.supportedNameIdFormats}"
 				targetList="#{_ssoProfile.nameIDFormatPrecedenceList}"
 				converterId="stringConverter"
-				update="@this"
 				sourceCaption="Available NamedId Formats" targetCaption="Selected NamedId Formats(in order of preference)"
 				listHeight="200" listWidth="330"/>
 		</b:formGroup>

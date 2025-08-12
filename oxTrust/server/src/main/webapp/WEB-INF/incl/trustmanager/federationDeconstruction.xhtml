@@ -51,7 +51,7 @@
 
                 </h:panelGroup>
                 <div id="DeconstructionUpdate">
-                    <b:commandButton ajax="true" look="primary" value="Save" action="#{federationDeconstructionAction.saveEntityList()}" update=""
+                    <b:commandButton ajax="true" look="primary" value="Save" action="#{federationDeconstructionAction.saveEntityList()}" update="trustForm:formTabId:FederationWizardEntitySelection"
                         oncomplete="$('.federationDeconstructionClass').modal('hide');" />
                     <b:commandButton ajax="true" look="primary" value="Back" oncomplete="$('.federationDeconstructionClass').modal('hide'); return false;" />
                 </div>

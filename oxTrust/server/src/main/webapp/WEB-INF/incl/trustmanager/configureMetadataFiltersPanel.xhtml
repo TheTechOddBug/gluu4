@@ -9,15 +9,15 @@
     xmlns:gluuext="http://xmlns.jcp.org/jsf/composite/gluuext"
     xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
 
-  <b:modal id="additionalTRParamsPanel" styleClass="additionalTRParamsPanelClass" title="#{msgs['trustmanager.metadataFiltersConfiguration']}" size="modal-xl">
+  <b:modal id="additionalTRParamsPanel" styleClass="additionalTRParamsPanelClass" title="#{msgs['trustmanager.metadataFiltersConfiguration']}" size="modal-xlg8">
 
-        <h:form>
+        <h:form id="MetadataFilterForm">
             <h:panelGrid columns="1" id="MetadataFilterMenu">
 				<ox:pickList listId="metadataFilterSelection" sourceList="#{metadataFiltersAction.availableMetadataFilters}"
 					targetList="#{metadataFiltersAction.metadataFilters}"
 					sourceCaption="#{msgs['trustmanager.availableFilter']}" targetCaption="Selected Filters"
 					converterId="metadataFilterConverter"
-					listHeight="150" listWidth="130" update="@form:MetadataFilterConfigMenu"/>
+					listHeight="150" listWidth="230" update="@form:MetadataFilterConfigMenu"/>
 
                 <h:panelGroup id="MetadataFilterConfigMenu">
                     <h:panelGroup style="overflow:auto; height: 300px; width: 520px;" layout="block" rendered="#{metadataFiltersAction.metadataFilters.size() > 0}">

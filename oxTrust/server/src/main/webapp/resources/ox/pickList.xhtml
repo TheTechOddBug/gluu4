@@ -21,7 +21,7 @@
 </cc:interface>
 
 <cc:implementation>
-	<ui:param name="_hashCode" value="#{gluufn:hashCode(cc.attrs.listId)}"/>
+	<ui:param name="_hashCode" value="#{gluufn:hashCodeName(cc.attrs.listId)}"/>
 	<b:panel id="pickListId#{_hashCode}" style="margin: 0 auto;">
 		<ui:param name="_sourceList" value="#{pickListAction.retainUnique(cc.attrs.sourceList, cc.attrs.targetList)}"/>
 		<b:row styleClass="show-grid">
@@ -68,11 +68,11 @@
 			</b:column>
 		</b:row>
 
-		<b:remoteCommand name="moveAllToTarget#{_hashCode}" action="#{pickListAction.moveAll(_sourceList, cc.attrs.targetList)}" ajax="true" process="@this" update="@form:pickListId#{_hashCode}:sourceColumnId @form:pickListId#{_hashCode}:targetColumnId #{cc.attrs.update}"/>
-		<b:remoteCommand name="moveAllToSource#{_hashCode}" action="#{pickListAction.moveAll(cc.attrs.targetList, _sourceList)}" ajax="true" process="@this" update="@form:pickListId#{_hashCode}:sourceColumnId @form:pickListId#{_hashCode}:targetColumnId #{cc.attrs.update}"/>
+		<b:remoteCommand name="moveAllToTarget#{_hashCode}" action="#{pickListAction.moveAll(_sourceList, cc.attrs.targetList)}" ajax="true" process="@this" update="@parent:pickListId#{_hashCode}:sourceColumnId @form:pickListId#{_hashCode}:targetColumnId #{cc.attrs.update}"/>
+		<b:remoteCommand name="moveAllToSource#{_hashCode}" action="#{pickListAction.moveAll(cc.attrs.targetList, _sourceList)}" ajax="true" process="@this" update="@parent:pickListId#{_hashCode}:sourceColumnId @form:pickListId#{_hashCode}:targetColumnId #{cc.attrs.update}"/>
 	
-		<b:remoteCommand name="moveToSource#{_hashCode}" action="#{pickListAction.move(cc.attrs.targetList, _sourceList)}" parameters="indexes" ajax="true" process="@this" update="@form:pickListId#{_hashCode}:sourceColumnId @form:pickListId#{_hashCode}:targetColumnId #{cc.attrs.update}"/>
-		<b:remoteCommand name="moveToTarget#{_hashCode}" action="#{pickListAction.move(_sourceList, cc.attrs.targetList)}" parameters="indexes" ajax="true" process="@this" update="@form:pickListId#{_hashCode}:sourceColumnId @form:pickListId#{_hashCode}:targetColumnId #{cc.attrs.update}"/>
+		<b:remoteCommand name="moveToSource#{_hashCode}" action="#{pickListAction.move(cc.attrs.targetList, _sourceList)}" parameters="indexes" ajax="true" process="@this" update="@parent:pickListId#{_hashCode}:sourceColumnId @form:pickListId#{_hashCode}:targetColumnId #{cc.attrs.update}"/>
+		<b:remoteCommand name="moveToTarget#{_hashCode}" action="#{pickListAction.move(_sourceList, cc.attrs.targetList)}" parameters="indexes" ajax="true" process="@this" update="@parent:pickListId#{_hashCode}:sourceColumnId @form:pickListId#{_hashCode}:targetColumnId #{cc.attrs.update}"/>
 	</b:panel>
 	
 	<h:outputScript>

@@ -29,7 +29,7 @@ public class ProfileConfiguration implements Serializable {
 	private String profileConfigurationCertFileName;
 	private String defaultAuthenticationMethod;
 	private String nameIDFormatPrecedence;
-	private List<String> nameIDFormatPrecedenceList = new ArrayList<>();
+	private List<String> nameIDFormatPrecedenceList = null;
 
 	public String getName() {
 		return name;
@@ -142,9 +142,19 @@ public class ProfileConfiguration implements Serializable {
 	}
 	
 	public List<String> getNameIDFormatPrecedenceList() {
+		if (nameIDFormatPrecedenceList != null) {
+			return nameIDFormatPrecedenceList;
+		}
+
 		if (this.nameIDFormatPrecedence != null) 
 			this.nameIDFormatPrecedenceList = new ArrayList<String>(Arrays.asList(nameIDFormatPrecedence.split(DELIMITER)));
 		return nameIDFormatPrecedenceList;
+	}
+
+	public void updateProfileConfiguration() {
+		if (nameIDFormatPrecedenceList != null) {
+			setNameIDFormatPrecedence(String.join(DELIMITER, nameIDFormatPrecedenceList));
+		}
 	}
 
 }

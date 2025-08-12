@@ -91,21 +91,17 @@ button, input[type="reset"], input[type="submit"], input[type="button"]
 	color: #FFFFFF;
 	background-color: #337AB7;
 }
-@media (min-width: 1000px) {
-   .modal-xlg {
-      width: 70%; 
-   }
-}</style>
+</style>
 	</h:head>
 	<b:modal id="TRConfigPanel" styleClass="TRConfigPanelClass"
-		title="#{msgs['trustmanager.relyingPartyConfiguration']}" size="modal-xlg">
-		<h:form>
+		title="#{msgs['trustmanager.relyingPartyConfiguration']}" size="modal-xlg9">
+		<h:form id="RelyingPartyForm">
 			<h:panelGroup id="RelyingPartyMenu" layout="block" style="margin: 10px; margin-bottom: 0px;" styleClass="row">
 				<ox:pickList listId="profileConfigurationSelection" sourceList="#{relyingPartyAction.availableProfileConfigurations}"
 					targetList="#{relyingPartyAction.profileConfigurations}"
 					sourceCaption="#{msgs['trustmanager.availableFilter']}" targetCaption="Selected Filters"
 					converterId="profileConfigurationConverter"
-					listHeight="150" listWidth="330" update="@form:ProfileConfigurationConfigMenu">
+					listHeight="150" listWidth="330" update="RelyingPartyForm:ProfileConfigurationConfigMenu">
 					<b:column>
 						<f:facet name="header">Name</f:facet>
 						#{item}

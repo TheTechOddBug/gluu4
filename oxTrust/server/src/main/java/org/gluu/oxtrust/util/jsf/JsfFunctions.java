@@ -185,5 +185,15 @@ public class JsfFunctions {
         return value.hashCode();
         
     }
+    
+    public static String hashCodeName(String value) {
+        if ((value == null) || (value.length() == 0)) {
+            return "";
+        }
+        
+        String hashCode = Long.toString(value.hashCode()).replaceAll("-", "_");
+        return hashCode;
+        
+    }
 
 }
