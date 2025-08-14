@@ -16,4 +16,4 @@ maintainers:
     email: support@gluu.org
     url: https://github.com/moabu
 icon: https://gluu.org/docs/gluu-server/favicon.ico
-appVersion: "4.5.11"
+appVersion: "4.5.12"

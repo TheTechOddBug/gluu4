@@ -1,6 +1,6 @@
 # oxauth-key-rotation
 
-![Version: 1.8.46](https://img.shields.io/badge/Version-1.8.46-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.5.11](https://img.shields.io/badge/AppVersion-4.5.11-informational?style=flat-square)
+![Version: 1.8.46](https://img.shields.io/badge/Version-1.8.46-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.5.12](https://img.shields.io/badge/AppVersion-4.5.12-informational?style=flat-square)
 
 Responsible for regenerating auth-keys per x hours
 
@@ -35,7 +35,7 @@ Kubernetes: `>=v1.22.0-0`
 | image.pullPolicy | string | `"IfNotPresent"` | Image pullPolicy to use for deploying. |
 | image.pullSecrets | list | `[]` | Image Pull Secrets |
 | image.repository | string | `"gluufederation/certmanager"` | Image  to use for deploying. |
-| image.tag | string | `"4.5.11-1"` | Image  tag to use for deploying. |
+| image.tag | string | `"4.5.12_dev"` | Image  tag to use for deploying. |
 | keysLife | int | `48` | Auth server key rotation keys life in hours. |
 | keysPushDelay | int | `0` | Delay (in seconds) before pushing private keys to Auth server |
 | keysPushStrategy | string | `"NEWER"` | Set key selection strategy after pushing private keys to Auth server (only takes effect when keysPushDelay value is greater than 0) |

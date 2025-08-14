@@ -60,7 +60,7 @@ The Kubernetes deployment of the Gluu Server, also called Cloud Native (CN) Edit
        # -- Image to use for deploying.
        repository: gluufederation/oxauth
        # -- Image  tag to use for deploying.
-       tag: 4.5.11-1
+       tag: 4.5.12_dev
        # -- Image Pull Secrets
        pullSecrets:
          - name: regcred
