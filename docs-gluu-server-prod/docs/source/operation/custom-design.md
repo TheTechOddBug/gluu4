@@ -457,7 +457,7 @@ As an example, we're going to add text to the logout form.
     1.  Run helm install or helm upgrade if Gluu has been already installed.
 
         ```bash
-        helm upgrade gluu gluu/gluu -n gluu --version=1.7.x -f values.yaml
+        helm upgrade gluu gluu/gluu -n gluu --version=1.8.x -f values.yaml
         ```
 
 === "Jackrabbit"
@@ -529,5 +529,5 @@ This guide will show examples of how to customize pages in oxShibboleth (SAML ID
     1.  Run helm install or helm upgrade if Gluu has been already installed.
 
         ```bash
-        helm upgrade gluu gluu/gluu -n gluu --version=1.7.x -f values.yaml
+        helm upgrade gluu gluu/gluu -n gluu --version=1.8.x -f values.yaml
         ```

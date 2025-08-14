@@ -60,7 +60,7 @@ The Kubernetes deployment of the Gluu Server, also called Cloud Native (CN) Edit
        # -- Image to use for deploying.
        repository: gluufederation/oxauth
        # -- Image  tag to use for deploying.
-       tag: 4.5.3-1
+       tag: 4.5.11-1
        # -- Image Pull Secrets
        pullSecrets:
          - name: regcred
@@ -349,7 +349,7 @@ Please calculate the minimum required resources as per the services deployed. Th
 
         helm repo add gluu https://gluufederation.github.io/gluu4/pygluu/kubernetes/templates/helm
         helm repo update
-        helm install gluu gluu/gluu -n <namespace> --version=1.7.x -f override-values.yaml
+        helm install gluu gluu/gluu -n <namespace> --version=1.8.x -f override-values.yaml
        ```
 
     ### EKS Helm notes
