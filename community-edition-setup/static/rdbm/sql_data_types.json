@@ -191,7 +191,7 @@
   },
   "oxValidation": {
     "mysql": {
-      "type": "TINYTEXT"
+      "type": "MEDIUMTEXT"
     },
     "pgsql": {
       "type": "TEXT"
@@ -241,11 +241,11 @@
   },
   "oxPublicKeyId": {
     "mysql": {
-      "size": 96,
+      "size": 256,
       "type": "VARCHAR"
     },
     "spanner": {
-      "size": 96,
+      "size": 256,
       "type": "STRING"
     }
   },
@@ -987,7 +987,7 @@
   },
   "document": {
     "mysql": {
-      "type": "TEXT"
+      "type": "MEDIUMTEXT"
     },
     "pgsql": {
       "type": "TEXT"
