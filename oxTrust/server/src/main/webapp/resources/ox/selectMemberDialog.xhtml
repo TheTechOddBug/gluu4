@@ -40,8 +40,7 @@
 		<h:form id="memberFormId" prepend="false">
 			<h:panelGrid id="memberPanelId" columns="1" border="0"
 				cellpadding="0" cellspacing="0" width="100%"
-				columnClasses="alignLeft"
-				style="float:left !important;width:100% !important;">
+				columnClasses="alignLeft">
 				<ox:decorate id="searchPattern" hideLabel="true">
 					<div style="float: left;">
 						<h:inputText style="float: left;width: 70%;"
@@ -52,7 +51,7 @@
 
 						<b:commandButton ajax="true" look="primary" style="float: left;margin-left: 5px;"
 							value="Search" action="#{cc.attrs.searchMethod}"
-							update="@form:memberPanelId" styleClass="btn btn-primary" />
+							update="@form:memberPanelId" process="@form:searchMemberPatternId" styleClass="btn btn-primary" />
 					</div>
 				</ox:decorate>
 

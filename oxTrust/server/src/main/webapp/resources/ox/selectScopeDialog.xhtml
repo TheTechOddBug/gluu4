@@ -47,7 +47,7 @@
 
 					<b:commandButton ajax="true" look="primary" style="margin-top:5px;"
 						styleClass="btn btn-primary" value="Search"
-						action="#{cc.attrs.searchMethod}" update="@form:scopePanelId" />
+						action="#{cc.attrs.searchMethod}" update="@form:scopePanelId" process="@form:searchScopePatternId" />
 				</ox:decorate>
 
 				<h:panelGroup id="scopeNoResultId"

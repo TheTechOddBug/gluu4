@@ -40,13 +40,13 @@
 					<div class="row" style="float: left; margin-left: 3px;">
 						<h:inputText value="#{cc.attrs.searchPattern}" size="30"
 							maxlength="30" styleClass="searchParameters form-control"
-							alt="Search parameters like Uid, Name, Display Name, E-mail" />
+							alt="Search parameters like Uid, Name, Display Name, E-mail" id="searcPatternId"/>
 					</div>
 					<div class="row"
 						style="float: left; margin-left: 20px; margin-top: -5px;">
-						<b:commandButton ajax="true" look="primary" value="Search" style="margin-top:5px;"
+						<b:commandButton look="primary" value="Search" style="margin-top:5px;"
 							styleClass="btn btn-primary searchButtonClass"
-							action="#{cc.attrs.searchMethod}" update="@form:attributePanelId" />
+							action="#{cc.attrs.searchMethod}" update="@form:attributePanelId" process="@form:searcPatternId"/>
 					</div>
 				</ox:decorate>
 				<h:panelGroup id="attributeNoResultId"

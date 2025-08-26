@@ -45,8 +45,8 @@
 						maxlength="30" id="searchGroupPatternId"
 						styleClass="searchParameters"
 						alt="Search parameters like iNum, Display Name" />
-					<b:commandButton ajax="true" look="primary" value="Search" action="#{cc.attrs.searchMethod}"
-						update="@form:groupPanelId" />
+					<b:commandButton look="primary" value="Search" action="#{cc.attrs.searchMethod}"
+						update="@form:groupPanelId" process="@form:searchGroupPatternId" />
 				</ox:decorate>
 
 				<h:panelGroup id="groupNoResultId"
