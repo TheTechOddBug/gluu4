@@ -562,6 +562,14 @@ public class UpdateClientAction implements Serializable {
     
     public void removeClientResource(String uri) {
         resourceSetService.removeResource(uri);
+        
+        for (Iterator<UmaResource> it = resources.iterator(); it.hasNext();) {
+        	UmaResource resource = it.next();
+        	if (resource.getId().equalsIgnoreCase(uri)) {
+        		it.remove();
+        		break;
+        	}
+		}
     }
     
     public void removeAdditionalAudience(String uri) {

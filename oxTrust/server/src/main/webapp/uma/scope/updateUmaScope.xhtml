@@ -45,7 +45,7 @@
 				</a></li>
 			</ol>
 		</section>
-		<h:form id="umaScopeForm">
+		<h:form id="umaScopeFormId">
 			<input type='hidden' name='cid' value='#{conversation.id}' />
 			<section class="content">
 				<h:panelGroup id="formArea" layout="block">
@@ -89,7 +89,7 @@
 													<div class="col-sm-6">
 														<b:commandLink ajax="true"
 															action="#{updateUmaScopeAction.removeAuthorizationPolicy(_authorizationPolicy)}"
-															process="@this" update="selectedAuthorizationPolicyId"
+															process="@this" update="@form:selectedAuthorizationPolicyId"
 															styleClass="glyphicon glyphicon-remove removeAuthorization">
 														</b:commandLink>
 													</div>
@@ -150,16 +150,17 @@
 							<div class="box-footer">
 								<h:panelGroup id="updateButtons" layout="block">
 									<h:commandButton action="#{updateUmaScopeAction.save}"
+										onclick="saveScopeEditor();"
 										styleClass="btn btn-primary updateScopeButtonId"
 										value="#{updateUmaScopeAction.update ? 'Update' : 'Add Scope'}" />
 									<b:commandButton ajax="true" look="primary"
-										oncomplete="$('.acceptRemovalModalPanelClass').modal('show')"
+										oncomplete="$('.deleteConfirmationClass').modal('show')"
 										rendered="#{updateUmaScopeAction.update}"
 										style="margin-left:3px;"
 										styleClass="btn btn-primary deleteScopeButtonId"
 										value="Delete" />
-									<h:commandButton action="#{updateUmaScopeAction.cancel}"
-										immediate="true" style="margin-left:3px;"
+									<b:commandButton action="#{updateUmaScopeAction.cancel}"
+										style="margin-left:3px;"
 										styleClass="btn btn-primary" value="#{msgs['uma.cancel']}" />
 								</h:panelGroup>
 							</div>
@@ -172,12 +173,12 @@
 			acceptMethod="#{updateUmaScopeAction.acceptSelectAuthorizationPolicies}"
 			cancelMethod="#{updateUmaScopeAction.cancelSelectAuthorizationPolicies}"
 			displayNameProperty="entity.description" displaySearchForm="false"
-			id="authorizationPolicy" label="#{msgs['uma.addAuthorizationPolicy']}"
-			nameProperty="entity.name" render="selectedAuthorizationPolicyId"
+			id="selectedAuthorizationPolicyId" label="#{msgs['uma.addAuthorizationPolicy']}"
+			nameProperty="entity.name" render="umaScopeFormId:selectedAuthorizationPolicyId"
 			searchMethod="#{updateUmaScopeAction.searchAvailableAuthorizationPolicies}"
 			searchResult="#{updateUmaScopeAction.availableAuthorizationPolicies}" />
 		<ox:acceptRemovalDialog deleteMethod="#{updateUmaScopeAction.delete}"
-			dialogId="deleteConfirmation" subject="scope" render="umaScopeForm"
+			dialogId="deleteConfirmation" subject="scope" render="umaScopeFormId"
 			value="#{updateUmaScopeAction.umaScope.id}" />
 	</ui:define>
 </ui:composition>

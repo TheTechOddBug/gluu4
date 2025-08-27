@@ -343,7 +343,7 @@ public class UpdateResourceAction implements Serializable {
 	}
 
 	public void addScope(Scope scope) {
-		DisplayNameEntry oneScope = new DisplayNameEntry(scope.getDn(), scope.getId(), scope.getDisplayName());
+		DisplayNameEntry oneScope = new DisplayNameEntry(scope.getDn(), scope.getInum(), scope.getDisplayName());
 		this.scopes.add(oneScope);
 	}
 

@@ -19,7 +19,7 @@
 	</f:metadata>
 
 	<ui:define name="body">
-		<h:form>
+		<h:form id="scopeDescriptionFormId">
 			<section class="content-header">
 				<h1 style="color: #333;">
 					#{msgs['uma.uma']} <small> <i class="fa fa-caret-right"
@@ -55,6 +55,7 @@
 										leftClass="col-sm-4" rightClass="col-sm-8" id="oxId"
 										required="true" style="width:100% !important"
 										value="#{_scope.id}" />
+									<b:message for="@previous" autoUpdate="true" />
 								</ox:decorate>
 								<ox:decorate id="displayName" label="#{msgs['uma.displayName']}">
 									<h:inputText styleClass="form-control displayNameId"
@@ -80,7 +81,7 @@
 													<div class="col-sm-6">
 														<b:commandLink ajax="true"
 															action="#{updateUmaScopeAction.removeAuthorizationPolicy(_authorizationPolicy)}"
-															process="@this" update="selectedAuthorizationPolicyId"
+															process="@this" update="@form:selectedAuthorizationPolicyId"
 															styleClass="glyphicon glyphicon-remove removeAuthorization">
 														</b:commandLink>
 													</div>
@@ -136,7 +137,7 @@
 			cancelMethod="#{updateUmaScopeAction.cancelSelectAuthorizationPolicies}"
 			displayNameProperty="entity.description" displaySearchForm="false"
 			id="authorizationPolicy" label="#{msgs['uma.addAuthorizationPolicy']}"
-			nameProperty="entity.name" render="selectedAuthorizationPolicyId"
+			nameProperty="entity.name" render="scopeDescriptionFormId:selectedAuthorizationPolicyId"
 			searchMethod="#{updateUmaScopeAction.searchAvailableAuthorizationPolicies}"
 			searchResult="#{updateUmaScopeAction.availableAuthorizationPolicies}" />
 		<ox:acceptRemovalDialog deleteMethod="#{updateUmaScopeAction.delete}"

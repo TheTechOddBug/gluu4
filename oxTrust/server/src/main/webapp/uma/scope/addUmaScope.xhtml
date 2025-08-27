@@ -43,7 +43,7 @@
 				</a></li>
 			</ol>
 		</section>
-		<h:form>
+		<h:form id="umaScopeFormId">
 			<section class="content">
 				<h:panelGroup id="formArea" layout="block">
 					<h:outputStylesheet>
@@ -61,11 +61,13 @@
 										leftClass="col-sm-4" rightClass="col-sm-8" id="oxId"
 										required="true" style="width:100% !important"
 										value="#{_scope.id}" />
+									<b:message for="@previous" autoUpdate="true" />
 								</ox:decorate>
 								<ox:decorate id="displayName" label="#{msgs['uma.displayName']}">
 									<h:inputText styleClass="form-control displayNameId"
 										leftClass="col-sm-4" rightClass="col-sm-8" id="displayNameId"
-										value="#{_scope.displayName}" />
+										required="true" value="#{_scope.displayName}" />
+									<b:message for="@previous" autoUpdate="true" />
 								</ox:decorate>
 								<ox:decorate id="IconUrl" label="IconUrl">
 									<h:inputText styleClass="form-control IconUrlId" pt:type="url"
@@ -86,8 +88,8 @@
 													<div class="col-sm-6">
 														<b:commandLink ajax="true"
 															action="#{updateUmaScopeAction.removeAuthorizationPolicy(_authorizationPolicy)}"
-															process="@this" update="selectedAuthorizationPolicyId"
-															styleClass="glyphicon glyphicon-remove removeAuthorization">
+															process="@this" update="@form:selectedAuthorizationPolicyId"
+															icon="glyphicon glyphicon-remove" styleClass="removeAuthorization">
 														</b:commandLink>
 													</div>
 												</div>
@@ -147,6 +149,7 @@
 							<div class="box-footer">
 								<h:panelGroup id="updateButtons" layout="block">
 									<h:commandButton action="#{updateUmaScopeAction.save}"
+										onclick="saveScopeEditor();"
 										styleClass="btn btn-primary updateScopeButtonId"
 										value="#{updateUmaScopeAction.update ? 'Update' : 'Add Scope'}" />
 									<b:commandButton ajax="true" look="primary"
@@ -155,7 +158,7 @@
 										style="margin-left:3px;"
 										styleClass="btn btn-primary deleteScopeButtonId"
 										value="Delete" />
-									<h:commandButton action="#{updateUmaScopeAction.cancel}"
+									<b:commandButton action="#{updateUmaScopeAction.cancel}"
 										immediate="true" style="margin-left:3px;"
 										styleClass="btn btn-primary" value="#{msgs['uma.cancel']}" />
 								</h:panelGroup>
@@ -170,7 +173,7 @@
 			cancelMethod="#{updateUmaScopeAction.cancelSelectAuthorizationPolicies}"
 			displayNameProperty="entity.description" displaySearchForm="false"
 			id="authorizationPolicy" label="#{msgs['uma.addAuthorizationPolicy']}"
-			nameProperty="entity.name" render="selectedAuthorizationPolicyId"
+			nameProperty="entity.name" render="umaScopeFormId:selectedAuthorizationPolicyId"
 			searchMethod="#{updateUmaScopeAction.searchAvailableAuthorizationPolicies}"
 			searchResult="#{updateUmaScopeAction.availableAuthorizationPolicies}" />
 		<ox:acceptRemovalDialog deleteMethod="#{updateUmaScopeAction.delete}"
