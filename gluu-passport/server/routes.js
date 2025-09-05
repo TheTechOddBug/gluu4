@@ -18,42 +18,6 @@ router.get('/error', function (req, res) {
   handleStrategyError(req, res)
 })
 
-router.post('/auth/saml/:provider/callback',
-  validateProvider,
-  authenticateRequestCallback,
-  idpInitiated.process,
-  callbackResponse)
-
-router.get('/auth/:provider/callback',
-  validateProvider,
-  authenticateRequestCallback,
-  callbackResponse)
-
-router.post('/auth/:provider/callback',
-  validateProvider,
-  require('express').urlencoded({ extended: false }),
-  authenticateRequestCallback,
-  callbackResponse)
-
-router.get('/auth/:provider/:token',
-  validateProvider,
-  validateToken,
-  authenticateRequest)
-
-router.get('/auth/:provider/:token/:state',
-  validateProvider,
-  validateToken,
-  authenticateRequest)
-
-router.get('/casa/:provider/:token',
-  (req, res, next) => {
-    req.failureUrl = '/casa/rest/pl/account-linking/idp-linking'
-    next()
-  },
-  validateProvider,
-  validateToken,
-  authenticateRequestCasa)
-
 // Token generation
 router.get('/token',
   // eslint-disable-next-line no-unused-vars
@@ -95,6 +59,42 @@ router.get('/auth/meta/idp/:idp',
         }
       })
   })
+
+router.post('/auth/saml/:provider/callback',
+  validateProvider,
+  authenticateRequestCallback,
+  idpInitiated.process,
+  callbackResponse)
+
+router.get('/auth/:provider/callback',
+  validateProvider,
+  authenticateRequestCallback,
+  callbackResponse)
+
+router.post('/auth/:provider/callback',
+  validateProvider,
+  require('express').urlencoded({ extended: false }),
+  authenticateRequestCallback,
+  callbackResponse)
+
+router.get('/auth/:provider/:token',
+  validateProvider,
+  validateToken,
+  authenticateRequest)
+
+router.get('/auth/:provider/:token/:state',
+  validateProvider,
+  validateToken,
+  authenticateRequest)
+
+router.get('/casa/:provider/:token',
+  (req, res, next) => {
+    req.failureUrl = '/casa/rest/pl/account-linking/idp-linking'
+    next()
+  },
+  validateProvider,
+  validateToken,
+  authenticateRequestCasa)
 
 // Supporting functions
 
