@@ -40,7 +40,7 @@
 										style="margin-left:3px;" styleClass="btn btn-primary"
 										value="#{updateTrustRelationshipAction.isActive()?'Deactivate':'Activate'}" />
 									<b:commandButton ajax="true" look="primary"
-										oncomplete="$('.acceptRemovalModalPanelClass').modal('show')"
+										oncomplete="$('.deleteConfirmationClass').modal('show')"
 										rendered="#{updateTrustRelationshipAction.update}"
 										style="margin-left:3px;" styleClass="btn btn-primary"
 										value="Delete" />
@@ -64,7 +64,7 @@
 				</ui:decorate>
 				<ox:acceptRemovalDialog
 					deleteMethod="#{updateTrustRelationshipAction.delete}"
-					dialogId="deleteConfirmation" queue="trustQueue"
+					dialogId="deleteConfirmation"
 					subject="Trust Relationship"
 					render="trustForm"
 					value="#{updateTrustRelationshipAction.trustRelationship.displayName}" />
