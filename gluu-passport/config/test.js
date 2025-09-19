@@ -262,6 +262,7 @@ const rateLimitWindowMs = 24 * 60 * 60 * 1000
 const rateLimitMaxRequestAllow = 100
 const cookieSameSite = 'none'
 const cookieSecure = true
+const rateLimitWhitelistIP = '127.0.0.1,::1,::ffff:127.0.0.1'
 
 const HTTP_PROXY = 'http://localhost:3128'
 const HTTPS_PROXY = 'http://localhost:3129'
@@ -279,5 +280,6 @@ module.exports = {
   cookieSecure,
   HTTP_PROXY,
   NO_PROXY,
-  HTTPS_PROXY
+  HTTPS_PROXY,
+  rateLimitWhitelistIP
 }

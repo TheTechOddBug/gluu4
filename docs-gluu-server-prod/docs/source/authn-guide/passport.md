@@ -109,6 +109,7 @@ Currently this configuration is not available in oxTrust and must be edited manu
 |----------|---------------|-------------|
 | rateLimitWindowMs | 86400000 Milliseconds <br/>(24 Hr) | The Timeframe for which requests are checked/remembered. |
 | rateLimitMaxRequestAllow | 1000 requests | Max number of connections during `rateLimitWindowMs` milliseconds before sending a `429 Too Many Requests` response.|
+| rateLimitWhitelistIP | '' | Accept comma seperated IPs to skip rate limit protection. |
 
 Example:
 

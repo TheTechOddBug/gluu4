@@ -31,3 +31,13 @@ Then('last request response should have status code {int}', async (responseStatu
   assert.equal(this.lastResponse.statusCode, responseStatusCode,
     `response.statusCode is NOT ${responseStatusCode}`)
 })
+
+Given('configured rate limit with whitelist IPs 127.0.0.1,::1', async () => {
+  assert.equal(config.get('rateLimitWhitelistIP'), '127.0.0.1,::1,::ffff:127.0.0.1')
+})
+
+When('{string} is requested {int} times by client {string}', async (endpoint, requestsCount, ip) => {
+  for (let i = 1; i <= requestsCount; i++) {
+    this.lastResponse = await requester.get(`/passport${endpoint}`)
+  }
+})
