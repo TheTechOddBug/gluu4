@@ -16,6 +16,7 @@ import com.fasterxml.jackson.datatype.jsonorg.JsonOrgModule;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationIntrospector;
 import com.google.common.base.Strings;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.gluu.oxauth.model.registration.Client;
 import org.gluu.oxauth.model.uma.persistence.UmaPermission;
 import org.gluu.oxauth.model.util.JwtUtil;
@@ -55,6 +56,21 @@ public class ServerUtil {
     private static final Logger log = LoggerFactory.getLogger(ServerUtil.class);
 
     private ServerUtil() {
+    }
+
+    /**
+     * Sanitized username before output by logger
+     * @param username username
+     *
+     * @return sanitized username
+     */
+    public static String sanitizeUsernameForLog(String username) {
+        if (username == null) {
+            return "unknown_user";
+        }
+        final int maximumUsernameLength = 50;
+        username = username.length() > maximumUsernameLength ? username.substring(0, maximumUsernameLength) : username;
+        return StringEscapeUtils.escapeJava(username).replaceAll("[\\r\\n]", "_");
     }
 
     public static Map<String, String[]> prepareForLogs(Map<String, String[]> parameters) {
