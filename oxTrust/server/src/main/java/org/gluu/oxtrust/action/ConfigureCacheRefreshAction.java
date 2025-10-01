@@ -197,7 +197,7 @@ public class ConfigureCacheRefreshAction
 	}
 
 	public String updateImpl() {
-		checkDuplicateKetattribute();
+		checkDuplicateKeyAttribute();
 
 		if (!vdsCacheRefreshPollingInterval()) {
 			return OxTrustConstants.RESULT_FAILURE;
@@ -552,7 +552,7 @@ public class ConfigureCacheRefreshAction
 		if (simpleProperties.size() >= 1) {
 			oxTrustAuditService.audit("Value:" + simpleProperties.get(0).getValue());
 		}
-		if (checkDuplicateKetattribute() && simpleProperties != null) {
+		if ((simpleProperties != null) && checkDuplicateAttribute(simpleProperties)) {
 			simpleProperties.add(new SimpleProperty(""));
 		}
 	}
@@ -697,12 +697,12 @@ public class ConfigureCacheRefreshAction
 		}
 	}
 
-	public boolean checkDuplicateKetattribute() {
-		for (SimpleProperty keyAttribute1 : keyAttributes) {
+	public boolean checkDuplicateAttribute(List<SimpleProperty> attributes) {
+		for (SimpleProperty keyAttribute1 : attributes) {
 			String checkValue = keyAttribute1.getValue();
 			int i = 0;
 
-			for (SimpleProperty keyAttribute : keyAttributes) {
+			for (SimpleProperty keyAttribute : attributes) {
 				String value = keyAttribute.getValue();
 
 				if (checkValue.equals(value) && !checkValue.isEmpty() && !value.isEmpty()) {
@@ -716,6 +716,10 @@ public class ConfigureCacheRefreshAction
 			}
 		}
 		return true;
+	}
+
+	public boolean checkDuplicateKeyAttribute() {
+		return checkDuplicateAttribute(keyAttributes);
 	}
 
 	public String testLdapConnection(GluuLdapConfiguration ldapConfig) {
