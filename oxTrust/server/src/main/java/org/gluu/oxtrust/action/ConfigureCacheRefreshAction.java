@@ -719,24 +719,7 @@ public class ConfigureCacheRefreshAction
 	}
 
 	public boolean checkDuplicateKeyAttribute() {
-		for (SimpleProperty keyAttribute1 : keyAttributes) {
-			String checkValue = keyAttribute1.getValue();
-			int i = 0;
-
-			for (SimpleProperty keyAttribute : keyAttributes) {
-				String value = keyAttribute.getValue();
-
-				if (checkValue.equals(value) && !checkValue.isEmpty() && !value.isEmpty()) {
-					i = i + 1;
-					if (i == 2) {
-						facesMessages.add(FacesMessage.SEVERITY_ERROR, "Key Attribute already Exist!",
-								"Key Attribute already Exist!");
-						return false;
-					}
-				}
-			}
-		}
-		return true;
+		return checkDuplicateAttribute(keyAttributes);
 	}
 
 	public String testLdapConnection(GluuLdapConfiguration ldapConfig) {
