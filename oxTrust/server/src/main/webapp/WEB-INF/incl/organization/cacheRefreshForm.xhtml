@@ -215,26 +215,26 @@
 								<div class="tab-pane" id="ldap-servers">
 									<div class="box box-primary">
 										<div class="box-header"></div>
-										<h:panelGroup>
+										<h:panelGroup id="sourceConfigPanelId">
 											<ui:repeat id="sourceConfigsId" value="#{_configureCacheRefreshAction.sourceConfigs}" var="_ldapConfig">
 												<h:panelGroup style="width: 100%;" styleClass="noBorder">
-												<div style="display: inline-block; width: 75% !important;">
-													<ox:ldapConfig ldapConfig="#{_ldapConfig}" id="scId"
-														ldapConfigList="#{_configureCacheRefreshAction.sourceConfigs}"
-														ldapConfigAction="#{_configureCacheRefreshAction}"
-														propertiesAction="#{_configureCacheRefreshAction}"
-														displayEnable="false" renderAfterRomoval="sourceConfigsId"
-														showTestButton="true" displayAnonymousBind="false"
-														changePasswordDialogId="bindPasswordDialogId:changePasswordModalPanel" />
-												</div>
-											</h:panelGroup>
+													<div style="display: inline-block; width: 75% !important;">
+														<ox:ldapConfig ldapConfig="#{_ldapConfig}" id="scId"
+															ldapConfigList="#{_configureCacheRefreshAction.sourceConfigs}"
+															ldapConfigAction="#{_configureCacheRefreshAction}"
+															propertiesAction="#{_configureCacheRefreshAction}"
+															displayEnable="false" renderAfterRomoval="@form:sourceConfigPanelId"
+															showTestButton="true" displayAnonymousBind="false"
+															changePasswordDialogId="bindPasswordDialogId:changePasswordModalPanel" />
+													</div>
+												</h:panelGroup>
 											</ui:repeat>
 											<h:panelGroup layout="block" styleClass="addConfig">
 												<b:commandLink ajax="true"
 													styleClass="btn btn-primary addSourceServerButton"
 													value="#{msgs['organization.addSourceLDAPServer']}"
 													action="#{_configureCacheRefreshAction.addSourceConfig()}"
-													update="sourceConfigsId"
+													update="@form:sourceConfigPanelId" process="@form:sourceConfigPanelId"
 													style="margin-right:1100px;margin-top:50px;" />
 											</h:panelGroup>
 										</h:panelGroup>

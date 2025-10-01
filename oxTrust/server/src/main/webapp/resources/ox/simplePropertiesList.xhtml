@@ -24,8 +24,8 @@
 	<ox:decorate label="#{cc.attrs.label}" id="decorator">
 		<h:panelGroup id="propertiesList">
 			<ui:repeat value="#{cc.attrs.properties}" var="_property">
-				<h:panelGrid id="pID1" columns="1" width="100%" border="0"
-					cellpadding="0" cellspacing="0" styleClass="#{cc.attrs.tableId}">
+				<h:panelGrid id="#{cc.attrs.tableId}" columns="1" width="100%" border="0"
+					cellpadding="0" cellspacing="0">
 					<h:panelGroup id="pID2">
 						<div id="pDiv" class="col-sm-11 prop" style="padding-left: 0px;">
 							<h:inputText id="fInput"
@@ -36,22 +36,20 @@
 							<b:message for="@previous" autoUpdate="true"/>
 						</div>
 
-						<h:graphicImage value="/img/error.gif" rendered="#{invalid}"
-							styleClass="errors" />
-
+						<h:graphicImage value="/img/error.gif" rendered="#{invalid}" styleClass="errors" />
 						<b:commandLink ajax="true"
 							style="margin-top:5px;font-size:23px !important;"
 							styleClass="removePropertyButton"
 							icon="glyphicon-remove"
 							action="#{cc.attrs.propertiesAction.removeItemFromSimpleProperties(cc.attrs.properties, _property)}"
-							update="@parent:@parent:@parent:propertiesList" process="@this" />
+							update="@parent:@parent:@parent:@parent" process="@parent:@parent:@parent:@parent" />
 					</h:panelGroup>
 				</h:panelGrid>
 			</ui:repeat>
 
 			<b:commandLink ajax="true"
 				action="#{cc.attrs.propertiesAction.addItemToSimpleProperties(cc.attrs.properties)}"
-				update="@form:propertiesList" process="@this"
+				update="@parent" process="@parent"
 				rendered="#{empty maxItems or maxItems gt properties.size()}">
 				<h:outputText style="margin-left:0px;"
 					styleClass="btn btn-primary addItemButton"
