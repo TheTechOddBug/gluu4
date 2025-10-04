@@ -365,6 +365,9 @@ global:
   cr-rotate:
     # -- Boolean flag to enable/disable the cr-rotate chart.
     enabled: false
+  cleanup:
+    # -- Boolean flag to enable/disable the cleanup cronjob chart.
+    enabled: true
 
 # -- Configuration parameters for setup and initial configuration secret and config layers used by Gluu services.
 config:
@@ -2161,3 +2164,68 @@ oxauth-key-rotation:
   # - /tmp/custom.sh
   # - /tmp/custom2.sh
   customScripts: []
+
+# -- Cleanup expired entries in persistence
+cleanup:
+  # -- Add tolerations for the pods
+  tolerations: [ ]
+  # -- Add custom normal and secret envs to the service
+  usrEnvs:
+    # -- Add custom normal envs to the service
+    # variable1: value1
+    normal: {}
+    # -- Add custom secret envs to the service
+    # variable1: value1
+    secret: {}
+  # -- Add custom dns policy
+  dnsPolicy: ""
+  # -- Add custom dns config
+  dnsConfig: {}
+  image:
+    # -- Image pullPolicy to use for deploying.
+    pullPolicy: IfNotPresent
+    # -- Image  to use for deploying.
+    repository: gluufederation/cloudtools
+    # -- Image  tag to use for deploying.
+    tag: 4.5.12_dev
+    # -- Image Pull Secrets
+    pullSecrets: [ ]
+  # -- Resource specs.
+  resources:
+    limits:
+      # -- CPU limit.
+      cpu: 300m
+      # -- Memory limit.
+      memory: 300Mi
+    requests:
+      # -- CPU request.
+      cpu: 300m
+      # -- Memory request.
+      memory: 300Mi
+  # -- Interval of running the cleanup process (in minutes)
+  interval: 60
+  # -- Max. numbers of entries to cleanup
+  limit: 1000
+  # -- Configure any additional volumes that need to be attached to the pod
+  volumes: []
+  # -- Configure any additional volumesMounts that need to be attached to the containers
+  volumeMounts: []
+  # Actions on lifecycle events such as postStart and preStop
+  # Example
+  # lifecycle:
+  #   postStart:
+  #     exec:
+  #       command: ["sh", "-c", "mkdir /opt/gluu/jetty/oxauth/custom/static/stylesheet/"]
+  lifecycle: {}
+  # -- Additional labels that will be added across the gateway in the format of {mylabel: "myapp"}
+  additionalLabels: { }
+  # -- Additional annotations that will be added across the gateway in the format of {cert-manager.io/issuer: "letsencrypt-prod"}
+  additionalAnnotations: {}
+  # -- Add custom scripts that have been mounted to run before the entrypoint.
+  # - /tmp/custom.sh
+  # - /tmp/custom2.sh
+  customScripts: []
+  # -- Add custom job's command. If passed, it will override the default conditional command.
+  customCommand: []
+  # -- Add nodeSelector (see https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#nodeselector)
+  nodeSelector: {}

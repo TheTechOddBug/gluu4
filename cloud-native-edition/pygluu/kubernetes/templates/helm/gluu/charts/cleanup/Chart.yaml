@@ -1,0 +1,19 @@
+# License terms and conditions for Gluu Cloud Native Edition:
+# https://www.apache.org/licenses/LICENSE-2.0
+apiVersion: v2
+name: cleanup
+version: 1.8.47
+kubeVersion: ">=v1.22.0-0"
+description: Cleanup expired entries in persistence
+type: application
+keywords:
+  - Persistence
+home: https://gluu.org/docs/gluu-server
+sources:
+  - https://github.com/GluuFederation/gluu4/tree/4.5/cloud-native-edition
+maintainers:
+  - name: Mohammad Abudayyeh
+    email: support@gluu.org
+    url: https://github.com/moabu
+icon: https://gluu.org/docs/gluu-server/favicon.ico
+appVersion: "4.5.12"

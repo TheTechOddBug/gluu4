@@ -35,6 +35,8 @@ annotations:
       image: gluufederation/persistence:4.5.12_dev
     - name: oxtrust
       image: gluufederation/oxtrust:4.5.12_dev
+    - name: cleanup
+      image: gluufederation/cloudtools:4.5.12_dev
   artifacthub.io/license: Apache-2.0
 icon: https://gluu.org/docs/gluu-server/favicon.ico
 home: https://www.gluu.org
@@ -117,3 +119,7 @@ dependencies:
     - name: gluu-alb-ingress
       condition: global.alb.ingress
       version: 1.8.46
+
+    - name: cleanup
+      condition: global.cleanup.enabled
+      version: 1.8.47

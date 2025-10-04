@@ -1,0 +1,186 @@
+# License terms and conditions for Gluu Cloud Native Edition:
+# https://www.apache.org/licenses/LICENSE-2.0
+{{ if .Values.global.cleanup.enabled -}}
+kind: CronJob
+apiVersion: batch/v1
+metadata:
+  name: {{ include "cleanup.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    APP_NAME: cleanup
+    release: {{ .Release.Name }}
+{{ include "cleanup.labels" . | indent 4 }}
+{{- if .Values.additionalLabels }}
+{{ toYaml .Values.additionalLabels | indent 4 }}
+{{- end }}
+{{- if .Values.additionalAnnotations }}
+  annotations:
+{{ toYaml .Values.additionalAnnotations | indent 4 }}
+{{- end }}
+spec:
+  schedule: "@every {{ .Values.interval }}m"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+        {{- with .Values.image.pullSecrets }}
+          imagePullSecrets:
+            {{- toYaml . | nindent 10 }}
+        {{- end }}
+          dnsPolicy: {{ .Values.dnsPolicy | quote }}
+        {{- with .Values.tolerations }}
+          tolerations:
+            {{- toYaml . | nindent 10 }}
+        {{- end }}
+        {{- with .Values.dnsConfig }}
+          dnsConfig:
+{{ toYaml . | indent 12 }}
+        {{- end }}
+          containers:
+            - name: {{ include "cleanup.name" . }}
+              {{- if or (.Values.customScripts) (.Values.customCommand) }}
+              command:
+                {{- if .Values.customCommand }}
+                {{- toYaml .Values.customCommand | nindent 18 }}
+                {{- else }}
+                - /bin/sh
+                - -c
+                - |
+                    {{- with .Values.customScripts }}
+                    {{- toYaml . | replace "- " "" | nindent 20}}
+                    {{- end }}
+                    /app/scripts/entrypoint.sh
+                {{- end}}
+              {{- end}}
+              image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+              securityContext:
+                runAsUser: 1000
+                runAsNonRoot: true
+              env:
+                {{- include "cleanup.usr-envs" . | indent 16 }}
+                {{- include "cleanup.usr-secret-envs" . | indent 16 }}
+              imagePullPolicy: {{ .Values.image.pullPolicy }}
+              lifecycle:
+{{- toYaml .Values.lifecycle | nindent 16 }}
+              volumeMounts:
+              {{- with .Values.volumeMounts }}
+{{- toYaml . | nindent 16 }}
+              {{- end }}
+              {{ if or (eq .Values.global.configSecretAdapter "aws") (eq .Values.global.configAdapterName "aws") }}
+                - mountPath: {{ .Values.global.cnAwsSharedCredentialsFile }}
+                  name: aws-shared-credential-file
+                  subPath: aws_shared_credential_file
+                - mountPath: {{ .Values.global.cnAwsConfigFile }}
+                  name: aws-config-file
+                  subPath: aws_config_file
+                - mountPath: {{ .Values.global.cnAwsSecretsReplicaRegionsFile }}
+                  name: aws-secrets-replica-regions
+                  subPath: aws_secrets_replica_regions
+              {{- end }}
+              {{ if or (eq .Values.global.configSecretAdapter "google") (eq .Values.global.gluuPersistenceType "spanner") }}
+                - mountPath: {{ .Values.global.cnGoogleApplicationCredentials }}
+                  name: google-sa
+                  subPath: google-credentials.json
+              {{- end }}
+              {{- if eq .Values.global.gluuPersistenceType "sql" }}
+                - name: sql-pass
+                  mountPath: "/etc/gluu/conf/sql_password"
+                  subPath: sql_password
+              {{- end }}
+              {{- if or (eq .Values.global.gluuPersistenceType "couchbase") (eq .Values.global.gluuPersistenceType "hybrid") }}
+                - name: cb-pass
+                  mountPath: "/etc/gluu/conf/couchbase_password"
+                  subPath: couchbase_password
+                {{- if not .Values.global.istio.enabled }}
+                - name: cb-crt
+                  mountPath: "/etc/certs/couchbase.crt"
+                  subPath: couchbase.crt
+                {{- end }}
+              {{- end }}
+              envFrom:
+                - configMapRef:
+                    name: {{ .Release.Name }}-config-cm
+                {{ if .Values.global.usrEnvs.secret }}
+                - secretRef:
+                    name: {{ .Release.Name }}-global-user-custom-envs
+                {{- end }}
+                {{ if .Values.global.usrEnvs.normal }}
+                - configMapRef:
+                    name: {{ .Release.Name }}-global-user-custom-envs
+                {{- end }}
+              {{- if .Values.global.cloud.testEnviroment }}
+              resources: {}
+              {{- else }}
+              resources:
+{{- toYaml .Values.resources | nindent 16 }}
+              {{- end }}
+              {{- if .Values.global.istio.enabled }}
+              command:
+                - tini
+                - -g
+                - --
+                - /bin/sh
+                - -c
+                - |
+                  /app/scripts/entrypoint.sh cleanup --limit {{ .Values.limit }}
+                  curl -X POST http://localhost:15020/quitquitquit
+              {{- else }}
+              args: ["cleanup", "--limit", "{{ .Values.limit }}"]
+              {{- end }}
+          volumes:
+          {{- with .Values.volumes }}
+{{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{ if or (eq .Values.global.configSecretAdapter "aws") (eq .Values.global.configAdapterName "aws") }}
+            - name: aws-shared-credential-file
+              secret:
+                secretName: {{ .Release.Name }}-aws-config-creds
+                items:
+                  - key: aws_shared_credential_file
+                    path: aws_shared_credential_file
+            - name: aws-config-file
+              secret:
+                secretName: {{ .Release.Name }}-aws-config-creds
+                items:
+                  - key: aws_config_file
+                    path: aws_config_file
+            - name: aws-secrets-replica-regions
+              secret:
+                secretName: {{ .Release.Name }}-aws-config-creds
+                items:
+                  - key: aws_secrets_replica_regions
+                    path: aws_secrets_replica_regions
+          {{- end }}
+          {{- if eq .Values.global.gluuPersistenceType "sql" }}
+            - name: sql-pass
+              secret:
+                secretName: {{ .Release.Name }}-sql-pass
+          {{- end }}
+          {{ if or (eq .Values.global.configSecretAdapter "google") (eq .Values.global.gluuPersistenceType "spanner") }}
+            - name: google-sa
+              secret:
+                secretName: {{ .Release.Name }}-google-sa
+          {{- end }}
+          {{- if or (eq .Values.global.gluuPersistenceType "couchbase") (eq .Values.global.gluuPersistenceType "hybrid") }}
+            - name: cb-pass
+              secret:
+                secretName: {{ .Release.Name }}-cb-pass
+            {{- if not .Values.global.istio.enabled }}
+            - name: cb-crt
+              secret:
+                secretName: {{ .Release.Name }}-cb-crt
+            {{- end }}
+          {{- end }}
+          restartPolicy: Never
+          {{- if not .Values.global.isFqdnRegistered }}
+          hostAliases:
+            - ip: {{ .Values.global.lbIp }}
+              hostnames:
+                - {{ .Values.global.domain }}
+          {{- end }}
+          {{- if .Values.nodeSelector }}
+          nodeSelector:
+{{- toYaml .Values.nodeSelector | nindent 12 }}
+          {{- end }}
+{{- end }}
