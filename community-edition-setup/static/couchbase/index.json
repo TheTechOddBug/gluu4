@@ -81,6 +81,7 @@
     "attributes":[
     ],
     "static" : [
+      [["exp"], "del=true"]
     ]
   },
 
@@ -90,7 +91,8 @@
     ],
     "static" : [
         [["grtId"], "objectClass = \"token\""],
-        [["ssnId"], "objectClass = \"token\""]
+        [["ssnId"], "objectClass = \"token\""],
+        [["exp"], "del=true"]
     ]
   },
 
@@ -100,7 +102,8 @@
     ],
     "static" : [
         [["sid"], "objectClass = \"oxAuthSessionId\""],
-        [["exp"], "objectClass = \"oxAuthSessionId\""]
+        [["exp"], "objectClass = \"oxAuthSessionId\""],
+        [["exp"], "del=true"]
     ]
   },
 
