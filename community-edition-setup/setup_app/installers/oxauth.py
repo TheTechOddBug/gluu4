@@ -2,6 +2,7 @@ import os
 import glob
 import random
 import string
+import configparser
 
 from setup_app import paths
 from setup_app.utils import base
@@ -41,6 +42,7 @@ class OxauthInstaller(JettyInstaller):
     def install(self):
         self.profile_templates(self.templates_folder)
         self.installJettyService(self.jetty_app_configuration[self.service_name], True)
+        self.data_cleaner_crontab()
         self.enable()
 
 
@@ -98,3 +100,51 @@ class OxauthInstaller(JettyInstaller):
             
             src_fn = os.path.join(Config.install_dir, 'static/auth/conf', conf_fn)
             self.copyFile(src_fn, Config.certFolder)
+
+    def data_cleaner_crontab(self):
+
+        cleaner_dir = os.path.join(Config.gluuOptFolder, 'data-cleaner')
+        cleaner_config_fn = os.path.join(cleaner_dir, 'data-clean.ini')
+
+        if not os.path.exists(cleaner_dir):
+            self.createDirs(cleaner_dir)
+
+        # copy files
+        crontab_fn = 'gluu-clean-data-crontab.py'
+        cleaner_fn = 'clean-data-gluu.py'
+        for fn in (crontab_fn, cleaner_fn):
+            source = os.path.join(Config.staticFolder, 'auth/data_clean', fn)
+            target = os.path.join(cleaner_dir, fn)
+            self.copyFile(source, target, backup=False)
+            self.run([paths.cmd_chmod, '+x', target])
+
+        if Config.rdbm_type == 'spanner':
+            from setup_app.utils import spanner_rest_client
+            spanner_fn = spanner_rest_client.__file__
+            target = os.path.join(cleaner_dir, os.path.basename(spanner_fn))
+            self.copyFile(spanner_fn, target, backup=False)
+
+        # scan tables to clean and write config file
+        tables = []
+        if not hasattr(base.current_app.RDBMInstaller, 'schema_files'):
+            base.current_app.RDBMInstaller.prepare()
+
+        for schema_fn in base.current_app.RDBMInstaller.schema_files:
+            schema = base.readJsonFile(schema_fn)
+            for cls in schema['objectClasses']:
+                if 'exp' in cls['may'] and 'del' in cls['may']:
+                    tables.append(cls['names'][0])
+
+        config = configparser.ConfigParser()
+        config['main'] = { 'tables': ' '.join(tables) }
+        with open(cleaner_config_fn, 'w') as configfile:
+            config.write(configfile)
+
+        base.extract_file(
+            os.path.join(Config.distAppFolder, 'python-crontab.zip'),
+            'crontab.py',
+            cleaner_dir
+            )
+
+        # create crontab entry
+        self.run([os.path.join(cleaner_dir, crontab_fn)])
