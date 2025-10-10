@@ -61,8 +61,9 @@
 			</h:panelGroup>
 			<ox:selectAttributeDialog
 				acceptMethod="#{updateScopeAction.acceptSelectClaims}"
-				cancelMethod="#{updateScopeAction.cancelSelectClaims}" id="claim"
-				label="#{msgs['scope.addClaim']}" queue="scopeQueue"
+				cancelMethod="#{updateScopeAction.cancelSelectClaims}"
+				id="claim"
+				label="#{msgs['scope.addClaim']}"
 				render="scopeForm:selectedClaimsId"
 				searchMethod="#{updateScopeAction.searchAvailableClaims}"
 				searchPattern="#{updateScopeAction.searchAvailableClaimPattern}"

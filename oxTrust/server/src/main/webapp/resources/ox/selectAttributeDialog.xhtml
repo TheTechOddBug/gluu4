@@ -22,6 +22,8 @@
 		method-signature="void action()" />
 	<cc:attribute name="cancelMethod" required="true"
 		method-signature="void action()" />
+	<cc:attribute name="updateSelectionMethod" required="false"
+		method-signature="void action()" />
 	<cc:attribute name="searchResult" required="true" type="java.util.List" />
 	<cc:attribute name="render" required="false" type="java.lang.String" />
 	<cc:attribute name="queue" default="ox" required="false"
@@ -30,12 +32,15 @@
 <cc:implementation>
 	<b:modal id="selectAttributeModalPanel" styleClass="#{cc.attrs.id}Class"
 		title="#{cc.attrs.label}" size="modal-lg">
+		<h:outputScript rendered="#{cc.attrs.updateSelectionMethod != null}">
+			$('.#{cc.attrs.id}Class').on('show.bs.modal', function (event) {
+				executeUpdateSelection();
+		    });
+		</h:outputScript>
 
 		<b:form id="myForm" appendId="false">
-			<h:panelGroup id="attributePanelId" styleClass="attributePanelId"
-				columns="1" border="0" cellpadding="0" cellspacing="0" width="100%"
-				columnClasses="alignLeft"
-				style="float:left !important;width:100% !important;">
+			<h:panelGrid id="attributePanelId" columns="1" border="0" cellpadding="0"
+				cellspacing="0" width="100%" columnClasses="alignLeft">
 				<ox:decorate id="searchPattern" hideLabel="true">
 					<div class="row" style="float: left; margin-left: 3px;">
 						<h:inputText value="#{cc.attrs.searchPattern}" size="30"
@@ -53,6 +58,11 @@
 					rendered="#{cc.attrs.searchResult.size() eq 0}">
 					<h:outputText value="No Search Result Found" />
 				</h:panelGroup>
+				
+				<ui:fragment rendered="#{cc.attrs.updateSelectionMethod != null}">
+					<b:remoteCommand name="executeUpdateSelection" action="#{cc.attrs.updateSelectionMethod}" update="@form:attributePanelId" />
+				</ui:fragment>
+				
 				<h:panelGroup id="attributeSecondPanelId"
 					style="overflow-y:auto; width:715px;#{cc.attrs.searchResult.size() gt 5 ? ' height:310px;' : ''}"
 					layout="block" rendered="#{cc.attrs.searchResult.size() gt 0}">
@@ -95,12 +105,12 @@
 								update="@form @form:attributeSecondPanelId @form:attributeListId #{cc.attrs.render}"
 								oncomplete="$('.#{cc.attrs.id}Class').modal('hide'); return false;" />
 
-			<gluuext:spacer width="8px" height="8px"/>
-			<gluuext:status startText="Request in progress please wait......" />
+							<gluuext:spacer width="8px" height="8px"/>
+							<gluuext:status startText="Request in progress please wait......" />
 						</div>
 					</h:panelGroup>
 				</div>
-			</h:panelGroup>
+			</h:panelGrid>
 		</b:form>
 	</b:modal>
 </cc:implementation>

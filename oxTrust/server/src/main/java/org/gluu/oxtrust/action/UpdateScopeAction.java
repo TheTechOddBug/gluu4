@@ -388,9 +388,7 @@ public class UpdateScopeAction implements Serializable {
 			addedClaimInums.add(claim.getInum());
 		}
 		for (GluuAttribute attribute : this.availableClaims) {
-			if (attribute.isSelected() && !addedClaimInums.contains(attribute.getInum())) {
-				addClaim(attribute);
-			}
+			attribute.setSelected(addedClaimInums.contains(attribute.getInum()));
 		}
 	}
 

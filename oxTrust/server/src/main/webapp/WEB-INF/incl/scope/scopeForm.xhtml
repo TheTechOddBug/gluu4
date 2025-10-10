@@ -130,14 +130,13 @@
 													</div>
 												</div>
 											</ui:repeat>
-											<gluuext:spacer height="16" />
 										</h:panelGroup>
-										<h:panelGroup>
+										<div>
 											<b:commandButton ajax="true" look="primary" process="@this"
 												oncomplete="$('.authorizationPolicyClass').modal('show')"
 												styleClass="btn btn-primary AddAuthorizationButtonClass"
 												value="#{msgs['uma.addAuthorizationPolicy']}" />
-										</h:panelGroup>
+										</div>
 									</b:panel>
 									</h:panelGroup>
 									</h:panelGroup>
@@ -167,31 +166,31 @@
 							rendered="#{(not empty _scope.scopeType) and (_scope.scopeType.value eq 'openid' or _scope.scopeType.value eq 'dynamic')}">
 							<b:panel id="claims" title="#{msgs['scope.claims']}"
 								look="primary" iconAwesome="fa-list">
-								<h:panelGroup id="selectedClaimsId"
-									styleClass="selectedClaimsId">
-									<h:panelGroup>
+								<h:panelGroup id="selectedClaimsId" styleClass="selectedClaimsId">
+									<h:panelGrid columns="1" width="100%" border="0"
+										cellpadding="0" cellspacing="0">
 										<ui:repeat value="#{_scopeAction.claims}" var="_claim" varStatus="_claimStatus">
-											<div class="row-fluid">
+											<div class="col-sm-12">
 												<div class="#{(_claimStatus.index % 2 == 0) ?'odd':'even'}">
 													<h:outputText
 														value="#{empty _claim.displayName ? _claim.displayName : _claim.displayName}" />
 													<gluuext:spacer width="8px"/>
 													<div class="span6 pull-right">
 														<b:commandLink ajax="true" icon="glyphicon-remove"
-															style="margin-top:-20px;"
 															action="#{_scopeAction.removeClaim(_claim.inum)}"
-															process="@this" update="@form:selectedClaimsId"
-															eventsQueue="scopeQueue">
+															process="@this" update="@form:selectedClaimsId">
 														</b:commandLink>
 													</div>
 												</div>
 											</div>
-											<br />
 										</ui:repeat>
+										<gluuext:spacer height="16" />
+									</h:panelGrid>
+									<h:panelGroup>
 										<b:commandButton ajax="true" look="primary" styleClass="btn btn-primary"
-											value="Add Claim" update="@form:claim"
-											action="#{_scopeAction.clearAvailableClaims()}"
-											oncomplete="$('.selectAttributeModalPanelClass').modal('show'); refresh();"
+											value="Add Claim"
+											action="#{_scopeAction.selectAvailableClaims()}"
+											oncomplete="$('.claimClass').modal('show');"
 											process="@this" />
 									</h:panelGroup>
 								</h:panelGroup>
@@ -208,16 +207,15 @@
 										cellpadding="0" cellspacing="0">
 										<ui:repeat value="#{updateScopeAction.dynamicScripts}" var="_dynamicScript" varStatus="_dynamicScriptStatus">
 											<div class="col-sm-12">
-												<div class="col-sm-6">
-													<h:outputText value="#{_dynamicScript.name}"
-														style="margin-left:-29px;" />
+												<div class="#{(_dynamicScriptStatus.index % 2 == 0) ?'odd':'even'}">
+													<h:outputText value="#{_dynamicScript.name}"/>
 													<gluuext:spacer width="8px"/>
-												</div>
-												<div class="col-sm-6">
-													<b:commandLink ajax="true" styleClass="glyphicon glyphicon-remove "
-														action="#{updateScopeAction.removeDynamicScript(_dynamicScript)}"
-														process="@this" update="@form:selectedDynamicScriptId">
-													</b:commandLink>
+													<div class="span6 pull-right">
+														<b:commandLink ajax="true" icon="glyphicon-remove "
+															action="#{updateScopeAction.removeDynamicScript(_dynamicScript)}"
+															process="@this" update="@form:selectedDynamicScriptId">
+														</b:commandLink>
+													</div>
 												</div>
 											</div>
 										</ui:repeat>
@@ -227,7 +225,7 @@
 								<h:panelGroup>
 									<b:commandButton ajax="true" look="primary"
 										value="#{msgs['scope.addDynamicScopeScript']}"
-										oncomplete="$('.selectEntityModalPanelClass').modal('show');"
+										oncomplete="$('.dynamicScriptClass').modal('show');"
 										process="@this" styleClass="btn btn-primary" />
 								</h:panelGroup>
 							</b:panel>
@@ -239,17 +237,12 @@
 				<div class="box-footer">				
 				<h:panelGroup>
 					<h:panelGroup id="controlbuttonid" rendered="#{(not empty _scope.scopeType) and !(_scope.scopeType.value eq 'uma' or _scope.scopeType.value eq 'spontaneous')}">
-					<ui:insert name="controlButttons" />
+						<ui:insert name="controlButttons" />
 					</h:panelGroup>
 				</h:panelGroup>
 				</div>
 			</b:panel>
 		</div>
-		<h:outputScript>
-        function refresh(){
-            setTimeout(function(){ $( ".searchButtonClass").click(); }, 1000);
-        }
-    </h:outputScript>
 	</h:form>
 	<ox:selectSelectableEntityDialog
 			acceptMethod="#{updateScopeAction.acceptSelectAuthorizationPolicies}"
