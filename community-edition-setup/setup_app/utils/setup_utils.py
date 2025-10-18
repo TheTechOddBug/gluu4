@@ -469,7 +469,11 @@ class SetupUtils(Crypto64):
             self.logIt("Error adding group", True)
 
     def set_systemd_timeout(self, t=300):
-        systemd_conf_fn = '/etc/systemd/system.conf'
+        for sys_fn in ('/etc/systemd/system.conf', '/run/systemd/system.conf', '/usr/lib/systemd/system.conf'):
+            if os.path.exists(sys_fn):
+                systemd_conf_fn = sys_fn
+                break
+
         systemd_conf = []
 
         for l in open(systemd_conf_fn):
