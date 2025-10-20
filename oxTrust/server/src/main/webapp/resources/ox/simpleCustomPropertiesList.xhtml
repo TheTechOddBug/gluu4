@@ -139,7 +139,7 @@
 
 				<b:commandLink ajax="true"
 					action="#{cc.attrs.propertiesAction.addItemToSimpleCustomProperties(cc.attrs.properties)}"
-					update="@form:customList" process="@this"
+					update="@form:customList" process="@form:customList"
 					rendered="#{empty maxItems or maxItems gt properties.size()}">
 					<h:outputText style="margin-top:-5px"
 						styleClass="btn btn-primary addNewPropertyButton"
