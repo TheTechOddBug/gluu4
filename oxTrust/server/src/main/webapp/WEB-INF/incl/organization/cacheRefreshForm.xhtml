@@ -170,7 +170,7 @@
 												propertiesAction="#{_configureCacheRefreshAction}"
 												displayBaseDn="false" displayAnonymousBind="false"
 												displayEnable="false" displayRemoveButton="false"
-												changePasswordDialogId="bindPasswordDialogId:changePasswordModalPanel"
+												changePasswordDialogId="bindPasswordDialogId"
 												rendered="#{_configureCacheRefreshAction.updateMethod.value eq 'vds'}" />
 										</h:panelGroup>
 									</div>
@@ -225,7 +225,7 @@
 															propertiesAction="#{_configureCacheRefreshAction}"
 															displayEnable="false" renderAfterRomoval="@form:sourceConfigPanelId"
 															showTestButton="true" displayAnonymousBind="false"
-															changePasswordDialogId="bindPasswordDialogId:changePasswordModalPanel" />
+															changePasswordDialogId="bindPasswordDialogId" />
 													</div>
 												</h:panelGroup>
 											</ui:repeat>
@@ -259,7 +259,7 @@
 													propertiesAction="#{_configureCacheRefreshAction}"
 													maxBaseDnItems="1" displayAnonymousBind="false"
 													displayEnable="false" displayRemoveButton="false"
-													changePasswordDialogId="bindPasswordDialogId:changePasswordModalPanel"
+													changePasswordDialogId="bindPasswordDialogId"
 													rendered="#{not _configureCacheRefreshAction.cacheRefreshConfig.defaultInumServer}" />
 											</h:panelGroup>
 										</h:panelGroup>
