@@ -121,7 +121,7 @@
 									rendered="#{cc.attrs.showRemoveDialogue eq false}"
 									style="float:left;margin-right:10px;margin-top: 8px;"
 									action="#{cc.attrs.propertiesAction.removeItemFromSimpleCustomProperties(cc.attrs.properties, _property)}"
-									update="@parent:@parent:@parent:customList" process="@this" />
+									update="@parent:@parent:@parent:@parent" process="@parent:@parent:@parent:@parent" />
 
 								<b:commandLink ajax="true"
 									styleClass="col-md-2 col-lg-2 removePropertyButton"
@@ -130,7 +130,7 @@
 									action="#{cc.attrs.propertiesAction.removeItemFromSimpleCustomProperties(cc.attrs.properties, _property)}"
 									style="float:left;margin-right:10px;margin-top: 8px;"
 									oncomplete="$('.acceptRemovalModalPanelClass').modal('show')"
-									update="@parent:@parent:@parent:customList" process="@this"/>
+									update="@parent:@parent:@parent:@parent" process="@parent:@parent:@parent:@parent"/>
 							</div>
 						</h:panelGroup>
 					</h:panelGrid>
@@ -139,7 +139,7 @@
 
 				<b:commandLink ajax="true"
 					action="#{cc.attrs.propertiesAction.addItemToSimpleCustomProperties(cc.attrs.properties)}"
-					update="@form:customList" process="@form:customList"
+					update="@parent" process="@parent"
 					rendered="#{empty maxItems or maxItems gt properties.size()}">
 					<h:outputText style="margin-top:-5px"
 						styleClass="btn btn-primary addNewPropertyButton"
