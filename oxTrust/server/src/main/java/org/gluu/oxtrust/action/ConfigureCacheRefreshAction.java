@@ -595,7 +595,7 @@ public class ConfigureCacheRefreshAction
 		}
 
 		try {
-			this.activeLdapConfig.setBindPassword(encryptionService.encrypt(this.activeLdapConfig.getBindPassword()));
+			this.activeLdapConfig.setBindPassword(encryptionService.encrypt(pwd));
 		} catch (EncryptionException ex) {
 			log.error("Failed to encrypt password", ex);
 		}
