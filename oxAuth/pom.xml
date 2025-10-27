@@ -5,7 +5,7 @@
 	<groupId>org.gluu</groupId>
 	<artifactId>oxauth</artifactId>
 	<packaging>pom</packaging>
-	<version>4.5.12-SNAPSHOT</version>
+	<version>4.5.13-SNAPSHOT</version>
 	<name>oxAuth</name>
 	<url>https://www.gluu.org</url>
 
