@@ -28,6 +28,9 @@ setup(
     packages=find_packages(),
     zip_safe=False,
     install_requires=[
+        "urllib3>=2.5.0",
+        # required by recent google lib
+        "packaging>=25.0",
         "requests>=2.22.0",
         "python-consul>=1.0.1",
         "hvac>=0.7.0",
@@ -43,7 +46,7 @@ setup(
         "google-cloud-spanner>=3.3.0",
         "boto3>=1.26.21",
         "google-cloud-secret-manager>=2.2.0",
-        "click",
+        "click>=8.1.7",
     ],
     classifiers=[
         "Intended Audience :: Developers",
