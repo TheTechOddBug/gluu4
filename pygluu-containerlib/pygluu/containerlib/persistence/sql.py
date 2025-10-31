@@ -11,6 +11,7 @@ from sqlalchemy import create_engine
 from sqlalchemy import MetaData
 from sqlalchemy import func
 from sqlalchemy import select
+from sqlalchemy.engine.url import URL
 from sqlalchemy.exc import SAWarning
 from ldap3.utils import dn as dnutils
 
@@ -56,14 +57,16 @@ class SQLClient:
         return self._engine
 
     @property
-    def engine_url(self) -> str:
+    def engine_url(self) -> URL:
         """Engine connection URL."""
-        host = os.environ.get("GLUU_SQL_DB_HOST", "localhost")
-        port = os.environ.get("GLUU_SQL_DB_PORT", 3306)
-        database = os.environ.get("GLUU_SQL_DB_NAME", "gluu")
-        user = os.environ.get("GLUU_SQL_DB_USER", "gluu")
-        password = get_sql_password()
-        return f"{self.adapter.connector}://{user}:{password}@{host}:{port}/{database}"
+        return URL(
+            drivername=self.adapter.connector,
+            username=os.environ.get("GLUU_SQL_DB_USER", "gluu"),
+            password=get_sql_password(),
+            host=os.environ.get("GLUU_SQL_DB_HOST", "localhost"),
+            port=int(os.environ.get("GLUU_SQL_DB_PORT", "3306")),
+            database=os.environ.get("GLUU_SQL_DB_NAME", "gluu"),
+        )
 
     @property
     def metadata(self):
