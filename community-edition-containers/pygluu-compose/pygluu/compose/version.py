@@ -1,4 +1,4 @@
 """Contains metadata for versioning."""
 
-__version__ = "1.25.0"
-__gluu_version__ = "4.5.12"
+__version__ = "1.26.0"
+__gluu_version__ = "4.5.13"
