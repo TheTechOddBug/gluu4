@@ -71,7 +71,7 @@
 					</h:selectBooleanCheckbox>
 				</ox:decorate>
 			</h:panelGroup>
-			<b:panel title="Custom Scripts" look="primary" id="customScriptForm"
+			<b:panel title="Custom Scripts" look="primary" id="customScriptPanel"
 				collapsible="false">
 				<b:tabView id="scriptTypeTabPanelId" ajax="true" tabPosition="left" contentStyle="border: 1px solid" look="primary">
 						<b:tab id="scriptTabId" styleClass="#{_scriptType.displayName}" title="#{_scriptType.displayName}"
@@ -90,7 +90,7 @@
 											style="#{(_customScript.enabled and _action.hasCustomScriptError(_customScript)) ?  'background: red' : ''}"
 											id="headingOne">
 											<h5 class="mb-0">
-												<a class="accordion-toggle in" data-toggle="collapse"
+												<a class="accordion-toggle in collapsed" data-toggle="collapse"
 													href="#collapseOne#{_customScriptHash}"
 													aria-expanded="true" aria-controls="collapseOne">
 													#{(_customScript.name == null) ?
@@ -127,13 +127,16 @@
 															forId="#{msgs['customScript.name']}"
 															tooltip="#{msgs['customScript.name']}"
 															leftClass="col-sm-3" rightClass="col-sm-8">
-															<h:inputText value="#{_customScript.name}" size="90"
+															<b:inputText value="#{_customScript.name}" size="90"
 																required="#{empty param['rq']}"
 																validatorMessage="#{msgs['customScript.name.error']}"
 																styleClass="form-control scriptNameTextBox"
-																style="width: 90%;">
+																style="width: 90%;" process="@this" update="@next">
 																<f:validateRegex pattern="^[a-zA-Z0-9-_\\-\\:\\/\\.]+$" />
-															</h:inputText>
+																<f:ajax event="blur"/>
+																<f:param name="blockui.disabled" value="true" />
+															</b:inputText>
+															<b:message for="@previous" />
 														</ox:decorate>
 													</div>
 													<div class="form-group">
@@ -283,7 +286,7 @@
 													<ox:acceptRemovalDialog dialogId="deleteConfirmation#{_customScriptId}"
 														subject="Script" value="#{_customScript.name}"
 														deleteMethod="#{_action.removeCustomScript(_customScript)}"
-														render="@parent:@parent:@parent:@parent:@parent:@parent:@parent:@parent:@parent"/>
+														render="customScriptForm"/>
 												</h:panelGroup>
 											</h:panelGroup>
 										</div>
@@ -294,8 +297,7 @@
 											style="font-size:13px !important;"
 											value="#{msgs['customScript.addCustomScriptConfiguration']}"
 											action="#{_action.addCustomScript(_scriptType)}"
-											update="@parent:customScriptRegionId" process="@this">
-											<f:param name="rq" value="1" />
+											update="customScriptRegionId" process="customScriptRegionId">
 										</b:commandLink>
 									</h:panelGroup>
 								</h:panelGroup>

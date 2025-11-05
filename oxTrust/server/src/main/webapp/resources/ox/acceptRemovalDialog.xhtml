@@ -39,7 +39,7 @@
 
 		<h:form>
 			<b:commandButton value="Ok" look="primary" ajax="true"
-				process="@this" update="#{cc.attrs.render}"
+				process="#{cc.attrs.render}" update="#{cc.attrs.render}"
 				action="#{cc.attrs.deleteMethod}"
 				oncomplete="$('.#{cc.attrs.dialogId}Class').modal('hide');"
 				onsuccess="$('.#{cc.attrs.dialogId}Class').modal('hide');"/>
