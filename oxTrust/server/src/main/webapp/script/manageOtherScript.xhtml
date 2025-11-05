@@ -37,10 +37,12 @@
 					<ui:param name="_action" value="#{manageOtherScriptAction}" />
 					<ui:define name="controlButttons">
 						<div id="updateButtons" style="margin-top: 10px;">
-							<b:commandButton look="primary" action="#{manageOtherScriptAction.save}"
-								ajax="true" update="@form"
+							<h:commandButton look="primary" action="#{manageOtherScriptAction.save}"
 								styleClass="btn btn-success"
-								value="#{msgs['customScript.update']}" />
+								value="#{msgs['customScript.update']}">
+								<f:ajax execute="@form" render="@form" />
+							</h:commandButton>
+
 							<h:commandButton action="#{manageOtherScriptAction.cancel}"
 								immediate="true"
 								style="margin-left:5px !important;" styleClass="btn btn-success"
