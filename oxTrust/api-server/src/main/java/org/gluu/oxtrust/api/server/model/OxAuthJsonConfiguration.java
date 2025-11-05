@@ -12,6 +12,7 @@ import org.gluu.oxauth.model.configuration.AuthenticationFilter;
 import org.gluu.oxauth.model.configuration.AuthenticationProtectionConfiguration;
 import org.gluu.oxauth.model.configuration.CIBAEndUserNotificationConfig;
 import org.gluu.oxauth.model.configuration.ClientAuthenticationFilter;
+import org.gluu.oxauth.model.configuration.ConnectionServiceConfiguration;
 import org.gluu.oxauth.model.configuration.CorsConfigurationFilter;
 import org.gluu.oxauth.model.error.ErrorHandlingMethod;
 import org.gluu.oxauth.model.jwk.KeySelectionStrategy;
@@ -331,6 +332,8 @@ public class OxAuthJsonConfiguration {
     private Boolean allowBlankValuesInDiscoveryResponse;
 
     private Boolean skipAuthenticationFilterOptionsMethod;
+
+    private ConnectionServiceConfiguration connectionServiceConfiguration;
 
 	public String getIssuer() {
 		return issuer;
@@ -2073,6 +2076,14 @@ public class OxAuthJsonConfiguration {
 
 	public void setSkipAuthenticationFilterOptionsMethod(Boolean skipAuthenticationFilterOptionsMethod) {
 		this.skipAuthenticationFilterOptionsMethod = skipAuthenticationFilterOptionsMethod;
+	}
+
+	public ConnectionServiceConfiguration getConnectionServiceConfiguration() {
+		return connectionServiceConfiguration;
+	}
+
+	public void setConnectionServiceConfiguration(ConnectionServiceConfiguration connectionServiceConfiguration) {
+		this.connectionServiceConfiguration = connectionServiceConfiguration;
 	}
 
 
