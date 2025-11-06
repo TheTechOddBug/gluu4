@@ -159,8 +159,7 @@
 											<b:commandLink ajax="true" update="@form:clientSecret:clientSecretId1" rendered="#{_new}"
 												styleClass="btn btn-primary generateClientSecretButton"
 												value="Generate Client Secret" style="margin-left: 10px;"
-												action="#{_clientAction.generatePassword()}" process="@this"
-												oncomplete="return valuesDisplay(this);" />
+												action="#{_clientAction.generatePassword()}" process="@this" />
 											<b:commandLink ajax="true" rendered="#{_new}"
 												style="margin-left: 10px;"
 												styleClass="btn btn-primary lockClientSecretField"
