@@ -70,130 +70,6 @@
         }
       }
     },
-    "/api/v1/attributes/active" : {
-      "get" : {
-        "summary" : "Get all active attributes",
-        "description" : "Gets all the active gluu attributes",
-        "operationId" : "getAllActiveAttributes",
-        "responses" : {
-          "200" : {
-            "description" : "success",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "type" : "string"
-                }
-              }
-            }
-          },
-          "500" : {
-            "description" : "Server error"
-          }
-        },
-        "security" : [ {
-          "oauth2" : [ "https://gluu.org/auth/oxtrust.attribute.read" ]
-        } ]
-      }
-    },
-    "/api/v1/attributes/inactive" : {
-      "get" : {
-        "summary" : "Get all inactive attributes",
-        "description" : "Gets all inative attributes",
-        "operationId" : "getAllInactiveAttributes",
-        "responses" : {
-          "200" : {
-            "description" : "success",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "type" : "string"
-                }
-              }
-            }
-          },
-          "500" : {
-            "description" : "Server error"
-          }
-        },
-        "security" : [ {
-          "oauth2" : [ "https://gluu.org/auth/oxtrust.attribute.read" ]
-        } ]
-      }
-    },
-    "/api/v1/attributes/attribute/{inum}" : {
-      "get" : {
-        "summary" : "Get attribute by inum",
-        "description" : "Get an attribute by inum",
-        "operationId" : "getAttributeByInum",
-        "parameters" : [ {
-          "name" : "inum",
-          "in" : "path",
-          "required" : true,
-          "schema" : {
-            "type" : "string"
-          }
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "success",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/GluuAttribute"
-                }
-              }
-            }
-          },
-          "500" : {
-            "description" : "Server error"
-          }
-        },
-        "security" : [ {
-          "oauth2" : [ "https://gluu.org/auth/oxtrust.attribute.read" ]
-        } ]
-      }
-    },
-    "/api/v1/attributes/search" : {
-      "get" : {
-        "summary" : "Search attributes",
-        "description" : "Perform an attribute search",
-        "operationId" : "searchAttributes",
-        "parameters" : [ {
-          "name" : "pattern",
-          "in" : "query",
-          "required" : true,
-          "schema" : {
-            "type" : "string"
-          }
-        }, {
-          "name" : "size",
-          "in" : "query",
-          "schema" : {
-            "type" : "integer",
-            "format" : "int32",
-            "default" : 1
-          }
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "success",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/GluuAttribute"
-                }
-              }
-            }
-          },
-          "500" : {
-            "description" : "Server error"
-          }
-        },
-        "security" : [ {
-          "oauth2" : [ "https://gluu.org/auth/oxtrust.attribute.read" ]
-        } ]
-      }
-    },
     "/api/v1/attributes" : {
       "get" : {
         "summary" : "Get all attributes",
@@ -295,6 +171,130 @@
             }
           }
         }
+      }
+    },
+    "/api/v1/attributes/attribute/{inum}" : {
+      "get" : {
+        "summary" : "Get attribute by inum",
+        "description" : "Get an attribute by inum",
+        "operationId" : "getAttributeByInum",
+        "parameters" : [ {
+          "name" : "inum",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/GluuAttribute"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Server error"
+          }
+        },
+        "security" : [ {
+          "oauth2" : [ "https://gluu.org/auth/oxtrust.attribute.read" ]
+        } ]
+      }
+    },
+    "/api/v1/attributes/search" : {
+      "get" : {
+        "summary" : "Search attributes",
+        "description" : "Perform an attribute search",
+        "operationId" : "searchAttributes",
+        "parameters" : [ {
+          "name" : "pattern",
+          "in" : "query",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "size",
+          "in" : "query",
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 1
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/GluuAttribute"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Server error"
+          }
+        },
+        "security" : [ {
+          "oauth2" : [ "https://gluu.org/auth/oxtrust.attribute.read" ]
+        } ]
+      }
+    },
+    "/api/v1/attributes/active" : {
+      "get" : {
+        "summary" : "Get all active attributes",
+        "description" : "Gets all the active gluu attributes",
+        "operationId" : "getAllActiveAttributes",
+        "responses" : {
+          "200" : {
+            "description" : "success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Server error"
+          }
+        },
+        "security" : [ {
+          "oauth2" : [ "https://gluu.org/auth/oxtrust.attribute.read" ]
+        } ]
+      }
+    },
+    "/api/v1/attributes/inactive" : {
+      "get" : {
+        "summary" : "Get all inactive attributes",
+        "description" : "Gets all inative attributes",
+        "operationId" : "getAllInactiveAttributes",
+        "responses" : {
+          "200" : {
+            "description" : "success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Server error"
+          }
+        },
+        "security" : [ {
+          "oauth2" : [ "https://gluu.org/auth/oxtrust.attribute.read" ]
+        } ]
       }
     },
     "/api/v1/attributes/{inum}" : {
@@ -616,61 +616,6 @@
         }
       }
     },
-    "/api/v1/clients/{inum}/scopes" : {
-      "get" : {
-        "summary" : "Get assigned OIDC client scopes",
-        "description" : "Get OIDC scopes assign to OIDC client",
-        "operationId" : "getClientScope",
-        "parameters" : [ {
-          "name" : "inum",
-          "in" : "path",
-          "required" : true,
-          "schema" : {
-            "type" : "string"
-          }
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "Success",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "type" : "string"
-                }
-              }
-            }
-          },
-          "500" : {
-            "description" : "Server error"
-          },
-          "404" : {
-            "description" : "Not Found"
-          }
-        },
-        "security" : [ {
-          "oauth2" : [ "https://gluu.org/auth/oxtrust.client.read" ]
-        } ]
-      },
-      "delete" : {
-        "operationId" : "deleteClientScopes",
-        "parameters" : [ {
-          "name" : "inum",
-          "in" : "path",
-          "required" : true,
-          "schema" : {
-            "type" : "string"
-          }
-        } ],
-        "responses" : {
-          "default" : {
-            "description" : "default response",
-            "content" : {
-              "application/json" : { }
-            }
-          }
-        }
-      }
-    },
     "/api/v1/clients/{inum}" : {
       "get" : {
         "summary" : "Get OIDC client",
@@ -774,6 +719,61 @@
         "security" : [ {
           "oauth2" : [ "https://gluu.org/auth/oxtrust.client.read" ]
         } ]
+      }
+    },
+    "/api/v1/clients/{inum}/scopes" : {
+      "get" : {
+        "summary" : "Get assigned OIDC client scopes",
+        "description" : "Get OIDC scopes assign to OIDC client",
+        "operationId" : "getClientScope",
+        "parameters" : [ {
+          "name" : "inum",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Server error"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        },
+        "security" : [ {
+          "oauth2" : [ "https://gluu.org/auth/oxtrust.client.read" ]
+        } ]
+      },
+      "delete" : {
+        "operationId" : "deleteClientScopes",
+        "parameters" : [ {
+          "name" : "inum",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "default" : {
+            "description" : "default response",
+            "content" : {
+              "application/json" : { }
+            }
+          }
+        }
       }
     },
     "/api/v1/clients/{inum}/scopes/{sinum}" : {
@@ -2058,57 +2058,6 @@
         }
       }
     },
-    "/api/v1/users/{inum}" : {
-      "get" : {
-        "summary" : "Get person by inum",
-        "description" : "Get a person by inum",
-        "operationId" : "getPersonByInum",
-        "parameters" : [ {
-          "name" : "inum",
-          "in" : "path",
-          "required" : true,
-          "schema" : {
-            "type" : "string"
-          }
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "Success",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/GluuPersonApi"
-                }
-              }
-            }
-          },
-          "500" : {
-            "description" : "Server error"
-          }
-        }
-      },
-      "delete" : {
-        "summary" : "Delete person",
-        "description" : "Delete a person",
-        "operationId" : "deletePerson",
-        "parameters" : [ {
-          "name" : "inum",
-          "in" : "path",
-          "required" : true,
-          "schema" : {
-            "type" : "string"
-          }
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "Success"
-          },
-          "500" : {
-            "description" : "Server error"
-          }
-        }
-      }
-    },
     "/api/v1/users" : {
       "get" : {
         "summary" : "Get people",
@@ -2212,6 +2161,57 @@
                 }
               }
             }
+          },
+          "500" : {
+            "description" : "Server error"
+          }
+        }
+      }
+    },
+    "/api/v1/users/{inum}" : {
+      "get" : {
+        "summary" : "Get person by inum",
+        "description" : "Get a person by inum",
+        "operationId" : "getPersonByInum",
+        "parameters" : [ {
+          "name" : "inum",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/GluuPersonApi"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Server error"
+          }
+        }
+      },
+      "delete" : {
+        "summary" : "Delete person",
+        "description" : "Delete a person",
+        "operationId" : "deletePerson",
+        "parameters" : [ {
+          "name" : "inum",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success"
           },
           "500" : {
             "description" : "Server error"
@@ -2401,6 +2401,73 @@
         }
       }
     },
+    "/api/v1/scopes/search" : {
+      "get" : {
+        "summary" : "Search openid connect scopes",
+        "description" : "Search openid connect scopes",
+        "operationId" : "searchScope",
+        "parameters" : [ {
+          "name" : "pattern",
+          "in" : "query",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "size",
+          "in" : "query",
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 10
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Server error"
+          }
+        }
+      }
+    },
+    "/api/v1/scopes/{inum}/claims" : {
+      "get" : {
+        "summary" : "Get scope claims",
+        "description" : "List all claims of a scope",
+        "operationId" : "getScopeClaims",
+        "parameters" : [ {
+          "name" : "inum",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Server error"
+          }
+        }
+      }
+    },
     "/api/v1/scopes/{inum}" : {
       "get" : {
         "summary" : "Get openid scope",
@@ -2445,73 +2512,6 @@
         "responses" : {
           "200" : {
             "description" : "Success"
-          },
-          "500" : {
-            "description" : "Server error"
-          }
-        }
-      }
-    },
-    "/api/v1/scopes/{inum}/claims" : {
-      "get" : {
-        "summary" : "Get scope claims",
-        "description" : "List all claims of a scope",
-        "operationId" : "getScopeClaims",
-        "parameters" : [ {
-          "name" : "inum",
-          "in" : "path",
-          "required" : true,
-          "schema" : {
-            "type" : "string"
-          }
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "Success",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "type" : "string"
-                }
-              }
-            }
-          },
-          "500" : {
-            "description" : "Server error"
-          }
-        }
-      }
-    },
-    "/api/v1/scopes/search" : {
-      "get" : {
-        "summary" : "Search openid connect scopes",
-        "description" : "Search openid connect scopes",
-        "operationId" : "searchScope",
-        "parameters" : [ {
-          "name" : "pattern",
-          "in" : "query",
-          "schema" : {
-            "type" : "string"
-          }
-        }, {
-          "name" : "size",
-          "in" : "query",
-          "schema" : {
-            "type" : "integer",
-            "format" : "int32",
-            "default" : 10
-          }
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "Success",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "type" : "string"
-                }
-              }
-            }
           },
           "500" : {
             "description" : "Server error"
@@ -2838,6 +2838,335 @@
         }
       }
     },
+    "/api/v1/saml/tr/set_certificate/{inum}" : {
+      "post" : {
+        "summary" : "set certificate for TrustRelationship",
+        "description" : "Find TrustRelationship by inum and set certificate.",
+        "operationId" : "setCertificate",
+        "parameters" : [ {
+          "name" : "inum",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "text/plain" : {
+              "schema" : {
+                "type" : "string"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          },
+          "500" : {
+            "description" : "Server error"
+          }
+        }
+      }
+    },
+    "/api/v1/saml/tr/update/{inum}" : {
+      "put" : {
+        "summary" : "update TrustRelationship",
+        "description" : "Update GluuSAMLTrustRelationship.",
+        "operationId" : "update_1",
+        "parameters" : [ {
+          "name" : "inum",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "*/*" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/GluuSAMLTrustRelationship"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/GluuSAMLTrustRelationship"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Server error"
+          }
+        }
+      }
+    },
+    "/api/v1/saml/tr/list" : {
+      "get" : {
+        "summary" : "list TrustRelationships",
+        "description" : "List all GluuSAMLTrustRelationship.",
+        "operationId" : "list",
+        "responses" : {
+          "200" : {
+            "description" : "SUCCESS",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/GluuSAMLTrustRelationship"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Server error"
+          }
+        }
+      }
+    },
+    "/api/v1/saml/tr/create" : {
+      "post" : {
+        "summary" : "create TrustRelationship",
+        "description" : "Create new GluuSAMLTrustRelationship. Returns inum.",
+        "operationId" : "create",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/GluuSAMLTrustRelationship"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "text/plain" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Server error"
+          }
+        }
+      }
+    },
+    "/api/v1/saml/tr/delete/{inum}" : {
+      "delete" : {
+        "summary" : "delete TrustRelationship",
+        "description" : "Delete GluuSAMLTrustRelationship.",
+        "operationId" : "delete",
+        "parameters" : [ {
+          "name" : "inum",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          },
+          "500" : {
+            "description" : "Server error"
+          }
+        }
+      }
+    },
+    "/api/v1/saml/tr/read/{inum}" : {
+      "get" : {
+        "summary" : "read TrustRelationship",
+        "description" : "Returns a GluuSAMLTrustRelationship by inum",
+        "operationId" : "read",
+        "parameters" : [ {
+          "name" : "inum",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/GluuSAMLTrustRelationship"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Server error"
+          }
+        }
+      }
+    },
+    "/api/v1/saml/tr/add_attribute/{inum}" : {
+      "post" : {
+        "operationId" : "addAttribute",
+        "parameters" : [ {
+          "name" : "inum",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "string"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          },
+          "500" : {
+            "description" : "Server error"
+          }
+        }
+      }
+    },
+    "/api/v1/saml/tr/remove_attribute" : {
+      "delete" : {
+        "operationId" : "removeAttribute",
+        "requestBody" : {
+          "content" : {
+            "text/plain" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/GluuAttribute"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "default" : {
+            "description" : "default response",
+            "content" : {
+              "text/plain" : { }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/saml/tr/set_metadata/{inum}" : {
+      "post" : {
+        "operationId" : "setMetadata",
+        "parameters" : [ {
+          "name" : "inum",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/xml" : {
+              "schema" : {
+                "type" : "string"
+              }
+            },
+            "text/plain" : {
+              "schema" : {
+                "type" : "string"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          },
+          "500" : {
+            "description" : "Server error"
+          }
+        }
+      }
+    },
+    "/api/v1/saml/tr/generate_inum_for_new_trust_relationship" : {
+      "get" : {
+        "operationId" : "generateInumForNewTrustRelationship",
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "text/plain" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Server error"
+          }
+        }
+      }
+    },
+    "/api/v1/saml/tr/get_contacts/{inum}" : {
+      "get" : {
+        "operationId" : "getContacts",
+        "parameters" : [ {
+          "name" : "inum",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "text/plain" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Server error"
+          }
+        }
+      }
+    },
+    "/api/v1/saml/tr/generate_configuration_files" : {
+      "put" : {
+        "summary" : "generate configuration files",
+        "description" : "Generate configuration files for Shibboleth IDP",
+        "operationId" : "generateConfigurationFiles",
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          },
+          "500" : {
+            "description" : "Server error"
+          }
+        }
+      }
+    },
     "/api/v1/saml/tr/list_all_federations" : {
       "get" : {
         "operationId" : "listAllFederations",
@@ -3028,54 +3357,6 @@
         }
       }
     },
-    "/api/v1/saml/tr/generate_inum_for_new_trust_relationship" : {
-      "get" : {
-        "operationId" : "generateInumForNewTrustRelationship",
-        "responses" : {
-          "200" : {
-            "description" : "OK",
-            "content" : {
-              "text/plain" : {
-                "schema" : {
-                  "type" : "string"
-                }
-              }
-            }
-          },
-          "500" : {
-            "description" : "Server error"
-          }
-        }
-      }
-    },
-    "/api/v1/saml/tr/get_contacts/{inum}" : {
-      "get" : {
-        "operationId" : "getContacts",
-        "parameters" : [ {
-          "name" : "inum",
-          "in" : "path",
-          "required" : true,
-          "schema" : {
-            "type" : "string"
-          }
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "OK",
-            "content" : {
-              "text/plain" : {
-                "schema" : {
-                  "type" : "string"
-                }
-              }
-            }
-          },
-          "500" : {
-            "description" : "Server error"
-          }
-        }
-      }
-    },
     "/api/v1/saml/tr/set_contacts/{inum}" : {
       "post" : {
         "summary" : "set contacts for TrustRelationship",
@@ -3104,287 +3385,6 @@
           },
           "500" : {
             "description" : "Server error"
-          }
-        }
-      }
-    },
-    "/api/v1/saml/tr/generate_configuration_files" : {
-      "put" : {
-        "summary" : "generate configuration files",
-        "description" : "Generate configuration files for Shibboleth IDP",
-        "operationId" : "generateConfigurationFiles",
-        "responses" : {
-          "200" : {
-            "description" : "OK"
-          },
-          "500" : {
-            "description" : "Server error"
-          }
-        }
-      }
-    },
-    "/api/v1/saml/tr/set_metadata/{inum}" : {
-      "post" : {
-        "operationId" : "setMetadata",
-        "parameters" : [ {
-          "name" : "inum",
-          "in" : "path",
-          "required" : true,
-          "schema" : {
-            "type" : "string"
-          }
-        } ],
-        "requestBody" : {
-          "content" : {
-            "application/xml" : {
-              "schema" : {
-                "type" : "string"
-              }
-            },
-            "text/plain" : {
-              "schema" : {
-                "type" : "string"
-              }
-            }
-          },
-          "required" : true
-        },
-        "responses" : {
-          "200" : {
-            "description" : "OK"
-          },
-          "500" : {
-            "description" : "Server error"
-          }
-        }
-      }
-    },
-    "/api/v1/saml/tr/set_certificate/{inum}" : {
-      "post" : {
-        "summary" : "set certificate for TrustRelationship",
-        "description" : "Find TrustRelationship by inum and set certificate.",
-        "operationId" : "setCertificate",
-        "parameters" : [ {
-          "name" : "inum",
-          "in" : "path",
-          "required" : true,
-          "schema" : {
-            "type" : "string"
-          }
-        } ],
-        "requestBody" : {
-          "content" : {
-            "text/plain" : {
-              "schema" : {
-                "type" : "string"
-              }
-            }
-          }
-        },
-        "responses" : {
-          "200" : {
-            "description" : "OK"
-          },
-          "500" : {
-            "description" : "Server error"
-          }
-        }
-      }
-    },
-    "/api/v1/saml/tr/update/{inum}" : {
-      "put" : {
-        "summary" : "update TrustRelationship",
-        "description" : "Update GluuSAMLTrustRelationship.",
-        "operationId" : "update_1",
-        "parameters" : [ {
-          "name" : "inum",
-          "in" : "path",
-          "required" : true,
-          "schema" : {
-            "type" : "string"
-          }
-        } ],
-        "requestBody" : {
-          "content" : {
-            "*/*" : {
-              "schema" : {
-                "$ref" : "#/components/schemas/GluuSAMLTrustRelationship"
-              }
-            }
-          }
-        },
-        "responses" : {
-          "200" : {
-            "description" : "OK",
-            "content" : {
-              "*/*" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/GluuSAMLTrustRelationship"
-                }
-              }
-            }
-          },
-          "500" : {
-            "description" : "Server error"
-          }
-        }
-      }
-    },
-    "/api/v1/saml/tr/list" : {
-      "get" : {
-        "summary" : "list TrustRelationships",
-        "description" : "List all GluuSAMLTrustRelationship.",
-        "operationId" : "list",
-        "responses" : {
-          "200" : {
-            "description" : "SUCCESS",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/GluuSAMLTrustRelationship"
-                }
-              }
-            }
-          },
-          "500" : {
-            "description" : "Server error"
-          }
-        }
-      }
-    },
-    "/api/v1/saml/tr/read/{inum}" : {
-      "get" : {
-        "summary" : "read TrustRelationship",
-        "description" : "Returns a GluuSAMLTrustRelationship by inum",
-        "operationId" : "read",
-        "parameters" : [ {
-          "name" : "inum",
-          "in" : "path",
-          "required" : true,
-          "schema" : {
-            "type" : "string"
-          }
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "Success",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/GluuSAMLTrustRelationship"
-                }
-              }
-            }
-          },
-          "500" : {
-            "description" : "Server error"
-          }
-        }
-      }
-    },
-    "/api/v1/saml/tr/delete/{inum}" : {
-      "delete" : {
-        "summary" : "delete TrustRelationship",
-        "description" : "Delete GluuSAMLTrustRelationship.",
-        "operationId" : "delete",
-        "parameters" : [ {
-          "name" : "inum",
-          "in" : "path",
-          "required" : true,
-          "schema" : {
-            "type" : "string"
-          }
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "OK"
-          },
-          "500" : {
-            "description" : "Server error"
-          }
-        }
-      }
-    },
-    "/api/v1/saml/tr/create" : {
-      "post" : {
-        "summary" : "create TrustRelationship",
-        "description" : "Create new GluuSAMLTrustRelationship. Returns inum.",
-        "operationId" : "create",
-        "requestBody" : {
-          "content" : {
-            "application/json" : {
-              "schema" : {
-                "$ref" : "#/components/schemas/GluuSAMLTrustRelationship"
-              }
-            }
-          }
-        },
-        "responses" : {
-          "200" : {
-            "description" : "OK",
-            "content" : {
-              "text/plain" : {
-                "schema" : {
-                  "type" : "string"
-                }
-              }
-            }
-          },
-          "500" : {
-            "description" : "Server error"
-          }
-        }
-      }
-    },
-    "/api/v1/saml/tr/add_attribute/{inum}" : {
-      "post" : {
-        "operationId" : "addAttribute",
-        "parameters" : [ {
-          "name" : "inum",
-          "in" : "path",
-          "required" : true,
-          "schema" : {
-            "type" : "string"
-          }
-        } ],
-        "requestBody" : {
-          "content" : {
-            "application/json" : {
-              "schema" : {
-                "type" : "string"
-              }
-            }
-          },
-          "required" : true
-        },
-        "responses" : {
-          "200" : {
-            "description" : "OK"
-          },
-          "500" : {
-            "description" : "Server error"
-          }
-        }
-      }
-    },
-    "/api/v1/saml/tr/remove_attribute" : {
-      "delete" : {
-        "operationId" : "removeAttribute",
-        "requestBody" : {
-          "content" : {
-            "text/plain" : {
-              "schema" : {
-                "$ref" : "#/components/schemas/GluuAttribute"
-              }
-            }
-          }
-        },
-        "responses" : {
-          "default" : {
-            "description" : "default response",
-            "content" : {
-              "text/plain" : { }
-            }
           }
         }
       }
@@ -3554,175 +3554,6 @@
         "operationId" : "deleteTrustedIdps",
         "parameters" : [ {
           "name" : "remoteIdpHost",
-          "in" : "path",
-          "required" : true,
-          "schema" : {
-            "type" : "string"
-          }
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "Success"
-          },
-          "500" : {
-            "description" : "Server error"
-          }
-        }
-      }
-    },
-    "/api/v1/uma/resources" : {
-      "get" : {
-        "summary" : "Get UMA resources",
-        "description" : "Get uma resources",
-        "operationId" : "listUmaResources",
-        "responses" : {
-          "200" : {
-            "description" : "Success",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "type" : "string"
-                }
-              }
-            }
-          },
-          "500" : {
-            "description" : "Server error"
-          }
-        }
-      },
-      "put" : {
-        "summary" : "Update UMA resource",
-        "description" : "Update uma resource",
-        "operationId" : "updateUmaResource",
-        "requestBody" : {
-          "content" : {
-            "application/json" : {
-              "schema" : {
-                "$ref" : "#/components/schemas/UmaResource"
-              }
-            }
-          }
-        },
-        "responses" : {
-          "200" : {
-            "description" : "Success",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/UmaResource"
-                }
-              }
-            }
-          },
-          "500" : {
-            "description" : "Server error"
-          }
-        }
-      },
-      "post" : {
-        "summary" : "Add new UMA resource",
-        "description" : "Add new uma resource",
-        "operationId" : "createUmaResource",
-        "requestBody" : {
-          "content" : {
-            "application/json" : {
-              "schema" : {
-                "$ref" : "#/components/schemas/UmaResource"
-              }
-            }
-          }
-        },
-        "responses" : {
-          "200" : {
-            "description" : "Success",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/UmaResource"
-                }
-              }
-            }
-          },
-          "500" : {
-            "description" : "Server error"
-          }
-        }
-      }
-    },
-    "/api/v1/uma/resources/search" : {
-      "get" : {
-        "summary" : "Search UMA resources",
-        "description" : "Search uma resources",
-        "operationId" : "searchUmaResources",
-        "parameters" : [ {
-          "name" : "pattern",
-          "in" : "query",
-          "required" : true,
-          "schema" : {
-            "type" : "string"
-          }
-        }, {
-          "name" : "size",
-          "in" : "query",
-          "required" : true,
-          "schema" : {
-            "type" : "integer",
-            "format" : "int32"
-          }
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "Success",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "type" : "string"
-                }
-              }
-            }
-          },
-          "500" : {
-            "description" : "Server error"
-          }
-        }
-      }
-    },
-    "/api/v1/uma/resources/{id}" : {
-      "get" : {
-        "summary" : "Get UMA resource by id",
-        "description" : "Get a uma resource by id",
-        "operationId" : "getUmaResourceById",
-        "parameters" : [ {
-          "name" : "id",
-          "in" : "path",
-          "required" : true,
-          "schema" : {
-            "type" : "string"
-          }
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "Success",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/UmaResource"
-                }
-              }
-            }
-          },
-          "500" : {
-            "description" : "Server error"
-          }
-        }
-      },
-      "delete" : {
-        "summary" : "Delete UMA resource",
-        "description" : "Delete a uma resource",
-        "operationId" : "deleteUmaResource",
-        "parameters" : [ {
-          "name" : "id",
           "in" : "path",
           "required" : true,
           "schema" : {
@@ -3919,6 +3750,175 @@
               "application/json" : {
                 "schema" : {
                   "$ref" : "#/components/schemas/UmaResource"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Server error"
+          }
+        }
+      }
+    },
+    "/api/v1/uma/resources" : {
+      "get" : {
+        "summary" : "Get UMA resources",
+        "description" : "Get uma resources",
+        "operationId" : "listUmaResources",
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Server error"
+          }
+        }
+      },
+      "put" : {
+        "summary" : "Update UMA resource",
+        "description" : "Update uma resource",
+        "operationId" : "updateUmaResource",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/UmaResource"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/UmaResource"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Server error"
+          }
+        }
+      },
+      "post" : {
+        "summary" : "Add new UMA resource",
+        "description" : "Add new uma resource",
+        "operationId" : "createUmaResource",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/UmaResource"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/UmaResource"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Server error"
+          }
+        }
+      }
+    },
+    "/api/v1/uma/resources/{id}" : {
+      "get" : {
+        "summary" : "Get UMA resource by id",
+        "description" : "Get a uma resource by id",
+        "operationId" : "getUmaResourceById",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/UmaResource"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Server error"
+          }
+        }
+      },
+      "delete" : {
+        "summary" : "Delete UMA resource",
+        "description" : "Delete a uma resource",
+        "operationId" : "deleteUmaResource",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success"
+          },
+          "500" : {
+            "description" : "Server error"
+          }
+        }
+      }
+    },
+    "/api/v1/uma/resources/search" : {
+      "get" : {
+        "summary" : "Search UMA resources",
+        "description" : "Search uma resources",
+        "operationId" : "searchUmaResources",
+        "parameters" : [ {
+          "name" : "pattern",
+          "in" : "query",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "size",
+          "in" : "query",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
                 }
               }
             }
@@ -4463,22 +4463,22 @@
           "gluuTooltip" : {
             "type" : "string"
           },
-          "adminCanAccess" : {
-            "type" : "boolean"
-          },
           "adminCanView" : {
             "type" : "boolean"
           },
           "adminCanEdit" : {
             "type" : "boolean"
           },
-          "userCanAccess" : {
-            "type" : "boolean"
-          },
           "userCanView" : {
             "type" : "boolean"
           },
           "userCanEdit" : {
+            "type" : "boolean"
+          },
+          "adminCanAccess" : {
+            "type" : "boolean"
+          },
+          "userCanAccess" : {
             "type" : "boolean"
           },
           "whitePagesCanView" : {
@@ -5521,15 +5521,15 @@
       "SmtpConfiguration" : {
         "type" : "object",
         "properties" : {
+          "valid" : {
+            "type" : "boolean"
+          },
           "connectProtectionList" : {
             "type" : "array",
             "items" : {
               "type" : "string",
               "enum" : [ "None", "StartTls", "SslTls" ]
             }
-          },
-          "valid" : {
-            "type" : "boolean"
           },
           "host" : {
             "type" : "string"
@@ -6062,6 +6062,23 @@
             "xml" : {
               "name" : "base-dn"
             }
+          }
+        }
+      },
+      "ConnectionServiceConfiguration" : {
+        "type" : "object",
+        "properties" : {
+          "maxTotal" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "maxPerRoute" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "validateAfterInactivity" : {
+            "type" : "integer",
+            "format" : "int32"
           }
         }
       },
@@ -6920,6 +6937,112 @@
           },
           "skipAuthenticationFilterOptionsMethod" : {
             "type" : "boolean"
+          },
+          "connectionServiceConfiguration" : {
+            "$ref" : "#/components/schemas/ConnectionServiceConfiguration"
+          }
+        }
+      },
+      "OxTrustBasicConfig" : {
+        "type" : "object",
+        "properties" : {
+          "baseDN" : {
+            "type" : "string"
+          },
+          "orgSupportEmail" : {
+            "type" : "string"
+          },
+          "applicationUrl" : {
+            "type" : "string"
+          },
+          "baseEndpoint" : {
+            "type" : "string"
+          },
+          "ldifStore" : {
+            "type" : "string"
+          },
+          "updateStatus" : {
+            "type" : "boolean"
+          },
+          "keystorePath" : {
+            "type" : "string"
+          },
+          "allowPersonModification" : {
+            "type" : "boolean"
+          },
+          "configGeneration" : {
+            "type" : "boolean"
+          },
+          "gluuSpCert" : {
+            "type" : "string"
+          },
+          "certDir" : {
+            "type" : "string"
+          },
+          "servicesRestartTrigger" : {
+            "type" : "string"
+          },
+          "loginRedirectUrl" : {
+            "type" : "string"
+          },
+          "logoutRedirectUrl" : {
+            "type" : "string"
+          },
+          "clientAssociationAttribute" : {
+            "type" : "string"
+          },
+          "ignoreValidation" : {
+            "type" : "boolean"
+          },
+          "umaIssuer" : {
+            "type" : "string"
+          },
+          "cssLocation" : {
+            "type" : "string"
+          },
+          "jsLocation" : {
+            "type" : "string"
+          },
+          "enableUpdateNotification" : {
+            "type" : "boolean"
+          },
+          "oxIncommonFlag" : {
+            "type" : "boolean"
+          },
+          "clientWhiteList" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "clientBlackList" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "loggingLevel" : {
+            "type" : "string"
+          },
+          "organizationName" : {
+            "type" : "string"
+          },
+          "disableJdkLogger" : {
+            "type" : "boolean"
+          },
+          "passwordResetRequestExpirationTime" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "cleanServiceInterval" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "enforceEmailUniqueness" : {
+            "type" : "boolean"
+          },
+          "useLocalCache" : {
+            "type" : "boolean"
           }
         }
       },
@@ -7288,109 +7411,6 @@
           },
           "userExtensionSchemaURI" : {
             "type" : "string"
-          }
-        }
-      },
-      "OxTrustBasicConfig" : {
-        "type" : "object",
-        "properties" : {
-          "baseDN" : {
-            "type" : "string"
-          },
-          "orgSupportEmail" : {
-            "type" : "string"
-          },
-          "applicationUrl" : {
-            "type" : "string"
-          },
-          "baseEndpoint" : {
-            "type" : "string"
-          },
-          "ldifStore" : {
-            "type" : "string"
-          },
-          "updateStatus" : {
-            "type" : "boolean"
-          },
-          "keystorePath" : {
-            "type" : "string"
-          },
-          "allowPersonModification" : {
-            "type" : "boolean"
-          },
-          "configGeneration" : {
-            "type" : "boolean"
-          },
-          "gluuSpCert" : {
-            "type" : "string"
-          },
-          "certDir" : {
-            "type" : "string"
-          },
-          "servicesRestartTrigger" : {
-            "type" : "string"
-          },
-          "loginRedirectUrl" : {
-            "type" : "string"
-          },
-          "logoutRedirectUrl" : {
-            "type" : "string"
-          },
-          "clientAssociationAttribute" : {
-            "type" : "string"
-          },
-          "ignoreValidation" : {
-            "type" : "boolean"
-          },
-          "umaIssuer" : {
-            "type" : "string"
-          },
-          "cssLocation" : {
-            "type" : "string"
-          },
-          "jsLocation" : {
-            "type" : "string"
-          },
-          "enableUpdateNotification" : {
-            "type" : "boolean"
-          },
-          "oxIncommonFlag" : {
-            "type" : "boolean"
-          },
-          "clientWhiteList" : {
-            "type" : "array",
-            "items" : {
-              "type" : "string"
-            }
-          },
-          "clientBlackList" : {
-            "type" : "array",
-            "items" : {
-              "type" : "string"
-            }
-          },
-          "loggingLevel" : {
-            "type" : "string"
-          },
-          "organizationName" : {
-            "type" : "string"
-          },
-          "disableJdkLogger" : {
-            "type" : "boolean"
-          },
-          "passwordResetRequestExpirationTime" : {
-            "type" : "integer",
-            "format" : "int32"
-          },
-          "cleanServiceInterval" : {
-            "type" : "integer",
-            "format" : "int32"
-          },
-          "enforceEmailUniqueness" : {
-            "type" : "boolean"
-          },
-          "useLocalCache" : {
-            "type" : "boolean"
           }
         }
       },
@@ -7785,47 +7805,6 @@
           }
         }
       },
-      "SAMLTrustRelationshipShort" : {
-        "type" : "object",
-        "properties" : {
-          "inum" : {
-            "type" : "string"
-          },
-          "displayName" : {
-            "type" : "string"
-          },
-          "description" : {
-            "type" : "string"
-          },
-          "validationStatus" : {
-            "type" : "string",
-            "enum" : [ "In Progress", "Success", "Scheduled", "Failed" ]
-          },
-          "releasedAttributes" : {
-            "type" : "array",
-            "items" : {
-              "type" : "string"
-            }
-          }
-        }
-      },
-      "TrustContact" : {
-        "type" : "object",
-        "properties" : {
-          "name" : {
-            "type" : "string"
-          },
-          "phone" : {
-            "type" : "string"
-          },
-          "mail" : {
-            "type" : "string"
-          },
-          "title" : {
-            "type" : "string"
-          }
-        }
-      },
       "GluuCustomAttribute" : {
         "type" : "object",
         "properties" : {
@@ -7851,25 +7830,14 @@
               "enum" : [ "disabled", "enabled", "false", "true", "inactive", "active" ]
             }
           },
+          "displayValue" : {
+            "type" : "object"
+          },
+          "booleanValue" : {
+            "type" : "string",
+            "enum" : [ "disabled", "enabled", "false", "true", "inactive", "active" ]
+          },
           "new" : {
-            "type" : "boolean"
-          },
-          "adminCanAccess" : {
-            "type" : "boolean"
-          },
-          "adminCanView" : {
-            "type" : "boolean"
-          },
-          "adminCanEdit" : {
-            "type" : "boolean"
-          },
-          "userCanAccess" : {
-            "type" : "boolean"
-          },
-          "userCanView" : {
-            "type" : "boolean"
-          },
-          "userCanEdit" : {
             "type" : "boolean"
           },
           "stringValues" : {
@@ -7878,18 +7846,29 @@
               "type" : "string"
             }
           },
-          "value" : {
-            "type" : "object"
+          "stringValue" : {
+            "type" : "string"
           },
           "multiValued" : {
             "type" : "boolean"
           },
-          "booleanValue" : {
-            "type" : "string",
-            "enum" : [ "disabled", "enabled", "false", "true", "inactive", "active" ]
+          "adminCanView" : {
+            "type" : "boolean"
           },
-          "stringValue" : {
-            "type" : "string"
+          "adminCanEdit" : {
+            "type" : "boolean"
+          },
+          "userCanView" : {
+            "type" : "boolean"
+          },
+          "userCanEdit" : {
+            "type" : "boolean"
+          },
+          "adminCanAccess" : {
+            "type" : "boolean"
+          },
+          "userCanAccess" : {
+            "type" : "boolean"
           }
         }
       },
@@ -8031,20 +8010,6 @@
           "certificate" : {
             "type" : "string"
           },
-          "entityId" : {
-            "type" : "string"
-          },
-          "federation" : {
-            "type" : "boolean"
-          },
-          "uniqueGluuEntityId" : {
-            "uniqueItems" : true,
-            "type" : "array",
-            "writeOnly" : true,
-            "items" : {
-              "type" : "string"
-            }
-          },
           "containerFederation" : {
             "$ref" : "#/components/schemas/GluuSAMLTrustRelationship"
           },
@@ -8066,11 +8031,24 @@
           "mdqFederation" : {
             "type" : "boolean"
           },
+          "entityId" : {
+            "type" : "string"
+          },
+          "federation" : {
+            "type" : "boolean"
+          },
+          "uniqueGluuEntityId" : {
+            "uniqueItems" : true,
+            "type" : "array",
+            "writeOnly" : true,
+            "items" : {
+              "type" : "string"
+            }
+          },
           "baseDn" : {
             "type" : "string"
           }
-        },
-        "writeOnly" : true
+        }
       },
       "MetadataFilter" : {
         "type" : "object",
@@ -8165,6 +8143,47 @@
             "type" : "string"
           },
           "nameIDFormatPrecedenceList" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "TrustContact" : {
+        "type" : "object",
+        "properties" : {
+          "name" : {
+            "type" : "string"
+          },
+          "phone" : {
+            "type" : "string"
+          },
+          "mail" : {
+            "type" : "string"
+          },
+          "title" : {
+            "type" : "string"
+          }
+        }
+      },
+      "SAMLTrustRelationshipShort" : {
+        "type" : "object",
+        "properties" : {
+          "inum" : {
+            "type" : "string"
+          },
+          "displayName" : {
+            "type" : "string"
+          },
+          "description" : {
+            "type" : "string"
+          },
+          "validationStatus" : {
+            "type" : "string",
+            "enum" : [ "In Progress", "Success", "Scheduled", "Failed" ]
+          },
+          "releasedAttributes" : {
             "type" : "array",
             "items" : {
               "type" : "string"
