@@ -327,7 +327,7 @@
 												<h:selectBooleanCheckbox
 													value="#{_client.oxAuthTrustedClient}" id="trustedClientId"
 													styleClass="oxAuthTrustedClientSelectBox rounded"
-													onchange="togglePersistAuthorization()" required="true" />
+													required="true" />
 												<b:message for="@previous" autoUpdate="true"/>
 											</ox:decorate>
 											
@@ -409,7 +409,6 @@
 											
 										</div>
 										<div class="col-sm-6 col-lg-6" style="padding: 0px;">
-												#{_client.oxIncludeClaimsInIdToken}
 											<ox:decorate id="includeClaimsInIdToken"
 												label="#{msgs['clientForm.includeClaimsInIdToken']}"
 												leftClass="col-sm-6" rightClass="col-sm-6">
@@ -521,8 +520,7 @@
 												<h:selectBooleanCheckbox
 													value="#{_client.oxAuthPersistClientAuthorizations}"
 													id="persisteClientAuthorizationsId"
-													styleClass="persistClientAuthorizationSelectBox rounded"
-													onchange="togglePersistAuthorization()" />
+													styleClass="persistClientAuthorizationSelectBox rounded" />
 							</ox:decorate>
 							<ox:decorate id="keepClientAuthorizationAfterExpiration"
 												label="#{msgs['clientForm.keepClientAuthorizationAfterExpiration']}"
