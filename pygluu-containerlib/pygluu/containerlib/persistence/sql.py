@@ -102,11 +102,30 @@ class SQLClient:
     def get_table_mapping(self) -> dict:
         """Get mapping of column name and type from all tables."""
         table_mapping = defaultdict(dict)
+
         for table_name, table in self.metadata.tables.items():
             for column in table.c:
-                if getattr(column.type, "collation", None):
-                    column.type.collation = None
-                table_mapping[table_name][column.name] = str(column.type)
+                collation = getattr(column.type, "collation", None)
+
+                try:
+                    # temporarily clear COLLATION (if present)
+                    if collation:
+                        column.type.collation = None
+
+                    col_type = str(column.type)
+
+                    # extract the DATETIME's fsp (fractional seconds part) to match the schema from file
+                    fsp = getattr(column.type, "fsp", None)
+                    if col_type.startswith("DATETIME") and fsp is not None:
+                        col_type = f"DATETIME({fsp})"
+
+                    table_mapping[table_name][column.name] = col_type
+
+                finally:
+                    if collation and column.type.collation is None:
+                        column.type.collation = collation
+
+        # finalized table mapping
         return dict(table_mapping)
 
     def row_exists(self, table_name, id_) -> bool:
