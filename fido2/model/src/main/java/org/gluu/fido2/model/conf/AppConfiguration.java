@@ -37,6 +37,8 @@ public class AppConfiguration implements Configuration {
     private boolean useLocalCache;
 	@DocProperty(description = "Boolean value specifying whether to enable JDK Loggers")
     private boolean disableJdkLogger = true;
+	@DocProperty(description = "Boolean value specifying whether to enable external log4j configuration")
+    private Boolean disableExternalLoggerConfiguration = true;
 	@DocProperty(description = "Logging level for Fido2 logger")
     private String loggingLevel;
 	@DocProperty(description = "Logging layout used for Fido2")
@@ -108,6 +110,14 @@ public class AppConfiguration implements Configuration {
 
 	public void setDisableJdkLogger(Boolean disableJdkLogger) {
 		this.disableJdkLogger = disableJdkLogger;
+	}
+
+	public Boolean getDisableExternalLoggerConfiguration() {
+		return disableExternalLoggerConfiguration;
+	}
+
+	public void setDisableExternalLoggerConfiguration(Boolean disableExternalLoggerConfiguration) {
+		this.disableExternalLoggerConfiguration = disableExternalLoggerConfiguration;
 	}
 
 	public String getLoggingLevel() {

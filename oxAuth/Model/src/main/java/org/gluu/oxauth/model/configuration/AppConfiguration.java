@@ -223,6 +223,7 @@ public class AppConfiguration implements Configuration {
     private Boolean logClientIdOnClientAuthentication;
     private Boolean logClientNameOnClientAuthentication;
     private Boolean disableJdkLogger = true;
+    private Boolean disableExternalLoggerConfiguration = true;
     private Set<String> authorizationRequestCustomAllowedParameters;
     private Boolean legacyDynamicRegistrationScopeParam;
     private Boolean openidScopeBackwardCompatibility = false;
@@ -569,7 +570,15 @@ public class AppConfiguration implements Configuration {
         this.disableJdkLogger = disableJdkLogger;
     }
 
-    /**
+    public Boolean getDisableExternalLoggerConfiguration() {
+		return disableExternalLoggerConfiguration;
+	}
+
+	public void setDisableExternalLoggerConfiguration(Boolean disableExternalLoggerConfiguration) {
+		this.disableExternalLoggerConfiguration = disableExternalLoggerConfiguration;
+	}
+
+	/**
      * Used in ServletLoggingFilter to enable http request/response logging.
      */
     private Boolean httpLoggingEnabled;

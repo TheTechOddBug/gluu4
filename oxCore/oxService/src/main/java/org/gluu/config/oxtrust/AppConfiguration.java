@@ -157,6 +157,7 @@ public class AppConfiguration implements Configuration, Serializable {
     private int metricReporterKeepDataDays;
     private Boolean metricReporterEnabled;
     private Boolean disableJdkLogger = true;
+    private Boolean disableExternalLoggerConfiguration = true;
 
     @JsonProperty("ScimProperties")
     private ScimProperties scimProperties;
@@ -904,7 +905,15 @@ public class AppConfiguration implements Configuration, Serializable {
         this.disableJdkLogger = disableJdkLogger;
     }
 
-    public int getPasswordResetRequestExpirationTime() {
+    public Boolean getDisableExternalLoggerConfiguration() {
+		return disableExternalLoggerConfiguration;
+	}
+
+	public void setDisableExternalLoggerConfiguration(Boolean disableExternalLoggerConfiguration) {
+		this.disableExternalLoggerConfiguration = disableExternalLoggerConfiguration;
+	}
+
+	public int getPasswordResetRequestExpirationTime() {
         return passwordResetRequestExpirationTime;
     }
 

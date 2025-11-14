@@ -1507,6 +1507,11 @@
             "description": "Boolean value specifying whether to enable JDK Loggers.",
             "type": "boolean"
         },
+        "disableExternalLoggerConfiguration": {
+            "id": "disableExternalLoggerConfiguration",
+            "description": "Boolean value specifying whether to enable external log4j configuration.",
+            "type": "boolean"
+        },
         "jmsUserName": {
             "id": "jmsUserName",
             "description": "JMS UserName.",
@@ -2013,6 +2018,7 @@
         "loggingLevel",
         "loggingLayout",
         "disableJdkLogger",
+        "disableExternalLoggerConfiguration",
         "corsConfigurationFilters",
         "logClientIdOnClientAuthentication",
         "logClientNameOnClientAuthentication",

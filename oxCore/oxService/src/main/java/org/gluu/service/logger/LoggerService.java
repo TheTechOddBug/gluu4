@@ -71,9 +71,8 @@ public abstract class LoggerService {
     }
 
     public void initTimer(boolean updateNow) {
-        if (isDisableConfigurationUpdate()) {
-        	return;
-        }
+    	// Log message if external log4j configuration will be used
+        isDisableConfigurationUpdate(false);
 
         log.info("Initializing Logger Update Timer");
 
@@ -93,7 +92,7 @@ public abstract class LoggerService {
 
     @Asynchronous
     public void updateLoggerTimerEvent(@Observes @Scheduled LoggerUpdateEvent loggerUpdateEvent) {
-        if (isDisableConfigurationUpdate()) {
+        if (isDisableConfigurationUpdate(true)) {
         	return;
         }
 
@@ -118,7 +117,7 @@ public abstract class LoggerService {
 
     @Asynchronous
     public void updateLoggerSeverity(@Observes @ConfigurationUpdate Object appConfiguration) {
-        if (isDisableConfigurationUpdate()) {
+        if (isDisableConfigurationUpdate(true)) {
         	return;
         }
 
@@ -141,9 +140,20 @@ public abstract class LoggerService {
         }
     }
 
-	private boolean isDisableConfigurationUpdate() {
+	private boolean isDisableConfigurationUpdate(boolean silent) {
+		if (isDisableExternalLoggerConfiguration()) {
+			if (!silent) {
+				if (System.getProperty(OVERRIDE_JAVA_PROPERTY) != null) {
+					log.info("Property log4j2.configurationFile is specifed. Ignoring it according to \"disableExternalLoggerConfiguration\" configuration property");
+				}
+			}
+			return false;
+		}
+
 		if (System.getProperty(OVERRIDE_JAVA_PROPERTY) != null) {
-            log.info("Property log4j2.configurationFile is specifed. Update configuration is turned off");
+			if (!silent) {
+				log.info("Property log4j2.configurationFile is specifed. Update configuration is turned off");
+			}
             return true;
         }
 
@@ -403,10 +413,12 @@ public abstract class LoggerService {
 
     public abstract boolean isDisableJdkLogger();
 
+    public abstract boolean isDisableExternalLoggerConfiguration();
+
     public abstract String getLoggingLevel();
 
     public abstract String getLoggingLayout();
-    
+
     public abstract String getExternalLoggerConfiguration();
 
 }

@@ -50,6 +50,11 @@
          "description":"Boolean value specifying whether to enable JDK Loggers.",
          "type":"boolean"
       },
+      "disableExternalLoggerConfiguration": {
+         "id": "disableExternalLoggerConfiguration",
+         "description": "Boolean value specifying whether to enable external log4j configuration.",
+         "type": "boolean"
+      },
       "loggingLevel":{
          "id":"loggingLevel",
          "description":"Logging level for oxAuth logers.",
@@ -293,6 +298,7 @@
       "cleanServiceBatchChunkSize",
       "useLocalCache",
       "disableJdkLogger",
+      "disableExternalLoggerConfiguration",
       "loggingLevel",
       "loggingLayout",
       "externalLoggerConfiguration",
