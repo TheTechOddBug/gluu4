@@ -24,6 +24,11 @@ public class LoggerService extends org.gluu.service.logger.LoggerService {
         return ServerUtil.isTrue(appConfiguration.getDisableJdkLogger());
     }
 
+	@Override
+	public boolean isDisableExternalLoggerConfiguration() {
+		return (appConfiguration.getDisableExternalLoggerConfiguration() != null) && appConfiguration.getDisableExternalLoggerConfiguration();
+	}
+
     @Override
     public String getLoggingLevel() {
         return appConfiguration.getLoggingLevel();
