@@ -22,8 +22,6 @@ import javax.enterprise.context.ConversationScoped;
 import javax.faces.application.FacesMessage;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
@@ -38,11 +36,11 @@ import org.gluu.jsf2.message.FacesMessages;
 import org.gluu.jsf2.service.ConversationService;
 import org.gluu.model.SmtpConfiguration;
 import org.gluu.orm.util.ArrayHelper;
-import org.gluu.oxtrust.service.config.ConfigurationFactory;
 import org.gluu.oxtrust.model.GluuConfiguration;
 import org.gluu.oxtrust.model.GluuOrganization;
 import org.gluu.oxtrust.service.ConfigurationService;
 import org.gluu.oxtrust.service.OrganizationService;
+import org.gluu.oxtrust.service.config.ConfigurationFactory;
 import org.gluu.oxtrust.servlet.FaviconImageServlet;
 import org.gluu.oxtrust.servlet.IdpFaviconServlet;
 import org.gluu.oxtrust.servlet.IdpLogoServlet;
@@ -52,6 +50,7 @@ import org.gluu.oxtrust.servlet.OxAuthLogoServlet;
 import org.gluu.oxtrust.util.OxTrustConstants;
 import org.gluu.persist.exception.BasePersistenceException;
 import org.gluu.service.MailService;
+import org.gluu.service.XmlService;
 import org.gluu.service.security.Secure;
 import org.gluu.util.StringHelper;
 import org.primefaces.event.FileUploadEvent;
@@ -59,6 +58,7 @@ import org.primefaces.model.file.UploadedFile;
 import org.slf4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
@@ -96,6 +96,9 @@ public class UpdateOrganizationAction implements Serializable {
 
 	@Inject
 	private MailService mailService;
+
+	@Inject
+	private XmlService xmlService;
 
 	private GluuOrganization organization;
 
@@ -394,7 +397,7 @@ public class UpdateOrganizationAction implements Serializable {
 		}
 		String fileName = saveFile(uploadedFile, LIB_PATH);
 		BASE_FILE_NAME=BASE_FILE_NAME+fileName;
-		boolean result = updateXml(XML_PATH, isOxTrust, BASE_FILE_NAME);
+		boolean result = updateXml(XML_PATH, BASE_FILE_NAME);
 		if (result) {
 			facesMessages.add(FacesMessage.SEVERITY_INFO, "Library " + fileName + " added");
 		} else {
@@ -402,18 +405,22 @@ public class UpdateOrganizationAction implements Serializable {
 		}
 	}
 
-	private boolean updateXml(String XML_PATH, boolean isOxTrust, String fileName) {
+	private boolean updateXml(String XML_PATH, String fileName) {
 		try {
-			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder builder = factory.newDocumentBuilder();
-			Document document = builder.parse(new File(XML_PATH));
+			Document document = xmlService.getXmlDocumentFromUri(XML_PATH);
 			document.getDocumentElement().normalize();
 			NodeList configures = document.getElementsByTagName("Configure");
 			Element configure = (Element) configures.item(0);
-			Element library = document.createElement("Set");
-			library.setAttribute("name", "extraClasspath");
-			library.appendChild(document.createTextNode(fileName));
-			configure.appendChild(library);
+			Node library = findExtraClasspath(configure, "extraClasspath");
+			if (library == null) {
+				Element newLibrary = document.createElement("Set");
+				newLibrary.setAttribute("name", "extraClasspath");
+				library = newLibrary;
+				configure.appendChild(library);
+				library.appendChild(document.createTextNode(fileName));
+			} else {
+				library.appendChild(document.createTextNode("," +fileName));
+			}
 			document.getDocumentElement().normalize();
 			TransformerFactory transformerFactory = TransformerFactory.newInstance();
 			Transformer transformer = transformerFactory.newTransformer();
@@ -421,13 +428,33 @@ public class UpdateOrganizationAction implements Serializable {
 			File file = new File(XML_PATH);
 			file.setWritable(true);
 			StreamResult result = new StreamResult(file);
-			transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+			transformer.setOutputProperty(OutputKeys.ENCODING, "ISO-8859-1");
+			transformer.setOutputProperty(OutputKeys.DOCTYPE_PUBLIC, "-//Jetty//Configure//EN");
+			transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, "http://www.eclipse.org/jetty/configure_10_0.dtd"); 
 			transformer.transform(source, result);
 			return true;
 		} catch (Exception e) {
 			log.info("=========" + e);
 			return false;
 		}
+	}
+
+	private Node findExtraClasspath(Element rootElement, String nameValue) {
+		if (rootElement.hasChildNodes()) {
+			NodeList nodeList = rootElement.getChildNodes();
+			for (int i = 0; i < nodeList.getLength(); i++) {
+				Node node = nodeList.item(i);
+	            if (node.getNodeType() == Node.ELEMENT_NODE) {
+	                Element element = (Element) node;
+	                String nodeAttributeValue = element.getAttribute("name");
+	                if (nameValue.equalsIgnoreCase(nodeAttributeValue)) {
+	                    return element;
+	                }
+	            }
+			}
+		}
+		
+		return null;
 	}
 
 	private void saveLogo(UploadedFile uploadedFile) {
