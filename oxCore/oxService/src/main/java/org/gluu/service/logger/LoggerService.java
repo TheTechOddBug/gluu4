@@ -141,12 +141,25 @@ public abstract class LoggerService {
     }
 
 	private boolean isDisableConfigurationUpdate(boolean silent) {
-		if (isDisableExternalLoggerConfiguration()) {
-			if (!silent) {
-				if (System.getProperty(OVERRIDE_JAVA_PROPERTY) != null) {
-					log.info("Property log4j2.configurationFile is specifed. Ignoring it according to \"disableExternalLoggerConfiguration\" configuration property");
-				}
+		if (!silent) {
+			if (System.getProperty(OVERRIDE_JAVA_PROPERTY) != null) {
+				log.info("Property log4j2.configurationFile is specifed. Ignoring it according to \"disableExternalLoggerConfiguration\" configuration property");
 			}
+			if (isDisableExternalLoggerConfiguration()) {
+				log.info("External configuration is disabled with 'disableExternalLoggerConfiguration=true'");
+			}
+		}
+
+		if (isDisableExternalLoggerConfiguration()) {
+			if (System.getProperty(OVERRIDE_JAVA_PROPERTY) != null) {
+				// Unset log4j2.configurationFile
+				log.info("Property log4j2.configurationFile is cleared");
+				System.clearProperty(OVERRIDE_JAVA_PROPERTY);
+				// Reload configuration
+				resetLoggerConfigLocation();
+			}
+			
+			// Allow configuration dynamic update
 			return false;
 		}
 
@@ -154,10 +167,10 @@ public abstract class LoggerService {
 			if (!silent) {
 				log.info("Property log4j2.configurationFile is specifed. Update configuration is turned off");
 			}
-            return true;
         }
 
-		return false;
+		// Disable configuration dynamic update
+		return true;
 	}
 
     private void updateApplicationConfiguration() {
