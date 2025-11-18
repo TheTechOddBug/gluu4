@@ -13,9 +13,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import javax.annotation.Nonnull;
-import javax.persistence.Transient;
-
 import org.apache.commons.lang.StringUtils;
 import org.gluu.persist.annotation.AttributeName;
 import org.gluu.persist.annotation.AttributesList;
@@ -88,7 +85,6 @@ public class SessionId implements Deletable, Serializable {
     @AttributeName(name = "creationDate")
     private Date creationDate = new Date();
 
-    @Transient
     private transient boolean persisted;
 
     @Expiration
@@ -188,7 +184,6 @@ public class SessionId implements Deletable, Serializable {
         this.permissionGranted = permissionGranted;
     }
 
-    @Nonnull
     public Map<String, String> getSessionAttributes() {
         if (sessionAttributes == null) {
             sessionAttributes = Maps.newHashMap();
