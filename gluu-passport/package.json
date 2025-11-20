@@ -1,7 +1,7 @@
 {
   "name": "passport",
-  "version": "4.5.13",
-  "release_version": "4.5.13-SNAPSHOT",
+  "version": "4.5.14",
+  "release_version": "4.5.14-SNAPSHOT",
   "private": true,
   "nyc": {
     "all": true,
