@@ -5,7 +5,6 @@ import org.gluu.persist.annotation.AttributeName;
 import org.gluu.persist.annotation.DN;
 import org.gluu.persist.annotation.JsonObject;
 
-import javax.annotation.Nonnull;
 import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.Date;
@@ -180,7 +179,6 @@ public class SampleSessionId implements Serializable {
         permissionGrantedMap.put(clientId, granted);
     }
 
-    @Nonnull
     public Map<String, String> getSessionAttributes() {
         if (sessionAttributes == null) {
             sessionAttributes = Maps.newHashMap();
