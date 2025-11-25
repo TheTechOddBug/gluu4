@@ -120,6 +120,7 @@ public class AppConfiguration implements Configuration {
 
     private Boolean keyRegenerationEnabled;
     private int keyRegenerationInterval;
+    private int keyRegenerationWarnIfExpiresInDaysLess;
     private String defaultSignatureAlgorithm;
     private String oxOpenIdConnectVersion;
     private String oxId;
@@ -1347,6 +1348,14 @@ public class AppConfiguration implements Configuration {
 
     public void setKeyRegenerationInterval(int keyRegenerationInterval) {
         this.keyRegenerationInterval = keyRegenerationInterval;
+    }
+
+    public int getKeyRegenerationWarnIfExpiresInDaysLess() {
+        return keyRegenerationWarnIfExpiresInDaysLess;
+    }
+
+    public void setKeyRegenerationWarnIfExpiresInDaysLess(int keyRegenerationWarnIfExpiresInDaysLess) {
+        this.keyRegenerationWarnIfExpiresInDaysLess = keyRegenerationWarnIfExpiresInDaysLess;
     }
 
     public String getDefaultSignatureAlgorithm() {

@@ -85,6 +85,7 @@ cleanServiceBatchChunkSize                         | Clean service chunk size wh
 cleanServiceBaseDns                                | Array of base DNs where clean service will look up for expired entities.
 keyRegenerationEnabled                             | Boolean value specifying whether to regenerate keys
 keyRegenerationInterval                            | The interval for key regeneration in hours
+keyRegenerationWarnIfExpiresInDaysLess             | Print warning in logs if key's expiresInDays are less then number specified by this property. If value is not set, it defaults to zero and warning is printed.
 defaultSignatureAlgorithm                          | The default signature algorithm to sign ID Tokens
 oxOpenIdConnectVersion                             | OpenID Connect Version
 organizationInum                                   | The Organization Inum

@@ -39,6 +39,7 @@ public abstract class AbstractCryptoProvider {
     protected static final Logger LOG = Logger.getLogger(AbstractCryptoProvider.class);
 
     private int keyRegenerationIntervalInDays = -1;
+    private int keyRegenerationWarnIfExpiresInDaysLess;
 
     public JSONObject generateKey(Algorithm algorithm, Long expirationTime) throws Exception {
         return generateKey(algorithm, expirationTime, Use.SIGNATURE);
@@ -191,6 +192,11 @@ public abstract class AbstractCryptoProvider {
             SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Date today = new Date();
             long expiresInDays = (expirationTime - today.getTime()) / (24 * 60 * 60 * 1000);
+
+            if (!shouldWarnKeysExpiration((int) expiresInDays, keyRegenerationWarnIfExpiresInDaysLess)) {
+                return;
+            }
+
             if (expiresInDays == 0) {
                 LOG.warn("\nWARNING! Key will expire soon, alias: " + alias
                         + "\n\tExpires On: " + ft.format(expirationDate)
@@ -231,5 +237,13 @@ public abstract class AbstractCryptoProvider {
 
     public void setKeyRegenerationIntervalInDays(int keyRegenerationIntervalInDays) {
         this.keyRegenerationIntervalInDays = keyRegenerationIntervalInDays;
+    }
+
+    public void setKeyRegenerationWarnIfExpiresInDaysLess(int keyRegenerationWarnIfExpiresInDaysLess) {
+        this.keyRegenerationWarnIfExpiresInDaysLess = keyRegenerationWarnIfExpiresInDaysLess;
+    }
+
+    public static boolean shouldWarnKeysExpiration(int expiresInDays, int keyRegenerationWarnIfExpiresInDaysLess) {
+        return expiresInDays < keyRegenerationWarnIfExpiresInDaysLess || keyRegenerationWarnIfExpiresInDaysLess <= 0;
     }
 }

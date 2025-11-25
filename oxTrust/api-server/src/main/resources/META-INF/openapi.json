@@ -6457,6 +6457,10 @@
             "type" : "integer",
             "format" : "int32"
           },
+          "keyRegenerationWarnIfExpiresInDaysLess" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
           "defaultSignatureAlgorithm" : {
             "type" : "string"
           },

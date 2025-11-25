@@ -235,6 +235,7 @@
     "cleanServiceBatchChunkSize": 10000,
     "keyRegenerationEnabled":true,
     "keyRegenerationInterval":48,
+    "keyRegenerationWarnIfExpiresInDaysLess": 30,
     "defaultSignatureAlgorithm":"RS256",
     "oxOpenIdConnectVersion":"openidconnect-1.0",
     "oxId":"https://%(hostname)s/oxid/service/gluu/inum",

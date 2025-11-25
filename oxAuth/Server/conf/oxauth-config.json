@@ -208,6 +208,7 @@
     "cleanServiceInterval":${config.client.clean-service-interval},
     "keyRegenerationEnabled":false,
     "keyRegenerationInterval":48,
+    "keyRegenerationWarnIfExpiresInDaysLess": 30,
     "defaultSignatureAlgorithm":"RS256",
     "oxOpenIdConnectVersion":"openidconnect-1.0",
     "oxId":"https://${server.name}/oxid/service/gluu/inum",
