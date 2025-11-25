@@ -7,7 +7,7 @@
 	<artifactId>gluu-core-bom</artifactId>
 	<packaging>pom</packaging>
 	<name>gluu-core-bom</name>
-	<version>4.5.13-SNAPSHOT</version>
+	<version>4.5.14-SNAPSHOT</version>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -274,7 +274,7 @@
 			<dependency>
 				<groupId>com.nimbusds</groupId>
 				<artifactId>nimbus-jose-jwt</artifactId>
-				<version>9.48</version>
+				<version>10.0.2</version>
 			</dependency>
 
 			<!-- Weld -->
