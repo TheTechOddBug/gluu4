@@ -691,6 +691,16 @@
             "exclusiveMaximum": false,
             "exclusiveMinimum": false
         },
+        "keyRegenerationWarnIfExpiresInDaysLess": {
+            "id": "keyRegenerationWarnIfExpiresInDaysLess",
+            "description": "Print warning in logs if key's expiresInDays are less then number specified by this property. If value is not set, it defaults to zero and warning is printed.",
+            "type": "integer",
+            "multipleOf": 1,
+            "maximum": 2147483647,
+            "minimum": 1,
+            "exclusiveMaximum": false,
+            "exclusiveMinimum": false
+        },
         "defaultSignatureAlgorithm": {
             "id": "defaultSignatureAlgorithm",
             "description": "The default signature algorithm to sign ID Tokens.",
