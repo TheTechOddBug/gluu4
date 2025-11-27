@@ -311,7 +311,8 @@ Please calculate the minimum required resources as per the services deployed. Th
 
         For testing purposes, you can deploy it on your Kubernetes cluster using the following commands:
         ```bash
-        helm install my-release --set auth.postgresPassword=Test1234#,auth.database=gluu -n gluu oci://registry-1.docker.io/bitnamicharts/postgresql
+        wget https://raw.githubusercontent.com/GluuFederation/flex/nightly/automation/pgsql.yaml
+        kubectl apply -f pgsql.yaml
         ```
 
         Add the following yaml snippet to your `override.yaml` file:
@@ -323,8 +324,33 @@ Please calculate the minimum required resources as per the services deployed. Th
             cnSqlDbName: gluu
             cnSqlDbPort: 5432
             cnSqlDbDialect: pgsql
-            cnSqlDbHost: my-release-postgresql.gluu.svc
+            cnSqlDbHost: postgresql.gluu.svc
             cnSqlDbUser: postgres
+            cnSqlDbTimezone: UTC
+            cnSqldbUserPassword: Test1234#
+        ```
+
+    1.  **Optional:** If using MySQL as the persistence backend.
+        In a production environment, a production grade MySQL server should be used such as `Cloud SQL` in GCP or `Amazon RDS` in AWS.
+
+        For testing purposes, you can deploy it on your Kubernetes cluster using the following commands:
+
+        ```bash
+        wget https://raw.githubusercontent.com/GluuFederation/flex/nightly/automation/mysql.yaml
+        kubectl apply -f mysql.yaml
+        ```
+
+        Add the following yaml snippet to your `override.yaml` file:
+        ```yaml
+        global:
+          gluuPersistenceType: sql
+        config:
+          configmap:
+            cnSqlDbName: gluu
+            cnSqlDbPort: 3306
+            cnSqlDbDialect: mysql
+            cnSqlDbHost: mysql.gluu.svc
+            cnSqlDbUser: root
             cnSqlDbTimezone: UTC
             cnSqldbUserPassword: Test1234#
         ```
