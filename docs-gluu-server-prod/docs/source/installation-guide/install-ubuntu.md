@@ -36,9 +36,9 @@ echo "deb https://repo.gluu.org/ubuntu/ jammy main" > /etc/apt/sources.list.d/gl
 curl --user "your-username:your-password" https://repo.gluu.org/ubuntu/gluu-apt.key | apt-key add -
 ```
 
-```
 Create a file named /etc/apt/auth.conf.d/99repo with content:
 
+```
 machine https://repo.gluu.org
 login your-username
 password your-password
