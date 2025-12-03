@@ -266,9 +266,14 @@ public abstract class BaseEntryManager<O extends PersistenceOperationService> im
 		if (isValidateAfterUpdate()) {
 			if (!isSchemaUpdate) {
 				// Compare loaded entry data after merge
+				
+				// Step 1. Rebuild map with attributes which we planned to persist
+				attributesToPersistMap = getAttributesMap(attributesToPersist);
+
+				// Step 2. Load current entry from DB
 				List<AttributeData> attributesAfterMergeFromLdap = find(dnValue.toString(), objectClasses, propertiesAnnotationsMap, currentLdapReturnAttributesList.toArray(EMPTY_STRING_ARRAY));
 
-				// Compare loaded entry data with initial entry data
+				// Step 3. Compare loaded entry data with initial entry data
 				List<AttributeDataModification> attributeDataModificationsAftermerge = prepareAttributeDataModifications(entryClass,
 						dnValue, entry, propertiesAnnotations, attributesToPersistMap, attributesAfterMergeFromLdap, schemaModificationType,
 						isSchemaUpdate, isConfigurationUpdate, forceUpdate);
