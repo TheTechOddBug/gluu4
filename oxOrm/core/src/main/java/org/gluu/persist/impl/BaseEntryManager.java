@@ -279,7 +279,7 @@ public abstract class BaseEntryManager<O extends PersistenceOperationService> im
 						isSchemaUpdate, isConfigurationUpdate, forceUpdate);
 
 				if (attributeDataModificationsAftermerge.size() > 0) {
-					LOG.warn("Detected changes which not exists in enry after merge. Entry DN: %s, missing changes: %s",
+					LOG.warn("Detected changes which not exists in enry after merge. Entry DN: {}, missing changes: {}",
 							dnValue, attributeDataModificationsAftermerge);
 				}
 			}
