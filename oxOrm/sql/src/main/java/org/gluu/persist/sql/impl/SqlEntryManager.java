@@ -17,8 +17,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
-
 import org.gluu.orm.util.ArrayHelper;
 import org.gluu.orm.util.StringHelper;
 import org.gluu.persist.PersistenceEntryManager;
@@ -54,6 +52,8 @@ import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.Expressions;
 
+import javax.inject.Inject;
+
 /**
  * SQL Entry Manager
  *
@@ -76,10 +76,13 @@ public class SqlEntryManager extends BaseEntryManager<SqlOperationService> imple
 
     private List<DeleteNotifier> subscribers;
 
+	private boolean validateAfterUpdate;
+
     protected SqlEntryManager(SqlOperationService operationService) {
         this.operationService = operationService;
         this.filterConverter = new SqlFilterConverter(operationService);
         subscribers = new LinkedList<DeleteNotifier>();
+        this.validateAfterUpdate = operationService.getConnectionProvider().isValidateAfterUpdate();
     }
 
     @Override
@@ -1003,6 +1006,11 @@ public class SqlEntryManager extends BaseEntryManager<SqlOperationService> imple
 		}
 		
 		return objectClasses[0];
+	}
+
+    @Override
+	protected boolean isValidateAfterUpdate() {
+		return validateAfterUpdate;
 	}
 
 }

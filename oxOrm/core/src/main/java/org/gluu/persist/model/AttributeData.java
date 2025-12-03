@@ -82,10 +82,10 @@ public class AttributeData {
 		if (obj == null)
 			return false;
 		AttributeData other = (AttributeData) obj;
-		if ((multiValued != null) && (other.multiValued != null)) {
-			if (!multiValued.equals(other.multiValued))
-				return false;
-		}
+//		if ((multiValued != null) && (other.multiValued != null)) {
+//			if (!multiValued.equals(other.multiValued))
+//				return false;
+//		}
 		if (name == null) {
 			if (other.name != null)
 				return false;
