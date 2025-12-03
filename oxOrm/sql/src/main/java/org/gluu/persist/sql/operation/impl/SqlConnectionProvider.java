@@ -91,6 +91,8 @@ public class SqlConnectionProvider {
 	private Map<String, String> tableEnginesMap = new HashMap<>();
 	private Map<String, ArrayList<String>> tableJsonColumnsMap = new HashMap<>();
 
+	private boolean validateAfterUpdate;
+
     protected SqlConnectionProvider() {
     }
 
@@ -179,6 +181,11 @@ public class SqlConnectionProvider {
 		Boolean testOnReturn = StringHelper.toBoolean(props.getProperty("connection.pool.test-on-return"), null);
 		if (testOnReturn != null) {
 			objectPoolConfig.setTestOnReturn(testOnReturn);
+		}
+
+		Boolean validateAfterUpdate = StringHelper.toBoolean(props.getProperty("orm.validate-after-update"), null);
+		if (validateAfterUpdate != null) {
+			this.validateAfterUpdate = validateAfterUpdate.booleanValue();
 		}
 
         openWithWaitImpl();
@@ -508,6 +515,10 @@ public class SqlConnectionProvider {
 
 	public SupportedDbType getDbType() {
 		return dbType;
+	}
+
+	public boolean isValidateAfterUpdate() {
+		return validateAfterUpdate;
 	}
 
 }
