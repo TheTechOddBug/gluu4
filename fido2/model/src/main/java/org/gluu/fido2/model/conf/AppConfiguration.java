@@ -8,8 +8,6 @@ package org.gluu.fido2.model.conf;
 
 import java.util.List;
 
-import javax.enterprise.inject.Vetoed;
-
 import org.gluu.doc.annotation.DocProperty;
 import org.gluu.oxauth.model.configuration.Configuration;
 
@@ -22,7 +20,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  * @version May 13, 2020
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-@Vetoed
 public class AppConfiguration implements Configuration {
 
 	@DocProperty(description = "URL using the https scheme for Issuer identifier")
