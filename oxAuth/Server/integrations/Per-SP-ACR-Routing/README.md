@@ -100,6 +100,11 @@ entityid_oidc_acr_map_file = /etc/certs/saml2oidc_acr_mappings.json
 
 Edit config:
 
+ - Log into Gluu Server oxTrust
+ - JSON Configuration > oxAuth Configuration > Search for "authorizationRequestCustomAllowedParameters"
+ - Add `issuerId` as Item_1 and "entityId" as Item_2
+ - Update property
+
 ```json
 "authorizationRequestCustomAllowedParameters": [
   "issuerId",
