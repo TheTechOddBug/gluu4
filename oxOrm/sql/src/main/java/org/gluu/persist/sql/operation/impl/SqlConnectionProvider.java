@@ -186,6 +186,7 @@ public class SqlConnectionProvider {
 		Boolean validateAfterUpdate = StringHelper.toBoolean(props.getProperty("orm.validate-after-update"), null);
 		if (validateAfterUpdate != null) {
 			this.validateAfterUpdate = validateAfterUpdate.booleanValue();
+	        LOG.debug("ORM validate after update: '{}'", this.validateAfterUpdate);
 		}
 
         openWithWaitImpl();
