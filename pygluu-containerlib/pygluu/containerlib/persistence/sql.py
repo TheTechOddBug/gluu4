@@ -8,6 +8,7 @@ import warnings
 from collections import defaultdict
 
 from sqlalchemy import create_engine
+from sqlalchemy import event
 from sqlalchemy import MetaData
 from sqlalchemy import func
 from sqlalchemy import select
@@ -54,6 +55,9 @@ class SQLClient:
         """Lazy init of engine instance object."""
         if not self._engine:
             self._engine = create_engine(self.engine_url, pool_pre_ping=True, hide_parameters=True)
+
+            if self.dialect in ("pgsql", "postgresql"):
+                event.listen(self._engine, "connect", set_postgres_search_path, insert=True)
         return self._engine
 
     @property
@@ -385,14 +389,7 @@ def render_sql_properties(manager, src: str, dest: str) -> None:
     with open(dest, "w") as f:
         db_dialect = os.environ.get("GLUU_SQL_DB_DIALECT", "mysql")
         db_name = os.environ.get("GLUU_SQL_DB_NAME", "gluu")
-
-        # In MySQL, physically, a schema is synonymous with a database
-        if db_dialect == "mysql":
-            default_schema = db_name
-        else:  # likely postgres
-            # by default, PostgreSQL creates schema called `public` upon database creation
-            default_schema = "public"
-        db_schema = os.environ.get("GLUU_SQL_DB_SCHEMA", "") or default_schema
+        db_schema = resolve_db_schema_name()
 
         rendered_txt = txt % {
             "rdbm_db": db_name,
@@ -421,3 +418,49 @@ def doc_id_from_dn(dn: str) -> str:
     if doc_id == "gluu":
         doc_id = "_"
     return doc_id
+
+
+def resolve_db_schema_name():
+    """Resolve database schema name based on dialect and environment.
+
+    For MySQL, schema is synonymous with database name.
+    For PostgreSQL, defaults to 'public' unless overridden.
+
+    Returns:
+        Schema name to use.
+    """
+    db_dialect = os.environ.get("GLUU_SQL_DB_DIALECT", "mysql")
+    db_name = os.environ.get("GLUU_SQL_DB_NAME", "gluu")
+
+    # In MySQL, physically, a schema is synonymous with a database
+    if db_dialect == "mysql":
+        default_schema = db_name
+    else:  # likely postgres
+        # by default, PostgreSQL creates schema called `public` upon database creation
+        default_schema = "public"
+    return os.environ.get("GLUU_SQL_DB_SCHEMA", "") or default_schema
+
+
+def set_postgres_search_path(dbapi_connection, connection_record):
+    """Set PostgreSQL search_path to the resolved schema on new connections.
+
+    Args:
+        dbapi_connection: Raw DBAPI connection.
+        connection_record: SQLAlchemy connection record (unused but required by event signature).
+    """
+    db_schema = resolve_db_schema_name()
+
+    # use the .autocommit DBAPI attribute so that when the SET search_path directive is invoked,
+    # it is invoked outside of the scope of any transaction and therefore will not be reverted when
+    # the DBAPI connection has a rollback.
+    existing_autocommit = dbapi_connection.autocommit
+
+    try:
+        dbapi_connection.autocommit = True
+        cursor = dbapi_connection.cursor()
+        try:
+            cursor.execute("SET search_path = %s", [db_schema])
+        finally:
+            cursor.close()
+    finally:
+        dbapi_connection.autocommit = existing_autocommit

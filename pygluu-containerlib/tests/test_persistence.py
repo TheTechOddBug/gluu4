@@ -611,6 +611,23 @@ def test_sql_client_init(monkeypatch, dialect):
     assert client.adapter.dialect == dialect
 
 
+@pytest.mark.parametrize(("db_dialect", "db_name", "db_schema", "actual_db_schema"), [
+    # using default schema names
+    ("mysql", "gluu", "", "gluu"),
+    ("pgsql", "gluu", "", "public"),
+    # using custom schema names
+    ("mysql", "gluu", "custom", "custom"),
+    ("pgsql", "gluu", "custom", "custom"),
+])
+def test_resolve_db_schema_name(monkeypatch, db_dialect, db_name, db_schema, actual_db_schema):
+    from pygluu.containerlib.persistence.sql import resolve_db_schema_name
+
+    monkeypatch.setenv("GLUU_SQL_DB_DIALECT", db_dialect)
+    monkeypatch.setenv("GLUU_SQL_DB_NAME", db_name)
+    monkeypatch.setenv("GLUU_SQL_DB_SCHEMA", db_schema)
+    assert resolve_db_schema_name() == actual_db_schema
+
+
 # =======
 # SPANNER
 # =======
