@@ -12,6 +12,7 @@ from sqlalchemy import event
 from sqlalchemy import MetaData
 from sqlalchemy import func
 from sqlalchemy import select
+from sqlalchemy import text
 from sqlalchemy.engine.url import URL
 from sqlalchemy.exc import SAWarning
 from ldap3.utils import dn as dnutils
@@ -63,13 +64,14 @@ class SQLClient:
     @property
     def engine_url(self) -> URL:
         """Engine connection URL."""
-        return URL(
+        return URL.create(
             drivername=self.adapter.connector,
             username=os.environ.get("GLUU_SQL_DB_USER", "gluu"),
             password=get_sql_password(),
             host=os.environ.get("GLUU_SQL_DB_HOST", "localhost"),
             port=int(os.environ.get("GLUU_SQL_DB_PORT", "3306")),
             database=os.environ.get("GLUU_SQL_DB_NAME", "gluu"),
+            query={},
         )
 
     @property
@@ -88,8 +90,8 @@ class SQLClient:
 
             if not self._metadata:
                 # do reflection on database table
-                self._metadata = MetaData(bind=self.engine)
-                self._metadata.reflect()
+                self._metadata = MetaData()
+                self._metadata.reflect(self.engine)
             return self._metadata
 
     @property
@@ -100,7 +102,7 @@ class SQLClient:
     def connected(self) -> bool:
         """Check whether connection is alive by executing simple query."""
         with self.engine.connect() as conn:
-            result = conn.execute("SELECT 1 AS is_alive")
+            result = conn.execute(text("SELECT 1 AS is_alive"))
             return result.fetchone()[0] > 0
 
     def get_table_mapping(self) -> dict:
@@ -138,7 +140,7 @@ class SQLClient:
         if table is None:
             return False
 
-        query = select([func.count()]).select_from(table).where(
+        query = select(func.count()).select_from(table).where(
             table.c.doc_id == id_
         )
         with self.engine.connect() as conn:
@@ -164,20 +166,22 @@ class SQLClient:
         query = f"CREATE TABLE {self.quoted_id(table_name)} ({columns_fmt}, {pk_def})"
 
         with self.engine.connect() as conn:
-            try:
-                conn.execute(query)
-                # refresh metadata as we have newly created table
-                self.metadata.reflect()
-            except Exception as exc:  # noqa: B902
-                self.adapter.on_create_table_error(exc)
+            with conn.begin():
+                try:
+                    conn.execute(text(query))
+                    # refresh metadata as we have newly created table
+                    self.metadata.reflect(conn)
+                except Exception as exc:
+                    self.adapter.on_create_table_error(exc)
 
     def create_index(self, query):
         """Create index using raw query."""
         with self.engine.connect() as conn:
-            try:
-                conn.execute(query)
-            except Exception as exc:  # noqa: B902
-                self.adapter.on_create_index_error(exc)
+            with conn.begin():
+                try:
+                    conn.execute(text(query))
+                except Exception as exc:
+                    self.adapter.on_create_index_error(exc)
 
     def insert_into(self, table_name, column_mapping):
         """Insert a row into a table."""
@@ -201,10 +205,11 @@ class SQLClient:
 
         query = table.insert().values(column_mapping)
         with self.engine.connect() as conn:
-            try:
-                conn.execute(query)
-            except Exception as exc:  # noqa: B902
-                self.adapter.on_insert_into_error(exc)
+            with conn.begin():
+                try:
+                    conn.execute(query)
+                except Exception as exc:
+                    self.adapter.on_insert_into_error(exc)
 
     def get(self, table_name, id_, column_names=None) -> dict:
         """Get a row from a table with matching ID."""
@@ -212,20 +217,18 @@ class SQLClient:
 
         attrs = column_names or []
         if attrs:
-            cols = [table.c[attr] for attr in attrs]
+            _select = select(*[table.c[attr] for attr in attrs])
         else:
-            cols = [table]
+            _select = select(table)
+        query = _select.where(table.c.doc_id == id_)
 
-        query = select(cols).select_from(table).where(
-            table.c.doc_id == id_
-        )
         with self.engine.connect() as conn:
             result = conn.execute(query)
             entry = result.fetchone()
 
         if not entry:
             return {}
-        return dict(entry)
+        return dict(entry._mapping)
 
     def update(self, table_name, id_, column_mapping) -> bool:
         """Update a table row with matching ID."""
@@ -233,29 +236,30 @@ class SQLClient:
 
         query = table.update().where(table.c.doc_id == id_).values(column_mapping)
         with self.engine.connect() as conn:
-            result = conn.execute(query)
+            with conn.begin():
+                result = conn.execute(query)
         return bool(result.rowcount)
 
     def search(self, table_name, column_names=None) -> dict:
-        """Get a row from a table with matching ID."""
+        """Search rows from a table."""
         table = self.metadata.tables.get(table_name)
 
         attrs = column_names or []
         if attrs:
-            cols = [table.c[attr] for attr in attrs]
+            query = select(*[table.c[attr] for attr in attrs])
         else:
-            cols = [table]
+            query = select(table)
 
-        query = select(cols).select_from(table)
         with self.engine.connect() as conn:
             result = conn.execute(query)
             for entry in result:
-                yield dict(entry)
+                yield dict(entry._mapping)
 
     @property
     def server_version(self):
         """Display server version."""
-        return self.engine.scalar(self.adapter.server_version_query)
+        with self.engine.connect() as conn:
+            return conn.scalar(text(self.adapter.server_version_query))
 
     def get_server_version(self):
         """Get server version as tuple."""
@@ -317,7 +321,7 @@ class PostgresqlAdapter:
             raise exc
 
     @property
-    def server_version(self):
+    def server_version_query(self):
         """Query string to display server version."""
         return "SHOW server_version"
 
