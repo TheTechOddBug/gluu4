@@ -26,6 +26,8 @@ public class CacheConfiguration implements Serializable {
 
     private NativePersistenceConfiguration nativePersistenceConfiguration;
 
+    private String keyPrefix;
+
     public NativePersistenceConfiguration getNativePersistenceConfiguration() {
         return nativePersistenceConfiguration;
     }
@@ -66,6 +68,14 @@ public class CacheConfiguration implements Serializable {
         this.memcachedConfiguration = memcachedConfiguration;
     }
 
+    public String getKeyPrefix() {
+        return keyPrefix;
+    }
+
+    public void setKeyPrefix(String keyPrefix) {
+        this.keyPrefix = keyPrefix;
+    }
+
     @Override
     public String toString() {
         return "CacheConfiguration{" +
@@ -74,6 +84,7 @@ public class CacheConfiguration implements Serializable {
                 ", redisConfiguration=" + redisConfiguration +
                 ", inMemoryConfiguration=" + inMemoryConfiguration +
                 ", nativePersistenceConfiguration=" + nativePersistenceConfiguration +
+                ", keyPrefix=" + keyPrefix +
                 '}';
     }
 }
