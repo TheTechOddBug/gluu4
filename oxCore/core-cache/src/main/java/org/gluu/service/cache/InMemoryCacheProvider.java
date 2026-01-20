@@ -106,4 +106,8 @@ public class InMemoryCacheProvider extends AbstractCacheProvider<ExpiringMap> {
         return CacheProviderType.IN_MEMORY;
     }
 
+    @Override
+    public CacheConfiguration getCacheConfiguration() {
+        return cacheConfiguration;
+    }
 }
