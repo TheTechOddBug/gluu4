@@ -5,6 +5,7 @@
  */
 package org.gluu.service;
 
+import org.apache.commons.lang3.StringUtils;
 import org.gluu.service.cache.CacheInterface;
 import org.gluu.service.cache.CacheProvider;
 import org.gluu.service.cache.CacheProviderType;
@@ -34,11 +35,21 @@ public abstract class BaseCacheService implements CacheInterface {
             return null;
         }
 
-    	log.trace("Request data, key '{}'", key);
+        key = addKeyPrefix(key, cacheProvider);
+
+        log.trace("Request data, key '{}'", key);
     	Object value = cacheProvider.get(key);
     	log.trace("Loaded data, key '{}': '{}'", key, value);
 
     	return value;
+    }
+
+    private static String addKeyPrefix(String key, CacheProvider cacheProvider) {
+        String keyPrefix = cacheProvider.getCacheConfiguration().getKeyPrefix();
+        if (StringUtils.isNotBlank(keyPrefix) && !key.startsWith(keyPrefix)) {
+            key = keyPrefix + key;
+        }
+        return key;
     }
 
     public <T> T getWithPut(String key, Supplier<T> loadFunction, int expirationInSeconds) {
@@ -47,6 +58,8 @@ public abstract class BaseCacheService implements CacheInterface {
         }
 
     	CacheProvider cacheProvider = getCacheProvider();
+
+        key = addKeyPrefix(key, cacheProvider);
 
     	if (CacheProviderType.NATIVE_PERSISTENCE == cacheProvider.getProviderType()) {
         	log.trace("Loading data from DB without cache, key '{}'", key);
@@ -80,7 +93,9 @@ public abstract class BaseCacheService implements CacheInterface {
         	log.error("Cache provider is invalid!");
 			return;
 		}
-		
+
+        key = addKeyPrefix(key, cacheProvider);
+
     	log.trace("Put data, key '{}': '{}'", key, object);
 		cacheProvider.put(expirationInSeconds, key, object);
 	}
@@ -91,7 +106,8 @@ public abstract class BaseCacheService implements CacheInterface {
         	log.error("Cache provider is invalid!");
 			return;
 		}
-		
+
+        key = addKeyPrefix(key, cacheProvider);
     	log.trace("Remove data, key '{}'", key);
 		cacheProvider.remove(key);
 	}
