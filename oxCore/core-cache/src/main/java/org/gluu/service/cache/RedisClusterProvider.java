@@ -11,7 +11,6 @@ import redis.clients.jedis.JedisPoolConfig;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
 /**
  * Important : keep it weld free. It's reused by oxd !
@@ -30,7 +29,7 @@ public class RedisClusterProvider extends AbstractRedisProvider {
 
     public void create() {
         try {
-            LOG.debug("Starting RedisClusterProvider ... configuration:" + getRedisConfiguration());
+            LOG.debug("Starting RedisClusterProvider ... configuration:" + redisConfiguration);
 
             JedisPoolConfig poolConfig = createPoolConfig();
             String password = redisConfiguration.getPassword();
@@ -40,10 +39,11 @@ public class RedisClusterProvider extends AbstractRedisProvider {
 
                 pool = new JedisCluster(hosts(getRedisConfiguration().getServers()), redisConfiguration.getConnectionTimeout(),
                         redisConfiguration.getSoTimeout(), redisConfiguration.getMaxRetryAttempts(),
-                        password, UUID.randomUUID().toString(), poolConfig, true);
+                        password, redisConfiguration.getClientName(), poolConfig, true);
             } else {
                 pool = new JedisCluster(hosts(getRedisConfiguration().getServers()), redisConfiguration.getConnectionTimeout(),
-                        redisConfiguration.getSoTimeout(), redisConfiguration.getMaxRetryAttempts(), password, poolConfig);
+                        redisConfiguration.getSoTimeout(), redisConfiguration.getMaxRetryAttempts(),
+                        password, redisConfiguration.getClientName(), poolConfig);
             }
 
             testConnection();
