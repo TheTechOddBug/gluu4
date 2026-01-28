@@ -119,6 +119,7 @@
     "cleanServiceInterval":300,
     "loggingLevel": "INFO",
     "loggingLayout": "text",
+    "disableExternalLoggerConfiguration": true,
     "passwordResetRequestExpirationTime":600,
     "useLocalCache": true
 }
