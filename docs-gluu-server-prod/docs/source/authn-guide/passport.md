@@ -161,7 +161,7 @@ If there are no matches, an entry is added using the values received from the ex
 
 ### Altering flow behavior
 
-There are a couple of ways to modify the behavior of the authentication flow. However, these are minor flow changes. For changes not covered in this section, open a [support ticket](https://support.gluu.org) for further assistance. Customization may require programming skills in languages such as Python, Java, and Node.js.
+There are a couple of ways to modify the behavior of the authentication flow. However, these are minor flow changes. For changes not covered in this section, open a [support ticket](https://help.gluu.org) for further assistance. Customization may require programming skills in languages such as Python, Java, and Node.js.
 
 !!! Warning
     Wait at least 1 minute before testing all modications to give the server time to pick up configuration changes.

@@ -20,6 +20,6 @@ There are two main ways to install a Community Edition deployment, one suitable 
 1. Run the [setup script](./setup_py.md)    
 
 ## Support
-Please review the [Gluu support portal](https://support.gluu.org). There are many existing tickets about troubleshooting installation issues. If there is no similar existing public issue, register for an account and open a new ticket. 
+Please review the [Gluu support portal](https://help.gluu.org). There are many existing tickets about troubleshooting installation issues. If there is no similar existing public issue, register for an account and open a new ticket. 
 
 If your organization needs guaranteed responses, SLAs, and priority access to the Gluu support and development team, consider purchasing one of our [VIP support contracts](https://gluu.org/pricing).  

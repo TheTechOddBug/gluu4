@@ -35,7 +35,7 @@ if Config.profile != static.SetupProfiles.DISA_STIG:
 import npyscreen
 
 random_marketing_strings = [
-    'Having trouble? Open a ticket: https://support.gluu.org',
+    'Having trouble? Open a ticket: https://help.gluu.org',
     'Need to cluster? Consider moving to Kubernetes with Gluu Cloud Native Edition.',
     "What is oxd? It's an API that developers use to obtain OAuth tokens or to use OpenID Connect authentication.",
     'Super Gluu is free mobile 2FA applications that uses push notifications and FIDO authentication https://super.gluu.org',

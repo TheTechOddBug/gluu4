@@ -64,7 +64,7 @@ The Gluu Server supports the User Managed Access (UMA) 2.0 profile of OAuth 2.0,
 Learn more about using the Gluu Server for access management in the [UMA docs](./admin-guide/uma.md).
 
 ## Support
-Gluu offers free and VIP support! Anyone can browse or register and post questions on the [Gluu support portal](https://support.gluu.org). Tickets opened by the community are public, and we do our best to answer them in a timely manner. 
+Gluu offers free and VIP support! Anyone can browse or register and post questions on the [Gluu support portal](https://help.gluu.org). Tickets opened by the community are public, and we do our best to answer them in a timely manner. 
 
 Private support, guaranteed response times and consultative support are available with a paid support contract. For more information, see [our website](https://gluu.org/).
 

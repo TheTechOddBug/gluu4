@@ -9,7 +9,7 @@ Official documentation is available at https://gluu.org/docs/gluu-server/install
 
 ## Issues
 
-If you find any issues, please post them on the customer support portal, [support.gluu.org](https://support.gluu.org).
+If you find any issues, please post them on the customer support portal, [https://help.gluu.org](https://help.gluu.org).
 
 ## Compatibility
 

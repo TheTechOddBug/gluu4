@@ -56,7 +56,7 @@ For instance, when you restart the `gluu-server` service, it may take some time 
 
 This reveals a problem in execution of *casa* custom script. Check if `oxauth_script.log` is showing an error related to the authentication method in question.
 
-If you cannot diagnose the issue, please use the [support forum](https://support.gluu.org) to ask for help. 
+If you cannot diagnose the issue, please use the [support forum](https://help.gluu.org) to ask for help. 
 
 ### An "Unauthorized access" error is shown when accessing the application
 
@@ -179,4 +179,4 @@ Upon startup, the application needs to query the OpenID metadata URL of oxAuth t
 
 ## My problem is not listed here
 
-Feel free to open a [support](https://support.gluu.org) ticket.
+Feel free to open a [support](https://help.gluu.org) ticket.
