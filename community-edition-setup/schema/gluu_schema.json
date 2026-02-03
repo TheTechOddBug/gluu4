@@ -2454,6 +2454,7 @@
             "names": [
                 "oxUmaPolicyScriptDn"
             ],
+            "multivalued": true,
             "oid": "oxAttribute",
             "syntax": "1.3.6.1.4.1.1466.115.121.1.12",
             "x_origin": "Gluu created attribute"
