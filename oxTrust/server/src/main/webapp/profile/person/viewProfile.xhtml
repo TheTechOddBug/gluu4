@@ -6,9 +6,11 @@
 	xmlns:b="http://bootsfaces.net/ui"
 	xmlns:ox="http://xmlns.jcp.org/jsf/composite/ox"
 	xmlns:gluuext="http://xmlns.jcp.org/jsf/composite/gluuext"
+	xmlns:gluufn="http://www.gluu.org/jsf/functions"
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
 	xmlns:p="http://primefaces.org/ui"
+	xmlns:pp="http://primefaces.org/ui"
 	template="/WEB-INF/incl/layout/newtemplate.xhtml">
 	<f:metadata>
 		<f:viewAction
@@ -48,6 +50,7 @@
 			<ui:include
 				src="/WEB-INF/incl/profile/person/configureListingOptions.xhtml" />
 			<h:form id="personForm">
+				<b:messages/>
 				<div class="row">
 					<h:panelGroup layout="block"
 						styleClass="#{userProfileAction.isEditable() ? 'col-xs-8 col-md-8' : 'col-xs-12 col-md-12'}">
@@ -124,8 +127,7 @@
 												<b:commandLink ajax="true"
 													action="#{customAttributeAction.removeCustomAttribute(_custAttr.metadata.inum)}"
 													limitRender="true"
-													onbeforedomupdate="changeAttributeVisibility('#{_aid}', true);"
-													update="selectedCustomAttributesId"
+													update="@form:selectedCustomAttributesId"
 													rendered="#{_custAttr.userCanEdit and (not _mandatory) and permissionService.hasPermission(configurationService.configuration, 'profile_management')}"
 													icon="glyphicon glyphicon-remove" process="@this">
 												</b:commandLink>
@@ -154,31 +156,37 @@
 							title="Available User Claims" iconAwesome="fa-crop"
 							rendered="#{permissionService.hasPermission(configurationService.configuration, 'profile_management')}"
 							look="primary">
-							<div style="height: 400px; overflow-y: auto;">
-								<ul class="sidebar-menu">
-									<ui:repeat value="#{customAttributeAction.attributes}" var="_attr" varStatus="_attrStatus">
-										<ui:param name="_aid"
-											value="#{customAttributeAction.attributeIds[_attr]}" />
-										<li class="treeview"
-											pt:id="#{customAttributeAction.attributeIds[_attr]}"><b:commandLink ajax="true"
-												action="#{customAttributeAction.addCustomAttribute(attr.inum)}"
-												pt:aid="#{_aid}"
-												oncomplete="changeAttributeVisibility('${component.clientId}', false);"
-												update="selectedCustomAttributesId"
-												style="#{customAttributeAction.containsCustomAttribute(attr) ? 'display: none;' : ''}"
-												value="#{attr.displayName}" process="@this">
-											</b:commandLink></li>
+
+								<b:label severity="info"
+										text="Only active attributes are displayed." />
+								<div class="row" style="margin-left: 5px; margin-top: 5px;">
+									<ui:repeat var="attr" value="#{customAttributeAction.attributes}">
+										<ui:fragment rendered="#{attr.status.value eq 'active'}">
+											<div>
+												<ui:param name="_aid"
+														value="#{customAttributeAction.attributeIds[attr]}"/>
+												<b:commandLink ajax="true" p:aid="#{_aid}" value="#{attr.displayName}"
+																action="#{customAttributeAction.addCustomAttribute(attr.inum)}"
+																update="personForm:selectedCustomAttributesId"
+																oncomplete="changeAttributeVisibility('${component.clientId}', false);"
+																style="#{customAttributeAction.containsCustomAttribute(attr) ? 'display: none;' : ''}"
+																process="@this">
+													<f:event
+															listener="#{customAttributeAction.renderAttribute}"
+															type="preRenderComponent"/>
+												</b:commandLink>
+											</div>
+										</ui:fragment>
 									</ui:repeat>
-								</ul>
-							</div>
+								</div>
 						</b:panel>
 					</h:panelGroup>
 				</div>
 				<div class="box-footer">
-					<h:commandButton type="button"
-						onclick="PF('changePasswordModalPanel').show();"
+					<b:commandButton ajax="true" type="button"
+						oncomplete="$('.personPasswordClass').modal('show');"
 						rendered="#{permissionService.hasPermission(configurationService.configuration, 'profile_management')}"
-						styleClass="btn btn-success changeUserPasswordButton"
+						styleClass="btn btn-primary changeUserPasswordButton"
 						value="#{msgs['profile.changePassword']}" />
 					<gluuext:spacer width="10px" height="10px"/>	
 					<h:commandButton action="#{userProfileAction.update}"

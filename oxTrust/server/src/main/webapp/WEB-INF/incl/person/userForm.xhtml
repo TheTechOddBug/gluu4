@@ -54,6 +54,7 @@
     </h:outputScript>
     <ui:include src="/WEB-INF/incl/person/u2fPage.xhtml"/>
     <h:form id="PForm" autocomplete="off">
+        <b:messages/>
         <b:panel title="Person Add Form" look="primary"
                  iconAwesome="fa-user-plus" collapsible="false">
             <div class="row"
@@ -299,12 +300,12 @@
                         <ui:param name="_list"
                                   value="#{gluufn:toList(_customAttributeAction.attributeByOrigin)}" />
                         <pp:tabView id="attributeTabPanelId" dynamic="false"
-                                   value="#{_list}" var="_product" varStatus="status">
-                            <pp:tab title="#{_customAttributeAction.originDisplayNames[_product.key]}">
+                                   value="#{_list}" var="_item" varStatus="status">
+                            <pp:tab title="#{_customAttributeAction.originDisplayNames[_item.key]}">
                                 <b:label severity="info"
                                          text="Only active attributes are displayed." />
                                 <div class="row" style="margin-left: 5px; margin-top: 5px;">
-                                    <ui:repeat var="attr" value="#{_product.value}">
+                                    <ui:repeat var="attr" value="#{_item.value}">
                                         <ui:fragment rendered="#{attr.status.value eq 'active'}">
                                             <div>
                                                 <ui:param name="_aid"
