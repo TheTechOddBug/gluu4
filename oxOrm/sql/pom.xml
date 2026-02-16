@@ -79,6 +79,12 @@
 			<artifactId>testng</artifactId>
 			<scope>test</scope>
 		</dependency>
-	</dependencies>
 
+		<!-- Temporary solution to allow use Spanner/MySQL libs together-->
+		<dependency>
+			<groupId>com.google.protobuf</groupId>
+			<artifactId>protobuf-java</artifactId>
+			<version>4.33.5</version>
+		</dependency>
+	</dependencies>
 </project>
