@@ -33,7 +33,7 @@ spec:
     - uri:
         prefix: /.well-known/fido2-configuration
     rewrite:
-      uri: /fido2/restv1/fido2/configuration
+      uri: /fido2/restv1/configuration
     route:
     - destination:
         host: {{ .Values.service.fido2ServiceName }}.{{.Release.Namespace}}.svc.cluster.local
