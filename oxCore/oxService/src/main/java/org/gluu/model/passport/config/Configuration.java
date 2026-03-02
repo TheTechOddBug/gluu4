@@ -17,7 +17,7 @@ public class Configuration {
     private String spTLSCert;
     private String spTLSKey;
     private LoggingConfig logging;
-    private PassportConfigEndpointMode configEndpointMode;
+    private PassportConfigEndpointMode configEndpointMode = PassportConfigEndpointMode.UMA;
 
     public String getServerURI() {
         return serverURI;
