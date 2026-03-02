@@ -13,6 +13,7 @@ import org.gluu.oxtrust.service.PassportService;
 import org.gluu.oxtrust.util.OxTrustConstants;
 import org.slf4j.Logger;
 import org.gluu.config.oxtrust.LdapOxPassportConfiguration;
+import org.gluu.config.oxtrust.PassportConfigEndpointMode;
 import org.gluu.model.passport.PassportConfiguration;
 import org.gluu.model.passport.config.Configuration;
 import org.gluu.service.security.Secure;
@@ -98,4 +99,12 @@ public class PassportConfigurationAction implements Serializable {
 	public void setLoggingLevels(String[] loggingLevels) {
 		this.loggingLevels = loggingLevels;
 	}
+	
+	public PassportConfigEndpointMode[] getProtectionModes() {
+	    //Avoid exposing BYPASS
+	    return new PassportConfigEndpointMode[] { 
+	        PassportConfigEndpointMode.UMA, PassportConfigEndpointMode.OAUTH 
+	    };
+	}
+	
 }

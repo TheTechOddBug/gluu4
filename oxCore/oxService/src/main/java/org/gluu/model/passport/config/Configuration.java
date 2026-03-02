@@ -1,7 +1,9 @@
 package org.gluu.model.passport.config;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import org.gluu.model.passport.config.logging.LoggingConfig;
+import org.gluu.config.oxtrust.PassportConfigEndpointMode;
 
 /**
  * Created by jgomer on 2019-02-21.
@@ -15,6 +17,7 @@ public class Configuration {
     private String spTLSCert;
     private String spTLSKey;
     private LoggingConfig logging;
+    private PassportConfigEndpointMode configEndpointMode = PassportConfigEndpointMode.UMA;
 
     public String getServerURI() {
         return serverURI;
@@ -62,6 +65,14 @@ public class Configuration {
 
     public void setLogging(LoggingConfig logging) {
         this.logging = logging;
+    }
+
+    public PassportConfigEndpointMode getConfigEndpointMode() {
+        return configEndpointMode;
+    }
+
+    public void setConfigEndpointMode(PassportConfigEndpointMode configEndpointMode) {
+        this.configEndpointMode = configEndpointMode;
     }
 
 }

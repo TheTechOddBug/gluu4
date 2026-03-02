@@ -89,27 +89,18 @@
 										</div>
 										<div class="row" style="margin-left: 5px; margin-right: 5px;">
 											<ox:decorate
-												label="#{msgs['passport.basicconfig.form.spTLSCert']}"
-												leftClass="col-sm-3" rightClass="col-sm-9">
-												<h:inputText styleClass="rounded form-control SpTLSCertID"
-													id="SpTLSCertID" style="width:100%" required="true"
-													value="#{passportConfigurationAction.configuration.spTLSCert}">
-													<f:ajax event="blur"/>
-												</h:inputText>
+												label="#{msgs['passport.basicconfig.form.configEndpointMode']}"
+												leftClass="col-sm-3" rightClass="col-sm-3">
+												<h:selectOneMenu
+                                                    styleClass="rounded form-control"
+                                                    value="#{passportConfigurationAction.configuration.configEndpointMode}"
+                                                    id="ConfigEndpointMode" rendered="true">
+                                                    <f:selectItems
+                                                        value="#{passportConfigurationAction.protectionModes}"
+                                                        var="_mode" itemLabel="#{_mode}" />
+                                                </h:selectOneMenu>
 											</ox:decorate>
-										</div>
-										<div class="row" style="margin-left: 5px; margin-right: 5px;">
-											<ox:decorate
-												label="#{msgs['passport.basicconfig.form.spTLSKey']}"
-												leftClass="col-sm-3" rightClass="col-sm-9">
-												<h:inputText
-													styleClass="rounded form-control text-centered SpTLSCertKeyID"
-													id="SpTLSCertKeyID" style="width:100%" required="true"
-													value="#{passportConfigurationAction.configuration.spTLSKey}">
-													<f:ajax event="blur"/>
-												</h:inputText>
-											</ox:decorate>
-										</div>
+										</div>										
 										<div class="row"
 											style="margin-right: 20px; margin-left: 20px;">
 											<b:panel
@@ -203,6 +194,38 @@
 												</b:panel>
 											</b:panel>
 										</div>
+                                        <div class="row"
+                                            style="margin-right: 20px; margin-left: 20px;">
+                                            <b:panel
+                                                title="#{msgs['passport.basicconfig.form.uma']}"
+                                                look="primary" iconAwesome="fa-gear" collapsible="false">       
+                                                                         
+                                                <div class="row" style="margin-left: 5px; margin-right: 5px;">
+                                                    <ox:decorate
+                                                        label="#{msgs['passport.basicconfig.form.spTLSCert']}"
+                                                        leftClass="col-sm-3" rightClass="col-sm-6">
+                                                        <h:inputText styleClass="rounded form-control SpTLSCertID"
+                                                            id="SpTLSCertID" style="width:100%" required="true"
+                                                            value="#{passportConfigurationAction.configuration.spTLSCert}">
+                                                            <f:ajax event="blur"/>
+                                                        </h:inputText>
+                                                    </ox:decorate>
+                                                </div>
+                                                
+                                                <div class="row" style="margin-left: 5px; margin-right: 5px;">
+                                                    <ox:decorate
+                                                        label="#{msgs['passport.basicconfig.form.spTLSKey']}"
+                                                        leftClass="col-sm-3" rightClass="col-sm-6">
+                                                        <h:inputText
+                                                            styleClass="rounded form-control text-centered SpTLSCertKeyID"
+                                                            id="SpTLSCertKeyID" style="width:100%" required="true"
+                                                            value="#{passportConfigurationAction.configuration.spTLSKey}">
+                                                            <f:ajax event="blur"/>
+                                                        </h:inputText>
+                                                    </ox:decorate>
+                                                </div>
+                                            </b:panel>
+                                        </div>
 									</h:panelGroup>
 
 								</div>
