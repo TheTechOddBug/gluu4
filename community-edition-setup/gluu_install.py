@@ -250,13 +250,15 @@ if argsp.uninstall:
         os.system('/opt/opendj/bin/stop-ds')
     for uf in services:
         service,ext = os.path.splitext(uf)
-        if os.path.exists(os.path.join(jetty_home, service)):
+        should_stop = os.path.exists(os.path.join(jetty_home, service)) or service == 'oxd-server'
+        if should_stop:
             default_fn = os.path.join('/etc/default/', service)
             if os.path.exists(default_fn):
                 print("Removing", default_fn)
                 os.remove(default_fn)
             print("Stopping", service)
             os.system('systemctl stop ' + service)
+            os.system('systemctl disable ' + service)
 
     remove_list = ['/etc/certs', '/etc/gluu', '/opt/gluu', '/opt/amazon-corretto*', '/opt/jre', '/opt/jetty*', '/opt/jython*', '/opt/opendj', '/opt/node*', '/opt/shibboleth-idp', '/var/gluu/identity/cr-snapshots/*']
 
