@@ -4,6 +4,7 @@ package org.gluu.service.cache;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 /**
  * @author yuriyz on 02/23/2017.
@@ -22,6 +23,8 @@ public class RedisConfiguration implements Serializable {
     private String sentinelMasterGroupName = "";
 
     private String password;
+
+    private String clientName = UUID.randomUUID().toString();
 
     private Boolean useSSL = false;
 
@@ -57,6 +60,14 @@ public class RedisConfiguration implements Serializable {
     private int soTimeout = 3000;
 
     private int maxRetryAttempts = 5;
+
+    public String getClientName() {
+        return clientName;
+    }
+
+    public void setClientName(String clientName) {
+        this.clientName = clientName;
+    }
 
     public int getMaxIdleConnections() {
         return maxIdleConnections;
@@ -193,6 +204,7 @@ public class RedisConfiguration implements Serializable {
                 ", connectionTimeout=" + connectionTimeout +
                 ", soTimeout=" + soTimeout +
                 ", maxRetryAttempts=" + maxRetryAttempts +
+                ", clientName=" + clientName +
                 '}';
     }
 }

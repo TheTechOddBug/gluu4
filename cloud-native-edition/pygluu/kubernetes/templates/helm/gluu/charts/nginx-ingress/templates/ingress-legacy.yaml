@@ -435,8 +435,8 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
     nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
-    nginx.ingress.kubernetes.io/configuration-snippet: "rewrite /.well-known/fido2-configuration /fido2/restv1/fido2/configuration$1 break;"
-    nginx.ingress.kubernetes.io/rewrite-target: /fido2/restv1/fido2/configuration
+    nginx.ingress.kubernetes.io/configuration-snippet: "rewrite /.well-known/fido2-configuration /fido2/restv1/configuration$1 break;"
+    nginx.ingress.kubernetes.io/rewrite-target: /fido2/restv1/configuration
 {{- if .Values.ingress.fido2ConfigAdditionalAnnotations }}
 {{ toYaml .Values.ingress.fido2ConfigAdditionalAnnotations | indent 4 }}
 {{- end }}

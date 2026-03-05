@@ -292,4 +292,4 @@ If there are any issues during setup or testing, consider the following:
 
 1. For debugging purposes, you can print the contents of profile data you are receiving from the external provider. Follow the guidelines given [here](./inbound-oauth-passport.md#checking-user-profile).
 
-If you still have trouble, feel free to open a [support ticket](https://support.gluu.org) for further assistance. Please provide all related log entries to speed up the resolution process.
+If you still have trouble, feel free to open a [support ticket](https://help.gluu.org) for further assistance. Please provide all related log entries to speed up the resolution process.

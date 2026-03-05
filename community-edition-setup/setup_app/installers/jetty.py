@@ -338,8 +338,6 @@ class JettyInstaller(BaseInstaller, SetupUtils):
             installedComponents.append('scim')
         if Config.installFido2:
             installedComponents.append('fido2')
-        if Config.installOxd:
-            installedComponents.append('oxd')
 
         # Node apps
         if Config.installPassport:

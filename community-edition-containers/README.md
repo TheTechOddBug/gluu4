@@ -9,7 +9,7 @@ Official documentation is available at https://gluu.org/docs/gluu-server/install
 
 ## Issues
 
-If you find any issues, please post them on the customer support portal, [support.gluu.org](https://support.gluu.org).
+If you find any issues, please post them on the customer support portal, [https://help.gluu.org](https://help.gluu.org).
 
 ## Compatibility
 
@@ -17,6 +17,7 @@ The compatibility between `pygluu-compose` and Gluu Server is listed below:
 
 | pygluu-compose | Gluu Server |
 |:--------------:|:-----------:|
+|     1.27.x     |   4.5.14    |
 |     1.26.x     |   4.5.13    |
 |     1.25.x     |   4.5.12    |
 |     1.24.x     |   4.5.11    |

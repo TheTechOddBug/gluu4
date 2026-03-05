@@ -108,7 +108,7 @@ Below are some extra parameters:
 
 ### Protect the OIDC application with `passport_social` authentication
 
-The same steps described for [OAuth Login](#protect-the-application-with-passport_social-authentication) can be followed in this case. If additional assistance is needed, open a ticket on [Gluu support](https://support.gluu.org).
+The same steps described for [OAuth Login](#protect-the-application-with-passport_social-authentication) can be followed in this case. If additional assistance is needed, open a ticket on [Gluu support](https://help.gluu.org).
 
 ### Using oxd as mediator
 

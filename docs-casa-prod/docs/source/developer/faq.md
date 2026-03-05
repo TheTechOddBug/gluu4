@@ -63,4 +63,4 @@ The API provides some operations to retrieve the status of a user in terms of 2F
 
 ## My problem is not listed here
 
-Feel free to open a [support](https://support.gluu.org/) ticket.
+Feel free to open a [support](https://help.gluu.org/) ticket.

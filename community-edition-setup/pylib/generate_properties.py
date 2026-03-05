@@ -613,10 +613,6 @@ def generate_properties(as_dict=False):
     if os.path.exists('/opt/gluu/jetty/fido2/start.ini'):
         setup_prop['installFido2'] = True
 
-    if os.path.exists('/opt/oxd-server/conf/oxd-server.yml'):
-        setup_prop['installOxd'] = True
-
-
     return setup_prop
 
 if __name__ == '__main__':

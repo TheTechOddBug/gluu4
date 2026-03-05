@@ -56,7 +56,6 @@ class msg:
     installGluuRadius_label = "Install Radius"
     ldap_storages_label = "Store on OpenDJ"
     installing_label = "Current"
-    installOxd_label = "Install Oxd"
     installCasa_label = "Install Casa"
     installScimServer_label = "Install Scim"
     installFido2_label = "Install Fido2"
@@ -99,27 +98,18 @@ class msg:
     ask_installPassport  = "Install Passport"
     ask_installGluuRadius = "Install Gluu Radius"
     ask_installCasa = "Install Casa"
-    ask_installOxd = "Install Oxd"
     ask_ldap_install = "Install OpenDJ"
     ask_installScimServer = "Install Scim Server"
     ask_installFido2 = "Install Fido2"
-
 
     ldap_install_options = ["Don't Install","Install Locally","Use Remote OpenDJ"]
     ldap_admin_password_label = "LDAP Admin Password"
     ldap_remote_label =  "LDAP Hostname"
     opendj_port_availibility = "Setup needs port{0} {1} {2} free. Please stop services listening {3} port{0}."
-    oxd_url_label = "oxd Server URL"
-    install_oxd_or_url_warning = "Please either enter oxd Server URL or check Install Oxd"
-    oxd_connection_error = "Can't connect to oxd-server with url {}. Reason: {}"
-    oxd_ssl_cert_error = "Hostname of oxd ssl certificate is {} which does not match {} casa won't start properly"
 
     ask_cb_install = "Couchbase Installation"
     cb_install_options = ["Don't Install","Install Locally","Use Remote Couchbase"]
-    
-    ask_use_gluu_storage_oxd = "oxd includes a built-in h2 database for persistence. Do you want to change it to the Authorization Server's persistence mechanism instead (recommended for high load only)?"
-    ask_use_gluu_storage_oxd_title = "Use Authorization Server's persistence for oxd?"
-    
+
     notify_select_backend = "Please select one of the backends either local install or remote" 
     weak_password = "Password for {} must be at least 6 characters and include one uppercase letter, one lowercase letter, one digit, and one special character."
     unselected_storages = "Note: Unselected storages will go Couchbase Server"
@@ -127,7 +117,7 @@ class msg:
     idp_unselect = "Please go back and unselect to install Shibboleth SAML IDP"
 
     no_help = "No help is provided for this screen."
-    
+
     MainFromHelp = "Detected OS type, system init type, and Apache version is displayed. Inorder to continue to next step, you must check lisecnce acknowledgement."
     HostFromHelp = ("IP Address: ip address of this server. Detected ip address will be provided\n"
                    "Hostname: hostname of this server. Detected hostname will be provided.\n"
@@ -147,7 +137,6 @@ class msg:
     installation_description_jetty = "Eclipse Jetty provides a Web server and javax.servlet container, plus support for HTTP/2, WebSocket, OSGi, JMX, JNDI, JAAS and many other integrations."
     installation_description_jython = "Jython is a Java implementation of Python that combines expressive power with clarity. Jython is freely available for both commercial and non-commercial use and is distributed with source code under the PSF License v2."
     installation_description_node = "As an asynchronous event-driven JavaScript runtime, Node.js is designed to build scalable network applications."
-    installation_description_oxd = "oxd exposes simple, static APIs web application developers can use to implement user authentication and authorization against an OAuth 2.0 authorization server like Gluu."
     installation_description_casa = "Gluu Casa is a self-service web portal for end-users to manage authentication and authorization preferences for their account in a Gluu Server."
     installation_description_scim = "The Gluu Server implements SCIM to offer standard REST APIs for performing CRUD operations (create, read, update and delete) against user data."
     installation_description_fido2 = "FIDO 2.0 (FIDO2) is an open authentication standard that enables people to leverage common devices to authenticate to online services in both mobile and desktop environments"

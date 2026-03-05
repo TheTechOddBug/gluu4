@@ -1,0 +1,39 @@
+{{- if .Values.global.oxshibboleth.enabled }}
+
+{{- /* Start of Policy definition */}}
+{{- if and (eq .Values.gateway.className "nginx") (.Values.additionalConfig.nginx.ipHashLbEnabled) }}
+apiVersion: gateway.nginx.org/v1alpha1
+kind: UpstreamSettingsPolicy
+metadata:
+  name: oxshibboleth-nginx
+  namespace: {{ .Release.Namespace }}
+spec:
+  targetRefs:
+  - group: ""
+    kind: Service
+    name: oxshibboleth
+  loadBalancingMethod: "ip_hash"
+{{- else if eq .Values.gateway.className "kgateway" }}
+kind: BackendConfigPolicy
+apiVersion: gateway.kgateway.dev/v1alpha1
+metadata:
+  name: oxshibboleth-kgateway
+  namespace: {{ .Release.Namespace }}
+spec:
+  targetRefs:
+    - name: oxshibboleth
+      group: ""
+      kind: Service
+  loadBalancer:
+    maglev:
+      hashPolicies:
+      - cookie:
+          name: "shib-stateful-route"
+          path: "/idp"
+          ttl: {{ .Values.additionalConfig.kgateway.sessionCookieLifetime | quote }}
+          secure: true
+          httpOnly: true
+{{- end }}
+{{- /* End of Policy definition */}}
+
+{{- end }}

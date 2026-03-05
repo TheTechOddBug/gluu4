@@ -8,7 +8,7 @@ assignees: ''
 ---
 
 !!!Note
-Unless you are Gluu staff, please first review and open an issue on https://support.gluu.org before opening an issue here. Thanks!
+Unless you are Gluu staff, please first review and open an issue on https://help.gluu.org before opening an issue here. Thanks!
 
 
 ## Describe the issue
