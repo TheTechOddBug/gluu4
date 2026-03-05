@@ -262,7 +262,7 @@ if argsp.uninstall:
     remove_list = ['/etc/certs', '/etc/gluu', '/opt/gluu', '/opt/amazon-corretto*', '/opt/jre', '/opt/jetty*', '/opt/jython*', '/opt/opendj', '/opt/node*', '/opt/shibboleth-idp', '/var/gluu/identity/cr-snapshots/*']
 
     if os.path.exists('/opt/oxd-server'):
-    remove_list.append('/opt/oxd-server')
+        remove_list.append('/opt/oxd-server')
 
     if not argsp.keep_downloads:
         remove_list.append('/opt/dist')
