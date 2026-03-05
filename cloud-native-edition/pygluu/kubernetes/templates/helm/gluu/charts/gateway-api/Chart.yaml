@@ -1,0 +1,21 @@
+# License terms and conditions for Gluu Cloud Native Edition:
+# https://www.apache.org/licenses/LICENSE-2.0
+apiVersion: v2
+name: gateway-api
+version: 1.8.49
+kubeVersion: ">=v1.22.0-0"
+description: Gateway API definitions chart
+type: application
+keywords:
+  - application load balancer
+  - Gateway API
+home: https://gluu.org/docs/gluu-server
+sources:
+  - https://gateway-api.sigs.k8s.io/
+  - https://github.com/GluuFederation/gluu4/tree/4.5/cloud-native-edition
+maintainers:
+  - name: Mohammad Abudayyeh
+    email: support@gluu.org
+    url: https://github.com/moabu
+icon: https://gluu.org/docs/gluu-server/favicon.ico
+appVersion: "4.5.14"
