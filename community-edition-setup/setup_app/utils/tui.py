@@ -37,7 +37,6 @@ import npyscreen
 random_marketing_strings = [
     'Having trouble? Open a ticket: https://help.gluu.org',
     'Need to cluster? Consider moving to Kubernetes with Gluu Cloud Native Edition.',
-    "What is oxd? It's an API that developers use to obtain OAuth tokens or to use OpenID Connect authentication.",
     'Super Gluu is free mobile 2FA applications that uses push notifications and FIDO authentication https://super.gluu.org',
     'Gluu Casa enables end users to manage their 2FA credentials https://casa.gluu.org',
     "Interested in VIP support? Schedule a Zoom meeting https://www.gluu.org/booking",
@@ -289,7 +288,7 @@ class ServicesForm(GluuSetupForm):
         services = os.environ['GLUU_SERVICES'].split()
     else:
         services = ('installHttpd', 'installSaml',
-                'installPassport', 'installGluuRadius', 'installOxd',
+                'installPassport', 'installGluuRadius',
                 'installCasa', 'installScimServer', 'installFido2',
                 )
 
@@ -297,11 +296,6 @@ class ServicesForm(GluuSetupForm):
         for service in self.services:
             cb = self.add(npyscreen.Checkbox, scroll_exit=True, name = getattr(msg, 'ask_' + service))
             setattr(self, service, cb)
-
-        self.oxd_url = self.add(npyscreen.TitleText, name=msg.oxd_url_label, rely=12, begin_entry_at=17, hidden=True)
-
-        self.installCasa.value_changed_callback = self.casa_oxd_option_changed
-        self.installOxd.value_changed_callback = self.casa_oxd_option_changed
 
     def do_beforeEditing(self):
         for service in self.services:
@@ -315,10 +309,6 @@ class ServicesForm(GluuSetupForm):
 
         if Config.installed_instance and Config.rdbm_type == 'spanner':
             self.installSaml.editable = False
-
-        if Config.installed_instance and 'installCasa' in self.services_before_this_form:
-            self.oxd_url.hidden = True
-            self.oxd_url.update()
 
 
     def nextButtonPressed(self):
@@ -347,45 +337,6 @@ class ServicesForm(GluuSetupForm):
         if 'installSaml' in self.services and self.installSaml:
             Config.shibboleth_version = 'v3'
 
-        if self.installOxd.value:
-            Config.oxd_server_https = 'https://{}:8443'.format(Config.hostname)
-
-        if self.installCasa.value:
-            if not self.installOxd.value and not self.oxd_url.value:
-                npyscreen.notify_confirm(msg.install_oxd_or_url_warning, title="Warning")
-                return
-
-            if not self.installOxd.value:
-
-                oxd_server_https = self.oxd_url.value
-
-                oxd_connection_result = propertiesUtils.check_oxd_server(oxd_server_https)
-
-                if oxd_connection_result != True:
-                    npyscreen.notify_confirm(
-                            msg.oxd_connection_error.format(oxd_server_https, oxd_connection_result),
-                            title="Warning"
-                            )
-                    return
-
-                oxd_hostname, oxd_port = self.parentApp.gluuInstaller.parse_url(oxd_server_https)
-                oxd_ssl_result = propertiesUtils.check_oxd_ssl_cert(oxd_hostname, oxd_port)
-                if oxd_ssl_result :
-
-                    npyscreen.notify_confirm(
-                            msg.oxd_ssl_cert_error.format(oxd_ssl_result['CN'], oxd_hostname),
-                            title="Warning")
-                    return
-
-                Config.oxd_server_https = oxd_server_https
-
-        propertiesUtils.check_oxd_server_https()
-
-        if self.installOxd.value and 'installOxd' not in self.services_before_this_form:
-            result = npyscreen.notify_yes_no(msg.ask_use_gluu_storage_oxd, title=msg.ask_use_gluu_storage_oxd_title)
-            if result:
-                Config.oxd_use_gluu_storage = True
-
         # check if we have enough memory
         if not self.parentApp.jettyInstaller.calculate_selected_aplications_memory():
             result = npyscreen.notify_yes_no(msg.memory_warning, title="Warning")
@@ -396,20 +347,6 @@ class ServicesForm(GluuSetupForm):
             self.parentApp.switchForm('DisplaySummaryForm')
         else:
             self.parentApp.switchForm('DBBackendForm')
-
-
-    def casa_oxd_option_changed(self, widget):
-
-        if self.installOxd.value:
-            self.oxd_url.hidden = True
-
-        elif self.installCasa.value and not self.installOxd.value:
-            self.oxd_url.hidden = False
-
-        elif not self.installCasa.value:
-            self.oxd_url.hidden = True
-
-        self.oxd_url.update()
 
 
     def backButtonPressed(self):
@@ -951,11 +888,11 @@ class DisplaySummaryForm(GluuSetupForm):
     if os.environ.get('GLUU_SERVICES'):
         myfields_2 += os.environ['GLUU_SERVICES'].split()
     else:
-        myfields_2 += ["installSaml",
-                       "installPassport", "installGluuRadius", 
-                       "installOxd", "installCasa",
-                       'installScimServer', 'installFido2']
-                    
+        myfields_2 += ["installSaml", "installPassport",
+                        "installGluuRadius", "installCasa",
+                       'installScimServer', 'installFido2'
+                       ]
+
     myfields_2 += ["java_type","backend_types", 'ldap_storages']
 
     def create(self):

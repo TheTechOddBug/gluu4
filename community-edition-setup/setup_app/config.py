@@ -101,7 +101,7 @@ class Config:
             self.jre_home = Path(self.cmd_java).resolve().parent.parent.as_posix()
             self.cmd_keytool = shutil.which('keytool')
             self.cmd_jar = shutil.which('jar')
-            os.environ['GLUU_SERVICES'] = 'installHttpd installOxd installCasa installScimServer installFido2'
+            os.environ['GLUU_SERVICES'] = 'installHttpd installCasa installScimServer installFido2'
             self.default_store_type = 'bcfks'
             self.opendj_truststore_format = base.argsp.opendj_keystore_type
             self.default_client_test_store_type = 'pkcs12'
@@ -143,7 +143,6 @@ class Config:
                                         'oxauthClient_3_inum': '3E20',
                                         'oxauthClient_4_inum': 'FF81-2D39',
                                         'idp_attribute_resolver_ldap.search_filter': '(|(uid=$requestContext.principalName)(mail=$requestContext.principalName))',
-                                        'oxd_port': '8443',
                                         'server_time_zone': 'UTC' + time.strftime("%z"),
                                      }
 
@@ -205,7 +204,6 @@ class Config:
         self.installScimServer = False
         self.installFido2 = False
         self.installCasa = False
-        self.installOxd = False
         self.loadTestData = False
         self.allowPreReleasedFeatures = False
 
@@ -256,8 +254,6 @@ class Config:
             self.opendj_trust_store_fn = self.opendj_cert_fn
         else:
             self.opendj_trust_store_fn = os.path.join(self.certFolder, 'opendj.' + self.opendj_truststore_format)
-
-        self.oxd_package = base.determine_package(os.path.join(Config.distGluuFolder, 'oxd-server*.tgz'))
 
         self.opendj_truststore_pass = None
 
@@ -346,7 +342,6 @@ class Config:
                         'scim': ['opendj oxauth', 75],
                         'idp': ['opendj oxauth', 76],
                         'casa': ['opendj oxauth', 78],
-                        'oxd-server': ['opendj oxauth', 80],
                         'passport': ['opendj oxauth', 82],
                         'gluu-radius': ['opendj oxauth', 86],
                         }
@@ -369,7 +364,6 @@ class Config:
                 'casa':      {'weigth' : 15, "min" : 128},
                 'fido2':     {'weigth' : 10, "min" : 128},
                 'scim':      {'weigth' : 10, "min" : 128},
-                'oxd':       {'weigth' : 10, "min" : 128},
             }
 
         self.couchbaseBucketDict = OrderedDict((

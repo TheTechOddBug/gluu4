@@ -84,7 +84,6 @@ class CasaInstaller(JettyInstaller):
 
     def render_import_templates(self, import_script=True):
 
-        Config.templateRenderingDict['oxd_protocol'] = 'https'
         scripts_template = os.path.join(self.templates_folder, os.path.basename(self.ldif_scripts))
         extensions = base.find_script_names(scripts_template)
         self.prepare_base64_extension_scripts(extensions=extensions)
