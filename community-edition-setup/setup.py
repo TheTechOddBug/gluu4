@@ -76,7 +76,6 @@ from setup_app.installers.passport import PassportInstaller
 from setup_app.installers.fido import FidoInstaller
 from setup_app.installers.saml import SamlInstaller
 from setup_app.installers.radius import RadiusInstaller
-from setup_app.installers.oxd import OxdInstaller
 from setup_app.installers.casa import CasaInstaller
 from setup_app.installers.rdbm import RDBMInstaller
 
@@ -187,7 +186,6 @@ rdbmInstaller = RDBMInstaller()
 httpdinstaller = HttpdInstaller()
 oxauthInstaller = OxauthInstaller()
 oxtrustInstaller = OxtrustInstaller()
-oxdInstaller = OxdInstaller()
 fidoInstaller = FidoInstaller()
 scimInstaller = ScimInstaller()
 samlInstaller = SamlInstaller()
@@ -217,10 +215,10 @@ if Config.installed_instance:
         sys.exit()
 
 
-    for installer in (openDjInstaller, couchbaseInstaller, httpdinstaller, 
-                        oxauthInstaller, passportInstaller, scimInstaller, 
-                        fidoInstaller, samlInstaller, oxdInstaller, 
-                        casaInstaller, radiusInstaller, rdbmInstaller):
+    for installer in (openDjInstaller, couchbaseInstaller, httpdinstaller,
+                        oxauthInstaller, passportInstaller, scimInstaller,
+                        fidoInstaller, samlInstaller, casaInstaller,
+                         radiusInstaller, rdbmInstaller):
 
         setattr(Config, installer.install_var, installer.installed())
 
@@ -231,7 +229,6 @@ if Config.installed_instance:
                         ('installSaml', 'install_shib'),
                         ('installPassport', 'install_passport'),
                         ('installGluuRadius', 'install_gluu_radius'),
-                        ('installOxd', 'install_oxd'),
                         ('installCasa', 'install_casa'),
                         ('installScimServer', 'install_scim'),
                         ('installFido2', 'install_fido2')
@@ -242,9 +239,6 @@ if Config.installed_instance:
                 if service in Config.non_setup_properties['service_enable_dict']:
                     for attribute in Config.non_setup_properties['service_enable_dict'][service]:
                         setattr(Config, attribute, 'true')
-
-            if 'installCasa' in Config.addPostSetupService and 'installOxd' not in Config.addPostSetupService and not oxdInstaller.installed():
-                Config.addPostSetupService.append('installOxd')
 
         if argsp.gluu_passwurd_cert:
             Config.addPostSetupService.append('generate_passwurd_api_keystore')
@@ -349,7 +343,7 @@ def install_services():
 
     for instance in (httpdinstaller, oxauthInstaller, oxtrustInstaller,
                     fidoInstaller, scimInstaller, samlInstaller,
-                    oxdInstaller, casaInstaller, passportInstaller):
+                    casaInstaller, passportInstaller):
 
         if (Config.installed_instance and instance.install_var in Config.addPostSetupService) or (not Config.installed_instance and getattr(Config, instance.install_var)):
             instance.start_installation()

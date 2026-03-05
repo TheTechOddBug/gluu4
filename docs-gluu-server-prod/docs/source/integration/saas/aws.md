@@ -176,4 +176,4 @@ You should see the workflow like shown in the sample [video](https://youtu.be/LB
 
 ## Questions or Issues?
 
-Open a ticket on our [support portal](https://support.gluu.org). 
+Open a ticket on our [support portal](https://help.gluu.org). 

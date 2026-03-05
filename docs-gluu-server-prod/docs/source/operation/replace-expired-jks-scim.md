@@ -75,4 +75,4 @@ Update your client's SCIM application to use `fresher-scim-rp.jks` with its corr
 
 Finally, remove the `tmp` directory in your server.
 
-Something went wrong? Feel free to open a [support ticket](https://support.gluu.org).
+Something went wrong? Feel free to open a [support ticket](https://help.gluu.org).

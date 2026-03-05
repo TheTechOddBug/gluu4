@@ -11,6 +11,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.gluu.oxtrust.auth.PassportConfigService;
 import org.gluu.oxtrust.service.PassportService;
 import org.gluu.oxtrust.service.filter.ProtectedApi;
 import org.slf4j.Logger;
@@ -41,7 +42,7 @@ public class PassportRestWebService {
 
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
-    @ProtectedApi
+    @ProtectedApi(scopes = { PassportConfigService.OAUTH_SCOPE })
 	public Response getPassportConfig() {
 
 	    Status status;

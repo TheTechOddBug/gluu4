@@ -121,17 +121,6 @@ objectClass: top
 oxAttributes: {"spontaneousClientId":"","spontaneousClientScopes":[],"showInConfigurationEndpoint":true}
 oxScopeType: openid
 
-dn: inum=6D90,ou=scopes,o=gluu
-defaultScope: true
-description: oxd scope which is required to call oxd API
-oxId: oxd
-displayName: oxd
-inum: 6D90
-objectClass: oxAuthCustomScope
-objectClass: top
-oxAttributes: {"spontaneousClientId":"","spontaneousClientScopes":[],"showInConfigurationEndpoint":true}
-oxScopeType: openid
-
 dn: inum=6D92,ou=scopes,o=gluu
 description: Authorization Challenge
 displayName: authorization_challenge

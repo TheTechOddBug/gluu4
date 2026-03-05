@@ -35,7 +35,7 @@ metadata:
     alb.ingress.kubernetes.io/actions.fido-redirect: '{"Type": "redirect", "RedirectConfig": { "Protocol": "HTTPS", "Port": "443", "Path":"/oxauth/restv1/fido-configuration", "StatusCode": "HTTP_302"}}'
     {{- end }}
     {{ if .Values.global.alb.ingress.fido2ConfigEnabled -}}
-    alb.ingress.kubernetes.io/actions.fido2-redirect: '{"Type": "redirect", "RedirectConfig": { "Protocol": "HTTPS", "Port": "443", "Path":"/fido2/restv1/fido2/configuration", "StatusCode": "HTTP_302"}}'
+    alb.ingress.kubernetes.io/actions.fido2-redirect: '{"Type": "redirect", "RedirectConfig": { "Protocol": "HTTPS", "Port": "443", "Path":"/fido2/restv1/configuration", "StatusCode": "HTTP_302"}}'
     {{- end }}
     {{ if .Values.global.alb.ingress.adminUiEnabled -}}
     alb.ingress.kubernetes.io/actions.main-page-redirect: '{"Type": "redirect", "RedirectConfig": { "Protocol": "HTTPS", "Port": "443", "Path":"/identity/", "StatusCode": "HTTP_301"}}'

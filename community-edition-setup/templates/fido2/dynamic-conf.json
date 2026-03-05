@@ -8,6 +8,7 @@
    "loggingLevel":"INFO",
    "loggingLayout":"text",
    "externalLoggerConfiguration":"",
+   "disableExternalLoggerConfiguration": true,
    "metricReporterInterval":300,
    "metricReporterKeepDataDays":15,
    "metricReporterEnabled":true,

@@ -10,4 +10,4 @@ oxAuth configuration is stored in LDAP, and it would be hard to generate the rig
 
 Refer to [https://github.com/GluuFederation/install](https://github.com/GluuFederation/install) for installation instructions.
 
-To access Gluu support, please register and open a ticket on [Gluu Support](https://support.gluu.org).
+To access Gluu support, please register and open a ticket on [Gluu Support](https://help.gluu.org).

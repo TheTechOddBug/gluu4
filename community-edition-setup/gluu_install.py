@@ -196,13 +196,15 @@ if not argsp.uninstall:
 
         os.system(cmd)
 
-
 if not os.path.exists(scripts_dir):
     os.makedirs(scripts_dir)
 
 oxauth_war_fn = os.path.join(gluu_app_dir, 'oxauth.war')
 jetty_home = '/opt/gluu/jetty'
-services = ['casa.service', 'identity.service', 'opendj.service', 'oxauth.service', 'passport.service', 'fido2.service', 'idp.service', 'oxd-server.service', 'scim.service']
+services = ['casa.service', 'identity.service', 'opendj.service', 'oxauth.service', 'passport.service', 'fido2.service', 'idp.service', 'scim.service']
+
+if os.path.exists('/opt/oxd-server') or os.path.exists('/etc/systemd/system/oxd-server.service'):
+    services.append('oxd-server.service')
 
 jetty_dist_string = 'jetty-distribution'
 if argsp.a and hasattr(argsp, 'jetty_version') and argsp.jetty_version:
@@ -248,15 +250,21 @@ if argsp.uninstall:
         os.system('/opt/opendj/bin/stop-ds')
     for uf in services:
         service,ext = os.path.splitext(uf)
-        if os.path.exists(os.path.join(jetty_home, service)):
+        should_stop = os.path.exists(os.path.join(jetty_home, service)) or service == 'oxd-server'
+        if should_stop:
             default_fn = os.path.join('/etc/default/', service)
             if os.path.exists(default_fn):
                 print("Removing", default_fn)
                 os.remove(default_fn)
             print("Stopping", service)
             os.system('systemctl stop ' + service)
-    os.system('systemctl stop oxd-server')
-    remove_list = ['/etc/certs', '/etc/gluu', '/opt/gluu', '/opt/amazon-corretto*', '/opt/jre', '/opt/jetty*', '/opt/jython*', '/opt/opendj', '/opt/node*',  '/opt/oxd-server',  '/opt/shibboleth-idp', '/var/gluu/identity/cr-snapshots/*']
+            os.system('systemctl disable ' + service)
+
+    remove_list = ['/etc/certs', '/etc/gluu', '/opt/gluu', '/opt/amazon-corretto*', '/opt/jre', '/opt/jetty*', '/opt/jython*', '/opt/opendj', '/opt/node*', '/opt/shibboleth-idp', '/var/gluu/identity/cr-snapshots/*']
+
+    if os.path.exists('/opt/oxd-server'):
+        remove_list.append('/opt/oxd-server')
+
     if not argsp.keep_downloads:
         remove_list.append('/opt/dist')
 
@@ -376,8 +384,6 @@ if not argsp.u:
         download(os.path.join(maven_base, 'org/gluu/oxtrust-server-fips/{0}{1}/oxtrust-server-fips-{0}{1}.war'.format(app_versions['OX_VERSION'], app_versions['OX_GITVERISON'])), os.path.join(gluu_app_dir,'identity.war'))
 
 
-    download(os.path.join(maven_base, 'org/gluu/oxd-server/{0}{1}/oxd-server-{0}{1}-distribution.zip'.format(app_versions['OX_VERSION'], app_versions['OX_GITVERISON'])), os.path.join(gluu_app_dir, 'oxd-server.zip'))
-    download(os.path.join(maven_base, 'org/gluu/oxd-server/{0}{1}/oxd-server-{0}{1}-distribution-bc-fips.zip'.format(app_versions['OX_VERSION'], app_versions['OX_GITVERISON'])), os.path.join(gluu_app_dir, 'oxd-server-fips.zip'))
     download(os.path.join(maven_base, 'org/gluu/oxauth-client-jar-with-dependencies/{0}{1}/oxauth-client-jar-with-dependencies-{0}{1}.jar'.format(app_versions['OX_VERSION'], app_versions['OX_GITVERISON'])), os.path.join(gluu_app_dir,'oxauth-client-jar-with-dependencies.jar'))
     download(os.path.join(maven_base, 'org/gluufederation/jython-installer/{0}/jython-installer-{0}.jar'.format(app_versions['JYTHON_VERSION'])), os.path.join(app_dir, 'jython-installer-{0}.jar'.format(app_versions['JYTHON_VERSION'])))
     download(os.path.join(maven_base, 'org/gluufederation/opendj/opendj-server-legacy/{0}/opendj-server-legacy-{0}.zip'.format(app_versions['OPENDJ_VERSION'])), os.path.join(app_dir,'opendj-server-{0}.zip'.format(app_versions['OPENDJ_VERSION'])))
@@ -412,18 +418,6 @@ if argsp.upgrade:
         shutil.copy(source_fn, target_fn)
         print("Restarting", service)
         os.system('systemctl restart ' + service)
-
-    if os.path.exists('/opt/oxd-server'):
-        print("Updating oxd-server")
-        oxd_tar = tarfile.open('/opt/dist/gluu/oxd-server.tgz')
-
-        for member in oxd_tar.getmembers():
-            if member.isfile() and member.path.startswith('oxd-server/lib'):
-                oxd_tar.extract(member, '/opt')
-
-        print("Restarting oxd-server")
-        os.system('systemctl restart oxd-server')
-
 
 else:
     print("Extracting community-edition-setup package")

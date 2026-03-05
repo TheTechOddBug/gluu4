@@ -67,7 +67,6 @@
 		
 				<ox:changePasswordDialog id="personPassword"
 					label="#{msgs['person.changePersonPassword']}"
-					person="#{userProfileAction.person}"
 					setPasswordMethod="#{passwordValidationAction.storeNewPassword(updatePersonAction.person, false)}"
 					cancelPasswordMethod="#{passwordValidationAction.reset}"
 					validatorBinding="#{passwordValidationAction.graphValidator}"

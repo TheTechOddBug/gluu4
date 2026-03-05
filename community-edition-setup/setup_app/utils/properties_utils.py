@@ -139,21 +139,9 @@ class PropertiesUtils(SetupUtils):
         if not Config.application_max_ram:
             Config.application_max_ram = int(base.current_mem_size * .83 * 1000) # 83% of physical memory
 
-        self.check_oxd_server_https()
-
         if Config.profile != SetupProfiles.CE:
             Config.install_node_app = False
 
-
-    def check_oxd_server_https(self):
-
-        if Config.get('oxd_server_https'):
-            Config.templateRenderingDict['oxd_hostname'], Config.templateRenderingDict['oxd_port'] = self.parse_url(Config.oxd_server_https)
-            if not Config.templateRenderingDict['oxd_port']:
-                Config.templateRenderingDict['oxd_port'] = 8443
-        else:
-            Config.templateRenderingDict['oxd_hostname'] = Config.hostname
-            Config.oxd_server_https = 'https://{}:8443'.format(Config.hostname)
 
     def decrypt_properties(self, fn, passwd):
         out_file = fn[:-4] + '.' + uuid.uuid4().hex[:8] + '-DEC~'
@@ -433,41 +421,6 @@ class PropertiesUtils(SetupUtils):
 
         return result
 
-    def check_oxd_server(self, oxd_url, error_out=True, log_error=True):
-
-        oxd_url = os.path.join(oxd_url, 'health-check')
-        self.logIt("Trying to connect {}".format(oxd_url))
-        try:
-            result = urllib.request.urlopen(
-                        oxd_url,
-                        timeout = 2,
-                        context=ssl._create_unverified_context()
-                    )
-            if result.code == 200:
-                oxd_status = json.loads(result.read().decode())
-                if oxd_status['status'] == 'running':
-                    return True
-        except Exception as e:
-            self.logIt("Connection to {} failed: {}".format(oxd_url, e))
-            if log_error:
-                if Config.thread_queue:
-                    return str(e)
-                if error_out:
-                    print(colors.DANGER)
-                    print("Can't connect to oxd-server with url {}".format(oxd_url))
-                    print("Reason: ", e)
-                    print(colors.ENDC)
-
-    def check_oxd_ssl_cert(self, oxd_hostname, oxd_port):
-
-        oxd_cert = ssl.get_server_certificate((oxd_hostname, oxd_port))
-        oxd_crt_fn = '/tmp/oxd_{}.crt'.format(str(uuid.uuid4()))
-        self.writeFile(oxd_crt_fn, oxd_cert)
-        ssl_subjects = self.get_ssl_subject(oxd_crt_fn)
-        
-        if ssl_subjects['CN'] != oxd_hostname:
-            return ssl_subjects
-
 
     def promptForBackendMappings(self):
 
@@ -510,42 +463,6 @@ class PropertiesUtils(SetupUtils):
                                             self.getDefaultOption(Config.installCasa)
                                             )[0].lower()
         Config.installCasa = True if promptForCasa == 'y' else False
-
-        if Config.installCasa:
-            print ("Please enter URL of oxd-server if you have one, for example: https://oxd.mygluu.org:8443")
-            if Config.oxd_package:
-                print ("Else leave blank to install oxd server locally.")
-                while True:
-                    oxd_server_https = input("oxd Server URL: ").lower()
-
-                    if not oxd_server_https:
-                        if Config.installed_instance and Config.installOxd:
-                            break
-                        Config.installOxd = True
-                        if Config.installed_instance:
-                            Config.addPostSetupService.append('installOxd')
-                        break
-
-                    print ("Checking oxd server ...")
-                    if self.check_oxd_server(oxd_server_https):
-                        oxd_hostname, oxd_port = self.parse_url(oxd_server_https)
-                        oxd_cert = ssl.get_server_certificate((oxd_hostname, oxd_port))
-                        oxd_crt_fn = '/tmp/oxd_{}.crt'.format(str(uuid.uuid4()))
-                        self.writeFile(oxd_crt_fn, oxd_cert)
-                        ssl_subjects = self.get_ssl_subject(oxd_crt_fn)
-
-                        if ssl_subjects['CN'] != oxd_hostname:
-                            print (('Hostname of oxd ssl certificate is {0}{1}{2} '
-                                    'which does not match {0}{3}{2}, \ncasa won\'t start '
-                                    'properly').format(
-                                            colors.DANGER,
-                                            ssl_subjects['CN'],
-                                            colors.ENDC,
-                                            oxd_hostname
-                                            ))
-                        else:
-                            Config.oxd_server_https = oxd_server_https
-                            break
 
         if Config.installed_instance and Config.installCasa:
             Config.addPostSetupService.append('installCasa')
@@ -636,28 +553,6 @@ class PropertiesUtils(SetupUtils):
 
         if Config.installed_instance and Config.installSaml:
             Config.addPostSetupService.append('installSaml')
-
-
-
-    def promptForOxd(self):
-
-        if Config.installed_instance and Config.installOxd:
-            return
-
-        promptForOxd = self.getPrompt("Install Oxd?", 
-                                            self.getDefaultOption(Config.installOxd)
-                                            )[0].lower()
-        Config.installOxd = True if promptForOxd == 'y' else False
-
-        if Config.installOxd:
-            promptForOxdGluuStorage = self.getPrompt("  Use Gluu Storage for Oxd?",
-                                                self.getDefaultOption(Config.get('oxd_use_gluu_storage'))
-                                                )[0].lower()
-            Config.oxd_use_gluu_storage = True if promptForOxdGluuStorage == 'y' else False
-
-
-        if Config.installed_instance and Config.installOxd:
-            Config.addPostSetupService.append('installOxd')
 
 
     def promptForGluuRadius(self):
@@ -932,8 +827,6 @@ class PropertiesUtils(SetupUtils):
                 else:
                     print("Hostname can't be \033[;1mlocalhost\033[0;0m")
 
-            Config.oxd_server_https = 'https://{}:8443'.format(Config.hostname)
-
             # Get city and state|province code
             Config.city = self.getPrompt("Enter your city or locality", Config.city)
             Config.state = self.getPrompt("Enter your state or province two letter code", Config.state)
@@ -1032,9 +925,6 @@ class PropertiesUtils(SetupUtils):
 
         if os.path.exists(os.path.join(Config.distGluuFolder, 'casa.war')):
             self.promptForCasaInstallation()
-
-        if (not Config.installOxd) and Config.oxd_package:
-            self.promptForOxd()
 
         if Config.profile != SetupProfiles.DISA_STIG:
             self.promptForGluuRadius()

@@ -58,7 +58,7 @@ Authentication guide:
 https://gluu.org/docs/ce/authn-guide/intro/
 
 Gluu Support (Register and ask here if you have any questions!):
-https://support.gluu.org
+https://help.gluu.org
 
 Super Gluu - Free Mobile two factor authentication:
 http://super.gluu.org

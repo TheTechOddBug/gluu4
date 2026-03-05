@@ -129,4 +129,8 @@ public class RedisProvider extends AbstractCacheProvider<AbstractRedisProvider> 
         return CacheProviderType.REDIS;
     }
 
+    @Override
+    public CacheConfiguration getCacheConfiguration() {
+        return cacheConfiguration;
+    }
 }

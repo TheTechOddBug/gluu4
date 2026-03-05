@@ -324,6 +324,7 @@
     "httpLoggingEnabled": false,
     "httpLoggingExludePaths": [],
     "externalLoggerConfiguration": "",
+    "disableExternalLoggerConfiguration": true,
     "authorizationRequestCustomAllowedParameters" : [
         "customParam1",
         "customParam2",
