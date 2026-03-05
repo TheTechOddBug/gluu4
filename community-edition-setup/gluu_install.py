@@ -196,7 +196,6 @@ if not argsp.uninstall:
 
         os.system(cmd)
 
-
 if not os.path.exists(scripts_dir):
     os.makedirs(scripts_dir)
 
