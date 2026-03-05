@@ -7,6 +7,7 @@ import org.gluu.oxauth.model.configuration.AppConfiguration;
 import org.gluu.oxauth.model.error.ErrorResponseFactory;
 import org.gluu.oxauth.model.register.ApplicationType;
 import org.gluu.oxauth.model.register.RegisterErrorResponseType;
+import org.junit.Assert;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.testng.MockitoTestNGListener;
@@ -338,6 +339,8 @@ public class RegisterParamsValidatorTest {
                     eq(Response.Status.BAD_REQUEST),
                     eq(RegisterErrorResponseType.INVALID_CLIENT_METADATA),
                     any());
+            return;
         }
+        Assert.fail("No exception thrown.");
     }
 }
