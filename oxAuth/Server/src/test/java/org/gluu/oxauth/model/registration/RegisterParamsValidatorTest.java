@@ -41,6 +41,29 @@ public class RegisterParamsValidatorTest {
     private ErrorResponseFactory errorResponseFactory;
 
     // ---- WEB application type ----
+    @Test
+    public void validateRedirectUris_webApp_javascript_shouldReturnFalse() {
+        boolean result = registerParamsValidator.validateRedirectUris(
+                Collections.singletonList(GrantType.AUTHORIZATION_CODE),
+                Collections.singletonList(ResponseType.CODE),
+                ApplicationType.WEB,
+                SubjectType.PUBLIC,
+                Collections.singletonList("javascript://example.com/callback"),
+                null);
+        assertFalse(result);
+    }
+
+    @Test
+    public void validateRedirectUris_webApp_file_shouldReturnFalse() {
+        boolean result = registerParamsValidator.validateRedirectUris(
+                Collections.singletonList(GrantType.AUTHORIZATION_CODE),
+                Collections.singletonList(ResponseType.CODE),
+                ApplicationType.WEB,
+                SubjectType.PUBLIC,
+                Collections.singletonList("file://example.com/callback"),
+                null);
+        assertFalse(result);
+    }
 
     @Test
     public void validateRedirectUris_webApp_httpsWithValidHost_shouldReturnTrue() {
