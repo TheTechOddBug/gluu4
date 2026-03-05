@@ -326,13 +326,14 @@ public class RegisterParamsValidator {
                         log.debug("HTTP redirect_uri for web app must use localhost or 127.0.0.1, got host: '{}'", uri.getHost());
                         return false;
                     }
+                    return true;
                 } else if (HTTPS.equalsIgnoreCase(scheme)) {
                     if (StringUtils.isBlank(uri.getHost())) {
                         log.debug("HTTPS redirect_uri must have a non-blank host for web app: '{}'", uri);
                         return false;
                     }
+                    return true;
                 }
-                return true;
             case NATIVE:
                 // Custom schemes are allowed for native apps per RFC 8252 (OAuth 2.0 for Native Apps).
                 return true;
