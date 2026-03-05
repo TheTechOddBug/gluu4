@@ -204,6 +204,9 @@ oxauth_war_fn = os.path.join(gluu_app_dir, 'oxauth.war')
 jetty_home = '/opt/gluu/jetty'
 services = ['casa.service', 'identity.service', 'opendj.service', 'oxauth.service', 'passport.service', 'fido2.service', 'idp.service', 'scim.service']
 
+if os.path.exists('/opt/oxd-server') or os.path.exists('/etc/systemd/system/oxd-server.service'):
+    services.append('oxd-server.service')
+
 jetty_dist_string = 'jetty-distribution'
 if argsp.a and hasattr(argsp, 'jetty_version') and argsp.jetty_version:
     app_versions['JETTY_VERSION'] = argsp.jetty_version
@@ -255,7 +258,12 @@ if argsp.uninstall:
                 os.remove(default_fn)
             print("Stopping", service)
             os.system('systemctl stop ' + service)
+
     remove_list = ['/etc/certs', '/etc/gluu', '/opt/gluu', '/opt/amazon-corretto*', '/opt/jre', '/opt/jetty*', '/opt/jython*', '/opt/opendj', '/opt/node*', '/opt/shibboleth-idp', '/var/gluu/identity/cr-snapshots/*']
+
+    if os.path.exists('/opt/oxd-server'):
+    remove_list.append('/opt/oxd-server')
+
     if not argsp.keep_downloads:
         remove_list.append('/opt/dist')
 
