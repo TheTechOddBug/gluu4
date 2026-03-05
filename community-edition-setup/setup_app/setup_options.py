@@ -21,7 +21,6 @@ def get_setup_options():
         'installGluuRadius': False,
         'installScimServer': False,
         'installCasa': False,
-        'installOxd': False,
         'installFido2': False,
         'loadTestData': False,
         'allowPreReleasedFeatures': False,
@@ -101,7 +100,6 @@ def get_setup_options():
     setupOptions['allowPreReleasedFeatures'] = base.argsp.allow_pre_released_features
     setupOptions['listenAllInterfaces'] = base.argsp.listen_all_interfaces
     setupOptions['installCasa'] = base.argsp.install_casa
-    setupOptions['installOxd'] = base.argsp.install_oxd
     setupOptions['installScimServer'] = base.argsp.install_scim
     setupOptions['installFido2'] = base.argsp.install_fido2
 
@@ -157,9 +155,6 @@ def get_setup_options():
 
     if base.argsp.no_data:
         setupOptions['loadData'] = False
-
-    if base.argsp.oxd_use_gluu_storage:
-        setupOptions['oxd_use_gluu_storage'] = True
 
     if base.argsp.import_ldif:
         if os.path.isdir(base.argsp.import_ldif):

@@ -311,10 +311,8 @@ class CollectProperties(SetupUtils, BaseInstaller):
         if casa_result:
             casa_config = casa_result['oxConfApplication'][0] if isinstance(casa_result['oxConfApplication'], list) else casa_result['oxConfApplication']
             casa_config = json.loads(casa_config) if isinstance(casa_config, str) else casa_config
-            Config.oxd_hostname = casa_config['oxd_config']['host']
         elif os.path.exists('/etc/gluu/conf/casa.json'):
             casa_config = json.load(open('/etc/gluu/conf/casa.json'))
-            Config.oxd_hostname = casa_config['oxd_config']['host']
 
     def save(self):
         propertiesUtils.save_properties()

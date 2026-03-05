@@ -38,11 +38,7 @@ list_installed_services() {
 		ordered_list="$ordered_list oxauth"
 	fi
 
-	if [ -d /opt/oxd-server ]; then
-		ordered_list="${ordered_list} oxd-server"
-	fi
-
-	remaining_list=`echo "$unordered_list"|sed 's/^ //'|tr ' ' '\n'|egrep -vw "oxauth|oxd-server"|tr '\n' ' '`
+	remaining_list=`echo "$unordered_list"|sed 's/^ //'|tr ' ' '\n'|egrep -vw "oxauth"|tr '\n' ' '`
 
 	echo "$ordered_list $remaining_list"
 }
