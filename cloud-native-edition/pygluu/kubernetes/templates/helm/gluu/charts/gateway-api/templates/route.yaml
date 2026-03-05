@@ -1,0 +1,409 @@
+{{- $fullName := include "gateway-api.fullname" . -}}
+{{- $namespace := .Release.Namespace }}
+
+{{- /* ======================================================== */}}
+{{- /* ROUTE 1: PUBLIC CONFIGURATION (HTTP & HTTPS)             */}}
+{{- /* These endpoints can be accessible via HTTP (No Redirect) */}}
+{{- /* ======================================================== */}}
+
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: {{ $fullName }}-routes-public
+  namespace: {{ $namespace }}
+{{- if .Values.routes.labels }}
+  labels:
+{{- toYaml .Values.routes.labels | nindent 4 }}
+{{- end }}
+{{- if .Values.routes.annotations }}
+  annotations:
+{{- toYaml .Values.routes.annotations | nindent 4 }}
+{{- end }}
+spec:
+  parentRefs:
+  - name: {{ .Values.gateway.name }}
+  hostnames:
+  - {{ .Values.global.domain | quote }}
+  rules:
+  {{- /* Start of spec.rules */}}
+  {{- if .Values.routes.deviceCodeEnabled }}
+  - matches:
+    - path:
+        type: Exact
+        value: /device-code
+    filters:
+    - type: URLRewrite
+      urlRewrite:
+        path:
+          type: ReplaceFullPath
+          replaceFullPath: /oxauth/device_authorization.htm
+    backendRefs:
+    - name: oxauth
+      port: 8080
+  {{- end }}
+  {{- if .Values.routes.openidConfigEnabled }}
+  - matches:
+    - path:
+        type: Exact
+        value: /.well-known/openid-configuration
+    filters:
+    - type: URLRewrite
+      urlRewrite:
+        path:
+          type: ReplaceFullPath
+          replaceFullPath: /oxauth/.well-known/openid-configuration
+    backendRefs:
+    - name: oxauth
+      port: 8080
+  {{- end }}
+  {{- if .Values.routes.firebaseMessagingEnabled }}
+  - matches:
+    - path:
+        type: Exact
+        value: /firebase-messaging-sw.js
+    filters:
+    - type: URLRewrite
+      urlRewrite:
+        path:
+          type: ReplaceFullPath
+          replaceFullPath: /oxauth/firebase-messaging-sw.js
+    backendRefs:
+    - name: oxauth
+      port: 8080
+  {{- end }}
+  {{- if .Values.routes.webfingerEnabled }}
+  - matches:
+    - path:
+        type: Exact
+        value: /.well-known/webfinger
+    filters:
+    - type: URLRewrite
+      urlRewrite:
+        path:
+          type: ReplaceFullPath
+          replaceFullPath: /oxauth/.well-known/webfinger
+    backendRefs:
+    - name: oxauth
+      port: 8080
+  {{- end }}
+  {{- if .Values.routes.webdiscoveryEnabled }}
+  - matches:
+    - path:
+        type: Exact
+        value: /.well-known/simple-web-discovery
+    filters:
+    - type: URLRewrite
+      urlRewrite:
+        path:
+          type: ReplaceFullPath
+          replaceFullPath: /oxauth/.well-known/simple-web-discovery
+    backendRefs:
+    - name: oxauth
+      port: 8080
+  {{- end }}
+  {{- if .Values.routes.u2fConfigEnabled }}
+  - matches:
+    - path:
+        type: Exact
+        value: /.well-known/fido-configuration
+    filters:
+    - type: URLRewrite
+      urlRewrite:
+        path:
+          type: ReplaceFullPath
+          replaceFullPath: /oxauth/restv1/fido-configuration
+    backendRefs:
+    - name: oxauth
+      port: 8080
+  {{- end }}
+  {{- if .Values.routes.uma2ConfigEnabled }}
+  - matches:
+    - path:
+        type: Exact
+        value: /.well-known/uma2-configuration
+    filters:
+    - type: URLRewrite
+      urlRewrite:
+        path:
+          type: ReplaceFullPath
+          replaceFullPath: /oxauth/restv1/uma2-configuration
+    backendRefs:
+    - name: oxauth
+      port: 8080
+  {{- end }}
+  {{- if .Values.routes.scimConfigEnabled }}
+  - matches:
+    - path:
+        type: Exact
+        value: /.well-known/scim-configuration
+    filters:
+    - type: URLRewrite
+      urlRewrite:
+        path:
+          type: ReplaceFullPath
+          replaceFullPath: /scim/restv1/scim/scim-configuration
+    backendRefs:
+    - name: scim
+      port: 8080
+  {{- end }}
+  {{- if .Values.routes.fido2ConfigEnabled }}
+  - matches:
+    - path:
+        type: Exact
+        value: /.well-known/fido2-configuration
+    filters:
+    - type: URLRewrite
+      urlRewrite:
+        path:
+          type: ReplaceFullPath
+          replaceFullPath: /fido2/restv1/configuration
+    backendRefs:
+    - name: fido2
+      port: 8080
+  {{- end }}
+  {{- /* End of spec.rules */}}
+
+---
+
+{{- /* ======================================================== */}}
+{{- /* ROUTE 2: SECURE APPS (HTTPS TRAFFIC)                     */}}
+{{- /* These endpoints serve the app when reached on HTTPS      */}}
+{{- /* ======================================================== */}}
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: {{ $fullName }}-routes-secure
+  namespace: {{ $namespace }}
+{{- if .Values.routes.labels }}
+  labels:
+{{- toYaml .Values.routes.labels | nindent 4 }}
+{{- end }}
+{{- if .Values.routes.annotations }}
+  annotations:
+{{- toYaml .Values.routes.annotations | nindent 4 }}
+{{- end }}
+spec:
+  parentRefs:
+  - name: {{ .Values.gateway.name }}
+    sectionName: https
+  hostnames:
+  - {{ .Values.global.domain | quote }}
+  rules:
+  {{- /* Start of spec.rules */}}
+  {{- if .Values.routes.authServerEnabled }}
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /oxauth
+    backendRefs:
+    - name: oxauth
+      port: 8080
+  {{- end }}
+  {{- if .Values.routes.adminUiEnabled }}
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /identity
+    backendRefs:
+    - name: oxtrust
+      port: 8080
+  {{- end }}
+  {{- if .Values.routes.fido2Enabled }}
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /fido2
+    backendRefs:
+    - name: fido2
+      port: 8080
+  {{- end }}
+  {{- if .Values.routes.scimEnabled }}
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /scim
+    backendRefs:
+    - name: scim
+      port: 8080
+  {{- end }}
+  {{- if .Values.routes.casaEnabled }}
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /casa
+    backendRefs:
+    - name: casa
+      port: 8080
+  {{- end }}
+  {{- if .Values.routes.shibEnabled }}
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /idp
+    backendRefs:
+    {{- if eq .Values.gateway.className "traefik" }}
+    - name: oxshibboleth-traefik
+      port: 8080
+      kind: TraefikService
+      group: "traefik.io"
+    {{- else }}
+    - name: oxshibboleth
+      port: 8080
+    {{- end }}
+  {{- end }}
+  {{- if .Values.routes.passportEnabled }}
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /passport
+    backendRefs:
+    - name: oxpassport
+      port: 8090
+  {{- end }}
+  {{- /* End of spec.rules */}}
+
+---
+
+{{- /* ======================================================== */}}
+{{- /* ROUTE 3: SECURE APPS (HTTP REDIRECT)                     */}}
+{{- /* These endpoints REDIRECT to HTTPS when reached on HTTP   */}}
+{{- /* ======================================================== */}}
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: {{ $fullName }}-routes-redirect
+  namespace: {{ $namespace }}
+{{- if .Values.routes.labels }}
+  labels:
+{{- toYaml .Values.routes.labels | nindent 4 }}
+{{- end }}
+{{- if .Values.routes.annotations }}
+  annotations:
+{{- toYaml .Values.routes.annotations | nindent 4 }}
+{{- end }}
+spec:
+  parentRefs:
+  - name: {{ .Values.gateway.name }}
+    sectionName: http
+  hostnames:
+  - {{ .Values.global.domain | quote }}
+  rules:
+  {{- /* Start of spec.rules */}}
+  {{- if .Values.routes.authServerEnabled }}
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /oxauth
+    filters:
+    - type: RequestRedirect
+      requestRedirect:
+        scheme: https
+        statusCode: 301
+  {{- end }}
+  {{- if .Values.routes.adminUiEnabled }}
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /identity
+    filters:
+    - type: RequestRedirect
+      requestRedirect:
+        scheme: https
+        statusCode: 301
+  {{- end }}
+  {{- if .Values.routes.fido2Enabled }}
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /fido2
+    filters:
+    - type: RequestRedirect
+      requestRedirect:
+        scheme: https
+        statusCode: 301
+  {{- end }}
+  {{- if .Values.routes.scimEnabled }}
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /scim
+    filters:
+    - type: RequestRedirect
+      requestRedirect:
+        scheme: https
+        statusCode: 301
+  {{- end }}
+  {{- if .Values.routes.casaEnabled }}
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /casa
+    filters:
+    - type: RequestRedirect
+      requestRedirect:
+        scheme: https
+        statusCode: 301
+  {{- end }}
+  {{- if .Values.routes.shibEnabled }}
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /idp
+    filters:
+    - type: RequestRedirect
+      requestRedirect:
+        scheme: https
+        statusCode: 301
+  {{- end }}
+  {{- if .Values.routes.passportEnabled }}
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /passport
+    filters:
+    - type: RequestRedirect
+      requestRedirect:
+        scheme: https
+        statusCode: 301
+  {{- end }}
+  {{- /* End of spec.rules */}}
+
+{{- if .Values.routes.adminUiEnabled }}
+---
+
+{{- /* ======================================================== */}}
+{{- /* ROUTE 4: ROOT PATH REDIRECT                              */}}
+{{- /* These endpoints REDIRECT / to /identity                  */}}
+{{- /* ======================================================== */}}
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: {{ $fullName }}-routes-base
+  namespace: {{ $namespace }}
+{{- if .Values.routes.labels }}
+  labels:
+{{- toYaml .Values.routes.labels | nindent 4 }}
+{{- end }}
+{{- if .Values.routes.annotations }}
+  annotations:
+{{- toYaml .Values.routes.annotations | nindent 4 }}
+{{- end }}
+spec:
+  parentRefs:
+  - name: {{ .Values.gateway.name }}
+  hostnames:
+  - {{ .Values.global.domain | quote }}
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: {{ .Values.routes.rootPath }}
+    filters:
+    - type: RequestRedirect
+      requestRedirect:
+        path:
+          type: ReplaceFullPath
+          replaceFullPath: /identity
+        scheme: https
+        statusCode: 302
+{{- end }}
