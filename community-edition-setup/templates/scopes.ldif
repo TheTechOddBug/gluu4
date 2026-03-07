@@ -188,3 +188,14 @@ displayName: call_static_endpoint
 defaultScope: true
 oxAttributes: {"spontaneousClientId":"","spontaneousClientScopes":[],"showInConfigurationEndpoint":false}
 oxScopeType: oauth
+
+dn: inum=C05B,ou=scopes,o=gluu
+objectClass: top
+objectClass: oxAuthCustomScope
+oxId: https://gluu.org/passport/config.read
+inum: C05B
+description: Retrieve passport configuration
+displayName: Retrieve passport configuration
+defaultScope: false
+oxAttributes: {"spontaneousClientId":null, "spontaneousClientScopes":null,"showInConfigurationEndpoint":true}
+oxScopeType: oauth
