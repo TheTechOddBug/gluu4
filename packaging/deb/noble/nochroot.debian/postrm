@@ -19,9 +19,9 @@ if [ "$1" = "remove" ] ; then
         systemctl disable systemd-nspawn@gluu-server.service
         rm -rf /lib/systemd/system/systemd-nspawn@gluu-server.service
     fi
+
     if [ -e /var/lib/container/gluu-server ]; then
         rm -rf /var/lib/container/gluu-server
-    fi
     fi
     
     rm -rf /install
