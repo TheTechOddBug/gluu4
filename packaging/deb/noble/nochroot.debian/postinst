@@ -1,0 +1,6 @@
+#!/bin/bash
+source /etc/profile.d/gluu-server.sh
+if [ -r /etc/profile.d/gluu-server.sh ]; then
+  . /etc/profile.d/gluu-server.sh
+fi
+exit 0

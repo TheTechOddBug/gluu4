@@ -1,0 +1,22 @@
+#!/bin/bash
+
+if [ "$1" = "remove" ] ; then
+    if [ -f /etc/init.d/gluu-server ] ; then
+        update-rc.d gluu-server remove
+        rm -rf /etc/init.d/gluu-server
+    fi
+
+    if [ -f /sbin/gluu-serverd ] ; then
+        rm -rf /sbin/gluu-serverd
+    fi
+    
+    if [ -f /lib/systemd/system/systemd-nspawn@gluu-server.service ]; then
+        systemctl disable systemd-nspawn@gluu-server.service || true
+        rm -f /lib/systemd/system/systemd-nspawn@gluu-server.service
+    fi
+    rm -rf /var/lib/container/gluu-server
+    systemctl daemon-reload || true
+   
+     rm -rf /var/lib/dpkg/info/gluu-server.* /install
+fi
+exit 0

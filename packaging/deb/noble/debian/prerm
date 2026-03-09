@@ -1,0 +1,37 @@
+#!/bin/bash
+
+set -e
+
+echo "Checking to make sure Gluu Server is down..."
+
+case $1 in
+    remove)
+        if [ -x /sbin/gluu-serverd ]; then
+            /sbin/gluu-serverd stop
+        fi
+        if [ -d /opt/gluu-server ] ; then
+            backup="/opt/gluu-server.save"
+            if [ -e "$backup" ]; then
+                backup="/opt/gluu-server.save.$(date +%s)"
+            fi
+            echo "Your changes will be saved into $backup"
+            mv /opt/gluu-server "$backup"
+        fi
+        fi
+        exit 0
+        ;;
+    deconfigure|upgrade)
+        if [ -x /sbin/gluu-serverd ]; then
+		/sbin/gluu-serverd stop
+        fi
+	exit 0
+        ;;
+    failed-upgrade)
+        exit 2
+        ;;
+    *)
+        echo "Prerm called with unknown argument '$1'" >&2
+        exit 0
+        ;;
+esac
+exit $?

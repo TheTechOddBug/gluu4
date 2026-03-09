@@ -1,0 +1,141 @@
+#!/bin/bash
+set -e
+
+# Setting package version
+VERSION='%VERSION%'
+RUN_VERSION=$2
+ARG=$1
+
+chmod -R 755 /opt/gluu-server/bin 
+chmod -R 755 /opt/gluu-server/lib
+
+# gluu-serverd
+mkdir -p /sbin/
+[ -f /opt/gluu-server/root/gluu-serverd ] && /bin/mv -f /opt/gluu-server/root/gluu-serverd /sbin/gluu-serverd || true
+
+# systemd unit file
+mkdir -p /lib/systemd/system/
+[ -f /opt/gluu-server/root/systemd-unitfile ] && /bin/mv -f /opt/gluu-server/root/systemd-unitfile /lib/systemd/system/systemd-nspawn@gluu-server.service || true
+systemctl daemon-reload || true
+systemctl enable machines.target
+systemctl enable systemd-nspawn@gluu-server.service
+
+mkdir -p /etc/systemd/journald.conf.d
+cat > /etc/systemd/journald.conf.d/gluu.conf <<'EOF'
+[Journal]
+Storage=persistent
+EOF
+systemctl restart systemd-journald || true
+
+if [[ ! -d /var/lib/container ]]; then
+  mkdir -p /var/lib/container
+fi
+ln -sfn /opt/gluu-server /var/lib/container/gluu-server
+
+mkdir -p /etc/gluu/keys
+if [[ ! -f /etc/gluu/keys/gluu-console ]]; then
+  ssh-keygen -b 2048 -t rsa -f /etc/gluu/keys/gluu-console -q -N ""
+fi
+ if [[ ! -d /opt/gluu-server/root/.ssh ]]; then
+   mkdir -p /opt/gluu-server/root/.ssh
+   chmod 700 /opt/gluu-server/root/.ssh
+ fi
+touch /opt/gluu-server/root/.ssh/authorized_keys
+grep -qxF "$(cat /etc/gluu/keys/gluu-console.pub)" /opt/gluu-server/root/.ssh/authorized_keys || \
+  cat /etc/gluu/keys/gluu-console.pub >> /opt/gluu-server/root/.ssh/authorized_keys
+chmod 600 /opt/gluu-server/root/.ssh/authorized_keys
+chmod 400 /opt/gluu-server/etc/ssh/ssh_host_rsa_key
+chmod 400 /opt/gluu-server/etc/ssh/ssh_host_ecdsa_key
+chmod 400 /opt/gluu-server/etc/ssh/ssh_host_ed25519_key
+chmod 755 /sbin/gluu-serverd
+
+/bin/cp /etc/resolv.conf /opt/gluu-server/etc/ > /dev/null 2>&1
+
+if [ "$1" = "configure" ]; then
+  if [ -z "$RUN_VERSION" ] || [ "$RUN_VERSION" = "$VERSION" ]; then
+    echo "Starting gluu-server ..."
+    sleep 1
+    /sbin/gluu-serverd start
+  else
+    if [ -n "$RUN_VERSION" ] && [ "$RUN_VERSION" != "$VERSION" ]; then
+      if [ -e /opt/gluu-server/etc/gluu/conf ]; then
+        [ -e /opt/gluu-server/etc/passwd_upgrade ] && mv /opt/gluu-server/etc/passwd_upgrade /opt/gluu-server/etc/passwd || true
+        [ -e /opt/gluu-server/etc/passwd-_upgrade ] && mv /opt/gluu-server/etc/passwd-_upgrade /opt/gluu-server/etc/passwd- || true
+        [ -e /opt/gluu-server/etc/group_upgrade ] && mv /opt/gluu-server/etc/group_upgrade /opt/gluu-server/etc/group || true
+        [ -e /opt/gluu-server/etc/group-_upgrade ] && mv /opt/gluu-server/etc/group-_upgrade /opt/gluu-server/etc/group- || true 
+        [ -e /opt/gluu-server/etc/shadow_upgrade ] && mv /opt/gluu-server/etc/shadow_upgrade /opt/gluu-server/etc/shadow || true 
+        [ -e /opt/gluu-server/etc/shadow-_upgrade ] && mv /opt/gluu-server/etc/shadow-_upgrade /opt/gluu-server/etc/shadow- || true
+        [ -e /opt/gluu-server/etc/gshadow_upgrade ] && mv /opt/gluu-server/etc/gshadow_upgrade /opt/gluu-server/etc/gshadow || true
+        [ -e /opt/gluu-server/etc/gshadow-_upgrade ] && mv /opt/gluu-server/etc/gshadow-_upgrade /opt/gluu-server/etc/gshadow- || true
+        [ -e /opt/gluu-server/etc/hostname_upgrade ] && mv /opt/gluu-server/etc/hostname_upgrade /opt/gluu-server/etc/hostname || true  
+        [ -e /opt/gluu-server/etc/hosts_upgrade ] && mv /opt/gluu-server/etc/hosts_upgrade /opt/gluu-server/etc/hosts || true
+        [ -e /opt/gluu-server/etc/profile_upgrade ] && mv /opt/gluu-server/etc/profile_upgrade /opt/gluu-server/etc/profile || true
+        [ -e /opt/gluu-server/etc/security/limits.conf_upgrade ] && mv /opt/gluu-server/etc/security/limits.conf_upgrade /opt/gluu-server/etc/security/limits.conf || true
+        [ -e /opt/gluu-server/etc/sysconfig/network_upgrade ] && mv /opt/gluu-server/etc/sysconfig/network_upgrade /opt/gluu-server/etc/sysconfig/network || true 
+        /usr/sbin/chroot /opt/gluu-server /bin/su - root -c '[ -e /opt/jetty ] && chown -R jetty:jetty /opt/jetty* || exit 0'
+        /usr/sbin/chroot /opt/gluu-server /bin/su - root -c '[ -e /opt/gluu/jetty ] && chown -R jetty:jetty /opt/gluu/jetty || exit 0'
+        /usr/sbin/chroot /opt/gluu-server /bin/su - root -c '[ -e /opt/gluu/jetty ] && chmod -R 755 /opt/gluu/jetty || exit 0'
+        /usr/sbin/chroot /opt/gluu-server /bin/su - root -c '[ -e /opt/shibboleth-idp ] && chown -R jetty:jetty /opt/shibboleth-idp || exit 0'
+        /usr/sbin/chroot /opt/gluu-server /bin/su - root -c '[ -e /opt/opendj ] && chown -R ldap:ldap /opt/opendj || exit 0'
+        /usr/sbin/chroot /opt/gluu-server /bin/su - root -c '[ -e /opt/node ] && chown -R node:node /opt/node* || exit 0'
+        /usr/sbin/chroot /opt/gluu-server /bin/su - root -c '[ -e /opt/gluu/node ] && chown -R node:node /opt/gluu/node || exit 0'
+        /usr/sbin/chroot /opt/gluu-server /bin/su - root -c '[ -e /opt/gluu/node ] && chmod -R 755 /opt/gluu/node || exit 0'
+        /usr/sbin/chroot /opt/gluu-server /bin/su - root -c '[ -e /opt/gluu/radius ] && chown -R radius:ldap /opt/gluu/radius || exit 0'
+        /usr/sbin/chroot /opt/gluu-server /bin/su - root -c '[ -e /opt/gluu/radius ] && chmod -R a+rx /opt/gluu/radius || exit 0'
+        /usr/sbin/chroot /opt/gluu-server /bin/su - root -c '[ -e /home/ldap ] && chown ldap:ldap /home/ldap || exit 0'
+        /usr/sbin/chroot /opt/gluu-server /bin/su - root -c '[ -e /home/node ] && chown node:node /home/node || exit 0'
+        /usr/sbin/chroot /opt/gluu-server /bin/su - root -c '[ -e /home/jetty ] && chown jetty:jetty /home/jetty || exit 0'
+        /usr/sbin/chroot /opt/gluu-server /bin/su - root -c '[ -e /etc/profile ] && chmod 644 /etc/profile || exit 0'
+        /usr/sbin/chroot /opt/gluu-server /bin/su - root -c '[ -e /tmp ] && chmod ga+w /tmp || exit 0' 
+        /usr/sbin/chroot /opt/gluu-server /bin/su - root -c '[ -e /var/gluu/ ] && chown root:gluu /var/gluu/ || exit 0'
+        /usr/sbin/chroot /opt/gluu-server /bin/su - root -c '[ -e /var/gluu/ ] && chmod 755 /var/gluu/ || exit 0'
+        /usr/sbin/chroot /opt/gluu-server /bin/su - root -c '[ -e /var/gluu/photos ] && chown root:gluu /var/gluu/photos || exit 0'
+        /usr/sbin/chroot /opt/gluu-server /bin/su - root -c '[ -e /var/gluu/photos ] && chmod 775 /var/gluu/photos || exit 0'
+        /usr/sbin/chroot /opt/gluu-server /bin/su - root -c '[ -e /var/gluu/identity ] && chown -R root:gluu /var/gluu/identity || exit 0'
+        /usr/sbin/chroot /opt/gluu-server /bin/su - root -c '[ -e /var/gluu/identity ] && chmod -R 775 /var/gluu/identity || exit 0'
+        /usr/sbin/chroot /opt/gluu-server /bin/su - root -c '[ -e /var/run ] && chown root:root /var/run || exit 0'
+        /usr/sbin/chroot /opt/gluu-server /bin/su - root -c '[ -e /var/run/jetty ] && chown root:jetty /var/run/jetty || exit 0'
+        /usr/sbin/chroot /opt/gluu-server /bin/su - root -c '[ -e /var/run/jetty ] && chown jetty:jetty /var/run/jetty/* || exit 0'
+        /usr/sbin/chroot /opt/gluu-server /bin/su - root -c '[ -e /var/run/radius ] && chown root:root /var/run/radius || exit 0'
+        /usr/sbin/chroot /opt/gluu-server /bin/su - root -c '[ -e /var/run/ ] && chmod 755 /var/run/ || exit 0'
+        /usr/sbin/chroot /opt/gluu-server /bin/su - root -c '[ -e /var/run/jetty ] && chmod 775 /var/run/jetty || exit 0'
+        /usr/sbin/chroot /opt/gluu-server /bin/su - root -c '[ -e /var/run/jetty ] && chmod 644 /var/run/jetty/* || exit 0'
+        /usr/sbin/chroot /opt/gluu-server /bin/su - root -c '[ -e /var/run/radius ] && chmod 775 /var/run/radius || exit 0'
+        /usr/sbin/chroot /opt/gluu-server /bin/su - root -c '[ -e /install/community-edition-setup/output/oxauth-keys.json ] && chown jetty:jetty /install/community-edition-setup/output/oxauth-keys.json || exit 0'
+        /usr/sbin/chroot /opt/gluu-server /bin/su - root -c '[ -e /install/community-edition-setup/output/oxauth-keys.json ] && chmod 500 /install/community-edition-setup/output/oxauth-keys.json || exit 0'
+        /usr/sbin/chroot /opt/gluu-server /bin/su - root -c '[ -e /etc/hostname ] && chmod 644 /etc/hostname || exit 0'
+        /usr/sbin/chroot /opt/gluu-server /bin/su - root -c '[ -e /etc/hosts ] && chmod 644 /etc/hosts || exit 0'
+        /usr/sbin/chroot /opt/gluu-server /bin/su - root -c '[ -e /home/ldap/.pw ] && chown ldap:ldap /home/ldap/.pw || exit 0'
+        /usr/sbin/chroot /opt/gluu-server /bin/su - root -c '[ -e /etc/gluu/conf ] && chown root:gluu /etc/gluu/conf || exit 0'
+        /usr/sbin/chroot /opt/gluu-server /bin/su - root -c '[ -e /etc/init.d/opendj ] && chmod +x /etc/init.d/opendj || exit 0'
+        /usr/sbin/chroot /opt/gluu-server /bin/su - root -c '[ -e /etc/default/oxauth ] && chown root:root /etc/default/oxauth || exit 0'
+        /usr/sbin/chroot /opt/gluu-server /bin/su - root -c '[ -e /etc/init.d/oxauth ] && chmod +x /etc/init.d/oxauth || exit 0'
+        /usr/sbin/chroot /opt/gluu-server /bin/su - root -c '[ -e /usr/lib/tmpfiles.d/jetty.conf ] && chown root:root /usr/lib/tmpfiles.d/jetty.conf || exit 0'
+        /usr/sbin/chroot /opt/gluu-server /bin/su - root -c '[ -e /usr/lib/tmpfiles.d/jetty.conf ] && chmod 644 /usr/lib/tmpfiles.d/jetty.conf || exit 0'
+        /usr/sbin/chroot /opt/gluu-server /bin/su - root -c '[ -e /etc/default/identity ] && chown root:root /etc/default/identity || exit 0'
+        /usr/sbin/chroot /opt/gluu-server /bin/su - root -c '[ -e /etc/init.d/identity ] && chmod +x /etc/init.d/identity || exit 0'
+        /usr/sbin/chroot /opt/gluu-server /bin/su - root -c '[ -e /usr/lib/tmpfiles.d/jetty.conf ] && chown root:root /usr/lib/tmpfiles.d/jetty.conf || exit 0'
+        /usr/sbin/chroot /opt/gluu-server /bin/su - root -c '[ -e /usr/lib/tmpfiles.d/jetty.conf ] && chmod 644 /usr/lib/tmpfiles.d/jetty.conf || exit 0'
+        /usr/sbin/chroot /opt/gluu-server /bin/su - root -c '[ -e /etc/default/idp ] && chown root:root /etc/default/idp || exit 0'
+        /usr/sbin/chroot /opt/gluu-server /bin/su - root -c '[ -e /etc/init.d/idp ] && chmod +x /etc/init.d/idp || exit 0'
+        /usr/sbin/chroot /opt/gluu-server /bin/su - root -c '[ -e /usr/lib/tmpfiles.d/jetty.conf ] && chown root:root /usr/lib/tmpfiles.d/jetty.conf || exit 0'
+        /usr/sbin/chroot /opt/gluu-server /bin/su - root -c '[ -e /usr/lib/tmpfiles.d/jetty.conf ] && chmod 644 /usr/lib/tmpfiles.d/jetty.conf || exit 0'
+        /usr/sbin/chroot /opt/gluu-server /bin/su - root -c '[ -e /etc/default/passport ] && chown root:root /etc/default/passport || exit 0'
+        /usr/sbin/chroot /opt/gluu-server /bin/su - root -c '[ -e /etc/init.d/passport ] && chmod +x /etc/init.d/passport || exit 0'
+        /usr/sbin/chroot /opt/gluu-server /bin/su - root -c '[ -e /etc/init.d/gluu-radius ] && chmod +x /etc/init.d/gluu-radius || exit 0'
+        /usr/sbin/chroot /opt/gluu-server /bin/su - root -c '[ -e /etc/gluu/conf/radius/ ] && chown root:gluu /etc/gluu/conf/radius/ || exit 0'
+        /sbin/gluu-serverd stop
+        /sbin/gluu-serverd start 
+        sleep 30
+      else
+        if [ -z "$(ls -A /opt/gluu-server/install/community-edition-setup)" ]; then
+            echo "Starting gluu-server ..."
+            sleep 1
+            /sbin/gluu-serverd start
+        fi
+      fi     
+    fi
+  fi
+fi
+
+exit 0
