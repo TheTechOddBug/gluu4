@@ -21,6 +21,7 @@ from org.gluu.oxauth.cert.validation.model import ValidationStatus
 from org.gluu.oxauth.util import CertUtil
 from org.gluu.oxauth.model.util import CertUtils
 from org.gluu.oxauth.service.net import HttpService
+from org.gluu.util.security import CoreCertUtil
 from org.apache.http.params import CoreConnectionPNames
 
 import sys
@@ -241,7 +242,7 @@ class PersonAuthentication(PersonAuthenticationType):
             request = externalContext.getRequest()
 
             # Try to get certificate from header X-ClientCert
-            clientCertificate = externalContext.getRequestHeaderMap().get("X-ClientCert")
+            clientCertificate = CoreCertUtil.parseCertHeader(externalContext.getRequest()).getCert()
             if clientCertificate != None:
                 x509Certificate = self.certFromPemString(clientCertificate)
                 identity.setWorkingParameter("cert_x509",  self.certToString(x509Certificate))

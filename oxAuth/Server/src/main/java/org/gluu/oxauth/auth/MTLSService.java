@@ -1,6 +1,17 @@
 package org.gluu.oxauth.auth;
 
-import com.google.common.base.Strings;
+import java.security.PublicKey;
+import java.security.cert.X509Certificate;
+import java.util.List;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.servlet.FilterChain;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
+
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.gluu.oxauth.model.authorize.AuthorizeRequestParam;
@@ -17,20 +28,9 @@ import org.gluu.oxauth.model.token.TokenErrorResponseType;
 import org.gluu.oxauth.model.util.CertUtils;
 import org.gluu.oxauth.service.SessionIdService;
 import org.gluu.oxauth.util.ServerUtil;
+import org.gluu.util.security.CoreCertUtil;
 import org.json.JSONObject;
 import org.slf4j.Logger;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.servlet.FilterChain;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response;
-import java.security.PublicKey;
-import java.security.cert.X509Certificate;
-import java.util.List;
 
 /**
  * @author Yuriy Zabrovarnyy
@@ -57,9 +57,9 @@ public class MTLSService {
         log.debug("Trying to authenticate client {} via {} ...", client.getClientId(),
                 client.getAuthenticationMethod());
 
-        final String clientCertAsPem = httpRequest.getHeader("X-ClientCert");
+        final String clientCertAsPem = CoreCertUtil.parseCertHeader(httpRequest).getCert();
         if (StringUtils.isBlank(clientCertAsPem)) {
-            log.debug("Client certificate is missed in `X-ClientCert` header, client_id: {}.", client.getClientId());
+            log.debug("Client certificate is missed in `{}` header, client_id: {}.", CoreCertUtil.HEADER_CLIENT_CERT, client.getClientId());
             return false;
         }
 

@@ -39,6 +39,7 @@ import org.gluu.oxauth.util.ServerUtil;
 import org.gluu.persist.exception.AuthenticationException;
 import org.gluu.util.OxConstants;
 import org.gluu.util.StringHelper;
+import org.gluu.util.security.CoreCertUtil;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -225,7 +226,7 @@ public class TokenRestWebServiceImpl implements TokenRestWebService {
                     scope = authorizationCodeGrant.checkScopesPolicy(scope);
                 }
 
-                AccessToken accToken = authorizationCodeGrant.createAccessToken(request.getHeader("X-ClientCert"), executionContext); // create token after scopes are checked
+                AccessToken accToken = authorizationCodeGrant.createAccessToken(CoreCertUtil.parseCertHeader(request).getCert(), executionContext); // create token after scopes are checked
 
                 IdToken idToken = null;
                 if (authorizationCodeGrant.getScopes().contains("openid")) {
@@ -295,7 +296,7 @@ public class TokenRestWebServiceImpl implements TokenRestWebService {
                     scope = authorizationGrant.getScopesAsString();
                 }
 
-                AccessToken accToken = authorizationGrant.createAccessToken(request.getHeader("X-ClientCert"), executionContext); // create token after scopes are checked
+                AccessToken accToken = authorizationGrant.createAccessToken(CoreCertUtil.parseCertHeader(request).getCert(), executionContext); // create token after scopes are checked
 
                 IdToken idToken = null;
                 if (appConfiguration.getOpenidScopeBackwardCompatibility() && authorizationGrant.getScopes().contains("openid")) {
@@ -335,7 +336,7 @@ public class TokenRestWebServiceImpl implements TokenRestWebService {
                 }
 
                 executionContext.setGrant(clientCredentialsGrant);
-                AccessToken accessToken = clientCredentialsGrant.createAccessToken(request.getHeader("X-ClientCert"), executionContext); // create token after scopes are checked
+                AccessToken accessToken = clientCredentialsGrant.createAccessToken(CoreCertUtil.parseCertHeader(request).getCert(), executionContext); // create token after scopes are checked
 
                 IdToken idToken = null;
                 if (appConfiguration.getOpenidScopeBackwardCompatibility() && clientCredentialsGrant.getScopes().contains("openid")) {
@@ -419,7 +420,7 @@ public class TokenRestWebServiceImpl implements TokenRestWebService {
                         scope = resourceOwnerPasswordCredentialsGrant.checkScopesPolicy(scope);
                     }
 
-                    AccessToken accessToken = resourceOwnerPasswordCredentialsGrant.createAccessToken(request.getHeader("X-ClientCert"), executionContext); // create token after scopes are checked
+                    AccessToken accessToken = resourceOwnerPasswordCredentialsGrant.createAccessToken(CoreCertUtil.parseCertHeader(request).getCert(), executionContext); // create token after scopes are checked
 
                     IdToken idToken = null;
                     if (appConfiguration.getOpenidScopeBackwardCompatibility() && resourceOwnerPasswordCredentialsGrant.getScopes().contains("openid")) {
@@ -471,7 +472,7 @@ public class TokenRestWebServiceImpl implements TokenRestWebService {
                             cibaGrant.getClient().getBackchannelTokenDeliveryMode() == BackchannelTokenDeliveryMode.POLL) {
                         if (!cibaGrant.isTokensDelivered()) {
                             RefreshToken refToken = cibaGrant.createRefreshToken(executionContext);
-                            AccessToken accessToken = cibaGrant.createAccessToken(request.getHeader("X-ClientCert"), executionContext);
+                            AccessToken accessToken = cibaGrant.createAccessToken(CoreCertUtil.parseCertHeader(request).getCert(), executionContext);
 
                             ExternalUpdateTokenContext context = ExternalUpdateTokenContext.of(executionContext);
                             Function<JsonWebResponse, Void> postProcessor = externalUpdateTokenService.buildModifyIdTokenProcessor(context);
@@ -621,7 +622,7 @@ public class TokenRestWebServiceImpl implements TokenRestWebService {
                 throw new WebApplicationException(response(error(400, TokenErrorResponseType.INVALID_GRANT, "The client is not authorized."), oAuth2AuditLog));
             }
             RefreshToken refToken = deviceCodeGrant.createRefreshToken(executionContext);
-            AccessToken accessToken = deviceCodeGrant.createAccessToken(executionContext.getHttpRequest().getHeader("X-ClientCert"), executionContext);
+            AccessToken accessToken = deviceCodeGrant.createAccessToken(CoreCertUtil.parseCertHeader(executionContext.getHttpRequest()).getCert(), executionContext);
 
             ExternalUpdateTokenContext context = ExternalUpdateTokenContext.of(executionContext);
             Function<JsonWebResponse, Void> postProcessor = externalUpdateTokenService.buildModifyIdTokenProcessor(context);

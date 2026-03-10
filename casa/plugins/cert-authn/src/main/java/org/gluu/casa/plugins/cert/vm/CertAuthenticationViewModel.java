@@ -11,6 +11,7 @@ import org.gluu.casa.service.IPersistenceService;
 import org.gluu.casa.service.ISessionContext;
 import org.gluu.casa.service.SndFactorAuthenticationUtils;
 import org.gluu.oxauth.model.util.CertUtils;
+import org.gluu.util.security.CoreCertUtil;
 import org.gluu.util.security.StringEncrypter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +28,6 @@ import java.security.cert.X509Certificate;
 public class CertAuthenticationViewModel {
 
     private static final String RND_KEY = "key";
-    private static final String CERT_HEADER = "X-ClientCert";
 
     private Logger logger = LoggerFactory.getLogger(getClass());
     private CertService certService;
@@ -133,10 +133,8 @@ public class CertAuthenticationViewModel {
     }
 
     private X509Certificate processCert() {
-
         X509Certificate clientCert = null;
-        String clientCertString = WebUtils.getRequestHeader(CERT_HEADER);
-
+        String clientCertString = CoreCertUtil.parseCertHeader(WebUtils.getServletRequest()).getCert();
         try {
             if (Utils.isEmpty(clientCertString)) {
                 String attribute = "javax.servlet.request.X509Certificate";
@@ -149,7 +147,7 @@ public class CertAuthenticationViewModel {
                 }
 
             } else {
-                logger.info("Got a certificate in request header '{}'", CERT_HEADER);
+                logger.info("Got a certificate in request header '{}'", CoreCertUtil.HEADER_CLIENT_CERT);
                 present = true;
                 clientCert = CertUtils.x509CertificateFromPem(clientCertString);
             }
