@@ -1,10 +1,8 @@
 package org.gluu.casa.core.navigation;
 
-import org.gluu.casa.core.AuthFlowContext;
-import org.gluu.casa.core.ConfigurationHandler;
-import org.gluu.casa.core.OxdService;
-import org.gluu.casa.core.SessionContext;
-import org.gluu.casa.core.UserService;
+import com.nimbusds.oauth2.sdk.GeneralException;
+
+import org.gluu.casa.core.*;
 import org.gluu.casa.core.pojo.User;
 import org.gluu.casa.misc.Utils;
 import org.gluu.casa.misc.WebUtils;
@@ -15,7 +13,7 @@ import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Page;
 import org.zkoss.zk.ui.util.Initiator;
 
-import java.util.Map;
+import java.util.*;
 
 import static org.gluu.casa.core.AuthFlowContext.RedirectStage.*;
 
@@ -29,87 +27,76 @@ public class HomeInitiator extends CommonInitiator implements Initiator {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     private AuthFlowContext flowContext;
-    private OxdService oxdService;
+    private OIDCService oidcService;
 
     public void doInit(Page page, Map<String, Object> map) throws Exception {
 
         super.doInit(page, map);
-        if (page.getAttribute("error") == null) {
+        if (page.getAttribute("error") != null)
+            return;
 
-            flowContext = Utils.managedBean(AuthFlowContext.class);
-            oxdService = Utils.managedBean(OxdService.class);
-            try {
-                switch (flowContext.getStage()) {
-                    case NONE:
-                        try {
-                            goForAuthorization();
-                        } catch (Exception e) {
-                            String error = "An error occurred during authorization step";
-                            setPageErrors(page, error, e.getMessage());
-                            logger.error(error, e);
-                        }
-                        break;
-                    case INITIAL:
-                        //If IDP response contains error query parameter we cannot proceed
-                        if (errorsParsed(page)) {
-                            flowContext.setStage(NONE);
-                        } else {
-                            String code = WebUtils.getQueryParam("code");
-                            if (code == null) {
-                                //This may happen when user did not ever entered his username at IDP, and tries accessing the app again
-                                goForAuthorization();
-                            } else {
-                                Pair<String, String> tokens = oxdService.getTokens(code, WebUtils.getQueryParam("state"));
-                                String accessToken = tokens.getX();
-                                String idToken = tokens.getY();
-                                logger.debug("Authorization code={}, Access token={}, Id token {}", code, accessToken, idToken);
+        flowContext = Utils.managedBean(AuthFlowContext.class);
+        oidcService = Utils.managedBean(OIDCService.class);
+        try {
+            switch (flowContext.getStage()) {
+                case NONE:
+                    goForAuthorization();
+                    break;
+                case INITIAL:
+                    if (Utils.isEmpty(WebUtils.getQueryParam("state"))) {
+                        goForAuthorization();
+                        return;
+                    }
 
-                                User user = Utils.managedBean(UserService.class)
-                                        .getUserFromClaims((Map<String, Object>) oxdService.getUserClaims(accessToken));
-                                //Store in session
-                                logger.debug("Adding user to session");
-                                Utils.managedBean(SessionContext.class).setUser(user);
-                                flowContext.setIdToken(idToken);
-                                flowContext.setStage(BYPASS);
-                                flowContext.setHasSessionAtOP(true);
-                                //This flow continues at index.zul
-                            }
-                        }
-                        break;
-                    case BYPASS:
-                        //go straight without the need for showing UI
-                        logger.debug("Taking user to homepage...");
-                        WebUtils.execRedirect(WebUtils.USER_PAGE_URL);
-                        break;
-                    default:
-                        //Added to pass style checker
-                }
-            } catch (Exception e) {
-                logger.error(e.getMessage(), e);
-                setPageErrors(page, Labels.getLabel("general.error.general"), e.getMessage());
-                flowContext.setStage(NONE);
+                    //Proceed only if there is state in URL                    
+                    String code = oidcService.validateAuthnResponse(WebUtils.getFullRequestURL(),
+                            flowContext.getState());
+                    flowContext.setState(null);
+                    
+                    //TODO: check what happens when user did not ever entered his username at IDP, and tries accessing the app again
+                    Pair<String, String> tokenResult = oidcService.getTokens(code);
+                    
+                    String accessToken = tokenResult.getX();
+                    String idToken = tokenResult.getY();
+
+                    Map<String, Object> claims = oidcService.getUserClaims(accessToken);                    
+                    User user = Utils.managedBean(UserService.class).getUserFromClaims(claims);
+                    
+                    //Store in session
+                    logger.debug("Adding user to session");
+                    Utils.managedBean(SessionContext.class).setUser(user);
+                    flowContext.setIdToken(idToken);
+                    flowContext.setStage(BYPASS);
+                    flowContext.setHasSessionAtOP(true);
+                    //This flow continues at index.zul
+
+                    break;
+                case BYPASS:
+                    //go straight without the need for showing UI
+                    logger.debug("Taking user to homepage...");
+                    WebUtils.execRedirect(WebUtils.USER_PAGE_URL);
+                    break;
             }
-
+        } catch (GeneralException e) {
+            String msg = e.getMessage();
+            logger.error(msg, e);
+            
+            String descr = Optional.ofNullable(e.getErrorObject().getCode())
+                    .map(c -> String.format("(%s) ", c)).orElse("");
+            descr += e.getErrorObject().getDescription();
+            setPageErrors(page, msg, descr);
+            flowContext.setStage(NONE);
         }
+
     }
 
-    //Redirects to an authorization URL obtained with OXD
     private void goForAuthorization() throws Exception {
         flowContext.setStage(INITIAL);
         logger.debug("Starting authorization flow");
         //do Authz Redirect
-        WebUtils.execRedirect(oxdService.getAuthzUrl(ConfigurationHandler.DEFAULT_ACR));
-    }
-
-    private boolean errorsParsed(Page page) {
-
-        String error = WebUtils.getQueryParam("error");
-        boolean errorsFound = error != null;
-        if (errorsFound) {
-            setPageErrors(page, error, WebUtils.getQueryParam("error_description"));
-        }
-        return errorsFound;
-
+        Pair<String, String> pair = oidcService.getAuthnRequestUrl(ConfigurationHandler.DEFAULT_ACR);
+        flowContext.setState(pair.getY());
+        WebUtils.execRedirect(pair.getX());
     }
 
 }

@@ -24,17 +24,6 @@
         <!-- GLUU -->
         <dependency>
             <groupId>org.gluu</groupId>
-            <artifactId>oxd-common</artifactId>
-            <version>${ox.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.gluu</groupId>
             <artifactId>oxauth-model</artifactId>
             <version>${ox.version}</version>
             <exclusions>
@@ -298,6 +287,12 @@
             <groupId>com.sun.mail</groupId>
             <artifactId>jakarta.mail</artifactId>
             <version>1.6.7</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.nimbusds</groupId>
+            <artifactId>oauth2-oidc-sdk</artifactId>
+            <version>11.33</version>
         </dependency>
         
         <dependency>

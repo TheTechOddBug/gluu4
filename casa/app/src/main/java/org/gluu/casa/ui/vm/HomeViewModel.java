@@ -53,7 +53,7 @@ public class HomeViewModel {
             updateScreenWidth(jsonObject.get("screenWidth"));
 
             boolean mobile = Optional.ofNullable(jsonObject.get("isMobile")).map(Boolean.class::cast).orElse(false);
-            logger.trace("Detected browser is {0} mobile", mobile ? "" : "not");
+            logger.trace("Detected browser is {} mobile", mobile ? "" : "not");
             updateBrowserInfo(jsonObject.get("name"), jsonObject.get("version"), mobile);
         }
 
@@ -69,7 +69,7 @@ public class HomeViewModel {
                 int offset = (int) value;
                 ZoneOffset zoffset = ZoneOffset.ofTotalSeconds(offset);
                 sessionContext.setZoneOffset(zoffset);
-                logger.trace("Time offset for session is {0}", logger.isTraceEnabled() ? zoffset : "");
+                logger.trace("Time offset for session is {}", logger.isTraceEnabled() ? zoffset : "");
             }
         } catch (Exception e) {
             logger.error(e.getMessage(), e);

@@ -227,6 +227,30 @@ public class PersistenceService implements IPersistenceService {
         return oxAuthConfDynamic.get("issuer").asText();
     }
 
+    public String getIntrospectionEndpoint() {
+        return oxAuthConfDynamic.get("introspectionEndpoint").asText();
+    }
+    
+    public String getAuthorizationEndpoint() {
+        return oxAuthConfDynamic.get("authorizationEndpoint").asText();
+    }
+    
+    public String getTokenEndpoint() {
+        return oxAuthConfDynamic.get("tokenEndpoint").asText();
+    }
+    
+    public String getUserInfoEndpoint() {
+        return oxAuthConfDynamic.get("userInfoEndpoint").asText();
+    }
+    
+    public String getEndSessionEndpoint() {
+        return oxAuthConfDynamic.get("endSessionEndpoint").asText();
+    }
+    
+    public String getJwksUri() {
+        return oxAuthConfDynamic.get("jwksUri").asText();
+    }
+
     public Set<String> getPersonOCs() {
         return personCustomObjectClasses;
     }
@@ -239,10 +263,6 @@ public class PersistenceService implements IPersistenceService {
         return personMember != null
                 && personMember.getMemberOf().stream().anyMatch(m -> dns.stream().anyMatch(dn -> dn.equals(m)));
 
-    }
-
-    public String getIntrospectionEndpoint() {
-        return oxAuthConfDynamic.get("introspectionEndpoint").asText();
     }
 
     public int getDynamicClientExpirationTime() {

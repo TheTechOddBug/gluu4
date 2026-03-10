@@ -1,19 +1,13 @@
 package org.gluu.casa.conf;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 
 import java.util.List;
 
 /**
  * @author jgomer
  */
-public class OxdSettings {
-
-    private String protocol;
-    private String host;
-    private int port;
+public class OIDCSettings {
 
     @JsonProperty("authz_redirect_uri")
     private String redirectUri;
@@ -24,28 +18,16 @@ public class OxdSettings {
     @JsonProperty("frontchannel_logout_uri")
     private String frontLogoutUri;
 
+    @JsonProperty("client_id")
+    private String clientId;
+    
+    @JsonProperty("client_secret")
+    private String clientSecret;
+
     private List<String> scopes;
-
-    @JsonProperty("client")
-    private OxdClientSettings client;
-
-    @JsonIgnore
-    private String opHost;
 
     @JsonIgnore
     private List<String> acrValues;
-
-    public String getProtocol() {
-        return protocol;
-    }
-
-    public String getHost() {
-        return host;
-    }
-
-    public int getPort() {
-        return port;
-    }
 
     public String getRedirectUri() {
         return redirectUri;
@@ -55,8 +37,12 @@ public class OxdSettings {
         return postLogoutUri;
     }
 
-    public String getOpHost() {
-        return opHost;
+    public String getClientId() {
+        return clientId;
+    }
+
+    public String getClientSecret() {
+        return clientSecret;
     }
 
     public List<String> getAcrValues() {
@@ -71,13 +57,12 @@ public class OxdSettings {
         return scopes;
     }
 
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    public OxdClientSettings getClient() {
-        return client;
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
     }
 
-    public void setOpHost(String opHost) {
-        this.opHost = opHost;
+    public void setClientSecret(String clientSecret) {
+        this.clientSecret = clientSecret;
     }
 
     public void setRedirectUri(String redirectUri) {
@@ -88,24 +73,8 @@ public class OxdSettings {
         this.postLogoutUri = postLogoutUri;
     }
 
-    public void setProtocol(String protocol) {
-        this.protocol = protocol;
-    }
-
-    public void setHost(String host) {
-        this.host = host;
-    }
-
-    public void setPort(int port) {
-        this.port = port;
-    }
-
     public void setAcrValues(List<String> acrValues) {
         this.acrValues = acrValues;
-    }
-
-    public void setClient(OxdClientSettings client) {
-        this.client = client;
     }
 
     public void setFrontLogoutUri(String frontLogoutUri) {

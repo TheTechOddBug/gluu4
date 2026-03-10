@@ -140,5 +140,15 @@ public final class WebUtils {
         return val;
 
     }
+    
+    public static String getFullRequestURL() {
+        HttpServletRequest req = getServletRequest();
+        String query = req.getQueryString();
+        StringBuffer sb = req.getRequestURL();
+        if (query != null) {
+            sb.append("?").append(query);
+        }
+        return sb.toString();
+    }
 
 }
