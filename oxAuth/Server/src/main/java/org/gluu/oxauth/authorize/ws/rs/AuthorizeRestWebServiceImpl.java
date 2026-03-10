@@ -602,7 +602,7 @@ public class AuthorizeRestWebServiceImpl implements AuthorizeRestWebService {
                     authorizationGrant.save(); // call save after object modification!!!
                 }
 
-                newAccessToken = authorizationGrant.createAccessToken(CoreCertUtil.parseCertHeader(httpRequest).getCert(), executionContext);
+                newAccessToken = authorizationGrant.createAccessToken(CoreCertUtil.getClientCert(httpRequest).getCert(), executionContext);
 
                 redirectUriResponse.getRedirectUri().addResponseParameter(AuthorizeResponseParam.ACCESS_TOKEN, newAccessToken.getCode());
                 redirectUriResponse.getRedirectUri().addResponseParameter(AuthorizeResponseParam.TOKEN_TYPE, newAccessToken.getTokenType().toString());
@@ -768,7 +768,7 @@ public class AuthorizeRestWebServiceImpl implements AuthorizeRestWebService {
         RefreshToken refreshToken = cibaGrant.createRefreshToken(executionContext);
         log.debug("Issuing refresh token: {}", refreshToken.getCode());
 
-        AccessToken accessToken = cibaGrant.createAccessToken(CoreCertUtil.parseCertHeader(executionContext.getHttpRequest()).getCert(), executionContext);
+        AccessToken accessToken = cibaGrant.createAccessToken(CoreCertUtil.getClientCert(executionContext.getHttpRequest()).getCert(), executionContext);
         log.debug("Issuing access token: {}", accessToken.getCode());
 
         ExternalUpdateTokenContext context = ExternalUpdateTokenContext.of(executionContext);

@@ -242,7 +242,7 @@ class PersonAuthentication(PersonAuthenticationType):
             request = externalContext.getRequest()
 
             # Try to get certificate from header X-ClientCert
-            clientCertificate = CoreCertUtil.parseCertHeader(externalContext.getRequest()).getCert()
+            clientCertificate = CoreCertUtil.getClientCert(externalContext.getRequest()).getCert()
             if clientCertificate != None:
                 x509Certificate = self.certFromPemString(clientCertificate)
                 identity.setWorkingParameter("cert_x509",  self.certToString(x509Certificate))

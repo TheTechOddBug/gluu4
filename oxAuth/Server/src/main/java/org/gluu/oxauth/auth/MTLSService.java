@@ -57,7 +57,7 @@ public class MTLSService {
         log.debug("Trying to authenticate client {} via {} ...", client.getClientId(),
                 client.getAuthenticationMethod());
 
-        final String clientCertAsPem = CoreCertUtil.parseCertHeader(httpRequest).getCert();
+        final String clientCertAsPem = CoreCertUtil.getClientCert(httpRequest).getCert();
         if (StringUtils.isBlank(clientCertAsPem)) {
             log.debug("Client certificate is missed in `{}` header, client_id: {}.", CoreCertUtil.HEADER_CLIENT_CERT, client.getClientId());
             return false;

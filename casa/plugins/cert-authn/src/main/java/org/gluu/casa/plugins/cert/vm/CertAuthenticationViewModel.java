@@ -134,7 +134,7 @@ public class CertAuthenticationViewModel {
 
     private X509Certificate processCert() {
         X509Certificate clientCert = null;
-        String clientCertString = CoreCertUtil.parseCertHeader(WebUtils.getServletRequest()).getCert();
+        String clientCertString = CoreCertUtil.getClientCert(WebUtils.getServletRequest()).getCert();
         try {
             if (Utils.isEmpty(clientCertString)) {
                 String attribute = "javax.servlet.request.X509Certificate";
