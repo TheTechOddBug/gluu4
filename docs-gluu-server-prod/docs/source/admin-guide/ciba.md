@@ -211,7 +211,7 @@ Server: Jetty(9.4.11.v20180605)
     "registration_access_token": "e9ecb1a1-001c-4d04-b2f2-b42e35664975",
     "client_id": "4251a8c4-69e3-4d3e-a807-758ecbc51118",
     "token_endpoint_auth_method": "client_secret_basic",
-    "scope": "profile openid permission super_gluu_ro_session work_phone phone address org_name clientinfo email user_name test oxd uma_protection",
+    "scope": "profile openid permission super_gluu_ro_session work_phone phone address org_name clientinfo email user_name test uma_protection",
     "backchannel_user_code_parameter": true,
     "client_secret": "f101f27b-0f18-4bff-9470-c33361f28ff9",
     "client_id_issued_at": 1574831171,

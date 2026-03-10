@@ -121,7 +121,6 @@ nav:
         - 'Introduction': 'integration/index.md'
         - 'Server Side Web Apps':
             - 'OAuth2 Grants': 'admin-guide/oauth2.md'
-            - 'oxd OAuth 2.0': 'integration/oxd-oauth2/index.md'
             - 'Nginx lua-resty-openidc': 'integration/sswebapps/nginx.md'
             - 'Apache mod_auth_openidc': 'integration/sswebapps/openidc-rp.md'
             - 'Shibboleth SAML SP': 'integration/sswebapps/saml-sp.md'

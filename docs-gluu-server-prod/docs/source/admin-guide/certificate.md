@@ -355,54 +355,6 @@
                 kubectl apply -f oxshibboleth-key-rotation.yaml -n <gluu-namespace>
             ```   
     
-    === "oxd oAuth client"
-    
-        | Associated certificates and keys    |
-        | ----------------------------------- |
-        | /etc/certs/oxd_application.crt      |
-        | /etc/certs/oxd_application.key      |   
-        | /etc/certs/oxd_application.keystore |   
-        | /etc/certs/oxd_admin.crt            |   
-        | /etc/certs/oxd_admin.key            |   
-        | /etc/certs/oxd_admin.keystore       |
-        
-        !!! Note
-            Application common name must match oxd service name. `kubectl get svc -n <gluu-namespace>`. We assume it to be oxd-server below.
-        
-        1. Create a file named `oxd-key-rotation.yaml` with the following contents :
-        
-            ```yaml
-            # License terms and conditions for Gluu Cloud Native Edition:
-            # https://www.apache.org/licenses/LICENSE-2.0
-            apiVersion: batch/v1
-            kind: Job
-            metadata:
-              name: oxd-key-rotation
-            spec:
-              template:
-                metadata:
-                  annotations:
-                    sidecar.istio.io/inject: "false"              
-                spec:
-                  restartPolicy: Never
-                  imagePullSecrets:
-                      - name: regcred
-                  containers:
-                    - name: oxd-key-rotation
-                      image: gluufederation/certmanager:4.5.2-1
-                      envFrom:
-                      - configMapRef:
-                          name: gluu-config-cm
-                      # Change application-cn:oxd-server and admin-cn:oxd-server to match oxd service name
-                      args: ["patch", "oxd", "--opts", "application-cn:oxd-server", "--opts", "admin-cn:oxd-server", "--opts", "valid-to:365"]
-            ``` 
-        
-        1. Apply job
-        
-            ```bash
-                kubectl apply -f oxd-key-rotation.yaml -n <gluu-namespace>
-            ```
-                     
     === "ldap"
     
         !!! Note

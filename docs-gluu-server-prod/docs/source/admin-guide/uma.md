@@ -461,9 +461,6 @@ Example of decoded JWT payload claims:
 }
 ``` 
 
-## UMA RS Implementation
-If you need to secure apps with OpenID Connect RP and UMA 2 RS code, you might want to take a look at our [oxd client software](http://oxd.gluu.org).
-
 ## UMA API
 Learn more about the Gluu Server's [UMA-API](../api-guide/uma-api.md). 
 

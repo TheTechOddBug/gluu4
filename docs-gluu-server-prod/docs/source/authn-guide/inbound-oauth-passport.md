@@ -47,7 +47,7 @@ Follow these steps to integrate an external OP for login to an OIDC application:
 
 1. Enter a display name for the provider  (e.g "Partner 1", "Customer 1", etc.)
 
-1. In `Type`, choose `openid-client` (if you are using Gluu oxd as a mediator with an OP, check [this](#using-oxd-as-mediator) section)
+1. In `Type`, choose `openid-client`
 
 1. In `Mapping`, choose `openid-client`
 
@@ -109,22 +109,6 @@ Below are some extra parameters:
 ### Protect the OIDC application with `passport_social` authentication
 
 The same steps described for [OAuth Login](#protect-the-application-with-passport_social-authentication) can be followed in this case. If additional assistance is needed, open a ticket on [Gluu support](https://help.gluu.org).
-
-### Using oxd as mediator
-
-When using oxd, administrators can follow the steps similar as [above](#integrating-openid-connect-providers), taking into account the following considerations:
-
-- For provider `type`, select "openidconnect-oxd"
-
-- Instead of creating a client directly, a call to the oxd server [`register-site` API method](https://gluu.org/docs/oxd/4.1/api/#register-site) must be issued. [Here](https://github.com/GluuFederation/passport-oxd#create-a-client) is an example. From this action, the `oxdID` will be obtained. Ensure the client created actually has the scopes requested.
-
-- Supply values for the properties required. These properties are explained [here](https://github.com/GluuFederation/passport-oxd#configure-strategy) (see the options parameter). 
-
-- If you need to supply values for optional properties, their values must be provided as JSON content. The following are examples of valid JSON values: `true`, `0`, `"a string"`, `["item1", "item2"]`, `{ "key": { "some": "value" }}`.
-
-- `/opt/gluu/node/passport/server/mappings/oxd-default.js` is the default mapping file. Create your own if it does not fit your needs.
-
-![oidc_oxd_provider](../img/user-authn/passport/oidc_oxd_provider.png) 
 
 ### Using an external Gluu Server as OP
 

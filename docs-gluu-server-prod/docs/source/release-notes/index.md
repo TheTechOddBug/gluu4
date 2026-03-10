@@ -17,11 +17,6 @@ The Gluu Server is a free open source identity and access management (IAM) platf
 
 The most common use cases for the Gluu Server include single sign-on (SSO), mobile authentication, API access management, two-factor authentication, customer identity and access management (CIAM) and identity federation.
 
-## Documentation
-
-Please visit the [Gluu Documentation Page](http://www.gluu.org/docs/ce) for the complete 
-documentation and administrative guide. 
-
 ## Available components in Gluu Server 4.5
 - oxAuth, oxTrust, oxCore v4.5
 - Gluu OpenDJ v4.4.11 (with Bouncy Castle FIPS 140-2 crypto package 1.0.2.1 and Bouncy Castle Java APIs for the TLS 1.0.9)
@@ -34,6 +29,10 @@ documentation and administrative guide.
 - Weld 3.0.0
 - FluentD 3.5
 - Redis
+
+!!! Note
+
+    Release notes for versions after 4.5.6 are maintained on [GitHub releases page](https://github.com/GluuFederation/gluu4/releases). 
 
 ## 4.5.6 Fixes / Enhancements
 

@@ -49,7 +49,7 @@ Later, in the [Inbound flow revisited](#inbound-flow-revisited) section, more sp
 Out of the box, the following external identity providers can be integrated:
 
 - SAML IDPs
-- OpenId Connect OPs (with standard communication or via Gluu's mediator [oxd server](https://gluu.org/docs/oxd/))
+- OpenId Connect OPs (with standard communication)
 - OAuth (v1.0 or v2.0) Authorization Servers
 
 A typical usage of OAuth inbound identity is for supporting social login, ie. making your users log in to your application by using their existing accounts at popular sites like Facebook, Twitter, Github, etc.
@@ -141,7 +141,7 @@ See our tutorial for [attribute mapping and transformation](../tutorials/passpor
 
 ### Default mappings
 
-Passport already bundles several mappings by default. Most of them are targeted at social login and are proven to work for most use cases. `saml_basic_profile` and `saml_ldap_profile` are generic mappings inspired on the SAML basic and SAML X.500 attribute profiles, respectively. `oxd-default` and `openid-client` are intended for use when the `passport-oxd` and `openid-client` strategies are employed to integrate OPs.
+Passport already bundles several mappings by default. Most of them are targeted at social login and are proven to work for most use cases. `saml_basic_profile` and `saml_ldap_profile` are generic mappings inspired on the SAML basic and SAML X.500 attribute profiles, respectively. `openid-client` is intended for use when the `openid-client` strategy is employed to integrate OPs.
 
 !!! Warning
     Do not edit out-of-the-box mappings. Instead, create your own versions based on existing files. See the [tutorial](../tutorials/passport-attributes-mapping.md).
