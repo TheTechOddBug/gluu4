@@ -342,12 +342,6 @@
 							<h:outputText value="#{cc.attrs._client.oxRefreshTokenLifetime}"
 								id="oxRefreshTokenLifetimeId" />
 						</ox:decorate>
-
-						<ox:decorate id="oxdId"
-							rendered="#{!empty cc.attrs._client.oxdId and cc.attrs._client.oxdId ne null }"
-							label="#{msgs['clientForm.oxdId']}">
-							<h:outputText value="#{cc.attrs._client.oxdId}" id="oxdIdId" />
-						</ox:decorate>
 					</div>
 
 					<div class="col-sm-6 col-lg-6">
