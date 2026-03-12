@@ -21,7 +21,7 @@ public class HeaderViewModel {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    @WireVariable
+    @WireVariable("oIDCService")
     private OIDCService oidcService;
 
     @WireVariable
