@@ -218,9 +218,6 @@ public class OxAuthClient extends Entry implements Serializable {
 	@AttributeName(name = "oxDisabled")
 	private boolean disabled;
 
-	@AttributeName(name = "oxdId")
-	private String oxdId;
-
 	@AttributeName(name = "del")
 	private boolean deletable;
 
@@ -709,14 +706,6 @@ public class OxAuthClient extends Entry implements Serializable {
 
 	public void setExp(Date exp) {
 		this.exp = exp;
-	}
-
-	public final String getOxdId() {
-		return oxdId;
-	}
-
-	public final void setOxdId(String oxdId) {
-		this.oxdId = oxdId;
 	}
 
 	public boolean isDeletable() {
