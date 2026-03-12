@@ -20,6 +20,7 @@ from setup_app.utils.properties_utils import propertiesUtils
 from setup_app.pylib.jproperties import Properties
 from setup_app.installers.jetty import JettyInstaller
 from setup_app.installers.base import BaseInstaller
+from setup_app.installers import casa
 
 class CollectProperties(SetupUtils, BaseInstaller):
 
@@ -308,11 +309,26 @@ class CollectProperties(SetupUtils, BaseInstaller):
             Config.ip = self.detect_ip()
 
         casa_result = dbUtils.dn_exists('ou=casa,ou=configuration,o=gluu')
+        casa_config = {}
         if casa_result:
             casa_config = casa_result['oxConfApplication'][0] if isinstance(casa_result['oxConfApplication'], list) else casa_result['oxConfApplication']
             casa_config = json.loads(casa_config) if isinstance(casa_config, str) else casa_config
         elif os.path.exists('/etc/gluu/conf/casa.json'):
-            casa_config = json.load(open('/etc/gluu/conf/casa.json'))
+            with open('/etc/gluu/conf/casa.json') as f:
+                casa_config = json.load(f)
+
+        if casa_config:
+            casa_oidc_config = casa_config.get('oidc_config', {})
+
+            if casa_oidc_config.get('client_id'):
+                Config.casa_client_id = casa_oidc_config['client_id']
+
+            if casa_oidc_config and 'client_secret' in casa_oidc_config:
+                Config.casa_client_pw = casa_oidc_config['client_secret']
+                Config.casa_client_encoded_pw = self.obscure(Config.casa_client_pw)
+
+        if not Config.get('casa_client_id'):
+            self.check_clients([('casa_client_id', casa.client_id_prefix)])
 
     def save(self):
         propertiesUtils.save_properties()

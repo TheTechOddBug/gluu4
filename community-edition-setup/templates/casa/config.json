@@ -1,0 +1,12 @@
+{
+    "enable_pass_reset" : true,
+    "log_level" : "INFO",
+    "oidc_config" : { 
+        "authz_redirect_uri" : "https://%(hostname)s/casa",
+        "post_logout_uri" : "https://%(hostname)s/casa/bye.zul",
+        "frontchannel_logout_uri" : "https://%(hostname)s/casa/autologout",
+        "scopes": [ "openid", "profile", "user_name", "clientinfo" ],
+        "client_id": "%(casa_client_id)s",
+        "client_secret": "%(casa_client_pw)s"
+     }
+}

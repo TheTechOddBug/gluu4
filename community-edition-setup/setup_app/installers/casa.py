@@ -13,6 +13,7 @@ from setup_app.config import Config
 from setup_app.utils.properties_utils import propertiesUtils
 from setup_app.installers.jetty import JettyInstaller
 
+client_id_prefix = '3000.'
 
 class CasaInstaller(JettyInstaller):
 
@@ -30,8 +31,10 @@ class CasaInstaller(JettyInstaller):
 
         self.templates_folder = os.path.join(Config.templateFolder, 'casa')
         self.output_folder = os.path.join(Config.outputFolder, 'casa')
-        self.ldif = os.path.join(Config.outputFolder, 'casa/casa.ldif')
-        self.ldif_scripts = os.path.join(Config.outputFolder, 'casa/scripts.ldif')
+        self.ldif = os.path.join(self.output_folder, 'casa.ldif')
+        self.ldif_scripts = os.path.join(self.output_folder, 'scripts.ldif')
+        self.ldif_clients = os.path.join(self.output_folder, 'clients.ldif')
+        self.config_fn = os.path.join(self.output_folder, 'config.json')
         self.pylib_folder = os.path.join(Config.gluuOptPythonFolder, 'libs')
         self.casa_jetty_dir = os.path.join(self.jetty_base, 'casa')
 
@@ -75,6 +78,17 @@ class CasaInstaller(JettyInstaller):
 
         self.enable('casa')
 
+    def generate_configuration(self):
+
+        self.check_clients([('casa_client_id', client_id_prefix)])
+
+        if not Config.get('casa_client_pw'):
+            Config.casa_client_pw = self.getPW()
+
+        if not Config.get('casa_client_encoded_pw') and Config.get('casa_client_pw'):
+            Config.casa_client_encoded_pw = self.obscure(Config.casa_client_pw)
+
+
     def copy_static(self):
 
         for script_fn in glob.glob(os.path.join(Config.staticFolder, 'casa/scripts/*.*')):
@@ -84,11 +98,14 @@ class CasaInstaller(JettyInstaller):
 
     def render_import_templates(self, import_script=True):
 
+        self.renderTemplateInOut(self.config_fn, self.templates_folder, self.output_folder)
+        Config.templateRenderingDict['casa_config_base64'] = self.generate_base64_ldap_file(self.config_fn)
+
         scripts_template = os.path.join(self.templates_folder, os.path.basename(self.ldif_scripts))
         extensions = base.find_script_names(scripts_template)
         self.prepare_base64_extension_scripts(extensions=extensions)
 
-        ldif_files = (self.ldif, self.ldif_scripts)
+        ldif_files = (self.ldif, self.ldif_scripts, self.ldif_clients)
         for tmp in ldif_files:
             self.renderTemplateInOut(tmp, self.templates_folder, self.output_folder)
 

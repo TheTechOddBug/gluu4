@@ -2,4 +2,4 @@ dn: ou=casa,ou=configuration,o=gluu
 objectClass: top
 objectClass: oxApplicationConfiguration
 ou: casa
-oxConfApplication: { "enable_pass_reset": true, "log_level": "INFO" }
+oxConfApplication::%(casa_config_base64)s
