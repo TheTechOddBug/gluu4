@@ -61,15 +61,16 @@ tune_os() {
 case "$1" in
         start)
             systemctl start systemd-nspawn@gluu-server.service
-            ;;
+        ;;
          
         stop)
             systemctl stop systemd-nspawn@gluu-server.service
-            ;;
+        ;;
          
         status)
             systemctl status systemd-nspawn@gluu-server.service
-            ;;
+        ;;
+
         restart)
             systemctl stop systemd-nspawn@gluu-server.service
             if ! wait_stop; then
@@ -77,10 +78,12 @@ case "$1" in
                 exit 1
             fi
             systemctl start systemd-nspawn@gluu-server.service
-            ;;
-	ready)
-	    ready
+        ;;
+
+	    ready)
+	        ready
 	    ;;
+
         login)
             PID=$(machinectl status gluu-server 2>/dev/null | grep Leader | awk -F ' ' '{ print $2 };' )
 	    if [[ ${PID} =~ ^-?[0-9]+$ ]] ; then
@@ -91,19 +94,21 @@ case "$1" in
                 echo "Gluu server is not started."
             fi
 	    ;;
+
         enable)
-	    systemctl enable machines.target
-	    systemctl enable systemd-nspawn@gluu-server.service
+    	    systemctl enable machines.target
+	        systemctl enable systemd-nspawn@gluu-server.service
 	    ;;
-	disable) 
+
 	disable) 
 	    systemctl disable systemd-nspawn@gluu-server.service
-             ;; 
-            ;; 
+         ;; 
+
 	tune_os) 
-            tune_os
-            ;; 
+        tune_os
+        ;; 
+
 	*)
-            echo $"Usage: $0 {enable|start|restart|ready|login|stop|disable|tune_os|status}"
-            exit 1
+        echo $"Usage: $0 {enable|start|restart|ready|login|stop|disable|tune_os|status}"
+        exit 1
 esac
