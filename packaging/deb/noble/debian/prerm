@@ -17,7 +17,6 @@ case $1 in
             echo "Your changes will be saved into $backup"
             mv /opt/gluu-server "$backup"
         fi
-        fi
         exit 0
         ;;
     deconfigure|upgrade)
