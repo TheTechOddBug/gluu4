@@ -20,6 +20,7 @@ override_dh_makeshlibs:
 override_dh_shlibdeps:
 override_dh_strip_nondeterminism:
 override_dh_fixperms:
+override_dh_dwz:
 	dh_fixperms
 	[ -f ./debian/gluu-server/opt/gluu-server/lib/x86_64-linux-gnu/libpthread.so.0 ] && \
 		chmod 755 ./debian/gluu-server/opt/gluu-server/lib/x86_64-linux-gnu/libpthread.so.0 || true
