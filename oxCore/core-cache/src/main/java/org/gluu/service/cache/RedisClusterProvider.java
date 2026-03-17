@@ -39,11 +39,11 @@ public class RedisClusterProvider extends AbstractRedisProvider {
 
                 pool = new JedisCluster(hosts(getRedisConfiguration().getServers()), redisConfiguration.getConnectionTimeout(),
                         redisConfiguration.getSoTimeout(), redisConfiguration.getMaxRetryAttempts(),
-                        password, redisConfiguration.getClientName(), poolConfig, true);
+                        redisConfiguration.getUsername(), password, redisConfiguration.getClientName(), poolConfig, true);
             } else {
                 pool = new JedisCluster(hosts(getRedisConfiguration().getServers()), redisConfiguration.getConnectionTimeout(),
                         redisConfiguration.getSoTimeout(), redisConfiguration.getMaxRetryAttempts(),
-                        password, redisConfiguration.getClientName(), poolConfig);
+                        redisConfiguration.getUsername(), password, redisConfiguration.getClientName(), poolConfig);
             }
 
             testConnection();

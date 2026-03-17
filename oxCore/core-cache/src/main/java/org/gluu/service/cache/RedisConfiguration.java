@@ -26,6 +26,8 @@ public class RedisConfiguration implements Serializable {
 
     private String clientName = UUID.randomUUID().toString();
 
+    private String username;
+
     private Boolean useSSL = false;
 
     private String sslTrustStoreFilePath = "";
@@ -67,6 +69,14 @@ public class RedisConfiguration implements Serializable {
 
     public void setClientName(String clientName) {
         this.clientName = clientName;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public int getMaxIdleConnections() {
@@ -205,6 +215,7 @@ public class RedisConfiguration implements Serializable {
                 ", soTimeout=" + soTimeout +
                 ", maxRetryAttempts=" + maxRetryAttempts +
                 ", clientName=" + clientName +
+                ", username=" + username +
                 '}';
     }
 }
