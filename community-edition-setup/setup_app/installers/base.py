@@ -3,7 +3,10 @@ import uuid
 import inspect
 
 from pathlib import Path
-from distutils.version import LooseVersion
+try:
+    from packaging.version import Version
+except ModuleNotFoundError:
+    from distutils.version import LooseVersion as Version
 
 from setup_app import paths
 from setup_app import static
@@ -190,7 +193,11 @@ class BaseInstaller:
             if os.path.exists(src):
                 war_info = get_war_info(src)
                 if war_info.get('version'):
-                    return LooseVersion(war_info['version']) < LooseVersion(Config.oxVersion)
+                    war_match = re.search(r'([\d.]+)', war_info['version'] or '')
+                    ox_match = re.search(r'([\d.]+)', (Config.oxVersion or ''))
+                    if war_match and ox_match:
+                        return Version(war_match.group().strip('.')) < Version(ox_match.group().strip('.'))
+                    return True
 
         return True
 

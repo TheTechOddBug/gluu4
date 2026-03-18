@@ -190,10 +190,6 @@ if not argsp.uninstall:
 
         cmd = "{} install -y {}".format(package_installer, packages_str)
 
-        if os_type+os_version == 'centos7':
-            cmd = cmd.replace('python3-six', 'python36-six')
-            cmd = cmd.replace('python3-ruamel-yaml', 'python36-ruamel-yaml')
-
         os.system(cmd)
 
 if not os.path.exists(scripts_dir):
@@ -397,7 +393,6 @@ if not argsp.u:
     download('https://github.com/sqlalchemy/sqlalchemy/archive/rel_1_3_23.zip', os.path.join(app_dir, 'sqlalchemy.zip'))
     download('https://mds.fidoalliance.org/', os.path.join(app_dir, 'fido2/mds/toc/toc.jwt'))
     download('https://secure.globalsign.com/cacert/root-r3.crt', os.path.join(app_dir, 'fido2/mds/cert/root-r3.crt'))
-    download('https://files.pythonhosted.org/packages/7a/46/8b58d6b8244ff613ecb983b9428d1168dd0b014a34e13fb19737b9ba1fc1/cryptography-39.0.0-cp36-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl', os.path.join(app_dir, 'cryptography.whl'))
     download('https://github.com/jpadilla/pyjwt/archive/refs/tags/2.4.0.zip', os.path.join(app_dir, 'pyjwt.zip'))
     download('https://gitlab.com/doctormo/python-crontab/-/archive/v3.2.0/python-crontab-v3.2.0.zip', os.path.join(app_dir, 'python-crontab.zip'))
 
@@ -435,7 +430,6 @@ else:
     if argsp.profile != 'DISA-STIG':
         extract_libs += [
                     ('sqlalchemy.zip', 'lib/sqlalchemy', None),
-                    ('cryptography.whl', 'cryptography', ''),
                     ('pyjwt.zip', 'jwt', None),
                     ]
 
