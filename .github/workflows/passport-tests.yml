@@ -1,0 +1,39 @@
+name: passport-tests
+
+on:
+  push:
+    paths: ['gluu-passport/**']
+  pull_request:
+    paths: ['gluu-passport/**']
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [22, 24]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+          cache-dependency-path: gluu-passport/package-lock.json
+      - name: Install dependencies
+        run: npm ci
+        working-directory: gluu-passport
+      - name: Run tests
+        run: npm test
+        working-directory: gluu-passport
+      - name: Generate coverage report
+        run: npm run cover
+        working-directory: gluu-passport
+      - name: Upload coverage artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-${{ matrix.node-version }}
+          path: gluu-passport/coverage.lcov
+          if-no-files-found: ignore

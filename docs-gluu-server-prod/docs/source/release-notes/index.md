@@ -23,7 +23,7 @@ The most common use cases for the Gluu Server include single sign-on (SSO), mobi
 - Shibboleth v4.3.1
 - Passport v4.1
 - Java v1.8.0_112
-- Node.js v9.9.0
+- Node.js v22
 - Jetty-distribution-9.4.12.v20180830
 - Jython v2.7.2a
 - Weld 3.0.0
