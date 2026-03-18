@@ -1,5 +1,8 @@
 {{- $fullName := include "gateway-api.fullname" . -}}
-{{- $namespace := .Release.Namespace }}
+{{- $namespace := .Release.Namespace -}}
+{{- $gatewayNamespace := .Values.routes.gatewayNamespace | default $namespace -}}
+{{- $httpSection := .Values.routes.httpSectionName | default "http" -}}
+{{- $httpsSection := .Values.routes.httpsSectionName | default "https" -}}
 
 {{- /* ======================================================== */}}
 {{- /* ROUTE 1: PUBLIC CONFIGURATION (HTTP & HTTPS)             */}}
@@ -22,6 +25,7 @@ metadata:
 spec:
   parentRefs:
   - name: {{ .Values.gateway.name }}
+    namespace: {{ $gatewayNamespace }}
   hostnames:
   - {{ .Values.global.domain | quote }}
   rules:
@@ -185,7 +189,8 @@ metadata:
 spec:
   parentRefs:
   - name: {{ .Values.gateway.name }}
-    sectionName: https
+    namespace: {{ $gatewayNamespace }}
+    sectionName: {{ $httpsSection }}
   hostnames:
   - {{ .Values.global.domain | quote }}
   rules:
@@ -284,7 +289,8 @@ metadata:
 spec:
   parentRefs:
   - name: {{ .Values.gateway.name }}
-    sectionName: http
+    namespace: {{ $gatewayNamespace }}
+    sectionName: {{ $httpSection }}
   hostnames:
   - {{ .Values.global.domain | quote }}
   rules:
@@ -391,6 +397,7 @@ metadata:
 spec:
   parentRefs:
   - name: {{ .Values.gateway.name }}
+    namespace: {{ $gatewayNamespace }}
   hostnames:
   - {{ .Values.global.domain | quote }}
   rules:

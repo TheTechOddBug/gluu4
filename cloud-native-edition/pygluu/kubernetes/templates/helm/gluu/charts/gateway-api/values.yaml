@@ -3,6 +3,8 @@ fullnameOverride: ""
 
 # -- Configuration for Gateway resource
 gateway:
+  # -- Enable Gateway API and create Gateway resource (if disabled, you can create and manage the Gateway resource externally).
+  enabled: true
   # -- Set the gatewayClassName corresponding to your installed controller.
   className: nginx
   # -- The name of the Gateway resource to be created
@@ -30,6 +32,11 @@ gateway:
     annotations: {}
 # -- Configuration for HTTPRoute and its related resources
 routes:
+  # -- Namespace the Gateway resource is deployed in (if different from the release namespace, make sure to create the namespace beforehand and set up necessary RBAC permissions for the controller to manage resources in that namespace). Typically, the HTTPRoute resource will be created in the same namespace as the Gateway resource, but if the gateway is externally managed and deployed in a different namespace, you can set the namespace for HTTPRoute resource here.
+  gatewayNamespace: ""
+  # -- Set the httpSectionName and httpsSectionName according to your installed controller if it doesn't work with default values (e.g. some controller may require the listener name to be `default`).
+  httpSectionName: http
+  httpsSectionName: https
   # -- Specific labels for the HTTPRoute resource
   labels: {}
   # -- Specific annotations for the HTTPRoute resource
