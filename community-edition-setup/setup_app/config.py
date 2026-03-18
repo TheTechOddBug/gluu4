@@ -428,3 +428,9 @@ class Config:
         self.smtp_jks_fn = os.path.join(self.certFolder, 'smtp-keys' + '.' + Config.default_store_type)
         self.smtp_alias = 'smtp_sig_ec256'
         self.smtp_signing_alg = 'SHA256withECDSA'
+
+        # placeholders for scripts.ldif
+        self.clients_uma_rpt_policy = ""
+        self.clients_scim_access_policy = ""
+        self.enable_script_oxtrust_api_access_policy = 'false'
+        self.enable_scim_access_policy = 'false'
