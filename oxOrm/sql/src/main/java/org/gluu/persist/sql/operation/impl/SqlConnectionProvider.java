@@ -204,7 +204,7 @@ public class SqlConnectionProvider {
 
 		Long timeBetweenEvictionRunsMillis = StringHelper.toLong(props.getProperty("connection.pool.time-between-eviction-runs-millis"), null);
 		if (timeBetweenEvictionRunsMillis != null) {
-			objectPoolConfig.setTimeBetweenEvictionRuns(Duration.ofMillis(timeBetweenEvictionRunsMillis));
+			objectPoolConfig.setTimeBetweenEvictionRunsMillis(timeBetweenEvictionRunsMillis);
 		}
 
 		Boolean validateAfterUpdate = StringHelper.toBoolean(props.getProperty("orm.validate-after-update"), null);
@@ -416,7 +416,7 @@ public class SqlConnectionProvider {
 		PoolableConnectionFactory poolableConnectionFactory = new PoolableConnectionFactory(connectionFactory, null);
 		if (connectionPoolValidationEnabled) {
 			poolableConnectionFactory.setValidationQuery("SELECT 1");
-			poolableConnectionFactory.setValidationQueryTimeout(Duration.ofSeconds(5));
+			poolableConnectionFactory.setValidationQueryTimeout(5);
 		}
 		ObjectPool<PoolableConnection> objectPool = new GenericObjectPool<>(poolableConnectionFactory,
 				objectPoolConfig);
