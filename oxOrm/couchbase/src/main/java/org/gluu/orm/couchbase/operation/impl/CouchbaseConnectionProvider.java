@@ -264,37 +264,43 @@ public class CouchbaseConnectionProvider {
 
         boolean result = true;
         if (com.couchbase.client.java.manager.bucket.BucketType.COUCHBASE == bucketSettings.bucketType()) {
-        	// Check indexes state
-        	QueryResult queryResult = cluster.query("SELECT state FROM system:indexes WHERE state != $1 AND keyspace_id = $2", QueryOptions.queryOptions().parameters(JsonArray.from("online", bucket.name())));
-            
+            // Check indexes state
+            QueryResult queryResult = cluster.query("SELECT state FROM system:indexes WHERE state != $1 AND keyspace_id = $2", QueryOptions.queryOptions().parameters(JsonArray.from("online", bucket.name())));
+        
             if (QueryStatus.SUCCESS == queryResult.metaData().status()) {
-            	result = queryResult.rowsAsObject().size() == 0;
-            	if (LOG.isDebugEnabled()) {
-            		LOG.debug("There are indexes which not online");
-            	}
+                result = queryResult.rowsAsObject().size() == 0;
+                if (!result) {
+                    LOG.warn("There are indexes which not online");
+                }
             } else {
-            	result = false;
-            	if (LOG.isDebugEnabled()) {
-            		LOG.debug("Faield to check indexes status");
-            	}
+                result = false;
+                LOG.error("Failed to check indexes status");
             }
         }
 
         if (result) {
-        	PingResult pingResult = bucket.ping();
-	    	for (Entry<ServiceType, List<EndpointPingReport>> pingResultEntry : pingResult.endpoints().entrySet()) {
-	    		for (EndpointPingReport endpointPingReport : pingResultEntry.getValue()) {
-		    		if (PingState.OK != endpointPingReport.state()) {
-		        		LOG.debug("Ping returns that service type {} is not online", endpointPingReport.type());
-		    			result = false;
-		    			break;
-		    		}
-	    		}
-	    	}
-        }
- 
-    	return result;
+            PingResult pingResult = bucket.ping();
+            for (Entry<ServiceType, List<EndpointPingReport>> pingResultEntry : pingResult.endpoints().entrySet()) {
+                for (EndpointPingReport endpointPingReport : pingResultEntry.getValue()) {
+                    if (PingState.OK != endpointPingReport.state()) {
+                        // For ephemeral buckets, DEGRADED state may indicate transient
+                        // KV rejections (e.g. 0xd TMPFAIL) due to memory pressure —
+                        // these are not fatal connectivity failures
+                        if (PingState.ERROR == endpointPingReport.state()) {
+                            LOG.error("Ping returns that service type {} is not online", endpointPingReport.type());
+                            result = false;
+                            break;
+                        } else {
+                            LOG.warn("Ping returns non-OK state {} for service type {} — treating as non-fatal",
+                                endpointPingReport.state(), endpointPingReport.type());
+                        }
+                    }
+                }
+            }
 	}
+
+    	    return result;
+        }
 
 	public Cluster getCluster() {
 		return cluster;
