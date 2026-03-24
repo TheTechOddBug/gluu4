@@ -15,7 +15,8 @@ import shlex
 import subprocess
 from pathlib import Path
 from urllib import request
-from urllib.parse import urlparse
+from urllib.parse import urlparse, urljoin
+from urllib.error import HTTPError, URLError
 from tempfile import TemporaryDirectory
 
 sys.path.append('/usr/lib/python{}.{}/gluu-packaged'.format(sys.version_info.major, sys.version_info.minor))
@@ -43,6 +44,13 @@ parser.add_argument('--no-setup', help="Do not launch setup", action='store_true
 parser.add_argument('--dist-server-base', help="Download server", default='https://maven.gluu.org/maven4')
 parser.add_argument('-profile', help="Setup profile", choices=['CE', 'DISA-STIG'], default='CE')
 parser.add_argument('--setup-branch', help="Gluu CE setup github branch", default="4.5")
+parser.add_argument('--ox-version', help="Gluu CE maven artifacts download version")
+parser.add_argument(
+    '--ox-git-version',
+    help="Gluu CE OX git version suffix",
+    choices=['Final', 'SNAPSHOT'],
+)
+parser.add_argument('--passport-version', help="Gluu CE Passport version")
 parser.add_argument('-c', help="Don't download files that exists on disk", action='store_true')
 parser.add_argument('-app-info', help="Use specified app info file instead of downloading form github")
 
@@ -56,18 +64,64 @@ if '-a' in sys.argv and argsp.k:
 maven_base = argsp.dist_server_base
 maven_o = urlparse(maven_base)
 maven_root = maven_o._replace(path='').geturl()
-
-githup_raw_base_url = f'https://raw.githubusercontent.com/GluuFederation/gluu4/refs/heads/{argsp.setup_branch}/'
+setup_ref_kind = None
 
 if argsp.app_info:
-    app_versions = json.load(open(argsp.app_info))
+    if not os.path.isfile(argsp.app_info):
+        print(f"File {argsp.app_info} not found. Please check file location", file=sys.stderr)
+        sys.exit(1)
+    try:
+        with open(argsp.app_info) as f:
+            app_versions_str = f.read()
+    except OSError as exc:
+        print(f"Unable to read {argsp.app_info}: {exc}", file=sys.stderr)
+        sys.exit(1)
 else:
-    app_info_url = os.path.join(githup_raw_base_url, 'community-edition-setup/app_info.json')
-    print("Retreiving application info", app_info_url)
-    with request.urlopen(app_info_url) as response:
-        app_versions = json.loads(response.read())
+    for dloc in ('heads', 'tags'):
+        github_raw_base_url = f'https://raw.githubusercontent.com/GluuFederation/gluu4/{dloc}/{argsp.setup_branch}/'
+        app_info_url = urljoin(github_raw_base_url, 'community-edition-setup/app_info.json')
+        try:
+            print("Retrieving application info", app_info_url)
+            with request.urlopen(app_info_url, timeout=10) as response:
+                app_versions_str = response.read()
+            setup_ref_kind = dloc
+            break
+        except (HTTPError, URLError):
+            print(f"Unable to download from {dloc}. Trying next location.")
+    else:
+        print("Can't download app_info.json from github. Exiting ...", file=sys.stderr)
+        sys.exit(1)
+
+try:
+    app_versions = json.loads(app_versions_str)
+except json.decoder.JSONDecodeError as e:
+    print("An error occurred while decoding app_info.json. Exiting ...", file=sys.stderr)
+    sys.exit(1)
 
 app_versions['SETUP_BRANCH'] = argsp.setup_branch
+app_versions['SETUP_REF_KIND'] = (
+    setup_ref_kind
+    or app_versions.get('SETUP_REF_KIND')
+    or 'heads'
+)
+
+if argsp.ox_git_version:
+    app_versions['OX_GITVERISON'] = {
+        'Final': '.Final',
+        'SNAPSHOT': '-SNAPSHOT',
+    }[argsp.ox_git_version]
+
+if argsp.passport_version:
+    app_versions['PASSPORT_VERSION'] = argsp.passport_version
+
+if 'PASSPORT_VERSION' not in app_versions:
+    if 'OX_GITVERISON' not in app_versions:
+        print("OX_GITVERISON not found in app_info and --ox-git-version not provided. Exiting ...", file=sys.stderr)
+        sys.exit(1)
+    app_versions['PASSPORT_VERSION'] = app_versions['SETUP_BRANCH'] + app_versions['OX_GITVERISON']
+
+if argsp.ox_version:
+    app_versions['OX_VERSION'] = argsp.ox_version
 
 cur_dir = os.path.dirname(os.path.realpath(__file__))
 opt_dist_dir = '/var/gluu/dist' if argsp.profile == 'DISA-STIG' else '/opt/dist/'
@@ -389,7 +443,7 @@ if not argsp.u:
     download('https://repo1.maven.org/maven2/com/twilio/sdk/twilio/{0}/twilio-{0}.jar'.format(app_versions['TWILIO_VERSION']), os.path.join(gluu_app_dir,'twilio-{0}.jar'.format(app_versions['TWILIO_VERSION'])))
     download('https://repo1.maven.org/maven2/org/jsmpp/jsmpp/{0}/jsmpp-{0}.jar'.format(app_versions['JSMPP_VERSION']), os.path.join(gluu_app_dir,'jsmpp-{0}.jar'.format(app_versions['JSMPP_VERSION'])))
     download('https://raw.githubusercontent.com/JanssenProject/jans/refs/heads/main/jans-linux-setup/jans_setup/static/scripts/facter', os.path.join(gluu_app_dir,'facter'))
-    download('https://github.com/GluuFederation/gluu4/archive/refs/heads/{}.zip'.format(app_versions['SETUP_BRANCH']), os.path.join(gluu_app_dir, gluu_archieve))
+    download('https://github.com/GluuFederation/gluu4/archive/refs/{}/{}.zip'.format(app_versions['SETUP_REF_KIND'], app_versions['SETUP_BRANCH']), os.path.join(gluu_app_dir, gluu_archieve))
     download('https://github.com/sqlalchemy/sqlalchemy/archive/rel_1_3_23.zip', os.path.join(app_dir, 'sqlalchemy.zip'))
     download('https://mds.fidoalliance.org/', os.path.join(app_dir, 'fido2/mds/toc/toc.jwt'))
     download('https://secure.globalsign.com/cacert/root-r3.crt', os.path.join(app_dir, 'fido2/mds/cert/root-r3.crt'))
