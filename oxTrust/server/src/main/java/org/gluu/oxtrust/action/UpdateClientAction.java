@@ -714,7 +714,7 @@ public class UpdateClientAction implements Serializable {
             	if(!availableLoginUri.contains("//") && domainPattern.matcher(availableLoginUri.split("/")[0]).matches()) {
             		return true;
             	}
-            	if(availableLoginUri.startsWith("schema://")|| availableLoginUri.startsWith("appschema://")) {
+            	if(availableLoginUri.startsWith("schema://") || availableLoginUri.startsWith("appschema://") || availableLoginUri.startsWith("app.gluu.uat://")) {
             		return true;
             	}
                 if (this.client.getSubjectType().equals(OxAuthSubjectType.PUBLIC)) {
