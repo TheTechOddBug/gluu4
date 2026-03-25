@@ -58,7 +58,11 @@
 												select="true">
 												<b:dataTableColumn label="#{msgs['scope.inum']}" header-style="font-size: 14px !important;">
 													<h:link includeViewParams="false"
-														outcome="/scope/updateScope" value="#{clt.inum}">
+														outcome="/scope/updateScope" value="#{clt.inum}" rendered="#{clt.scopeType.value ne 'uma'}">
+														<f:param name="inum" value="#{clt.inum}" />
+													</h:link>
+													<h:link includeViewParams="false"
+														outcome="/uma/scope/updateUmaScope.htm" value="#{clt.inum}" rendered="#{clt.scopeType.value eq 'uma'}">
 														<f:param name="inum" value="#{clt.inum}" />
 													</h:link>
 												</b:dataTableColumn>
