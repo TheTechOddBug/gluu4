@@ -128,11 +128,7 @@ if 'PASSPORT_VERSION' not in app_versions:
         print("GLUU_GITVERISON not found in app_info and --gluu-git-version not provided. Exiting ...", file=sys.stderr)
         sys.exit(1)
 
-    app_versions['PASSPORT_VERSION'] = (
-        f"{app_versions['GLUU_VERSION']}{app_versions['GLUU_GITVERISON']}"
-        .replace('-SNAPSHOT', '')
-        .replace('.Final', '')
-    )
+    app_versions['PASSPORT_VERSION'] = app_versions['GLUU_VERSION'] + app_versions['GLUU_GITVERISON']
 
 cur_dir = os.path.dirname(os.path.realpath(__file__))
 opt_dist_dir = '/var/gluu/dist' if argsp.profile == 'DISA-STIG' else '/opt/dist/'
