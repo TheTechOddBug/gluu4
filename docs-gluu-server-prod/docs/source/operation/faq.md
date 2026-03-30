@@ -399,3 +399,22 @@ By default, when you hit your Gluu Server hostname it will redirect to `<hostnam
 ## Concurrent login of the same user (same session). Got `retry` error.
 
 When user is trying to login to multiple RP but do not finish login process then `retry` error can be returned which indicates that RP has to re-send authorization request. 
+
+## Migration Plan: Transitioning from `javax.*` to `jakarta.*` Packages
+
+Gluu products will gradually start using `jakarta.*` package namespace.
+
+Gluu software currently uses `javax.*` package namespace. Due to Oracle's ownership of the `Java` trademark, usage of the `javax.*` namespace has been restricted. The `jakarta.*` namespace was adopted by the Eclipse Foundation.
+
+Following Gluu 4 releases will provide a gradual migration path to `jakarta.*` namespace.
+
+| Version  | Package Namespace Used                                    |
+|----------|-----------------------------------------------------------|
+| 4.5.15   | Continue to release only `javax.*` packages               |
+| 4.5.16   | Release separate packages for `javax.*` and `jakarta.*`   |
+| 4.5.17   | Release only `jakarta.*` packages                         |
+
+
+
+
+
