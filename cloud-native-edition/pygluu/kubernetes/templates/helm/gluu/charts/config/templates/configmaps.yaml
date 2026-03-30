@@ -24,19 +24,19 @@ data:
   GLUU_SQL_DB_TIMEZONE: {{ .Values.configmap.cnSqlDbTimezone }}
   GLUU_SQL_PASSWORD_FILE: {{ .Values.configmap.cnSqlPasswordFile }}
   {{ if or (eq .Values.global.configAdapterName "google") (eq .Values.global.configSecretAdapter "google") (eq .Values.global.gluuPersistenceType "spanner") }}
-  # [google_envs] Envs related to using Google 
+  # [google_envs] Envs related to using Google
   GOOGLE_APPLICATION_CREDENTIALS: {{ .Values.global.cnGoogleApplicationCredentials | quote }}
   GOOGLE_PROJECT_ID: {{ .Values.configmap.cnGoogleProjectId | quote }}
   {{- end }}
   {{ if eq .Values.global.gluuPersistenceType "spanner" }}
-  # [google_spanner_envs] Envs related to using Google Cloud Spanner  
+  # [google_spanner_envs] Envs related to using Google Cloud Spanner
   GLUU_GOOGLE_SPANNER_INSTANCE_ID: {{ .Values.configmap.cnGoogleSpannerInstanceId | quote }}
   GLUU_GOOGLE_SPANNER_DATABASE_ID: {{ .Values.configmap.cnGoogleSpannerDatabaseId | quote }}
   SPANNER_EMULATOR_HOST: {{ .Values.configmap.cnGoogleSpannerEmulatorHost | quote }}
   # [google_spanner_envs] END
   {{- end }}
   {{ if or (eq .Values.global.configSecretAdapter "google") (eq .Values.global.configAdapterName "google") }}
-  # [google_secret_manager_envs] Envs related to using Google Secret Manager to store config and secret layer  
+  # [google_secret_manager_envs] Envs related to using Google Secret Manager to store config and secret layer
   GLUU_GOOGLE_SECRET_VERSION_ID: {{ .Values.configmap.cnSecretGoogleSecretVersionId | quote }}
   GLUU_GOOGLE_SECRET_NAME_PREFIX: {{ .Values.configmap.cnSecretGoogleSecretNamePrefix | quote }}
   # [google_secret_manager_envs] END
@@ -85,6 +85,8 @@ data:
   | replace "auditStatsLogLevel" "audit_log_level"
   | replace "cleanerLogTarget" "cleaner_log_target"
   | replace "cleanerLogLevel" "cleaner_log_level"
+  | replace "rootLogTarget" "root_log_target"
+  | replace "rootLogLevel" "root_log_level"
   | replace "enableStdoutLogPrefix" "enable_stdout_log_prefix"
   | squote
   }}
@@ -158,6 +160,8 @@ data:
   | replace "cacheRefreshPythonLogTarget" "cache_refresh_python_log_target"
   | replace "apachehcLogLevel" "apachehc_log_level"
   | replace "apachehcLogTarget" "apachehc_log_target"
+  | replace "rootLogTarget" "root_log_target"
+  | replace "rootLogLevel" "root_log_level"
   | replace "enableStdoutLogPrefix" "enable_stdout_log_prefix"
   | squote
   }}
@@ -167,6 +171,8 @@ data:
   | replace "fido2LogLevel" "fido2_log_level"
   | replace "persistenceLogTarget" "persistence_log_target"
   | replace "persistenceLogLevel" "persistence_log_level"
+  | replace "rootLogTarget" "root_log_target"
+  | replace "rootLogLevel" "root_log_level"
   | replace "enableStdoutLogPrefix" "enable_stdout_log_prefix"
   | squote
   }}
@@ -193,6 +199,17 @@ data:
   {{- end }}
   # Auto enable installation of some services
   GLUU_CASA_ENABLED: {{ .Values.configmap.gluuCasaEnabled | quote }}
+  GLUU_CASA_APP_LOGGERS: {{ .Values.global.casa.appLoggers
+  | toJson
+  | replace "casaLogTarget" "casa_log_target"
+  | replace "casaLogLevel" "casa_log_level"
+  | replace "timerLogTarget" "timer_log_target"
+  | replace "timerLogLevel" "timer_log_level"
+  | replace "rootLogTarget" "root_log_target"
+  | replace "rootLogLevel" "root_log_level"
+  | replace "enableStdoutLogPrefix" "enable_stdout_log_prefix"
+  | squote
+  }}
   GLUU_PASSPORT_ENABLED: {{ .Values.configmap.gluuPassportEnabled | quote }}
   GLUU_SCIM_ENABLED: {{ .Values.global.scim.enabled | quote }}
   GLUU_SCIM_PROTECTION_MODE: {{ .Values.configmap.gluuScimProtectionMode | quote }}
@@ -206,6 +223,8 @@ data:
   | replace "persistenceDurationLogLevel" "persistence_duration_log_level"
   | replace "scriptLogTarget" "script_log_target"
   | replace "scriptLogLevel" "script_log_level"
+  | replace "rootLogTarget" "root_log_target"
+  | replace "rootLogLevel" "root_log_level"
   | replace "enableStdoutLogPrefix" "enable_stdout_log_prefix"
   | squote
   }}
