@@ -377,19 +377,6 @@ global:
       springLogLevel: ""
       containerLogLevel: ""
       xmlsecLogLevel: ""
-  oxd-server:
-    # -- Boolean flag to enable/disable the oxd-server chart.
-    enabled: true
-    # -- passing custom  java options to oxShibboleth. Notice you do not need to pass in any loggers options as they are introduced below in appLoggers. DO NOT PASS GLUU_JAVA_OPTIONS in envs.
-    gluuCustomJavaOptions: ""
-    # -- App loggers can be configured to define where the logs will be redirected to and the level of each in which it should be displayed.
-    # log levels are "OFF", "FATAL", "ERROR", "WARN", "INFO", "DEBUG", "TRACE"
-    # Targets are "STDOUT" and "FILE"
-    appLoggers:
-      # -- oxd-server.log target
-      oxdServerLogTarget: "STDOUT"
-      # -- oxd-server.log level
-      oxdServerLogLevel: "INFO"
   nginx-ingress:
     # -- Boolean flag to enable/disable the nginx-ingress definitions chart.
     enabled: true
@@ -453,10 +440,6 @@ config:
     cnSqlPasswordFile: /etc/gluu/conf/sql_password
     # -- SQL password  injected as config.configmap.cnSqlPasswordFile .
     cnSqldbUserPassword: Test1234#
-    # -- OXD server OAuth client application certificate common name. This should be left to the default value client-api.
-    gluuOxdApplicationCertCn: oxd-server
-    # -- OXD serve OAuth client admin certificate common name. This should be left to the default value client-api .
-    gluuOxdAdminCertCn: oxd-server
     # -- Couchbase certificate authority string. This must be encoded using base64. This can also be found in your couchbase UI Security > Root Certificate. In mTLS setups this is not required.
     gluuCouchbaseCrt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURlakNDQW1LZ0F3SUJBZ0lKQUwyem5UWlREUHFNTUEwR0NTcUdTSWIzRFFFQkN3VUFNQzB4S3pBcEJnTlYKQkFNTUlpb3VZMkpuYkhWMUxtUmxabUYxYkhRdWMzWmpMbU5zZFhOMFpYSXViRzlqWVd3d0hoY05NakF3TWpBMQpNRGt4T1RVeFdoY05NekF3TWpBeU1Ea3hPVFV4V2pBdE1Tc3dLUVlEVlFRRERDSXFMbU5pWjJ4MWRTNWtaV1poCmRXeDBMbk4yWXk1amJIVnpkR1Z5TG14dlkyRnNNSUlCSWpBTkJna3Foa2lHOXcwQkFRRUZBQU9DQVE4QU1JSUIKQ2dLQ0FRRUFycmQ5T3lvSnRsVzhnNW5nWlJtL2FKWjJ2eUtubGU3dVFIUEw4Q2RJa1RNdjB0eHZhR1B5UkNQQgo3RE00RTFkLzhMaU5takdZZk41QjZjWjlRUmNCaG1VNmFyUDRKZUZ3c0x0cTFGT3MxaDlmWGo3d3NzcTYrYmlkCjV6Umw3UEE0YmdvOXVkUVRzU1UrWDJUUVRDc0dxVVVPWExrZ3NCMjI0RDNsdkFCbmZOeHcvYnFQa2ZCQTFxVzYKVXpxellMdHN6WE5GY0dQMFhtU3c4WjJuaFhhUGlva2pPT2dyMkMrbVFZK0htQ2xGUWRpd2g2ZjBYR0V0STMrKwoyMStTejdXRkF6RlFBVUp2MHIvZnk4TDRXZzh1YysvalgwTGQrc2NoQTlNQjh3YmJORUp2ZjNMOGZ5QjZ0cTd2CjF4b0FnL0g0S1dJaHdqSEN0dFVnWU1oU0xWV3UrUUlEQVFBQm80R2NNSUdaTUIwR0ExVWREZ1FXQkJTWmQxWU0KVGNIRVZjSENNUmp6ejczZitEVmxxREJkQmdOVkhTTUVWakJVZ0JTWmQxWU1UY0hFVmNIQ01Sanp6NzNmK0RWbApxS0V4cEM4d0xURXJNQ2tHQTFVRUF3d2lLaTVqWW1kc2RYVXVaR1ZtWVhWc2RDNXpkbU11WTJ4MWMzUmxjaTVzCmIyTmhiSUlKQUwyem5UWlREUHFNTUF3R0ExVWRFd1FGTUFNQkFmOHdDd1lEVlIwUEJBUURBZ0VHTUEwR0NTcUcKU0liM0RRRUJDd1VBQTRJQkFRQk9meTVWSHlKZCtWUTBXaUQ1aSs2cmhidGNpSmtFN0YwWVVVZnJ6UFN2YWVFWQp2NElVWStWOC9UNnE4Mk9vVWU1eCtvS2dzbFBsL01nZEg2SW9CRnVtaUFqek14RTdUYUhHcXJ5dk13Qk5IKzB5CnhadG9mSnFXQzhGeUlwTVFHTEs0RVBGd3VHRlJnazZMRGR2ZEN5NVdxWW1MQWdBZVh5VWNaNnlHYkdMTjRPUDUKZTFiaEFiLzRXWXRxRHVydFJrWjNEejlZcis4VWNCVTRLT005OHBZN05aaXFmKzlCZVkvOEhZaVQ2Q0RRWWgyTgoyK0VWRFBHcFE4UkVsRThhN1ZLL29MemlOaXFyRjllNDV1OU1KdjM1ZktmNUJjK2FKdWduTGcwaUZUYmNaT1prCkpuYkUvUENIUDZFWmxLaEFiZUdnendtS1dDbTZTL3g0TklRK2JtMmoKLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo=
     # -- Couchbase password for the restricted user config.configmap.gluuCouchbaseUser  that is often used inside the services. The password must contain one digit, one uppercase letter, one lower case letter and one symbol .
@@ -506,10 +489,6 @@ config:
     gluuOxtrustBackend: oxtrust:8080
     # -- oxAuth internal address. Leave as default.
     gluuOxauthBackend: oxauth:8080
-    # -- OXD server Oauth client address. This should be left intact in kubernetes as it uses the internal address format.
-    gluuOxdServerUrl: oxd-server:8443
-    # -- OXD server bind address. This limits what ip ranges can access the client-api. This should be left as * and controlled by a NetworkPolicy
-    gluuOxdBindIpAddresses: "*"
     # -- OpenDJ internal address. Leave as default. Used when `global.gluuPersistenceType` is set to `ldap`.
     gluuLdapUrl: opendj:1636
     # -- Jackrabbit Postgres uid
@@ -1553,121 +1532,6 @@ scim:
     periodSeconds: 30
     timeoutSeconds: 5
   # -- Configure the readiness healthcheck for the SCIM if needed.
-  readinessProbe:
-    exec:
-      command:
-        - python3
-        - /app/scripts/healthcheck.py
-    initialDelaySeconds: 25
-    periodSeconds: 25
-    timeoutSeconds: 5
-  # -- Configure any additional volumes that need to be attached to the pod
-  volumes: []
-  # -- Configure any additional volumesMounts that need to be attached to the containers
-  volumeMounts: []
-  # Actions on lifecycle events such as postStart and preStop
-  # Example postStop: https://github.com/GluuFederation/cloud-native-edition/discussions/516
-  # Example postStart:
-  # lifecycle:
-  #   postStart:
-  #     exec:
-  #       command: ["sh", "-c", "mkdir /opt/gluu/jetty/oxauth/custom/static/stylesheet/"]
-  lifecycle: {}
-
-  # -- Additional labels that will be added across all resources definitions in the format of {mylabel: "myapp"}
-  additionalLabels: { }
-  # -- Additional annotations that will be added across all resources  in the format of {cert-manager.io/issuer: "letsencrypt-prod"}. key app is taken
-  additionalAnnotations: { }
-  # -- https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/
-  tolerations: []
-  # -- https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
-  affinity: {}
-  nodeSelector: {}
-  # -- Add custom scripts that have been mounted to run before the entrypoint.
-  # - /tmp/custom.sh
-  # - /tmp/custom2.sh
-  customScripts: []
-
-# -- Middleware API to help application developers call an OAuth, OpenID or UMA server. You may wonder why this is necessary. It makes it easier for client developers to use OpenID signing and encryption features, without becoming crypto experts. This API provides some high level endpoints to do some of the heavy lifting.
-oxd-server:
-  # -- Configure the topology spread constraints. Notice this is a map NOT a list as in the upstream API
-  # https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/
-  topologySpreadConstraints: {}
-    # -- Define below as many constraints as needed. The key name should follow the structure tsc1, tsc2...etc.
-    # Do not enter the key labelSelector in the entry/entries below as that is automatically injected by the chart
-    #tsc1:
-    #  maxSkew: 1
-    #  minDomains: 1 # optional; beta since v1.25
-    #  topologyKey: kubernetes.io/hostname
-    #  whenUnsatisfiable: DoNotSchedule
-    #  matchLabelKeys: [] # optional; alpha since v1.25
-    #  nodeAffinityPolicy: [] # optional; alpha since v1.25
-    #  nodeTaintsPolicy: [] # optional; alpha since v1.25
-    #tsc2:
-      #maxSkew: 1
-  # -- Configure the PodDisruptionBudget
-  pdb:
-    enabled: true
-    maxUnavailable: "90%"
-  # -- Configure the HorizontalPodAutoscaler
-  hpa:
-    enabled: true
-    minReplicas: 1
-    maxReplicas: 10
-    targetCPUUtilizationPercentage: 50
-    # -- metrics if targetCPUUtilizationPercentage is not set
-    metrics: []
-    # -- Scaling Policies
-    behavior: {}
-  # -- Add custom normal and secret envs to the service
-  usrEnvs:
-    # -- Add custom normal envs to the service
-    # variable1: value1
-    normal: {}
-    # -- Add custom secret envs to the service
-    # variable1: value1
-    secret: {}
-  # -- Add custom dns policy
-  dnsPolicy: ""
-  # -- Add custom dns config
-  dnsConfig: {}
-  image:
-    # -- Image pullPolicy to use for deploying.
-    pullPolicy: IfNotPresent
-    # -- Image  to use for deploying.
-    repository: gluufederation/oxd-server
-    # -- Image  tag to use for deploying.
-    tag: 4.5.15_dev
-    # -- Image Pull Secrets
-    pullSecrets: [ ]
-  # -- Service replica number.
-  replicas: 1
-  # -- Resource specs.
-  resources:
-    limits:
-      # -- CPU limit.
-      cpu: 1000m
-      # -- Memory limit. This value is used to calculate memory allocation for Java. Currently it only supports `Mi`. Please refrain from using other units.
-      memory: 400Mi
-    requests:
-      # -- CPU request.
-      cpu: 1000m
-      # -- Memory request.
-      memory: 400Mi
-  service:
-    # -- Name of the OXD server service. This must match config.configMap.gluuOxdApplicationCertCn. Please keep it as default.
-    oxdServerServiceName: oxd-server
-  # -- Configure the liveness healthcheck for the auth server if needed.
-  livenessProbe:
-    # -- Executes the python3 healthcheck.
-    exec:
-      command:
-        - python3
-        - /app/scripts/healthcheck.py
-    initialDelaySeconds: 30
-    periodSeconds: 30
-    timeoutSeconds: 5
-  # -- Configure the readiness healthcheck for the auth server if needed.
   readinessProbe:
     exec:
       command:

@@ -80,10 +80,6 @@ Kubernetes: `>=v1.22.0-0`
 | configmap.gluuLdapUrl | string | `"opendj:1636"` | OpenDJ internal address. Leave as default. Used when `global.gluuPersistenceType` is set to `ldap`. |
 | configmap.gluuMaxRamPercent | string | `"75.0"` | Value passed to Java option -XX:MaxRAMPercentage |
 | configmap.gluuOxauthBackend | string | `"oxauth:8080"` | oxAuth internal address. Leave as default. |
-| configmap.gluuOxdAdminCertCn | string | `"oxd-server"` | OXD serve OAuth client admin certificate common name. This should be left to the default value client-api . |
-| configmap.gluuOxdApplicationCertCn | string | `"oxd-server"` | OXD server OAuth client application certificate common name. This should be left to the default value client-api. |
-| configmap.gluuOxdBindIpAddresses | string | `"*"` | OXD server bind address. This limits what ip ranges can access the client-api. This should be left as * and controlled by a NetworkPolicy |
-| configmap.gluuOxdServerUrl | string | `"oxd-server:8443"` | OXD server Oauth client address. This should be left intact in kubernetes as it uses the internal address format. |
 | configmap.gluuOxtrustApiEnabled | bool | `false` | Enable oxTrust API |
 | configmap.gluuOxtrustApiTestMode | bool | `false` | Enable oxTrust API testmode |
 | configmap.gluuOxtrustBackend | string | `"oxtrust:8080"` | oxTrust internal address. Leave as default. |

@@ -25,8 +25,6 @@ annotations:
       image: gluufederation/jackrabbit:4.5.14-1
     - name: oxauth
       image: gluufederation/oxauth:4.5.14-1
-    - name: oxd-server
-      image: gluufederation/oxd-server:4.5.14-1
     - name: oxpassport
       image: gluufederation/oxpassport:4.5.14-1
     - name: oxshibboleth
@@ -103,10 +101,6 @@ dependencies:
     - name: cr-rotate
       version: 1.8.49
       condition: global.cr-rotate.enabled
-
-    - name: oxd-server
-      condition: global.oxd-server.enabled
-      version: 1.8.49
 
     - name: persistence
       condition: global.persistence.enabled

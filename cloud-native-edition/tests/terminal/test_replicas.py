@@ -96,20 +96,6 @@ def test_prompt_replicas_oxpassport(monkeypatch, settings):
     assert settings.get("OXPASSPORT_REPLICAS") == 1
 
 
-def test_prompt_replicas_oxd(monkeypatch, settings):
-    from pygluu.kubernetes.terminal.replicas import PromptReplicas
-
-    monkeypatch.setattr("click.prompt", lambda x, default: 1)
-
-    # bypass
-    settings.set("OXAUTH_REPLICAS", 1)
-    settings.set("OXTRUST_REPLICAS", 1)
-
-    settings.set("ENABLE_OXD", "Y")
-    PromptReplicas(settings).prompt_replicas()
-    assert settings.get("OXD_SERVER_REPLICAS") == 1
-
-
 def test_prompt_replicas_casa(monkeypatch, settings):
     from pygluu.kubernetes.terminal.replicas import PromptReplicas
 

@@ -15,7 +15,6 @@ class ReplicasForm(FlaskForm):
         ldap_replicas (integer|optional|default: 1)
         oxshibboleth_replicas (integer|optional|default: 1)
         oxpassport_replicas (integer|optional|default: 1)
-        oxd_server_replicas (integer|optional|default: 1)
         casa_replicas (integer|optional|default: 1)
     """
     oxauth_replicas = IntegerField("Number of oxAuth replicas", default=1, validators=[InputRequired()])
@@ -27,9 +26,6 @@ class ReplicasForm(FlaskForm):
                                          default=1,
                                          validators=[Optional()])
     oxpassport_replicas = IntegerField("Number of oxPassport replicas",
-                                       default=1,
-                                       validators=[Optional()])
-    oxd_server_replicas = IntegerField("Number of oxd-server replicas",
                                        default=1,
                                        validators=[Optional()])
     casa_replicas = IntegerField("Number of Casa replicas", default=1, validators=[Optional()])

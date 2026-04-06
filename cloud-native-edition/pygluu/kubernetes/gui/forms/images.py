@@ -24,8 +24,6 @@ class ImageNameTagForm(FlaskForm):
         jackrabbit_image_tag (string|required_if edit_image_name_tags is Y| default from settings.json)
         oxauth_image_name (string|required_if edit_image_name_tags is Y| default from settings.json)
         oxauth_image_tag (string|required_if edit_image_name_tags is Y| default from settings.json)
-        oxd_image_name (string|required_if edit_image_name_tags is Y| default from settings.json)
-        oxd_image_tag (string|required_if edit_image_name_tags is Y| default from settings.json)
         oxpassport_image_name (string|required_if edit_image_name_tags is Y| default from settings.json)
         oxpassport_image_tag (string|required_if edit_image_name_tags is Y| default from settings.json)
         oxshibboleth_image_name (string|required_if edit_image_name_tags is Y| default from settings.json)
@@ -82,12 +80,6 @@ class ImageNameTagForm(FlaskForm):
         validators=[RequiredIfFieldEqualTo("edit_image_names_tags", "Y")])
     oxauth_image_tag = StringField(
         "Oxauth image tag",
-        validators=[RequiredIfFieldEqualTo("edit_image_names_tags", "Y")])
-    oxd_image_name = StringField(
-        "Oxd Server image name",
-        validators=[RequiredIfFieldEqualTo("edit_image_names_tags", "Y")])
-    oxd_image_tag = StringField(
-        "Oxd Server image tag",
         validators=[RequiredIfFieldEqualTo("edit_image_names_tags", "Y")])
     oxpassport_image_name = StringField(
         "oxPassport image name",

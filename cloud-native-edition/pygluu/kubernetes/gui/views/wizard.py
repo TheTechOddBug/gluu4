@@ -201,7 +201,6 @@ def optional_services():
             'casa': False,
             'fido2': False,
             'scim': False,
-            'oxd-server': False
         }
         data["ENABLE_CACHE_REFRESH"] = form.enable_cache_refresh.data
         if data["ENABLE_CACHE_REFRESH"] == "Y":
@@ -242,16 +241,6 @@ def optional_services():
         data["ENABLE_SCIM"] = form.enable_scim.data
         if data["ENABLE_SCIM"] == "Y":
             service_list['scim'] = True
-
-        data["ENABLE_OXD"] = form.enable_oxd.data
-
-        if data["ENABLE_OXD"] == "Y":
-            data["OXD_APPLICATION_KEYSTORE_CN"] = form.oxd_application_keystore_cn.data
-            data["OXD_ADMIN_KEYSTORE_CN"] = form.oxd_admin_keystore_cn.data
-            service_list['oxd-server'] = True
-        else:
-            data["OXD_APPLICATION_KEYSTORE_CN"] = ""
-            data["OXD_ADMIN_KEYSTORE_CN"] = ""
 
         data["ENABLE_OXTRUST_API"] = form.enable_oxtrust_api.data
         if data["ENABLE_OXTRUST_API"] == "Y":
@@ -1098,12 +1087,6 @@ def images():
             form.ldap_image_tag.id,
         ]
 
-    if gluu_settings.db.get("ENABLE_OXD") == "N":
-        collapsed_ids += [
-            form.oxd_image_name.id,
-            form.oxd_image_tag.id,
-        ]
-
     if gluu_settings.db.get("ENABLE_OXPASSPORT") == "N":
         collapsed_ids += [
             form.oxpassport_image_name.id,
@@ -1176,8 +1159,6 @@ def replicas():
         del form.oxshibboleth_replicas
     if gluu_settings.db.get("ENABLE_OXPASSPORT") == "N":
         del form.oxpassport_replicas
-    if gluu_settings.db.get("ENABLE_OXD") == "N":
-        del form.oxd_server_replicas
     if gluu_settings.db.get("ENABLE_CASA") == "N":
         del form.casa_replicas
 

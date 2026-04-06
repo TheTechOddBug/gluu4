@@ -21,7 +21,6 @@ Please calculate the minimum required resources as per services deployed. The fo
 |oxTrust           | 1.0        |    1.0GB    |   N/A            |  64 Bit        | No                                 |
 |oxShibboleth      | 1.0        |    1.0GB    |   N/A            |  64 Bit        | No                                 |
 |oxPassport        | 0.7        |    0.9GB    |   N/A            |  64 Bit        | No                                 |
-|oxd-server        | 1          |    0.4GB    |   N/A            |  64 Bit        | No                                 |
 |nginx             | 1          |    1GB      |   N/A            |  64 Bit        | Yes if not ALB                     |
 |key-rotation      | 0.3        |    0.3GB    |   N/A            |  64 Bit        | No                                 |
 |cr-rotate         | 0.2        |    0.2GB    |   N/A            |  64 Bit        | No                                 |
@@ -414,7 +413,6 @@ Please calculate the minimum required resources as per services deployed. The fo
         | `global.oxtrust.enabled`                           | Enable oxTrust                                                                                                                   | `true`                              |
         | `global.opendj.enabled`                            | Enable Opendj                                                                                                                    | `true`                              |
         | `global.oxshibboleth.enabled`                      | Enable oxShibboleth                                                                                                              | `false`                             |
-        | `global.oxd-server.enabled`                        | Enable oxd                                                                                                                       | `false`                             |
         | `global.nginx-ingress.enabled`                     | Enable Ingress nginx                                                                                                             | `true`                              |
         | `global.oxauth-key-rotation.enabled`               | Enable oxAuth Key Rotation                                                                                                       | `false`                             |
         | `global.cr-rotate.enabled`                         | Enable Cache Rotate                                                                                                              | `false`                             |
@@ -431,8 +429,6 @@ Please calculate the minimum required resources as per services deployed. The fo
         | `config.countryCode`                                  | Country code of where the Org is located                                                                                         | `US`                                                        |
         | `config.state`                                        | State                                                                                                                            | `TX`                                                        |
         | `config.city`                                         | City                                                                                                                             | `Austin`                                                    |
-        | `config.configmap.gluuOxdApplicationCertCn`           | oxd OAuth client application certificate common name                                                                             | `oxd-server`                                                |
-        | `config.configmap.gluuOxdAdminCertCn`                 | oxd OAuth client admin certificate common name                                                                                   | `oxd-server`                                                |
         | `config.configmap.gluuCouchbaseCrt`                   | Couchbase certificate authority                                                                                                  | `LS0tLS1CRUdJTiBDRVJ.....`                                  |
         | `config.configmap.gluuCouchbaseBucketPrefix`          | Prefix for Couchbase buckets                                                                                                     | `gluu`                                                      |
         | `config.configmap.gluuCouchbasePass`                  | Couchbase password                                                                                                               | `P@ssw0rd`                                                  |
@@ -458,7 +454,6 @@ Please calculate the minimum required resources as per services deployed. The fo
         | `config.configmap.gluuRedisSentinelGroup`             | Redis Sentinel group                                                                                                             | ``                                                          |
         | `config.configmap.gluuOxtrustBackend`                 | oxTrust backend address                                                                                                          | `oxtrust:8080`                                              |
         | `config.configmap.gluuOxauthBackend`                  | oxAuth backend address                                                                                                           | `oxauth:8080`                                               |
-        | `config.configmap.gluuOxdServerUrl`                   | oxd Oauth client address                                                                                                         | `oxd-server:8443`                                           |
         | `config.configmap.gluuLdapUrl`                        | opendj server url. Port and service name of opendj server - should not be changed                                           |  `opendj:1636`                                              |
         | `config.configmap.gluuJackrabbitSyncInterval`         | Jackrabbit sync interval                                                                                                         |  `300`                                                      |
         | `config.configmap.gluuJackrabbitUrl`                  | Jackrabbit url. Port and service name of Jackrabbit                                                                              |  `jackrabbit:8080`                                          |
@@ -614,26 +609,12 @@ Please calculate the minimum required resources as per services deployed. The fo
         | `scim.resources.requests.cpu`                      | SCIM memory request                                                                                                              | `500Mi`                             |
         | `scim.resources.requests.memory`                   | SCIM cpu request                                                                                                                 | `500m`                              |     
         
-    === "oxd-server"
-    
-        | Parameter                                          | Description                                                                                                                      | Default                             |
-        | -------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------- |          
-        | `oxd-server.service.oxdServerServiceName`          | Name of oxd Oauth client service                                                                                                 | `oxd-server`                        |
-        | `oxd-server.replicas`                              | oxd Oauth client replicas                                                                                                        | `1`                                 |
-        | `oxd-server.image.repository`                      | oxd Oauth client image repository                                                                                                | `gluufederation/oxd-server`         |
-        | `oxd-server.image.tag`                             | oxd Oauth client image tag repository                                                                                            | `4.3.0_01`                          |
-        | `oxd-server.image.pullPolicy`                      | oxd Oauth client image pull policy                                                                                               | `Always`                            |
-        | `oxd-server.resources.limits.cpu`                  | oxd Oauth client memory limit                                                                                                    | `400Mi`                             |
-        | `oxd-server.resources.limits.memory`               | oxd Oauth client cpu limit                                                                                                       | `1000m`                             |
-        | `oxd-server.resources.requests.cpu`                | oxd Oauth client memory request                                                                                                  | `400Mi`                             |
-        | `oxd-server.resources.requests.memory`             | oxd Oauth client cpu request                                                                                                     | `1000m`                             |     
-        
     === "casa"
     
         | Parameter                                          | Description                                                                                                                      | Default                             |
         | -------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------- |              
         | `casa.service.casaServiceName`                     | Name of casa service                                                                                                             | `casa`                              |
-        | `casa.replicas`                                    | oxd Oauth client replicas                                                                                                        | `1`                                 |
+        | `casa.replicas`                                    | Casa replicas                                                                                                                    | `1`                                 |
         | `casa.image.repository`                            | Casa image repository                                                                                                            | `gluufederation/casa`               |
         | `casa.image.tag`                                   | Casa image tag repository                                                                                                        | `4.3.0_01`                          |
         | `casa.image.pullPolicy`                            | Casa image pull policy                                                                                                           | `Always`                            |
@@ -728,7 +709,7 @@ Please calculate the minimum required resources as per services deployed. The fo
     
     ### Casa
     
-    - Casa is dependant on `oxd-server`. To install it `oxd-server` must be enabled.
+    - Casa is no longer dependent on `oxd-server`. 
     
     ### Other optional services
     
@@ -943,8 +924,6 @@ This is the main parameter file used with the [`pygluu-kubernetes.pyz`](https://
 | `GMAIL_ACCOUNT`                                 | Gmail account for GKE installation                                               | `""` or`"<gmail>"` i.e                                                                      |
 | `GOOGLE_NODE_HOME_DIR`                          | User node home directory, used if the hosts volume is used                       | `"Y"` or `"N"`                                                                              |
 | `IS_GLUU_FQDN_REGISTERED`                       | Is Gluu FQDN globally resolvable                                                 | `"Y"` or `"N"`                                                                              |
-| `OXD_APPLICATION_KEYSTORE_CN`                   | OXD application keystore common name                                             | `"<name>"` i.e `"oxd_server"`                                                               |
-| `OXD_ADMIN_KEYSTORE_CN`                         | OXD admin keystore common name                                                   | `"<name>"` i.e `"oxd_server"`                                                               |
 | `LDAP_STORAGE_SIZE`                             | LDAP volume storage size                                                         | `""` i.e `"4Gi"`                                                                            |
 | `OXAUTH_KEYS_LIFE`                              | oxAuth Key life span in hours                                                    | `48`                                                               |
 | `FIDO2_REPLICAS`                                | Number of FIDO2 replicas                                                         | min `"1"`                                                                                   |
@@ -954,13 +933,11 @@ This is the main parameter file used with the [`pygluu-kubernetes.pyz`](https://
 | `LDAP_REPLICAS`                                 | Number of LDAP replicas                                                          | min `"1"`                                                                                   |
 | `OXSHIBBOLETH_REPLICAS`                         | Number of oxShibboleth replicas                                                  | min `"1"`                                                                                   |
 | `OXPASSPORT_REPLICAS`                           | Number of oxPassport replicas                                                    | min `"1"`                                                                                   |
-| `OXD_SERVER_REPLICAS`                           | Number of oxdServer replicas                                                     | min `"1"`                                                                                   |
 | `CASA_REPLICAS`                                 | Number of Casa replicas                                                          | min `"1"`                                                                                   |
 | `RADIUS_REPLICAS`                               | Number of Radius replica                                                         | min `"1"`                                                                                   |
 | `ENABLE_OXTRUST_API`                            | Enable oxTrust-api                                                               | `"Y"` or `"N"`                                                                              |
 | `ENABLE_OXTRUST_TEST_MODE`                      | Enable oxTrust Test Mode                                                         | `"Y"` or `"N"`                                                                              |
 | `ENABLE_CACHE_REFRESH`                          | Enable cache refresh rotate installation                                         | `"Y"` or `"N"`                                                                              |
-| `ENABLE_OXD`                                    | Enable oxd server installation                                                   | `"Y"` or `"N"`                                                                              |
 | `ENABLE_RADIUS`                                 | Enable Radius installation                                                       | `"Y"` or `"N"`                                                                              |
 | `ENABLE_OXPASSPORT`                             | Enable oxPassport installation                                                   | `"Y"` or `"N"`                                                                              |
 | `ENABLE_OXSHIBBOLETH`                           | Enable oxShibboleth installation                                                 | `"Y"` or `"N"`                                                                              |
@@ -990,8 +967,6 @@ This is the main parameter file used with the [`pygluu-kubernetes.pyz`](https://
 | `LDAP_IMAGE_TAG`                                | LDAP image tag                                                                   | i.e `"4.3.0_01"`                                                                            |
 | `OXAUTH_IMAGE_NAME`                             | oxAuth image repository name                                                     | i.e `"gluufederation/oxauth"`                                                               |
 | `OXAUTH_IMAGE_TAG`                              | oxAuth image tag                                                                 | i.e `"4.3.0_01"`                                                                            |
-| `OXD_IMAGE_NAME`                                | oxd image repository name                                                        | i.e `"gluufederation/oxd-server"`                                                           |
-| `OXD_IMAGE_TAG`                                 | oxd image tag                                                                    | i.e `"4.3.0_01"`                                                                            |
 | `OXPASSPORT_IMAGE_NAME`                         | oxPassport image repository name                                                 | i.e `"gluufederation/oxpassport"`                                                           |
 | `OXPASSPORT_IMAGE_TAG`                          | oxPassport image tag                                                             | i.e `"4.3.0_01"`                                                                            |
 | `FIDO2_IMAGE_NAME`                              | FIDO2 image repository name                                                      | i.e `"gluufederation/oxpassport"`                                                           |

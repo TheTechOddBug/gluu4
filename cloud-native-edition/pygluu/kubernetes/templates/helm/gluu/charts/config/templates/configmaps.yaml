@@ -90,14 +90,6 @@ data:
   | replace "enableStdoutLogPrefix" "enable_stdout_log_prefix"
   | squote
   }}
-  GLUU_OXD_SERVER_URL: {{ .Values.configmap.gluuOxdServerUrl | quote }}
-  GLUU_OXD_BIND_IP_ADDRESSES: {{ .Values.configmap.gluuOxdBindIpAddresses | quote }}
-  GLUU_OXD_APP_LOGGERS: {{ index .Values "global" "oxd-server" "appLoggers"
-  | toJson
-  | replace "oxdServerLogTarget" "oxd_log_target"
-  | replace "oxdServerLogLevel" "oxd_log_level"
-  | squote
-  }}
   {{- if and (eq .Values.global.isDomainRegistered "false") (or (eq .Values.global.storageClass.provisioner "kubernetes.io/aws-ebs") (eq .Values.global.storageClass.provisioner "openebs.io/local")) }}
   LB_ADDR: {{ .Values.configmap.lbAddr }}
   {{- end }}
@@ -244,8 +236,6 @@ data:
   | squote
   }}
   {{- end }}
-  GLUU_OXD_APPLICATION_CERT_CN: {{ .Values.configmap.gluuOxdApplicationCertCn | quote }}
-  GLUU_OXD_ADMIN_CERT_CN: {{ .Values.configmap.gluuOxdAdminCertCn | quote }}
   {{ if eq .Values.configmap.gluuCacheType "REDIS" }}
   GLUU_REDIS_URL: {{ .Values.configmap.gluuRedisUrl | quote }}
   GLUU_REDIS_TYPE: {{ .Values.configmap.gluuRedisType | quote }}

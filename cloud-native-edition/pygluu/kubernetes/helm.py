@@ -326,14 +326,6 @@ class Helm(object):
             values_file_parser["global"]["oxshibboleth"]["enabled"] = True
             values_file_parser["config"]["configmap"]["gluuSyncShibManifests"] = True
 
-        values_file_parser["global"]["oxd-server"]["enabled"] = False
-        if self.settings.get("ENABLE_OXD") == "Y":
-            values_file_parser["global"]["oxd-server"]["enabled"] = True
-            values_file_parser["config"]["configmap"]["gluuOxdApplicationCertCn"] = \
-                self.settings.get("OXD_APPLICATION_KEYSTORE_CN")
-            values_file_parser["config"]["configmap"]["gluuOxdAdminCertCn"] = self.settings.get("OXD_ADMIN_KEYSTORE_CN")
-            values_file_parser["oxd-server"]["replicas"] = self.settings.get("OXD_SERVER_REPLICAS")
-
         values_file_parser["opendj"]["gluuRedisEnabled"] = False
         if self.settings.get("GLUU_CACHE_TYPE") == "REDIS":
             values_file_parser["opendj"]["gluuRedisEnabled"] = True
@@ -405,8 +397,6 @@ class Helm(object):
         values_file_parser["oxauth"]["image"]["repository"] = self.settings.get("OXAUTH_IMAGE_NAME")
         values_file_parser["oxauth"]["image"]["tag"] = self.settings.get("OXAUTH_IMAGE_TAG")
         values_file_parser["oxauth"]["replicas"] = self.settings.get("OXAUTH_REPLICAS")
-        values_file_parser["oxd-server"]["image"]["repository"] = self.settings.get("OXD_IMAGE_NAME")
-        values_file_parser["oxd-server"]["image"]["tag"] = self.settings.get("OXD_IMAGE_TAG")
         values_file_parser["oxpassport"]["image"]["repository"] = self.settings.get("OXPASSPORT_IMAGE_NAME")
         values_file_parser["oxpassport"]["image"]["tag"] = self.settings.get("OXPASSPORT_IMAGE_TAG")
         values_file_parser["oxpassport"]["replicas"] = self.settings.get("OXPASSPORT_REPLICAS")
@@ -432,7 +422,6 @@ class Helm(object):
                 "opendj",
                 "persistence",
                 "oxauth",
-                "oxd-server",
                 "oxpassport",
                 "oxshibboleth",
                 "jackrabbit",
