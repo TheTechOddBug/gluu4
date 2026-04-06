@@ -1,6 +1,6 @@
 # gateway-api
 
-![Version: 1.8.49](https://img.shields.io/badge/Version-1.8.49-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.5.14](https://img.shields.io/badge/AppVersion-4.5.14-informational?style=flat-square)
+![Version: 1.8.50](https://img.shields.io/badge/Version-1.8.50-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.5.15](https://img.shields.io/badge/AppVersion-4.5.15-informational?style=flat-square)
 
 Gateway API definitions chart
 
@@ -40,10 +40,11 @@ Kubernetes: `>=v1.22.0-0`
 | additionalConfig.nginx.ipHashLbEnabled | bool | `false` | Enable nginx ip_hash loadbalancing for supported service e.g. oxshibboleth (enable this if using nginx fabric OSS version). See https://docs.nginx.com/nginx-gateway-fabric/traffic-management/session-persistence/ for details. |
 | additionalConfig.traefik | object | `{}` | Configuration for Traefik. |
 | fullnameOverride | string | `""` |  |
-| gateway | object | `{"annotations":{},"attachLbIp":false,"className":"nginx","httpPort":80,"httpsPort":443,"infrastructure":{"annotations":{},"labels":{},"parametersRef":{}},"labels":{},"name":"gluu-gateway","tlsSecretName":"tls-certificate"}` | Configuration for Gateway resource |
+| gateway | object | `{"annotations":{},"attachLbIp":false,"className":"nginx","enabled":true,"httpPort":80,"httpsPort":443,"infrastructure":{"annotations":{},"labels":{},"parametersRef":{}},"labels":{},"name":"gluu-gateway","tlsSecretName":"tls-certificate"}` | Configuration for Gateway resource |
 | gateway.annotations | object | `{}` | Specific annotations for the Gateway resource |
 | gateway.attachLbIp | bool | `false` | Attach global.lbIp to Gateway spec.addresses with IPAddress type (enable this if loadbalancer doesn't assign IP address to Gateway automatically) |
 | gateway.className | string | `"nginx"` | Set the gatewayClassName corresponding to your installed controller. |
+| gateway.enabled | bool | `true` | Enable Gateway API and create Gateway resource (if disabled, you can create and manage the Gateway resource externally). |
 | gateway.httpPort | int | `80` | Gateway http port number |
 | gateway.httpsPort | int | `443` | Gateway https port number |
 | gateway.infrastructure | object | `{"annotations":{},"labels":{},"parametersRef":{}}` | Gateway spec.infrastructure |
@@ -54,7 +55,7 @@ Kubernetes: `>=v1.22.0-0`
 | gateway.name | string | `"gluu-gateway"` | The name of the Gateway resource to be created |
 | gateway.tlsSecretName | string | `"tls-certificate"` | Secret containing the TLS certificate for the Gateway |
 | nameOverride | string | `""` |  |
-| routes | object | `{"adminUiEnabled":true,"annotations":{},"authServerEnabled":true,"casaEnabled":false,"deviceCodeEnabled":true,"fido2ConfigEnabled":false,"fido2Enabled":false,"firebaseMessagingEnabled":true,"labels":{},"openidConfigEnabled":true,"passportEnabled":false,"rootPath":"/","scimConfigEnabled":false,"scimEnabled":false,"shibEnabled":false,"u2fConfigEnabled":true,"uma2ConfigEnabled":true,"webdiscoveryEnabled":true,"webfingerEnabled":true}` | Configuration for HTTPRoute and its related resources |
+| routes | object | `{"adminUiEnabled":true,"annotations":{},"authServerEnabled":true,"casaEnabled":false,"deviceCodeEnabled":true,"fido2ConfigEnabled":false,"fido2Enabled":false,"firebaseMessagingEnabled":true,"gatewayNamespace":"","httpSectionName":"http","httpsSectionName":"https","labels":{},"openidConfigEnabled":true,"passportEnabled":false,"rootPath":"/","scimConfigEnabled":false,"scimEnabled":false,"shibEnabled":false,"u2fConfigEnabled":true,"uma2ConfigEnabled":true,"webdiscoveryEnabled":true,"webfingerEnabled":true}` | Configuration for HTTPRoute and its related resources |
 | routes.adminUiEnabled | bool | `true` | Enable Admin UI endpoints /identity |
 | routes.annotations | object | `{}` | Specific annotations for the HTTPRoute resource |
 | routes.authServerEnabled | bool | `true` | Enable Auth server endpoints /oxauth |
@@ -63,6 +64,8 @@ Kubernetes: `>=v1.22.0-0`
 | routes.fido2ConfigEnabled | bool | `false` | Enable endpoint /.well-known/fido2-configuration |
 | routes.fido2Enabled | bool | `false` | Enable all fido2 endpoints |
 | routes.firebaseMessagingEnabled | bool | `true` | Enable endpoint /firebase-messaging-sw.js |
+| routes.gatewayNamespace | string | `""` | Namespace the Gateway resource is deployed in (if different from the release namespace, make sure to create the namespace beforehand and set up necessary RBAC permissions for the controller to manage resources in that namespace). Typically, the HTTPRoute resource will be created in the same namespace as the Gateway resource, but if the gateway is externally managed and deployed in a different namespace, you can set the namespace for HTTPRoute resource here. |
+| routes.httpSectionName | string | `"http"` | Set the httpSectionName and httpsSectionName according to your installed controller if it doesn't work with default values (e.g. some controller may require the listener name to be `default`). |
 | routes.labels | object | `{}` | Specific labels for the HTTPRoute resource |
 | routes.openidConfigEnabled | bool | `true` | Enable endpoint /.well-known/openid-configuration |
 | routes.passportEnabled | bool | `false` | Enable passport endpoints /passport |

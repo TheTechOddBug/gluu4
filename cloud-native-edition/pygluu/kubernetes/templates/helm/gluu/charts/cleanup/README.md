@@ -1,6 +1,6 @@
 # cleanup
 
-![Version: 1.8.49](https://img.shields.io/badge/Version-1.8.49-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.5.14](https://img.shields.io/badge/AppVersion-4.5.14-informational?style=flat-square)
+![Version: 1.8.50](https://img.shields.io/badge/Version-1.8.50-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.5.15](https://img.shields.io/badge/AppVersion-4.5.15-informational?style=flat-square)
 
 Cleanup expired entries in persistence
 
@@ -33,7 +33,7 @@ Kubernetes: `>=v1.22.0-0`
 | image.pullPolicy | string | `"IfNotPresent"` | Image pullPolicy to use for deploying. |
 | image.pullSecrets | list | `[]` | Image Pull Secrets |
 | image.repository | string | `"gluufederation/cloudtools"` | Image  to use for deploying. |
-| image.tag | string | `"4.5.14-1"` | Image  tag to use for deploying. |
+| image.tag | string | `"4.5.15-1"` | Image  tag to use for deploying. |
 | interval | int | `60` | Interval of running the cleanup process (in minutes) |
 | lifecycle | object | `{}` |  |
 | limit | int | `1000` | Max. numbers of entries to cleanup |
