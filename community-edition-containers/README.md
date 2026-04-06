@@ -17,6 +17,7 @@ The compatibility between `pygluu-compose` and Gluu Server is listed below:
 
 | pygluu-compose | Gluu Server |
 |:--------------:|:-----------:|
+|     1.28.x     |   4.5.15    |
 |     1.27.x     |   4.5.14    |
 |     1.26.x     |   4.5.13    |
 |     1.25.x     |   4.5.12    |
