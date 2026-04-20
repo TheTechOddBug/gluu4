@@ -23,8 +23,8 @@ public class RedisClusterProvider extends AbstractRedisProvider {
 
     private JedisCluster pool;
 
-    public RedisClusterProvider(RedisConfiguration redisConfiguration) {
-        super(redisConfiguration);
+    public RedisClusterProvider(CacheConfiguration configuration) {
+        super(configuration);
     }
 
     public void create() {

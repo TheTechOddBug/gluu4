@@ -34,10 +34,12 @@ public class RedisProviderTest {
 //        config.setServers("localhost:7000,localhost:7001,localhost:7002,localhost:7003,localhost:7004,localhost:7005");
         config.setServers("localhost:6379");
         //config.setDecryptedPassword("foobared");
+        CacheConfiguration cacheConfiguration = new CacheConfiguration();
+        cacheConfiguration.setRedisConfiguration(config);
 
-        standaloneProvider = new RedisStandaloneProvider(config);
-        clusterProvider = new RedisClusterProvider(config);
-        shardedProvider = new RedisShardedProvider(config);
+        standaloneProvider = new RedisStandaloneProvider(cacheConfiguration);
+        clusterProvider = new RedisClusterProvider(cacheConfiguration);
+        shardedProvider = new RedisShardedProvider(cacheConfiguration);
     }
 
     @AfterClass
