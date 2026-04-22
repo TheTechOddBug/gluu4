@@ -255,7 +255,7 @@ public class JsonConfigurationAction implements Serializable {
 	private boolean canConnectToRedis() {
 		try {
             decryptPassword(this.cacheConfiguration.getRedisConfiguration());
-            AbstractRedisProvider provider = RedisProviderFactory.create(this.cacheConfiguration.getRedisConfiguration());
+            AbstractRedisProvider provider = RedisProviderFactory.create(this.cacheConfiguration);
 			provider.create();
 			if (provider.isConnected()) {
 				provider.destroy();
