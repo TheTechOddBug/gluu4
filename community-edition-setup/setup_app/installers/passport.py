@@ -69,11 +69,23 @@ class PassportInstaller(NodeInstaller):
 
     def extract_passport(self):
         # Extract package
+        source_dir = os.path.join(self.node_base, 'package')
         try:
-            self.logIt("Extracting {} into {}".format(self.source_files[0][0], self.gluu_passport_base))
-            self.run([paths.cmd_tar, '--strip', '1', '-xzf', self.source_files[0][0], '-C', self.gluu_passport_base, '--no-xattrs', '--no-same-owner', '--no-same-permissions'])
-        except:
-            self.logIt("Error encountered while extracting archive {}".format(self.source_files[0][0]))
+            # Ensure a clean intermediate directory in case of a previous aborted run
+            if os.path.exists(source_dir):
+                self.removeDirs(source_dir)
+
+            self.logIt("Extracting {} into {}".format(self.source_files[0][0], self.node_base))
+            self.run([paths.cmd_tar, '-xzf', self.source_files[0][0], '-C', self.node_base, '--no-xattrs', '--no-same-owner', '--no-same-permissions'])
+            self.logIt("Copying extracted files to {}".format(self.gluu_passport_base))
+            self.copyTree(source_dir, self.gluu_passport_base)
+        except Exception:
+            self.logIt("Error encountered while extracting archive {}".format(self.source_files[0][0]), True)
+            raise
+        finally:
+            if os.path.exists(source_dir):
+                self.logIt("Removing source directory {}".format(source_dir))
+                self.removeDirs(source_dir)
 
     def extract_modules(self):
         
@@ -95,8 +107,9 @@ class PassportInstaller(NodeInstaller):
                 nodeEnv['PATH'] = ':'.join((os.path.join(Config.node_home, 'bin'), nodeEnv['PATH']))
                 cmd_npm = os.path.join(Config.node_home, 'bin', 'npm')
                 self.run([cmd_npm, 'install', '-P'], self.gluu_passport_base, nodeEnv, True)
-            except:
-                self.logIt("Error encountered running npm install in {}".format(self.gluu_passport_base))
+            except Exception:
+                self.logIt("Error encountered running npm install in {}".format(self.gluu_passport_base), True)
+                raise
 
 
     def installed(self):
