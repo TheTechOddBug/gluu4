@@ -104,6 +104,7 @@ spec:
         {{- range $key, $value := $.Values.ports }}
           - containerPort: {{ $value.targetPort }}
             name: {{ $key }}
+            protocol: {{ $value.protocol }}
         {{- end }}
         volumeMounts:
         {{- range $key, $values := $.Values.openDjVolumeMounts }}

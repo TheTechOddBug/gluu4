@@ -34,6 +34,7 @@ spec:
               {{- range $key, $value := .Values.ports }}
                 - containerPort: {{ $value.targetPort }}
                   name: {{ $key }}
+                  protocol: {{ $value.protocol }}
               {{- end }}
               env:
                 - name: LDAP_HOST
