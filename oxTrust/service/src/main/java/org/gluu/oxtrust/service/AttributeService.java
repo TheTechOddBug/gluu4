@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
@@ -323,11 +324,8 @@ public class AttributeService extends org.gluu.service.AttributeService {
     public List<GluuAttribute> getSCIMRelatedAttributesImpl(List<GluuAttribute> attributes) throws Exception {
         List<GluuAttribute> result = new ArrayList<GluuAttribute>();
         for (GluuAttribute attribute : attributes) {
-            boolean isEmpty = attribute.getOxSCIMCustomAttribute() == null;
-            if (!isEmpty) {
-                if ((attribute.getOxSCIMCustomAttribute() != null) && attribute.getOxSCIMCustomAttribute()) {
-                    result.add(attribute);
-                }
+            if (Optional.ofNullable(attribute.getOxSCIMCustomAttribute()).orElse(false)) {
+                result.add(attribute);
             }
         }
         return result;

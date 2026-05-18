@@ -4,16 +4,13 @@ import static org.gluu.oxtrust.model.scim2.Constants.USER_EXT_SCHEMA_DESCRIPTION
 import static org.gluu.oxtrust.model.scim2.Constants.USER_EXT_SCHEMA_ID;
 import static org.gluu.oxtrust.model.scim2.Constants.USER_EXT_SCHEMA_NAME;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.enterprise.event.*;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -26,6 +23,10 @@ import org.gluu.oxtrust.model.scim2.extensions.ExtensionField;
 import org.gluu.oxtrust.model.scim2.user.UserResource;
 import org.gluu.oxtrust.model.scim2.util.DateUtil;
 import org.gluu.oxtrust.service.AttributeService;
+import org.gluu.service.cdi.async.Asynchronous;
+import org.gluu.service.cdi.event.Scheduled;
+import org.gluu.service.timer.event.TimerEvent;
+import org.gluu.service.timer.schedule.TimerSchedule;
 import org.slf4j.Logger;
 
 @ApplicationScoped
@@ -39,28 +40,32 @@ public class ExtensionService {
 
     @Inject
     private AttributeService attrService;
+    
+    @Inject
+    private Event<TimerEvent> timerEvent;
+    
+    private List<GluuAttribute> markedAttributes;
+    
+    private AtomicBoolean isActive;
 
     public List<Extension> getResourceExtensions(Class<? extends BaseScimResource> cls) {
 
         List<Extension> list = new ArrayList<>();
         try {
-            // Currently support one extension only for User Resource
+            // Currently support only one extension (User Resource)
             if (cls.equals(UserResource.class)) {
-
+                
                 Map<String, ExtensionField> fields = new HashMap<>();
 
-                for (GluuAttribute attribute : attrService.getSCIMRelatedAttributes()) {
-                    if (Optional.ofNullable(attribute.getOxSCIMCustomAttribute()).orElse(false)) {
-                        // first non-null check is needed because certain entries do not have the multivalue attribute set
+                for (GluuAttribute attribute: markedAttributes) {
 
-                        ExtensionField field = new ExtensionField();
-                        field.setDescription(attribute.getDescription());
-                        field.setType(attribute.getDataType());
-                        field.setMultiValued(Optional.ofNullable(attribute.getOxMultiValuedAttribute()).orElse(false));
-                        field.setName(attribute.getName());
+                    ExtensionField field = new ExtensionField();
+                    field.setDescription(attribute.getDescription());
+                    field.setType(attribute.getDataType());
+                    field.setMultiValued(Optional.ofNullable(attribute.getOxMultiValuedAttribute()).orElse(false));
+                    field.setName(attribute.getName());
 
-                        fields.put(attribute.getName(), field);
-                    }
+                    fields.put(attribute.getName(), field);
                 }
 
                 String uri = appConfiguration.getScimProperties().getUserExtensionSchemaURI();
@@ -211,4 +216,30 @@ public class ExtensionService {
         return field;
     }
 
+    @Asynchronous
+    public void updateMarkedAttributes(@Observes @Scheduled UpdateScimExtendedAttributesEvent event) {
+        
+        if (!isActive.compareAndSet(false, true)) return;
+
+        try {
+            log.trace("Reloading list of SCIM extended attributes");
+            markedAttributes = attrService.getSCIMRelatedAttributes();
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        } finally {
+            isActive.set(false);
+        }
+
+    }
+    
+    @PostConstruct
+    private void init() {
+        
+        isActive = new AtomicBoolean(false);
+        updateMarkedAttributes(null);
+        timerEvent.fire(new TimerEvent(new TimerSchedule(30, 90),
+                new UpdateScimExtendedAttributesEvent(), Scheduled.Literal.INSTANCE));
+
+    }
+    
 }

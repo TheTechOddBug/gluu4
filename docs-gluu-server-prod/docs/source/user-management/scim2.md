@@ -999,13 +999,13 @@ Please visit this [page](../admin-guide/attribute.md#custom-attributes) for a mo
 !!! Note
     Only the following data types for extended attributes are supported in SCIM server implementation: `string`, `numeric` (integer), `boolean`, and `date`.
 
-Once you submit this form, your attribute will be part of the User Extension. You can verify this by inspecting the `Schema` endpoint:
+Once the form is submitted, it may take up to two minutes for the attribute to be included in the User Extension. You can verify this by inspecting the `Schema` endpoint:
 
 `https://<host-name>/identity/restv1/scim/v2/Schemas/urn:ietf:params:scim:schemas:extension:gluu:2.0:User`
 
 ![image](../img/admin-guide/user/scim-custom-first.png)
 
-In the JSON response, your new added attribute will appear.
+In the JSON response, the attribute will be shown.
 
 To customize the URI associated to the extension (whose default value is `urn:ietf:params:scim:schemas:extension:gluu:2.0:User`), you can use oxTrust:
 
