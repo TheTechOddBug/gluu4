@@ -2,7 +2,7 @@
 version: "2.4"
 services:
   configuration:
-    image: gluufederation/config-init:4.5.15-1
+    image: gluufederation/config-init:4.5.16_dev
     command: load
     environment:
       - GLUU_CONFIG_CONSUL_HOST=consul
@@ -15,6 +15,7 @@ services:
       - ./vault_secret_id.txt:/etc/certs/vault_secret_id
       - ./volumes/config-init/db:/app/db
       - ./generate.json:/app/db/generate.json
+      - ./gluu4-license-ssa.jwt:/etc/gluu/conf/gluu4-license-ssa.jwt:ro
     restart: on-failure
     mem_limit: 512M
     user: "0"

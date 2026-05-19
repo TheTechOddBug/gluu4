@@ -618,6 +618,7 @@ class App:
             "sql_password",
             "sql_root_password",
             "google-credentials.json",
+            "gluu4-license-ssa.jwt",
         ]
         for file_ in files:
             pathlib.Path(file_).touch()
@@ -665,11 +666,18 @@ class App:
         """Check whether current directory is a working directory.
 
         Current directory will be marked as working directory if there's
-        ``docker-compose.yml`` under the directory.
+        ``docker-compose.yml`` and ``gluu4-license-ssa.jwt`` under the directory.
 
-        If ``docker-compose.yml`` file is not exist, an error will be thrown.
+        If ``docker-compose.yml`` or ``gluu4-license-ssa.jwt`` file is not exist, an error will be thrown.
         """
         if not os.path.isfile("docker-compose.yml"):
-            print("[E] docker-compose.yml file is not found; "
-                  "make sure to run init command first")
+            print("[E] The 'docker-compose.yml' file is not found; make sure to run init command first")
+            raise click.Abort()
+
+        # check for SSA file
+        if not os.path.isfile("gluu4-license-ssa.jwt"):
+            print(
+                "[E] The SSA file 'gluu4-license-ssa.jwt' is not found. "
+                "Contact Gluu support to obtain the SSA license and save it to this file."
+            )
             raise click.Abort()
