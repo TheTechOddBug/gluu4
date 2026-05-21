@@ -7,7 +7,7 @@ import org.gluu.oxtrust.model.scim2.annotations.Schema;
 import org.gluu.oxtrust.model.scim2.annotations.StoreReference;
 
 /**
- * Fido 2.0 device SCIM resource. See the <i>oxFido2RegistrationEntry</i> objectclass of your Gluu's LDAP.
+ * Fido 2.0 device SCIM resource. See the <i>jansFido2RegistrationEntry</i> objectclass of your Gluu's LDAP.
  */
 @Schema(id = "urn:ietf:params:scim:schemas:core:2.0:Fido2Device", name = "Fido2Device", description = "Fido 2 Device")
 public class Fido2DeviceResource extends BaseScimResource {
@@ -29,12 +29,12 @@ public class Fido2DeviceResource extends BaseScimResource {
             isRequired = true,
             mutability = AttributeDefinition.Mutability.IMMUTABLE,
             type = AttributeDefinition.Type.INTEGER)
-    @StoreReference(ref = "oxCounter")
+    @StoreReference(ref = "jansCounter")
     private int counter;
 
     @Attribute(isRequired = true,
             canonicalValues = {"registered", "pending"})
-    @StoreReference(ref = "oxStatus")
+    @StoreReference(ref = "jansStatus")
     private String status;
 
     @Attribute

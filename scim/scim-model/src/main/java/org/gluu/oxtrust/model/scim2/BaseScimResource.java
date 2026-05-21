@@ -45,7 +45,7 @@ public class BaseScimResource {
             returned = AttributeDefinition.Returned.ALWAYS,
             uniqueness = AttributeDefinition.Uniqueness.SERVER)
     @StoreReference(resourceType = {UserResource.class, GroupResource.class, FidoDeviceResource.class, Fido2DeviceResource.class},
-            refs = {"inum", "inum", "oxId", "oxId"})
+            refs = {"inum", "inum", "oxId", "jansId"})
     private String id;
 
     @Attribute(description = "A String that is an identifier for the resource as defined by the provisioning client",
