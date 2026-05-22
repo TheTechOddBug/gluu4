@@ -247,6 +247,7 @@ class RDBMInstaller(BaseInstaller, SetupUtils):
         sql_tbl_cols = [f'{self.quote_column(col)} {dtype}' for col, dtype in sql_tbl_cols_list]
 
         if not self.dbUtils.table_exists(sql_tbl_name):
+            self.logIt(f"Creating table {sql_tbl_name}")
             doc_id_type = self.get_sql_col_type('doc_id', sql_tbl_name)
             uniq_col = ''
             if Config.rdbm_type == 'pgsql':
@@ -263,6 +264,13 @@ class RDBMInstaller(BaseInstaller, SetupUtils):
             self.dbUtils.exec_rdbm_query(sql_cmd)
             self.appendLine(sql_cmd, os.path.join(self.output_dir, 'gluu_tables.sql'), backup=False)
 
+        else:
+            self.logIt(f"Table {sql_tbl_name} exist. Altering table for columns {sql_tbl_cols_list}")
+            existing_cols = set(self.get_columns_of_table(sql_tbl_name))
+            for col_name, data_type in sql_tbl_cols_list:
+                if col_name in existing_cols:
+                    continue
+                self.add_col_to_table(sql_tbl_name, (self.quote_column(col_name), data_type))
 
     def get_columns_of_table(self, table_name):
         tbl_cls = self.dbUtils.Base.classes[table_name]
@@ -287,6 +295,8 @@ class RDBMInstaller(BaseInstaller, SetupUtils):
 
         column_add = 'COLUMN ' if Config.rdbm_type == 'spanner' else ''
         alter_table_sql_cmd = 'ALTER TABLE %s{}%s ADD %s{};' % (self.qchar, self.qchar, column_add)
+        if isinstance(col_def, (list, tuple)):
+            col_def = ' '.join(col_def)
         sql_cmd = alter_table_sql_cmd.format(tbl_name, col_def)
 
         if Config.rdbm_type == 'spanner':
@@ -303,6 +313,15 @@ class RDBMInstaller(BaseInstaller, SetupUtils):
             if tbl_name.startswith('__') and tbl_name.endswith('__'):
                 continue
             self.create_table(tbl_name, tables_dict[tbl_name])
+
+        all_attributes = tables_dict.get('__allattribs__') or {}
+        for attrib in all_attributes:
+            attribd = all_attributes[attrib]
+            sql_info = attribd.get('sql') or {}
+            add_to_table = sql_info.get('add_table') or ''
+            if add_to_table and self.dbUtils.table_exists(add_to_table):
+                sql_col_type = self.get_sql_col_type(attrib, add_to_table)
+                self.create_table(add_to_table, [(attrib, sql_col_type)])
 
 
     def create_subtables(self):

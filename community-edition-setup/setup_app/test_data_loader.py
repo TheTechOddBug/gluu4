@@ -138,49 +138,19 @@ class TestDataLoader(BaseInstaller, SetupUtils):
 
             self.logIt("Adding custom attributs and indexes")
 
-            schema2json(
+            oxauth_json_schema_fn = schema2json(
                     os.path.join(Config.templateFolder, 'test/oxauth/schema/102-oxauth_test.ldif'),
                     os.path.join(Config.outputFolder, 'test/oxauth/schema/')
                     )
-            schema2json(
+            scim_json_schema_fn = schema2json(
                     os.path.join(Config.templateFolder, 'test/scim-client/schema/103-scim_test.ldif'),
                     os.path.join(Config.outputFolder, 'test/scim-client/schema/'),
                     )
 
-            oxauth_json_schema_fn =os.path.join(Config.outputFolder, 'test/oxauth/schema/102-oxauth_test.json')
-            
-            oxauth_schema = base.readJsonFile(oxauth_json_schema_fn)
-            oxauth_schema['objectClasses'][0]['names'] = ['oxAuthClient']
-
-            with open(oxauth_json_schema_fn, 'w') as w:
-                json.dump(oxauth_schema, w, indent=2)
-
-            scim_json_schema_fn = os.path.join(Config.outputFolder, 'test/scim-client/schema/103-scim_test.json')
             gluu_schema_json_files = [ oxauth_json_schema_fn, scim_json_schema_fn ]
-
-            scim_schema = base.readJsonFile(scim_json_schema_fn)
-            may_list = []
-
-            for attribute in scim_schema['attributeTypes']:
-                may_list += attribute['names']
-
-            gluuPerson = {
-                        'kind': 'STRUCTURAL',
-                        'may': may_list,
-                        'must': ['objectclass'],
-                        'names': ['gluuPerson'],
-                        'oid': 'gluuObjClass',
-                        'sup': ['top'],
-                        'x_origin': 'Gluu created objectclass'
-                        }
-            scim_schema['objectClasses'].append(gluuPerson)
-
-            with open(scim_json_schema_fn, 'w') as w:
-                json.dump(scim_schema, w, indent=2)
-
             self.dbUtils.read_gluu_schema(others=gluu_schema_json_files)
-
             base.current_app.RDBMInstaller.create_tables(gluu_schema_json_files)
+
             if Config.rdbm_type != 'spanner': 
                 self.dbUtils.rdm_automapper(force=True)
 

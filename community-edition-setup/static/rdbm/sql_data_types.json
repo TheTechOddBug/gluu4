@@ -1023,5 +1023,13 @@
     "spanner": {
       "type": "STRING(MAX)"
     }
+  },
+  "scimCustomFirst": {
+    "mysql": {
+      "type": "TEXT"
+    },
+    "spanner": {
+      "type": "STRING(MAX)"
+    }
   }
 }
