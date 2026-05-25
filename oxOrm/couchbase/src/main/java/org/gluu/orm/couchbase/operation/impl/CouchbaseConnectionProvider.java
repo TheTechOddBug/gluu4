@@ -70,6 +70,8 @@ public class CouchbaseConnectionProvider {
     private ArrayList<String> binaryAttributes, certificateAttributes;
 
     private PasswordEncryptionMethod passwordEncryptionMethod;
+    
+    private Long lastConnectionErrorTime;
 
     protected CouchbaseConnectionProvider() {
     }
@@ -77,6 +79,7 @@ public class CouchbaseConnectionProvider {
     public CouchbaseConnectionProvider(Properties props, ClusterEnvironment clusterEnvironment) {
         this.props = props;
         this.clusterEnvironment = clusterEnvironment;
+        this.lastConnectionErrorTime = null;
     }
 
     public void create() {
@@ -112,7 +115,7 @@ public class CouchbaseConnectionProvider {
         }
 
         openWithWaitImpl();
-        LOG.info("Opended: '{}' buket with base names: '{}'", bucketToBaseNameMapping.keySet(), baseNameToBucketMapping.keySet());
+        LOG.info("Opened: '{}' bucket with base names: '{}'", bucketToBaseNameMapping.keySet(), baseNameToBucketMapping.keySet());
 
         if (props.containsKey("password.encryption.method")) {
             this.passwordEncryptionMethod = PasswordEncryptionMethod.getMethod(props.getProperty("password.encryption.method"));
@@ -154,13 +157,13 @@ public class CouchbaseConnectionProvider {
         long maxWaitTime = currentTime + connectionMaxWaitTimeSeconds * 1000;
         do {
             attempt++;
-            if (attempt > 0) {
+            if (attempt > 1) {
                 LOG.info("Attempting to create connection: '{}'", attempt);
             }
 
             try {
                 open(waitUntilReadyTimeSeconds);
-                if (isConnected()) {
+                if (isConnectedInternall()) {
                 	break;
                 } else {
                     LOG.info("Failed to connect to Couchbase");
@@ -169,12 +172,15 @@ public class CouchbaseConnectionProvider {
                 }
             } catch (CouchbaseException ex) {
                 lastException = ex;
+                // Release partially initialized cluster resources before next retry
+                destroy();
             }
 
             try {
                 Thread.sleep(5000);
             } catch (InterruptedException ex) {
                 LOG.error("Exception happened in sleep", ex);
+                Thread.currentThread().interrupt();
                 return;
             }
             currentTime = System.currentTimeMillis();
@@ -197,7 +203,7 @@ public class CouchbaseConnectionProvider {
         this.cluster = Cluster.connect(connectionString, clusterOptions);
 
         if (waitUntilReadyTimeSeconds > 0) {
-            LOG.info("Uwe waitUntilReady cluster SDK option: '{}'", waitUntilReadyTimeSeconds);
+            LOG.info("Using waitUntilReady cluster SDK option: '{}'", waitUntilReadyTimeSeconds);
         	this.cluster.waitUntilReady(Duration.ofSeconds(waitUntilReadyTimeSeconds));
         }
 
@@ -208,7 +214,7 @@ public class CouchbaseConnectionProvider {
 
             Bucket bucket = this.cluster.bucket(bucketName);
             if (waitUntilReadyTimeSeconds > 0) {
-                LOG.info("Uwe waitUntilReady bucket SDK option: '{}'", waitUntilReadyTimeSeconds);
+                LOG.info("Using waitUntilReady bucket SDK option: '{}'", waitUntilReadyTimeSeconds);
                 bucket.waitUntilReady(Duration.ofSeconds(waitUntilReadyTimeSeconds));
             }
 
@@ -235,7 +241,35 @@ public class CouchbaseConnectionProvider {
     }
 
     public boolean isConnected() {
-        if (cluster == null) {
+    	boolean isConnected = isConnectedInternall();
+    	if (!isConnected) {
+			LOG.warn("Connection is not healthy");
+	    	int failureRetryWindowTimeSeconds = StringHelper.toInteger(props.getProperty("connection.failure-retry-window-time"), -1);
+	    	if (failureRetryWindowTimeSeconds == -1) {
+	    		// No retry window configured, return false immediately
+	    		return false;
+	    	}
+	    	
+	    	if (lastConnectionErrorTime == null) {
+	    		lastConnectionErrorTime = System.currentTimeMillis();
+	    	} else if (System.currentTimeMillis() - lastConnectionErrorTime > failureRetryWindowTimeSeconds * 1000) {
+	    		LOG.info("Retrying connection after failure retry window time passed");
+	    		lastConnectionErrorTime = null;
+	    		return false;
+	    	}
+		} else {
+			// Reset failure window timer once connection is healthy again
+			if (lastConnectionErrorTime != null) {
+				LOG.info("Connection recovered, resetting failure retry window timer");
+				lastConnectionErrorTime = null;
+			}
+		}
+    	
+    	return isConnected;
+    }
+
+	private boolean isConnectedInternall() {
+		if (cluster == null) {
             return false;
         }
 
@@ -254,7 +288,7 @@ public class CouchbaseConnectionProvider {
         }
 
         return isConnected;
-    }
+	}
 
     private boolean isConnected(BucketMapping bucketMapping) {
         Bucket bucket = bucketMapping.getBucket();
@@ -374,4 +408,3 @@ public class CouchbaseConnectionProvider {
     }
 
 }
-

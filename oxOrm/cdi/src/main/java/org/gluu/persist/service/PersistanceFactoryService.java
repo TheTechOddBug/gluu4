@@ -50,6 +50,9 @@ public class PersistanceFactoryService implements BaseFactoryService {
 
 	public static String DB_PROPERTY_MYSQL_SIMPLE_JSON = "mysql.simple-json";
 	public static String DB_PROPERTY_ORM_VALIDATE_AFTER_UPDATE = "orm.validate-after-update";
+	public static String DB_PROPERTY_CONNECTION_WAIT_UNTIL_READY_TIME = "connection.wait-until-ready-time";
+	public static String DB_PROPERTY_CONNECTION_FAILURE_RETRY_WINDOW_TIME = "connection.failure-retry-window-time";
+	
 	
 	public static List<String> ADDIONAL_ENV_DB_PROPERTIES = Arrays.asList(DB_PROPERTY_MYSQL_SIMPLE_JSON, DB_PROPERTY_ORM_VALIDATE_AFTER_UPDATE);
 
