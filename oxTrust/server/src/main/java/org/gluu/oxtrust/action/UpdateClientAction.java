@@ -706,6 +706,10 @@ public class UpdateClientAction implements Serializable {
     private boolean isAcceptable(String availableLoginUri) {
         boolean result = false;
         try {
+        		if (this.client.getOxAuthAppType().equals(OxAuthApplicationType.NATIVE)) {
+        			return true;
+        		}
+
                 if (getProtocol(availableLoginUri).equalsIgnoreCase("http") 
                 		&& this.client.getOxAuthAppType().equals(OxAuthApplicationType.NATIVE) 
                 		&& isImplicitFlow()) {
