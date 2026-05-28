@@ -252,6 +252,7 @@ public class CouchbaseConnectionProvider {
 	    	
 	    	if (lastConnectionErrorTime == null) {
 	    		lastConnectionErrorTime = System.currentTimeMillis();
+	    		return true; // Return true for the first failure to allow retrying connection
 	    	} else if (System.currentTimeMillis() - lastConnectionErrorTime > failureRetryWindowTimeSeconds * 1000) {
 	    		LOG.info("Retrying connection after failure retry window time passed");
 	    		lastConnectionErrorTime = null;
