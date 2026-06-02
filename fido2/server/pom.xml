@@ -121,6 +121,18 @@
         <dependency>
             <groupId>org.gluu</groupId>
             <artifactId>oxauth-common</artifactId>
+            <exclusions>
+                <!-- jackrabbit-core drags in legacy bcprov-jdk15on (EOL, CVE-2018-1000613);
+                     replaced by bcprov-jdk18on 1.84 declared above -->
+                <exclusion>
+                    <groupId>org.apache.jackrabbit</groupId>
+                    <artifactId>jackrabbit-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.bouncycastle</groupId>
+                    <artifactId>bcprov-jdk15on</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.gluu</groupId>

@@ -29,7 +29,7 @@
   ],
   "main": "./lib",
   "dependencies": {
-    "@xmldom/xmldom": "0.8.6"
+    "@xmldom/xmldom": "0.8.13"
   },
   "devDependencies": {
     "chai": "4.3.4",

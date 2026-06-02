@@ -16,7 +16,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<oxcore.version>4.5.16-SNAPSHOT</oxcore.version>
-		<jackson.version>2.13.0</jackson.version>
+		<jackson.version>2.21.0</jackson.version>
 		<jaxrs.version>3.0.12.Final</jaxrs.version>
 		<resteasy.version>4.7.9.Final</resteasy.version>
 		<httpcore.version>4.4.14</httpcore.version>
@@ -281,6 +281,16 @@
 			</plugin>
 		</plugins>
 	</reporting>
+	<dependencyManagement>
+		<dependencies>
+			<!-- Pin transitive commons-io flagged by image scan (CVE-2024-47554); 2.x is backward-compatible -->
+			<dependency>
+				<groupId>commons-io</groupId>
+				<artifactId>commons-io</artifactId>
+				<version>2.20.0</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 	<dependencies>
 		<dependency>
 			<groupId>org.gluu.jdbc</groupId>
