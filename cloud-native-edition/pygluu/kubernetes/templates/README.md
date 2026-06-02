@@ -165,7 +165,7 @@ Please calculate the minimum required resources as per services deployed. The fo
     
     - Kubernetes 1.17+
     - Persistent volume provisioner support in the underlying infrastructure
-    - Install [Helm3](https://helm.sh/docs/using_helm/)
+    - Install [Helm](https://helm.sh/docs/intro/install/)
     
     ### Quickstart
     
