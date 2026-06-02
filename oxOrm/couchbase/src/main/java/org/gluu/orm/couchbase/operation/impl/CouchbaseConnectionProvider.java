@@ -257,6 +257,9 @@ public class CouchbaseConnectionProvider {
 	    		LOG.info("Retrying connection after failure retry window time passed");
 	    		lastConnectionErrorTime = null;
 	    		return false;
+	    	} else {
+	    		// Still within the retry window — keep reporting healthy
+	    	    return true; 
 	    	}
 		} else {
 			// Reset failure window timer once connection is healthy again
