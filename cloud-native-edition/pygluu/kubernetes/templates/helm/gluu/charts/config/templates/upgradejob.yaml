@@ -67,6 +67,9 @@ spec:
             secretName: {{ .Release.Name }}-cb-crt
         {{- end }}
         {{- end }}
+        - name: gluu4-license-ssa
+          secret:
+            secretName: {{ .Release.Name }}-gluu4-license-ssa
       restartPolicy: Never
       {{- if .Values.nodeSelector }}
       nodeSelector:
@@ -85,7 +88,7 @@ spec:
       containers:
       - name: {{ include "config.name" . }}-upgrader
         lifecycle:
-{{- toYaml .Values.lifecycle | nindent 10 }}        
+{{- toYaml .Values.lifecycle | nindent 10 }}
         image: "{{ .Values.global.upgrade.image.repository }}:{{ .Values.global.upgrade.image.tag }}"
         securityContext:
           runAsUser: 1000
@@ -133,6 +136,9 @@ spec:
             subPath: couchbase.crt
           {{- end }}
         {{- end }}
+          - mountPath: /etc/gluu/conf/gluu4-license-ssa.jwt
+            name: gluu4-license-ssa
+            subPath: gluu4-license-ssa.jwt
         resources:
 {{- toYaml .Values.resources | nindent 10 }}
         command:

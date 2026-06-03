@@ -38,7 +38,7 @@ Kubernetes: `>=v1.22.0-0`
 | image.pullPolicy | string | `"IfNotPresent"` | Image pullPolicy to use for deploying. |
 | image.pullSecrets | list | `[]` | Image Pull Secrets |
 | image.repository | string | `"gluufederation/opendj"` | Image  to use for deploying. |
-| image.tag | string | `"4.5.15-1"` | Image  tag to use for deploying. |
+| image.tag | string | `"4.5.16_dev"` | Image  tag to use for deploying. |
 | lifecycle.preStop.exec.command[0] | string | `"/bin/sh"` |  |
 | lifecycle.preStop.exec.command[1] | string | `"-c"` |  |
 | lifecycle.preStop.exec.command[2] | string | `"python3 /app/scripts/deregister_peer.py 1>&/proc/1/fd/1"` |  |

@@ -74,7 +74,7 @@ global:
       # -- Image  to use for deploying.
       repository: gluufederation/upgrade
       # -- Image  tag to use for deploying.
-      tag: 4.5.15-1
+      tag: 4.5.16_dev
     # -- Source version currently running. This is normally one minor version down.
     # The step should only be one minor version per upgrade
     sourceVersion: "4.5"
@@ -566,11 +566,13 @@ config:
     gluuCasaEnabled: false
     # -- Enable SAML-related features; UI menu, etc.
     gluuSamlEnabled: false
+    # -- Gluu4 license SSA string (required); change the value to actual SSA string.
+    gluuLicenseSsa: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiSm9obiBEb2UiLCJpYXQiOjE1MTYyMzkwMjJ9.BHX2DZGZDRwCOidg5KcNgjMFtAmaOujAAiJOGsIES4o"
   image:
     # -- Image  to use for deploying.
     repository: gluufederation/config-init
     # -- Image  tag to use for deploying.
-    tag: 4.5.15-1
+    tag: 4.5.16_dev
     # -- Image Pull Secrets
     pullSecrets: [ ]
   # -- Configure any additional volumes that need to be attached to the pod
@@ -805,7 +807,7 @@ jackrabbit:
     # -- Image  to use for deploying.
     repository: gluufederation/jackrabbit
      # -- Image  tag to use for deploying.
-    tag: 4.5.15-1
+    tag: 4.5.16_dev
     # -- Image Pull Secrets
     pullSecrets: [ ]
   # -- Service replica number.
@@ -936,7 +938,7 @@ opendj:
     # -- Image  to use for deploying.
     repository: gluufederation/opendj
     # -- Image  tag to use for deploying.
-    tag: 4.5.15-1
+    tag: 4.5.16_dev
     # -- Image Pull Secrets
     pullSecrets: [ ]
   persistence:
@@ -1050,7 +1052,7 @@ persistence:
     # -- Image  to use for deploying.
     repository: gluufederation/persistence
     # -- Image  tag to use for deploying.
-    tag: 4.5.15-1
+    tag: 4.5.16_dev
     # -- Image Pull Secrets
     pullSecrets: [ ]
   # -- Resource specs.
@@ -1141,7 +1143,7 @@ oxauth:
     # -- Image  to use for deploying.
     repository: gluufederation/oxauth
     # -- Image  tag to use for deploying.
-    tag: 4.5.15-1
+    tag: 4.5.16_dev
     # -- Image Pull Secrets
     pullSecrets: [ ]
   # -- Service replica number.
@@ -1260,7 +1262,7 @@ oxtrust:
     # -- Image  to use for deploying.
     repository: gluufederation/oxtrust
     # -- Image  tag to use for deploying.
-    tag: 4.5.15-1
+    tag: 4.5.16_dev
     # -- Image Pull Secrets
     pullSecrets: [ ]
   # -- Service replica number.
@@ -1381,7 +1383,7 @@ fido2:
     # -- Image  to use for deploying.
     repository: gluufederation/fido2
     # -- Image  tag to use for deploying.
-    tag: 4.5.15-1
+    tag: 4.5.16_dev
     # -- Image Pull Secrets
     pullSecrets: [ ]
   # -- Service replica number.
@@ -1499,7 +1501,7 @@ scim:
     # -- Image  to use for deploying.
     repository: gluufederation/scim
     # -- Image  tag to use for deploying.
-    tag: 4.5.15-1
+    tag: 4.5.16_dev
     # -- Image Pull Secrets
     pullSecrets: [ ]
   # -- Service replica number.
@@ -1616,7 +1618,7 @@ casa:
     # -- Image  to use for deploying.
     repository: gluufederation/casa
     # -- Image  tag to use for deploying.
-    tag: 4.5.15-1
+    tag: 4.5.16_dev
     # -- Image Pull Secrets
     pullSecrets: [ ]
   # -- Service replica number.
@@ -1735,7 +1737,7 @@ oxpassport:
     # -- Image  to use for deploying.
     repository: gluufederation/oxpassport
     # -- Image  tag to use for deploying.
-    tag: 4.5.15-1
+    tag: 4.5.16_dev
     # -- Image Pull Secrets
     pullSecrets: [ ]
   # -- Service replica number
@@ -1857,7 +1859,7 @@ oxshibboleth:
     # -- Image  to use for deploying.
     repository: gluufederation/oxshibboleth
     # -- Image  tag to use for deploying.
-    tag: 4.5.15-1
+    tag: 4.5.16_dev
     # -- Image Pull Secrets
     pullSecrets: [ ]
   # -- Service replica number.
@@ -1950,7 +1952,7 @@ cr-rotate:
     # -- Image  to use for deploying.
     repository: gluufederation/cr-rotate
     # -- Image  tag to use for deploying.
-    tag: 4.5.15-1
+    tag: 4.5.16_dev
     # -- Image Pull Secrets
     pullSecrets: [ ]
   # -- Resource specs.
@@ -2014,7 +2016,7 @@ oxauth-key-rotation:
     # -- Image  to use for deploying.
     repository: gluufederation/certmanager
     # -- Image  tag to use for deploying.
-    tag: 4.5.15-1
+    tag: 4.5.16_dev
     # -- Image Pull Secrets
     pullSecrets: [ ]
   # -- Auth server key rotation job schedule. It accepts any Cron syntax supported by Kubernetes. If empty, the schedule will run based on keysLife value.
@@ -2088,7 +2090,7 @@ cleanup:
     # -- Image  to use for deploying.
     repository: gluufederation/cloudtools
     # -- Image  tag to use for deploying.
-    tag: 4.5.15-1
+    tag: 4.5.16_dev
     # -- Image Pull Secrets
     pullSecrets: [ ]
   # -- Resource specs.

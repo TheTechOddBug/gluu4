@@ -74,6 +74,9 @@ spec:
           secret:
             secretName: {{ .Release.Name }}-google-sa
         {{- end }}
+        - name: gluu4-license-ssa
+          secret:
+            secretName: {{ .Release.Name }}-gluu4-license-ssa
       {{- if .Values.nodeSelector }}
       nodeSelector:
 {{- toYaml .Values.nodeSelector | nindent 8 }}
@@ -91,7 +94,7 @@ spec:
       containers:
       - name: {{ include "config.name" . }}-load
         lifecycle:
-{{- toYaml .Values.lifecycle | nindent 10 }}        
+{{- toYaml .Values.lifecycle | nindent 10 }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         securityContext:
           runAsUser: 1000
@@ -125,6 +128,9 @@ spec:
             name: google-sa
             subPath: google-credentials.json
           {{- end }}
+          - mountPath: /etc/gluu/conf/gluu4-license-ssa.jwt
+            name: gluu4-license-ssa
+            subPath: gluu4-license-ssa.jwt
         envFrom:
         - configMapRef:
             name: {{ .Release.Name }}-config-cm

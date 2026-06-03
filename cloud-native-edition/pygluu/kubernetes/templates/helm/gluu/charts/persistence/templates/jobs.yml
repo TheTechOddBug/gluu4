@@ -49,7 +49,7 @@ spec:
       containers:
       - name: {{ include "persistence.name" . }}
         lifecycle:
-{{- toYaml .Values.lifecycle | nindent 10 }}        
+{{- toYaml .Values.lifecycle | nindent 10 }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         securityContext:
           runAsUser: 1000
@@ -122,11 +122,14 @@ spec:
             mountPath: "/etc/gluu/conf/couchbase_superuser_password"
             subPath: couchbase_superuser_password
           {{- if not .Values.global.istio.enabled }}
-          - name: cb-crt 
+          - name: cb-crt
             mountPath: "/etc/certs/couchbase.crt"
             subPath: couchbase.crt
           {{- end }}
         {{- end }}
+          - mountPath: /etc/gluu/conf/gluu4-license-ssa.jwt
+            name: gluu4-license-ssa
+            subPath: gluu4-license-ssa.jwt
         resources:
 {{- toYaml .Values.resources | nindent 10 }}
       volumes:
@@ -176,8 +179,11 @@ spec:
           secret:
             secretName: {{ .Release.Name }}-superuser-cb-pass
         {{- if not .Values.global.istio.enabled }}
-        - name: cb-crt 
+        - name: cb-crt
           secret:
             secretName: {{ .Release.Name }}-cb-crt
         {{- end }}
       {{- end }}
+        - name: gluu4-license-ssa
+          secret:
+            secretName: {{ .Release.Name }}-gluu4-license-ssa

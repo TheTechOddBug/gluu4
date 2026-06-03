@@ -170,11 +170,13 @@ configmap:
   gluuCasaEnabled: false
   # -- Enable SAML-related features; UI menu, etc.
   gluuSamlEnabled: false
+  # -- Gluu4 license SSA string (required); change the value to actual SSA string.
+  gluuLicenseSsa: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiSm9obiBEb2UiLCJpYXQiOjE1MTYyMzkwMjJ9.BHX2DZGZDRwCOidg5KcNgjMFtAmaOujAAiJOGsIES4o"
 image:
   # -- Image  to use for deploying.
   repository: gluufederation/config-init
   # -- Image  tag to use for deploying.
-  tag: 4.5.15-1
+  tag: 4.5.16_dev
   # -- Image Pull Secrets
   pullSecrets: [ ]
 # -- Configure any additional volumes that need to be attached to the pod
