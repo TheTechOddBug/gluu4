@@ -454,7 +454,7 @@ if not argsp.u:
     download('https://github.com/sqlalchemy/sqlalchemy/archive/rel_1_3_23.zip', os.path.join(app_dir, 'sqlalchemy.zip'))
     download('https://mds.fidoalliance.org/', os.path.join(app_dir, 'fido2/mds/toc/toc.jwt'))
     download('https://secure.globalsign.com/cacert/root-r3.crt', os.path.join(app_dir, 'fido2/mds/cert/root-r3.crt'))
-    download('https://github.com/jpadilla/pyjwt/archive/refs/tags/2.4.0.zip', os.path.join(app_dir, 'pyjwt.zip'))
+    download('https://github.com/jpadilla/pyjwt/archive/refs/tags/2.12.1.zip', os.path.join(app_dir, 'pyjwt.zip'))
     download('https://gitlab.com/doctormo/python-crontab/-/archive/v3.2.0/python-crontab-v3.2.0.zip', os.path.join(app_dir, 'python-crontab.zip'))
 
 

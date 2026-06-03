@@ -19,6 +19,8 @@ from setup_app.messages import msg
 
 from setup_app.config import Config
 from setup_app.utils.setup_utils import SetupUtils
+from setup_app.utils.license_activator import LicenseActivator, LicenseError
+
 
 from setup_app.utils.db_utils import dbUtils
 from setup_app.pylib.jproperties import Properties
@@ -27,6 +29,9 @@ if Config.profile != SetupProfiles.DISA_STIG:
     import pymysql
     import psycopg2
     from setup_app.utils.spanner_rest_client import SpannerClient
+
+
+license_activator = LicenseActivator()
 
 class PropertiesUtils(SetupUtils):
 
@@ -75,12 +80,14 @@ class PropertiesUtils(SetupUtils):
 
     def check_properties(self):
         self.logIt('Checking properties')
-        while not Config.hostname:
-            testhost = input('Hostname of this server: ').strip()
-            if len(testhost.split('.')) >= 3:
-                Config.hostname = testhost
-            else:
-                print('The hostname has to be at least three domain components. Try again\n')
+
+
+        # check if license was activated
+        for key in ('licenseKey', 'hardwareId', 'productCode'):
+            if not Config.get(key):
+                self.get_or_read_ssa()
+                break
+
         while not Config.ip:
             Config.ip = self.get_ip()
         while not Config.orgName:
@@ -793,6 +800,71 @@ class PropertiesUtils(SetupUtils):
                 print("{}ERROR getting session from spanner: {}{}".format(colors.DANGER, e, colors.ENDC))
                 sys.exit()
 
+    def get_license_from_ssa(self, ssa):
+        try:
+            license_activator.set_ssa(ssa)
+        except LicenseError as e:
+            print(e)
+            sys.exit(1)
+
+        print(msg.validating_ssa)
+        try:
+            license_activator.validate_ssa()
+        except LicenseError as e:
+            print(e)
+            sys.exit(1)
+
+        print(msg.registering_license_client)
+        try:
+            license_activator.register_client()
+        except LicenseError as e:
+            print(e)
+            sys.exit(1)
+
+        print(msg.fectching_license)
+        try:
+            license_key = license_activator.fetch_license()
+        except LicenseError as e:
+            print(e)
+            sys.exit(1)
+
+        print(msg.checking_license)
+        try:
+            license_activator.check_license(license_key)
+        except LicenseError as e:
+            print(e)
+            sys.exit(1)
+
+        print(msg.activating_license)
+        try:
+            license_activator.activate_license(license_key)
+        except LicenseError as e:
+            print(e)
+            sys.exit(1)
+
+
+    def prompt_for_ssa(self):
+        ssa = self.getPrompt("Enter SSA or path to SSA", Config.get('ssa'))
+        Config.ssa = ssa
+        self.get_or_read_ssa()
+
+    def get_or_read_ssa(self):
+
+        if not Config.get('ssa'):
+            print("No SSA was entered. Exiting ...")
+            sys.exit(1)
+
+        if os.path.exists(Config.ssa):
+            print(f"Reading SSA from file {Config.ssa}")
+            Config.ssa = ssa = self.readFile(Config.ssa)
+
+        Config.ssa = Config.ssa.strip()
+        if not Config.ssa:
+            print("No SSA was entered. Exiting ...")
+            sys.exit(1)
+
+        self.get_license_from_ssa(Config.ssa)
+
     def promptForProperties(self):
 
         if Config.noPrompt:
@@ -807,14 +879,21 @@ class PropertiesUtils(SetupUtils):
             if promptForMITLicense != 'y':
                 sys.exit(0)
 
+
+            self.prompt_for_ssa()
+
             # IP address needed only for Apache2 and hosts file update
             if Config.installHttpd:
                 Config.ip = self.get_ip()
 
             detectedHostname = Config.hostname or self.detect_hostname()
 
+
+            """
+
             if detectedHostname == 'localhost':
                 detectedHostname = None
+
 
             while True:
                 if detectedHostname:
@@ -826,6 +905,8 @@ class PropertiesUtils(SetupUtils):
                     break
                 else:
                     print("Hostname can't be \033[;1mlocalhost\033[0;0m")
+
+            """
 
             # Get city and state|province code
             Config.city = self.getPrompt("Enter your city or locality", Config.city)

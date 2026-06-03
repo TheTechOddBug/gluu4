@@ -23,10 +23,6 @@
 ### IP Address of the interface to host IDP
 ip=
 
-### The hostname of the server
-hostname=
-
-
 ### Install OpenDJ
 installLdap=True
 
@@ -41,5 +37,5 @@ countryCode=
 city=
 state=
 
-
-
+### SSA or path to SSA file should be set
+ssa=

@@ -11,6 +11,7 @@ class msg:
     DBCBForm_label = "Couchbase Options"
     DBRDBMForm_label = "RDBM Options"
     DBSpannerForm_label = "Spanner Options"
+    LicenseActivationForm_label = "License Activation"
 
     version_label = 'Gluu {}'
     decription = "Use setup.py to configure your Gluu Server and to add initial data required for oxAuth and oxTrust to start. If setup.properties is found in this folder, these properties will automatically be used instead of the interactive setup."
@@ -147,3 +148,14 @@ class msg:
     exit_post_setup = "No service was selected to install. Exit now?"
 
     used_ports = "Port(s) {} should be free to continue. Please check."
+
+    license_activation_description = "In order to continue installing Gluu Server on this VM, you need to enter a License Activation SSA. If you don't have one, please contact sales@gluu.org to get one."
+    license_activation_ssa_title = "SSA for License Activation"
+    enter_ssa = "Please enter SSA to continue"
+    license_status_widget_label = "Licensing Status"
+    registering_license_client = "Creating client for license endpoints"
+    validating_ssa = "Validating SSA"
+    fectching_license = "Fetching License"
+    checking_license = "Checking License"
+    activating_license = "Activating License"
+    license_activated = "License was activated"

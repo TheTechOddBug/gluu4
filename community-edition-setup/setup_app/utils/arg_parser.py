@@ -25,6 +25,7 @@ def arg_parser():
     parser.add_argument('-j', help="Use Java existing on system", action='store_true')
     parser.add_argument('-profile', help="Setup profile", choices=['CE', 'DISA-STIG'], default='CE')
     parser.add_argument('-opendj-keystore-type', help="OpenDj keystore type (Ony for DISA-STIG profile)", choices=['pkcs11', 'bcfks'], default='bcfks')
+    parser.add_argument('-ssa', help="SSA value or path to an SSA file")
 
     scim_mode_group = parser.add_mutually_exclusive_group()
     scim_mode_group.add_argument('-stm', '--enable-scim-test-mode', help="Enable Scim Test Mode", action='store_true')
@@ -63,7 +64,6 @@ def arg_parser():
     parser.add_argument('--no-oxtrust', help="Do not install oxTrust Admin UI", action='store_true')
     parser.add_argument('--install-gluu-radius', help="Install Gluu Radius Server", action='store_true')
     parser.add_argument('-ip-address', help="Used primarily by Apache httpd for the Listen directive")
-    parser.add_argument('-host-name', help="Internet-facing FQDN that is used to generate certificates and metadata.")
     parser.add_argument('-org-name', help="Organization name field used for generating X.509 certificates")
     parser.add_argument('-email', help="Email address for support at your organization used for generating X.509 certificates")
     parser.add_argument('-city', help="City field used for generating X.509 certificates")

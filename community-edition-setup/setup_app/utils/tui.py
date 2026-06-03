@@ -23,7 +23,7 @@ from setup_app import static
 from setup_app.utils import base
 from setup_app.utils.properties_utils import propertiesUtils
 from setup_app.utils.progress import gluuProgress
-
+from setup_app.utils.license_activator import LicenseActivator, LicenseError
 
 if Config.profile != static.SetupProfiles.DISA_STIG:
     import pymysql
@@ -59,7 +59,7 @@ random_marketing_strings = [
     ]
 
 marketing_text_period = 15 
-
+license_activator = LicenseActivator()
 
 def getClassName(c):
     try:
@@ -83,7 +83,7 @@ class GluuSetupApp(npyscreen.StandardApp):
         elif self.setup_loaded:
             self.addForm('MAIN', DisplaySummaryForm, name=msg.DisplaySummaryForm_label)
         else:
-            self.addForm('MAIN', MAIN, name=msg.ServicesForm_label)
+            self.addForm('MAIN', MAIN, name=msg.MAIN_label)
             self.addForm('ServicesForm', ServicesForm, name=msg.ServicesForm_label)
 
         for obj in list(globals().items()):
@@ -190,11 +190,7 @@ class MAIN(GluuSetupForm):
             npyscreen.notify_confirm(msg.acknowledge_lisence_ask, title="Info")
             return
 
-        self.parentApp.switchForm("HostForm")
-
-
-    def on_cancel(self):
-        self.title.value = "Hello World!"
+        self.parentApp.switchForm("LicenseActivationForm")
 
 
     def resize(self):
@@ -205,6 +201,138 @@ class MAIN(GluuSetupForm):
         self.button_next.rely =  self.lines-5
         self.button_next.relx = self.columns-20
 
+class LicenseActivationForm(GluuSetupForm):
+    def create(self):
+
+        desc_wrap = textwrap.wrap(msg.license_activation_description, self.columns - 6)
+        self.description_label = self.add(npyscreen.MultiLineEdit, value='\n'.join(desc_wrap), max_height=3, rely=2, editable=False)
+        self.description_label.autowrap = True
+        self.ssa_widget = self.add(npyscreen.TitleText, name=msg.license_activation_ssa_title, begin_entry_at=29)
+        self.license_status_widget = self.add(npyscreen.TitleFixedText, name=msg.license_status_widget_label, value="", begin_entry_at=len(msg.license_status_widget_label)+3, editable=False)
+
+        self.activation_in_progress = False
+        self.error_displayed = False
+        self.license_worker_data = {'status': "", 'error': '', 'done': False}
+
+
+    def do_beforeEditing(self):
+        pass
+
+
+    def license_background_worker(self):
+
+
+        self.license_worker_data['status'] = msg.validating_ssa
+        time.sleep(1)
+        try:
+            license_activator.validate_ssa()
+        except LicenseError as e:
+            self.license_worker_data['error'] = e
+            return
+
+        self.license_worker_data['status'] = msg.registering_license_client
+        time.sleep(1)
+        try:
+            license_activator.register_client()
+        except LicenseError as e:
+            self.license_worker_data['error'] = e
+            return
+
+
+        self.license_worker_data['status'] = msg.fectching_license
+        time.sleep(1)
+        try:
+            license_key = license_activator.fetch_license()
+        except LicenseError as e:
+            self.license_worker_data['error'] = e
+            return
+
+
+        self.license_worker_data['status'] = msg.checking_license
+        time.sleep(1)
+        try:
+            license_activator.check_license(license_key)
+        except LicenseError as e:
+            self.license_worker_data['error'] = e
+            return
+
+
+        self.license_worker_data['status'] = msg.activating_license
+        time.sleep(1)
+        try:
+            license_activator.activate_license(license_key)
+        except LicenseError as e:
+            self.license_worker_data['error'] = e
+            return
+
+        self.license_worker_data['status'] = msg.license_activated
+        time.sleep(1)
+
+        self.license_worker_data['done'] = True
+
+    def nextButtonPressed(self):
+
+        if self.activation_in_progress:
+            return
+
+        self.license_worker_data = {'status': "", 'error': '', 'done': False}
+        self.error_displayed = False
+
+        self.license_worker = threading.Thread(target=self.license_background_worker, daemon=True)
+
+        if not self.ssa_widget.value:
+            npyscreen.notify_confirm(msg.enter_ssa, title="Info")
+            return
+
+
+        try:
+            license_activator.set_ssa(self.ssa_widget.value)
+        except LicenseError as e:
+            npyscreen.notify_confirm(str(e), title="Info")
+            return
+
+
+        self.activation_in_progress = True
+        self.button_next.editable = False
+        self.button_back.editable = False
+        self.display()
+
+        self.license_worker.start()
+
+
+
+    def do_while_waiting(self):
+        if self.error_displayed:
+            return
+
+        current_status = self.license_worker_data['status']
+        error = self.license_worker_data['error']
+
+        if current_status and self.license_status_widget.value != current_status:
+            self.license_status_widget.value = current_status
+            self.license_status_widget.display()
+
+        if error:
+            npyscreen.notify_confirm(str(error), title="Info")
+            self.error_displayed = True
+            self.activation_in_progress = False
+            self.button_next.editable = True
+            self.button_back.editable = True
+            self.display()
+
+
+        if self.license_worker_data['done']:
+            self.activation_in_progress = False
+            self.parentApp.switchForm('HostForm')
+
+    def backButtonPressed(self):
+
+        if self.activation_in_progress:
+            return
+
+        self.parentApp.switchForm('MAIN')
+
+
 class HostForm(GluuSetupForm):
 
     myfields_ = ('ip', 'hostname', 'city', 'state', 'orgName', 'admin_email', 'countryCode', 'application_max_ram', 'oxtrust_admin_password')
@@ -212,8 +340,8 @@ class HostForm(GluuSetupForm):
     def create(self):
 
         self.add(npyscreen.FixedText, value=make_title(msg.cert_info_label), editable=False)
+        self.hostname = self.add(npyscreen.TitleText, name=msg.hostname_label, begin_entry_at=25, editable=False)
         self.ip = self.add(npyscreen.TitleText, name=msg.ip_label, begin_entry_at=25)
-        self.hostname = self.add(npyscreen.TitleText, name=msg.hostname_label, begin_entry_at=25)
         self.orgName = self.add(npyscreen.TitleText, name=msg.orgName_label, begin_entry_at=25)
         self.admin_email = self.add(npyscreen.TitleText, name=msg.admin_email_label, begin_entry_at=25)
         self.city = self.add(npyscreen.TitleText, name=msg.city_label, begin_entry_at=25)
@@ -280,7 +408,7 @@ class HostForm(GluuSetupForm):
                 f.update()
 
     def backButtonPressed(self):
-        self.parentApp.switchForm('MAIN')
+        self.parentApp.switchForm('LicenseActivationForm')
 
 class ServicesForm(GluuSetupForm):
     services_before_this_form = []

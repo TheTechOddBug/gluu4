@@ -32,6 +32,13 @@ def get_setup_options():
     }
 
 
+    if base.argsp.n and not (base.argsp.ssa or base.argsp.f):
+        print("Please enter path to SSA file.")
+        sys.exit(2)
+
+    if base.argsp.ssa:
+        setupOptions['ssa'] = base.argsp.ssa
+
     if base.argsp.install_local_ldap:
         setupOptions['ldap_install'] = InstallTypes.LOCAL
 
@@ -53,9 +60,6 @@ def get_setup_options():
     if base.argsp.ip_address:
         setupOptions['ip'] = base.argsp.ip_address
 
-    if base.argsp.host_name:
-        setupOptions['hostname'] = base.argsp.host_name
-        
     if base.argsp.org_name:
         setupOptions['orgName'] = base.argsp.org_name
 
