@@ -55,6 +55,7 @@ nav:
 - Release Notes: 'release-notes/index.md'
 - Whats new in v4: '4.x-intro.md'
 - Installation Guide:
+        - 'Prerequisites': 'installation-guide/prerequisites.md'
         - 'VM Preparation': 'installation-guide/index.md'
         - 'Installation':
 #            - 'Start here': 'installation-guide/install.md'

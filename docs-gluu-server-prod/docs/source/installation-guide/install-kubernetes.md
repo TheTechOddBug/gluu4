@@ -26,6 +26,9 @@ The Kubernetes deployment of the Gluu Server, also called Cloud Native (CN) Edit
 
 ## Requirements for accessing docker images and assets
 
+!!!note
+    Starting from version 4.5.17, steps 1–4 will no longer be required and will be removed; they will be replaced entirely by step 5.
+  
 1. Contact sales@gluu.org for credentials (username and password/token) to access and pull our docker images. Existing customers should have received the credentials already. 
 
 2.  Create [secrets to access and pull images](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/#create-a-secret-by-providing-credentials-on-the-command-line) from Docker hub repo. The secrets must lives in the same namespace (create the namespace if doesn't exist yet).
@@ -65,6 +68,8 @@ The Kubernetes deployment of the Gluu Server, also called Cloud Native (CN) Edit
        pullSecrets:
          - name: regcred
    ```
+   
+5. Inject the [SSA](./prerequisites.md)  generated in your [`values.yaml`](https://github.com/GluuFederation/cloud-native-edition/blob/4.5/pygluu/kubernetes/templates/helm/gluu/values.yaml)  at `config.configmap.gluuLicenseSsa`.
 
 ## System Requirements for cloud deployments
 
