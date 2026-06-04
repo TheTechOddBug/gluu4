@@ -78,15 +78,18 @@ class PropertiesUtils(SetupUtils):
         except:
             return None
 
+    def check_if_license_activated(self):
+        # check if license was activated
+        for key in ('licenseType', 'hardwareId', 'licenseKey'):
+            if not Config.get(key):
+                return False
+
+        return True
+
     def check_properties(self):
         self.logIt('Checking properties')
 
-
-        # check if license was activated
-        for key in ('licenseKey', 'hardwareId', 'productCode'):
-            if not Config.get(key):
-                self.get_or_read_ssa()
-                break
+        self.get_or_read_ssa()
 
         while not Config.ip:
             Config.ip = self.get_ip()
@@ -863,7 +866,8 @@ class PropertiesUtils(SetupUtils):
             print("No SSA was entered. Exiting ...")
             sys.exit(1)
 
-        self.get_license_from_ssa(Config.ssa)
+        if not self.check_if_license_activated():
+            self.get_license_from_ssa(Config.ssa)
 
     def promptForProperties(self):
 

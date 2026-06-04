@@ -40,11 +40,8 @@ class LicenseActivator:
 
         Config.ssa = ssa
 
-        if not (self.decoded_payload.get('software_id') and self.decoded_payload.get('org_id') and self.decoded_payload.get('fqdn') and self.ssa_issuer):
+        if not (self.decoded_payload.get('software_id') and self.decoded_payload.get('org_id') and self.decoded_payload.get('fqdn') and self.decoded_payload.get('iss')):
             raise LicenseError("At least one of the fields software_id, org_id, fqdn or iss is missing in SSA payload")
-
-        self.ssa_issuer = self.ssa_issuer.rstrip('/')
-
 
 
     def decode_jwt_payload(self, token=None):
@@ -279,6 +276,8 @@ class LicenseActivator:
 
         for key, value in result.items():
             setattr(Config, key, value)
+
+        Config.licenseKey = license_key
 
         return result
 
