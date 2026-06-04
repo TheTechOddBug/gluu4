@@ -89,7 +89,8 @@ class PropertiesUtils(SetupUtils):
     def check_properties(self):
         self.logIt('Checking properties')
 
-        self.get_or_read_ssa()
+        if not Config.installed_instance:
+            self.get_or_read_ssa()
 
         while not Config.ip:
             Config.ip = self.get_ip()
