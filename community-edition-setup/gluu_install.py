@@ -360,18 +360,38 @@ def download(url, target_fn):
     if not os.path.exists(pardir):
         os.makedirs(pardir)
 
+    parsed = urlparse(url)
+    if parsed.scheme not in ("https",):
+        print(f"Unsupported URL scheme '{parsed.scheme}' for {url}. Exiting ...", file=sys.stderr)
+        sys.exit(2)
+
     print("Opening url", url)
 
+    try:
+        with request.urlopen(url, timeout=30) as resp:
+            if argsp.c and os.path.exists(dst) and resp.length == os.stat(dst).st_size:
+                print("File", dst, "exists. Passing")
+                return
 
-    with request.urlopen(url) as resp:
-        if argsp.c and os.path.exists(dst) and resp.length == os.stat(dst).st_size:
-            print("File", dst, "exists. Passing")
-            return
+            print("Downloading", url, "to", dst)
+            with open(dst, 'wb') as out_file :
+                shutil.copyfileobj(resp, out_file)
+    except (HTTPError, URLError):
+        env_var = re.sub(r'[^_a-zA-Z0-9]', '_', fn)
+        if env_var[0].isnumeric():
+            env_var = '_' + env_var
+        print(f"Unable to download {url}, looking for environmental variable {env_var} for fallback")
+        src = os.environ.get(env_var)
+        if src and os.path.isfile(src):
+            if os.path.exists(dst) and os.path.samefile(src, dst):
+                print(f"Fallback source {src} already matches destination {dst}. Passing")
+                return
 
-        print("Downloading", url, "to", dst)
-        with open(dst, 'wb') as out_file :
-            shutil.copyfileobj(resp, out_file)
-
+            print(f"Copying {src} to {dst}")
+            shutil.copy(src, dst)
+        else:
+            print(f"Source file {src} does not exist. Exiting ...")
+            sys.exit(2)
 
 def extract_subdir(zip_fn, sub_dir, target_dir, par_dir=None, overwrite=False):
     target_fp = os.path.join(target_dir, os.path.basename(sub_dir))
