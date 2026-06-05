@@ -78,7 +78,6 @@ Kubernetes: `>=v1.22.0-0`
 | configmap.gluuJackrabbitSyncInterval | int | `300` | Interval between files sync (default to 300 seconds). |
 | configmap.gluuJackrabbitUrl | string | `"http://jackrabbit:8080"` | Jackrabbit internal url. Normally left as default. |
 | configmap.gluuLdapUrl | string | `"opendj:1636"` | OpenDJ internal address. Leave as default. Used when `global.gluuPersistenceType` is set to `ldap`. |
-| configmap.gluuLicenseSsa | string | `"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiSm9obiBEb2UiLCJpYXQiOjE1MTYyMzkwMjJ9.BHX2DZGZDRwCOidg5KcNgjMFtAmaOujAAiJOGsIES4o"` | Gluu4 license SSA string (required); change the value to actual SSA string. |
 | configmap.gluuMaxRamPercent | string | `"75.0"` | Value passed to Java option -XX:MaxRAMPercentage |
 | configmap.gluuOxauthBackend | string | `"oxauth:8080"` | oxAuth internal address. Leave as default. |
 | configmap.gluuOxtrustApiEnabled | bool | `false` | Enable oxTrust API |

@@ -69,7 +69,7 @@ The Kubernetes deployment of the Gluu Server, also called Cloud Native (CN) Edit
          - name: regcred
    ```
    
-5. Inject the [SSA](./prerequisites.md)  generated in your [`values.yaml`](https://github.com/GluuFederation/cloud-native-edition/blob/4.5/pygluu/kubernetes/templates/helm/gluu/values.yaml)  at `config.configmap.gluuLicenseSsa`.
+5. Inject the [SSA](./prerequisites.md)  generated in your [`values.yaml`](https://github.com/GluuFederation/cloud-native-edition/blob/4.5/pygluu/kubernetes/templates/helm/gluu/values.yaml)  at `global.gluuLicenseSsa`.
 
 ## System Requirements for cloud deployments
 
