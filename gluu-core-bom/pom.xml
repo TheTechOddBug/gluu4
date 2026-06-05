@@ -29,13 +29,13 @@
 		<uel-impl.version>2.2.1-b05</uel-impl.version>
 
 		<jackson.bom.version>2.21.0</jackson.bom.version>
-		<jackson.version>2.21.0</jackson.version>
+		<jackson.version>2.22.0</jackson.version>
 		<jackson.annotations.version>2.21</jackson.annotations.version>
 		<jackson.databind.version>2.21.0</jackson.databind.version>
 		<json.version>20231013</json.version>
 
-		<log4j.version>2.25.3</log4j.version>
-		<slf4j-api.version>2.0.17</slf4j-api.version>
+		<log4j.version>2.26.0</log4j.version>
+		<slf4j-api.version>2.0.18</slf4j-api.version>
 		<slf4j.version>2.25.3</slf4j.version>
 
 		<guava.version>33.5.0-jre</guava.version>
@@ -605,7 +605,7 @@
 			<dependency>
 				<groupId>com.sun.mail</groupId>
 				<artifactId>jakarta.mail</artifactId>
-				<version>1.6.7</version>
+				<version>1.6.8</version>
 			</dependency>
 
 			<!-- Cache -->
