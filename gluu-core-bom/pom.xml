@@ -28,10 +28,10 @@
 		<uel-api.version>2.2.1-b04</uel-api.version>
 		<uel-impl.version>2.2.1-b05</uel-impl.version>
 
-		<jackson.bom.version>2.21.0</jackson.bom.version>
+		<jackson.bom.version>2.22.0</jackson.bom.version>
 		<jackson.version>2.22.0</jackson.version>
-		<jackson.annotations.version>2.21</jackson.annotations.version>
-		<jackson.databind.version>2.21.0</jackson.databind.version>
+		<jackson.annotations.version>2.22</jackson.annotations.version>
+		<jackson.databind.version>2.22.0</jackson.databind.version>
 		<json.version>20231013</json.version>
 
 		<log4j.version>2.26.0</log4j.version>

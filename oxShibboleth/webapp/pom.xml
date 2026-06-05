@@ -16,7 +16,8 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<oxcore.version>4.5.16-SNAPSHOT</oxcore.version>
-		<jackson.version>2.21.0</jackson.version>
+		<jackson.version>2.22.0</jackson.version>
+		<jackson.annotations.version>2.22</jackson.annotations.version>
 		<jaxrs.version>3.0.12.Final</jaxrs.version>
 		<resteasy.version>4.7.9.Final</resteasy.version>
 		<httpcore.version>4.4.14</httpcore.version>
@@ -424,7 +425,7 @@
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-annotations</artifactId>
-			<version>${jackson.version}</version>
+			<version>${jackson.annotations.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml</groupId>
