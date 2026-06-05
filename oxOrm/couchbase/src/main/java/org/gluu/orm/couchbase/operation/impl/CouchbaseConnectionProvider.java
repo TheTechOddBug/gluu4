@@ -241,35 +241,42 @@ public class CouchbaseConnectionProvider {
     }
 
     public boolean isConnected() {
-    	boolean isConnected = isConnectedInternall();
-    	if (!isConnected) {
-			LOG.warn("Connection is not healthy");
-	    	int failureRetryWindowTimeSeconds = StringHelper.toInteger(props.getProperty("connection.failure-retry-window-time"), -1);
-	    	if (failureRetryWindowTimeSeconds == -1) {
-	    		// No retry window configured, return false immediately
-	    		return false;
-	    	}
-	    	
-	    	if (lastConnectionErrorTime == null) {
-	    		lastConnectionErrorTime = System.currentTimeMillis();
-	    		return true; // Return true for the first failure to allow retrying connection
-	    	} else if (System.currentTimeMillis() - lastConnectionErrorTime > failureRetryWindowTimeSeconds * 1000) {
-	    		LOG.info("Retrying connection after failure retry window time passed");
-	    		lastConnectionErrorTime = null;
-	    		return false;
-	    	} else {
-	    		// Still within the retry window — keep reporting healthy
-	    	    return true; 
-	    	}
-		} else {
-			// Reset failure window timer once connection is healthy again
-			if (lastConnectionErrorTime != null) {
-				LOG.info("Connection recovered, resetting failure retry window timer");
-				lastConnectionErrorTime = null;
-			}
-		}
-    	
-    	return isConnected;
+        boolean isConnected = isConnectedInternall();
+        if (!isConnected) {
+            LOG.warn("Connection is not healthy");
+            int failureRetryWindowTimeSeconds = StringHelper.toInteger(props.getProperty("connection.failure-retry-window-time"), -1);
+            if (failureRetryWindowTimeSeconds == -1) {
+                // No retry window configured, return false immediately
+                return false;
+            }
+
+            if (lastConnectionErrorTime == null) {
+                lastConnectionErrorTime = System.currentTimeMillis();
+                LOG.info("Failure retry window started, allowed window: {}s", failureRetryWindowTimeSeconds);
+                return true; // Return true for the first failure to allow retrying connection
+            } else {
+                long elapsedMs = System.currentTimeMillis() - lastConnectionErrorTime;
+                long windowMs = (long) failureRetryWindowTimeSeconds * 1000;
+                long remainingMs = windowMs - elapsedMs;
+
+                if (remainingMs <= 0) {
+                    LOG.info("Failure retry window time passed");
+                    lastConnectionErrorTime = null;
+                    return false;
+                } else {
+                    LOG.warn("Still within failure retry window — {}s remaining", remainingMs / 1000);
+                    return true;
+                }
+            }
+        } else {
+            // Reset failure window timer once connection is healthy again
+            if (lastConnectionErrorTime != null) {
+                LOG.info("Connection recovered, resetting failure retry window timer");
+                lastConnectionErrorTime = null;
+            }
+        }
+
+        return isConnected;
     }
 
 	private boolean isConnectedInternall() {
