@@ -257,6 +257,7 @@ public class ManageOtherCustomScriptAction
 				CustomScript customScript = iterator.next();
 				if (System.identityHashCode(removeCustomScript) == System.identityHashCode(customScript)) {
 					iterator.remove();
+					customScriptService.remove(removeCustomScript);
 					return;
 				}
 			}
