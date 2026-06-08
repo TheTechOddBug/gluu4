@@ -372,6 +372,13 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+		<!--Force opensaml esapi dependecy-->
+		<dependency>
+		    <groupId>org.owasp.esapi</groupId>
+		    <artifactId>esapi</artifactId>
+		    <version>2.6.2.0</version>
+		    <scope>compile</scope>
+		</dependency>
 		<dependency>
 			<groupId>org.gluu</groupId>
 			<artifactId>oxcore-radius</artifactId>
