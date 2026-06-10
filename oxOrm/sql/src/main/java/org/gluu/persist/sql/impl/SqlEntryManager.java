@@ -502,6 +502,10 @@ public class SqlEntryManager extends BaseEntryManager<SqlOperationService> imple
     }
 
 	private String toExpressionForException(ConvertedExpression convertedExpression, Filter searchFilter) {
+		if ((convertedExpression == null) || (searchFilter == null)) {
+			return null;
+		}
+
 		String result = searchFilter.toString();
 		try {
 			result = convertedExpression.toString();
