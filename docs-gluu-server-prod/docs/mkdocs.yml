@@ -170,6 +170,7 @@ nav:
 #        - 'Patches': 'upgrade/patches.md'
         - 'Backups': 'operation/backup.md'
         - 'CE to CN Migration': 'operation/ce_to_cn_migration.md'
+        - 'Customization using Custom Scripts': 'operation/custom-script-customization.md'
         - 'CN External Secrets and Configmaps': 'operation/external-secrets-configmaps.md'
         - 'Change Admin Password': 'operation/change-admin-password.md'
         - 'Security tips': 'operation/security.md'
