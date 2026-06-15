@@ -22,5 +22,9 @@
             <class name="org.gluu.oxauth.model.util.CertUtilsTest"/>
         </classes>
     </test>
-
+    <test name="ECDSAPublicKey Test" enabled="true">
+        <classes>
+            <class name="org.gluu.oxauth.model.crypto.signature.ECDSAPublicKeyTest"/>
+        </classes>
+    </test>
 </suite>
