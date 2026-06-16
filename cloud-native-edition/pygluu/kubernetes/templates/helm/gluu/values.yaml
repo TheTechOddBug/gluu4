@@ -81,7 +81,7 @@ global:
     # -- Target version currently running. This is normally one minor version up.
     # The step should only be one minor version per upgrade
     targetVersion: "4.5"
-  # -- StorageClass section for Jackrabbit and OpenDJ charts. This is not currently used by the openbanking distribution. You may specify custom parameters as needed.
+  # -- StorageClass section for OpenDJ charts. You may specify custom parameters as needed.
   storageClass:
     allowVolumeExpansion: true
     allowedTopologies: []
@@ -137,8 +137,6 @@ global:
   ldapServiceName: opendj
   # -- Persistence backend to run Gluu with ldap|couchbase|hybrid|sql|spanner.
   gluuPersistenceType: couchbase
-  # -- Boolean flag if enabled will enable jackrabbit in cluster mode with Postgres.
-  gluuJackrabbitCluster: "true"
   # -- The config backend adapter that will hold Gluu configuration layer. aws|google|kubernetes. OpenDJ as a persistence is restricted to kubernetes ONLY!
   configAdapterName: kubernetes
   # -- The config backend adapter that will hold Gluu secret layer. aws|google|kubernetes OpenDJ as a persistence is restricted to kubernetes ONLY!
@@ -260,16 +258,8 @@ global:
   # -- https://kubernetes.io/docs/concepts/workloads/controllers/ttlafterfinished/
   jobTtlSecondsAfterFinished: 300
   jackrabbit:
-    # -- Boolean flag to enable/disable the jackrabbit chart. For more information on how it is used inside Gluu https://gluu.org/docs/gluu-server/4.2/installation-guide/install-kubernetes/#working-with-jackrabbit.
+    # -- No-op attribute to enable/disable jackrabbit. Note that jackrabbit support has been removed. See https://docs-4.gluu.org/gluu-server/installation-guide/install-kubernetes/#migrating-from-jackrabbit for migration to DB document storage.
     enabled: false
-    # -- App loggers can be configured to define where the logs will be redirected to and the level of each in which it should be displayed.
-    # log levels are "OFF", "FATAL", "ERROR", "WARN", "INFO", "DEBUG", "TRACE"
-    # Targets are "STDOUT" and "FILE"
-    appLoggers:
-      # -- jackrabbit.log target
-      jackrabbitLogTarget: "STDOUT"
-      # -- jackrabbit.log level
-      jackrabbitLogLevel: "INFO"
   persistence:
     # -- Boolean flag to enable/disable the persistence chart.
     enabled: true
@@ -493,27 +483,9 @@ config:
     gluuOxauthBackend: oxauth:8080
     # -- OpenDJ internal address. Leave as default. Used when `global.gluuPersistenceType` is set to `ldap`.
     gluuLdapUrl: opendj:1636
-    # -- Jackrabbit Postgres uid
-    gluuJackrabbitPostgresUser: jackrabbit
-    # -- The location of the Jackrabbit postgres password file jackrabbit.secrets.gluuJackrabbitPostgresPassword. The file path must end with postgres_password.
-    gluuJackrabbitPostgresPasswordFile: /etc/gluu/conf/postgres_password
-    # -- Jackrabbit postgres database name.
-    gluuJackrabbitPostgresDatabaseName: jackrabbit
-    # -- Postgres url
-    gluuJackrabbitPostgresHost: postgresql.postgres.svc.cluster.local
-    # -- Jackrabbit Postgres port
-    gluuJackrabbitPostgresPort: 5432
-    # -- Jackrabbit admin uid.
-    gluuJackrabbitAdminId: admin
-    # -- The location of the Jackrabbit admin password jackrabbit.secrets.gluuJackrabbitAdminPassword. The file path must end with jackrabbit_admin_password.
-    gluuJackrabbitAdminPassFile: /etc/gluu/conf/jackrabbit_admin_password
     # -- Interval between files sync (default to 300 seconds).
-    gluuJackrabbitSyncInterval: 300
-    # -- Jackrabbit internal url. Normally left as default.
-    gluuJackrabbitUrl: http://jackrabbit:8080
-    # -- The location of the Jackrabbit admin uid config.gluuJackrabbitAdminId. The file path must end with jackrabbit_admin_id.
-    gluuJackrabbitAdminIdFile: /etc/gluu/conf/jackrabbit_admin_id
-    # -- Document store type to use for shibboleth files DB, LOCAL, or JCA (deprecated). Note that if JCA is selected Apache Jackrabbit will be used.
+    gluuDocumentSyncInterval: 300
+    # -- Document store type to use for shibboleth files DB or LOCAL.
     gluuDocumentStoreType: DB
     # [google_envs] Envs related to using Google
     # -- Service account with roles roles/secretmanager.admin base64 encoded string. This is used often inside the services to reach the configuration layer. Used only when global.configAdapterName and global.configSecretAdapter is set to google.
@@ -756,134 +728,6 @@ nginx-ingress:
     - secretName: tls-certificate # DON'T change
       hosts:
       - demoexample.gluu.org
-
-# -- Jackrabbit Oak is a complementary implementation of the JCR specification. It is an effort to implement a scalable and performant hierarchical content repository for use as the foundation of modern world-class web sites and other demanding content applications
-# https://jackrabbit.apache.org/jcr/index.html
-jackrabbit:
-  # -- Configure the topology spread constraints. Notice this is a map NOT a list as in the upstream API
-  # https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/
-  topologySpreadConstraints: {}
-    # -- Define below as many constraints as needed. The key name should follow the structure tsc1, tsc2...etc.
-    # Do not enter the key labelSelector in the entry/entries below as that is automatically injected by the chart
-    #tsc1:
-    #  maxSkew: 1
-    #  minDomains: 1 # optional; beta since v1.25
-    #  topologyKey: kubernetes.io/hostname
-    #  whenUnsatisfiable: DoNotSchedule
-    #  matchLabelKeys: [] # optional; alpha since v1.25
-    #  nodeAffinityPolicy: [] # optional; alpha since v1.25
-    #  nodeTaintsPolicy: [] # optional; alpha since v1.25
-    #tsc2:
-      #maxSkew: 1
-  # -- Configure the PodDisruptionBudget
-  pdb:
-    enabled: true
-    maxUnavailable: 1
-  # -- Configure the HorizontalPodAutoscaler
-  hpa:
-    enabled: true
-    minReplicas: 1
-    maxReplicas: 10
-    targetCPUUtilizationPercentage: 50
-    # -- metrics if targetCPUUtilizationPercentage is not set
-    metrics: []
-    # -- Scaling Policies
-    behavior: {}
-  # -- Add custom normal and secret envs to the service
-  usrEnvs:
-    # -- Add custom normal envs to the service
-    # variable1: value1
-    normal: {}
-    # -- Add custom secret envs to the service
-    # variable1: value1
-    secret: {}
-  # -- Add custom dns policy
-  dnsPolicy: ""
-  # -- Add custom dns config
-  dnsConfig: {}
-  image:
-    # -- Image pullPolicy to use for deploying.
-    pullPolicy: IfNotPresent
-    # -- Image  to use for deploying.
-    repository: gluufederation/jackrabbit
-     # -- Image  tag to use for deploying.
-    tag: 4.5.16_dev
-    # -- Image Pull Secrets
-    pullSecrets: [ ]
-  # -- Service replica number.
-  replicas: 1
-  # -- Resource specs.
-  resources:
-    limits:
-      # -- CPU limit.
-      cpu: 1500m
-      # -- Memory limit.
-      memory: 1000Mi
-    requests:
-      # -- CPU request.
-      cpu: 1500m
-      # -- Memory request.
-      memory: 1000Mi
-  secrets:
-    # -- Jackrabbit admin uid password
-    gluuJackrabbitAdminPass: Test1234#
-    # -- Jackrabbit Postgres uid password
-    gluuJackrabbitPostgresPass: P@ssw0rd
-  service:
-    # -- Name of the Jackrabbit service. Please keep it as default.
-    jackRabbitServiceName: jackrabbit
-    # -- The name of the jackrabbit port within the jackrabbit service. Please keep it as default.
-    name: http-jackrabbit
-    # -- Port of the jackrabbit service. Please keep it as default.
-    port: 8080
-  # -- This id needs to be unique to each kubernetes cluster in a multi cluster setup
-  # west, east, south, north, region ...etc If left empty it will be randomly generated.
-  clusterId: ""
-  storage:
-    # -- Jackrabbit volume size
-    size: 5Gi
-  # -- Configure the liveness healthcheck for the Jackrabbit if needed.
-  livenessProbe:
-    # -- Executes tcp healthcheck.
-    tcpSocket:
-      port: http-jackrabbit
-    initialDelaySeconds: 25
-    periodSeconds: 25
-    timeoutSeconds: 5
-  # -- Configure the readiness healthcheck for the Jackrabbit if needed.
-  readinessProbe:
-    # -- Executes tcp healthcheck.
-    tcpSocket:
-      port: http-jackrabbit
-    initialDelaySeconds: 30
-    periodSeconds: 30
-    timeoutSeconds: 5
-  # -- Configure any additional volumes that need to be attached to the pod
-  volumes: []
-  # -- Configure any additional volumesMounts that need to be attached to the containers
-  volumeMounts: []
-  # Actions on lifecycle events such as postStart and preStop
-  # Example postStop: https://github.com/GluuFederation/cloud-native-edition/discussions/516
-  # Example postStart:
-  # lifecycle:
-  #   postStart:
-  #     exec:
-  #       command: ["sh", "-c", "mkdir /opt/gluu/jetty/oxauth/custom/static/stylesheet/"]
-  lifecycle: {}
-
-  # -- Additional labels that will be added across the gateway in the format of {mylabel: "myapp"}
-  additionalLabels: { }
-  # -- Additional annotations that will be added across the gateway in the format of {cert-manager.io/issuer: "letsencrypt-prod"}
-  additionalAnnotations: { }
-  # -- https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/
-  tolerations: []
-  # -- https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
-  affinity: {}
-  nodeSelector: {}
-  # -- Add custom scripts that have been mounted to run before the entrypoint.
-  # - /tmp/custom.sh
-  # - /tmp/custom2.sh
-  customScripts: []
 
 # -- OpenDJ is a directory server which implements a wide range of Lightweight Directory Access Protocol and related standards, including full compliance with LDAPv3 but also support for Directory Service Markup Language (DSMLv2).Written in Java, OpenDJ offers multi-master replication, access control, and many extensions.
 opendj:

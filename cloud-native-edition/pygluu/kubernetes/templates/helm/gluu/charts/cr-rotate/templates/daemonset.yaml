@@ -53,7 +53,7 @@ spec:
       containers:
         - name: {{ include "cr-rotate.name" . }}
           lifecycle:
-{{- toYaml .Values.lifecycle | nindent 12 }}          
+{{- toYaml .Values.lifecycle | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           securityContext:
             runAsUser: 1000
@@ -103,12 +103,12 @@ spec:
               mountPath: "/etc/gluu/conf/couchbase_password"
               subPath: couchbase_password
             {{- if not .Values.global.istio.enabled }}
-            - name: cb-crt 
+            - name: cb-crt
               mountPath: "/etc/certs/couchbase.crt"
               subPath: couchbase.crt
             {{- end }}
           {{- end }}
-          {{- if and ( or ( .Values.global.opendj.enabled ) ( .Values.global.jackrabbit.enabled) ) (or (eq .Values.global.storageClass.provisioner "microk8s.io/hostpath" ) (eq .Values.global.storageClass.provisioner "k8s.io/minikube-hostpath")) }}
+          {{- if and (.Values.global.opendj.enabled) (or (eq .Values.global.storageClass.provisioner "microk8s.io/hostpath" ) (eq .Values.global.storageClass.provisioner "k8s.io/minikube-hostpath")) }}
           resources: {}
           {{- else if .Values.global.cloud.testEnviroment }}
           resources: {}
@@ -155,8 +155,8 @@ spec:
           secret:
             secretName: {{ .Release.Name }}-cb-pass
         {{- if not .Values.global.istio.enabled }}
-        - name: cb-crt 
+        - name: cb-crt
           secret:
             secretName: {{ .Release.Name }}-cb-crt
         {{- end }}
-      {{- end }}    
+      {{- end }}

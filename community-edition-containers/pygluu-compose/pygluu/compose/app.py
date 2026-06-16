@@ -614,7 +614,6 @@ class App:
             "couchbase.crt",
             "couchbase_password",
             "couchbase_superuser_password",
-            "jackrabbit_admin_password",
             "sql_password",
             "sql_root_password",
             "google-credentials.json",

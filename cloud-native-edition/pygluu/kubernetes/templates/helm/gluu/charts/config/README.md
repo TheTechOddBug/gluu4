@@ -66,17 +66,8 @@ Kubernetes: `>=v1.22.0-0`
 | configmap.gluuCouchbaseSuperUserPassFile | string | `"/etc/gluu/conf/couchbase_superuser_password"` | The location of the Couchbase restricted user config.configmap.gluuCouchbaseSuperUser password. The file path must end with couchbase_superuser_password. |
 | configmap.gluuCouchbaseUrl | string | `"cbgluu.default.svc.cluster.local"` | Couchbase URL. Used only when global.gluuPersistenceType is hybrid or couchbase. This should be in FQDN format for either remote or local Couchbase clusters. The address can be an internal address inside the kubernetes cluster |
 | configmap.gluuCouchbaseUser | string | `"gluu"` | Couchbase restricted user. Used only when global.gluuPersistenceType is hybrid or couchbase. |
-| configmap.gluuDocumentStoreType | string | `"DB"` | Document store type to use for shibboleth files DB, LOCAL, or JCA (deprecated). Note that if JCA is selected Apache Jackrabbit will be used. |
-| configmap.gluuJackrabbitAdminId | string | `"admin"` | Jackrabbit admin uid. |
-| configmap.gluuJackrabbitAdminIdFile | string | `"/etc/gluu/conf/jackrabbit_admin_id"` | The location of the Jackrabbit admin uid config.gluuJackrabbitAdminId. The file path must end with jackrabbit_admin_id. |
-| configmap.gluuJackrabbitAdminPassFile | string | `"/etc/gluu/conf/jackrabbit_admin_password"` | The location of the Jackrabbit admin password jackrabbit.secrets.gluuJackrabbitAdminPassword. The file path must end with jackrabbit_admin_password. |
-| configmap.gluuJackrabbitPostgresDatabaseName | string | `"jackrabbit"` | Jackrabbit postgres database name. |
-| configmap.gluuJackrabbitPostgresHost | string | `"postgresql.postgres.svc.cluster.local"` | Postgres url |
-| configmap.gluuJackrabbitPostgresPasswordFile | string | `"/etc/gluu/conf/postgres_password"` | The location of the Jackrabbit postgres password file jackrabbit.secrets.gluuJackrabbitPostgresPassword. The file path must end with postgres_password. |
-| configmap.gluuJackrabbitPostgresPort | int | `5432` | Jackrabbit Postgres port |
-| configmap.gluuJackrabbitPostgresUser | string | `"jackrabbit"` | Jackrabbit Postgres uid |
-| configmap.gluuJackrabbitSyncInterval | int | `300` | Interval between files sync (default to 300 seconds). |
-| configmap.gluuJackrabbitUrl | string | `"http://jackrabbit:8080"` | Jackrabbit internal url. Normally left as default. |
+| configmap.gluuDocumentStoreType | string | `"DB"` | Document store type to use for shibboleth files DB or LOCAL. |
+| configmap.gluuDocumentSyncInterval | int | `300` | Interval between files sync (default to 300 seconds). |
 | configmap.gluuLdapUrl | string | `"opendj:1636"` | OpenDJ internal address. Leave as default. Used when `global.gluuPersistenceType` is set to `ldap`. |
 | configmap.gluuMaxRamPercent | string | `"75.0"` | Value passed to Java option -XX:MaxRAMPercentage |
 | configmap.gluuOxauthBackend | string | `"oxauth:8080"` | oxAuth internal address. Leave as default. |

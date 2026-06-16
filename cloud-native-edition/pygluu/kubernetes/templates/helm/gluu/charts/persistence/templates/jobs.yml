@@ -99,11 +99,6 @@ spec:
             name: aws-secrets-replica-regions
             subPath: aws_secrets_replica_regions
         {{- end }}
-        {{- if .Values.global.jackrabbit.enabled }}
-          - name: gluu-jackrabbit-admin-pass
-            mountPath: /etc/gluu/conf/jackrabbit_admin_password
-            subPath: jackrabbit_admin_password
-        {{- end }}
         {{- if eq .Values.global.gluuPersistenceType "sql" }}
           - name: sql-pass
             mountPath: "/etc/gluu/conf/sql_password"
@@ -155,11 +150,6 @@ spec:
             items:
               - key: aws_secrets_replica_regions
                 path: aws_secrets_replica_regions
-      {{- end }}
-      {{- if .Values.global.jackrabbit.enabled }}
-        - name: gluu-jackrabbit-admin-pass
-          secret:
-            secretName: gluu-jackrabbit-admin-pass
       {{- end }}
       {{- if eq .Values.global.gluuPersistenceType "sql" }}
         - name: sql-pass

@@ -62,9 +62,12 @@ data:
   GLUU_CONTAINER_METADATA: {{ .Values.configmap.containerMetadataName | quote }}
   GLUU_MAX_RAM_PERCENTAGE: {{ .Values.configmap.gluuMaxRamPercent | quote }}
   GLUU_CACHE_TYPE: {{ .Values.configmap.gluuCacheType | quote }}
-  GLUU_DOCUMENT_STORE_TYPE: {{ .Values.configmap.gluuDocumentStoreType | quote }}
-  GLUU_JACKRABBIT_SYNC_INTERVAL: {{ .Values.configmap.gluuJackrabbitSyncInterval | quote }}
-  GLUU_JACKRABBIT_URL: {{ .Values.configmap.gluuJackrabbitUrl | quote }}
+  {{- $documentStoreType := upper (default "DB" .Values.configmap.gluuDocumentStoreType) }}
+  {{- if not (or (eq $documentStoreType "DB") (eq $documentStoreType "LOCAL")) }}
+  {{- fail (printf "Unsupported configmap.gluuDocumentStoreType=%q. Supported values: DB, LOCAL (Jackrabbit/JCA removed)." .Values.configmap.gluuDocumentStoreType) }}
+  {{- end }}
+  GLUU_DOCUMENT_STORE_TYPE: {{ $documentStoreType | quote }}
+  GLUU_DOCUMENT_STORE_SYNC_INTERVAL: {{ .Values.configmap.gluuDocumentSyncInterval | quote }}
   DOMAIN: {{ .Values.global.domain | quote }}
   GLUU_OXAUTH_BACKEND: {{ .Values.configmap.gluuOxauthBackend | quote }}
   GLUU_OXAUTH_APP_LOGGERS: {{ .Values.global.oxauth.appLoggers
@@ -171,24 +174,6 @@ data:
   GLUU_SYNC_SHIB_MANIFESTS: {{ .Values.configmap.gluuSyncShibManifests | quote }}
   GLUU_OXTRUST_API_ENABLED: {{ .Values.configmap.gluuOxtrustApiEnabled | quote }}
   GLUU_OXTRUST_API_TEST_MODE: {{ .Values.configmap.gluuOxtrustApiTestMode | quote }}
-  {{ if .Values.global.jackrabbit.enabled }}
-  GLUU_JACKRABBIT_APP_LOGGERS: {{ .Values.global.jackrabbit.appLoggers
-  | toJson
-  | replace "jackrabbitLogTarget" "jackrabbit_log_target"
-  | replace "jackrabbitLogLevel" "jackrabbit_log_level"
-  | squote
-  }}
-  {{- end }}
-  {{ if eq .Values.global.gluuJackrabbitCluster "true" }}
-  GLUU_JACKRABBIT_ADMIN_ID: {{ .Values.configmap.gluuJackrabbitAdminId | quote }}
-  GLUU_JACKRABBIT_ADMIN_PASSWORD_FILE: {{ .Values.configmap.gluuJackrabbitAdminPassFile | quote }}
-  GLUU_JACKRABBIT_CLUSTER: {{ .Values.global.gluuJackrabbitCluster | quote }}
-  GLUU_JACKRABBIT_POSTGRES_USER: {{ .Values.configmap.gluuJackrabbitPostgresUser | quote }}
-  GLUU_JACKRABBIT_POSTGRES_PASSWORD_FILE: {{ .Values.configmap.gluuJackrabbitPostgresPasswordFile | quote }}
-  GLUU_JACKRABBIT_POSTGRES_HOST: {{ .Values.configmap.gluuJackrabbitPostgresHost | quote }}
-  GLUU_JACKRABBIT_POSTGRES_PORT: {{ .Values.configmap.gluuJackrabbitPostgresPort | quote }}
-  GLUU_JACKRABBIT_POSTGRES_DATABASE: {{ .Values.configmap.gluuJackrabbitPostgresDatabaseName | quote }}
-  {{- end }}
   # Auto enable installation of some services
   GLUU_CASA_ENABLED: {{ .Values.configmap.gluuCasaEnabled | quote }}
   GLUU_CASA_APP_LOGGERS: {{ .Values.global.casa.appLoggers

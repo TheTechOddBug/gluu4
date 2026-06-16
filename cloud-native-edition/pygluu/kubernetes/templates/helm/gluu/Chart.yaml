@@ -23,8 +23,6 @@ annotations:
       image: gluufederation/certmanager:4.5.15-1
     - name: opendj
       image: gluufederation/opendj:4.5.15-1
-    - name: jackrabbit
-      image: gluufederation/jackrabbit:4.5.15-1
     - name: oxauth
       image: gluufederation/oxauth:4.5.15-1
     - name: oxpassport
@@ -58,10 +56,6 @@ dependencies:
 
     - name: opendj
       condition: global.opendj.enabled
-      version: 1.8.50
-
-    - name: jackrabbit
-      condition: global.jackrabbit.enabled
       version: 1.8.50
 
     - name: oxauth

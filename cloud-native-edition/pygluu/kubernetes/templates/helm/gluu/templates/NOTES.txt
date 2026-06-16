@@ -1,0 +1,19 @@
+{{- with .Values.global.jackrabbit }}
+{{- if .enabled -}}
+********************************************************************************
+***              WARNING: JACKRABBIT CONFIGURATION                           ***
+********************************************************************************
+
+The legacy flag `global.jackrabbit.enabled` is set to `true`. Any configuration
+previously managed by `jackrabbit` will be ignored. See the following sections
+for migration.
+
+RECOMMENDATION:
+
+1. Set `global.jackrabbit.enabled` to `false`.
+2. Set `config.configmap.gluuDocumentStoreType` to `DB`.
+3. See https://docs-4.gluu.org/gluu-server/installation-guide/install-kubernetes/#migrating-from-jackrabbit for migration to DB document store.
+
+*********************************************************************************
+{{- end }}
+{{- end }}

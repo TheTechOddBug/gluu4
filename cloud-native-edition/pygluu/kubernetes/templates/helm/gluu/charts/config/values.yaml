@@ -97,27 +97,9 @@ configmap:
   gluuOxauthBackend: oxauth:8080
   # -- OpenDJ internal address. Leave as default. Used when `global.gluuPersistenceType` is set to `ldap`.
   gluuLdapUrl: opendj:1636
-  # -- Jackrabbit Postgres uid
-  gluuJackrabbitPostgresUser: jackrabbit
-  # -- The location of the Jackrabbit postgres password file jackrabbit.secrets.gluuJackrabbitPostgresPassword. The file path must end with postgres_password.
-  gluuJackrabbitPostgresPasswordFile: /etc/gluu/conf/postgres_password
-  # -- Jackrabbit postgres database name.
-  gluuJackrabbitPostgresDatabaseName: jackrabbit
-  # -- Postgres url
-  gluuJackrabbitPostgresHost: postgresql.postgres.svc.cluster.local
-  # -- Jackrabbit Postgres port
-  gluuJackrabbitPostgresPort: 5432
-  # -- Jackrabbit admin uid.
-  gluuJackrabbitAdminId: admin
-  # -- The location of the Jackrabbit admin password jackrabbit.secrets.gluuJackrabbitAdminPassword. The file path must end with jackrabbit_admin_password.
-  gluuJackrabbitAdminPassFile: /etc/gluu/conf/jackrabbit_admin_password
   # -- Interval between files sync (default to 300 seconds).
-  gluuJackrabbitSyncInterval: 300
-  # -- Jackrabbit internal url. Normally left as default.
-  gluuJackrabbitUrl: http://jackrabbit:8080
-  # -- The location of the Jackrabbit admin uid config.gluuJackrabbitAdminId. The file path must end with jackrabbit_admin_id.
-  gluuJackrabbitAdminIdFile: /etc/gluu/conf/jackrabbit_admin_id
-  # -- Document store type to use for shibboleth files DB, LOCAL, or JCA (deprecated). Note that if JCA is selected Apache Jackrabbit will be used.
+  gluuDocumentSyncInterval: 300
+  # -- Document store type to use for shibboleth files DB or LOCAL.
   gluuDocumentStoreType: DB
   # [google_envs] Envs related to using Google
   # -- Service account with roles roles/secretmanager.admin base64 encoded string. This is used often inside the services to reach the configuration layer. Used only when global.configAdapterName and global.configSecretAdapter is set to google.

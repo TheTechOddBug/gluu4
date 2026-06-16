@@ -27,9 +27,6 @@ services:
       - GLUU_REDIS_SSL_TRUSTSTORE=${REDIS_SSL_TRUSTSTORE}
       - GLUU_REDIS_SENTINEL_GROUP=${REDIS_SENTINEL_GROUP}
       - GLUU_DOCUMENT_STORE_TYPE=${DOCUMENT_STORE_TYPE}
-      - GLUU_JACKRABBIT_URL=http://jackrabbit:8080
-      - GLUU_JACKRABBIT_ADMIN_ID=${JACKRABBIT_USER}
-      - GLUU_JACKRABBIT_ADMIN_PASSWORD_FILE=/etc/gluu/conf/jackrabbit_admin_password
       - GLUU_SQL_DB_DIALECT=${SQL_DB_DIALECT}
       - GLUU_SQL_DB_NAME=${SQL_DB_NAME}
       - GLUU_SQL_DB_HOST=${SQL_DB_HOST}
@@ -49,7 +46,6 @@ services:
       - ./couchbase.crt:/etc/certs/couchbase.crt
       - ./couchbase_password:/etc/gluu/conf/couchbase_password
       - ./couchbase_superuser_password:/etc/gluu/conf/couchbase_superuser_password
-      - ./jackrabbit_admin_password:/etc/gluu/conf/jackrabbit_admin_password
       - ./google-credentials.json:/etc/gluu/conf/google-credentials.json
       - ./sql_password:/etc/gluu/conf/sql_password
       - ./gluu4-license-ssa.jwt:/etc/gluu/conf/gluu4-license-ssa.jwt:ro
