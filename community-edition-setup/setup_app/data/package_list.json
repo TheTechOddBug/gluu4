@@ -20,7 +20,8 @@
       "ruamel.yaml": "python3-ruamel-yaml",
       "certifi": "python3-certifi",
       "pymysql": "python3-PyMySQL",
-      "psycopg2": "python3-psycopg2"
+      "psycopg2": "python3-psycopg2",
+      "typing_extensions": "python3-typing-extensions"
     }
   },
   "debian 9": {
@@ -33,7 +34,8 @@
       "certifi": "python3-certifi",
       "pymysql": "python3-pymysql",
       "distutils.util": "python3-distutils",
-      "psycopg2": "python3-psycopg2"
+      "psycopg2": "python3-psycopg2",
+      "typing_extensions": "python3-typing-extensions"
     }
   },
   "debian 10": {
@@ -46,7 +48,8 @@
       "certifi": "python3-certifi",
       "pymysql": "python3-pymysql",
       "distutils.util": "python3-distutils",
-      "psycopg2": "python3-psycopg2"
+      "psycopg2": "python3-psycopg2",
+      "typing_extensions": "python3-typing-extensions"
     }
   },
   "debian 11": {
@@ -59,7 +62,8 @@
       "certifi": "python3-certifi",
       "pymysql": "python3-pymysql",
       "distutils.util": "python3-distutils",
-      "psycopg2": "python3-psycopg2"
+      "psycopg2": "python3-psycopg2",
+      "typing_extensions": "python3-typing-extensions"
     }
   },
   "ubuntu 20": {
@@ -71,7 +75,8 @@
       "ruamel.yaml": "python3-ruamel.yaml",
       "pymysql": "python3-pymysql",
       "psycopg2": "python3-psycopg2",
-      "distutils.util": "python3-distutils"
+      "distutils.util": "python3-distutils",
+      "typing_extensions": "python3-typing-extensions"
     }
   },
   "ubuntu 22": {
@@ -83,7 +88,8 @@
       "ruamel.yaml": "python3-ruamel.yaml",
       "pymysql": "python3-pymysql",
       "psycopg2": "python3-psycopg2",
-      "distutils.util": "python3-distutils"
+      "distutils.util": "python3-distutils",
+      "typing_extensions": "python3-typing-extensions"
     }
   },
   "ubuntu 24": {
@@ -95,7 +101,8 @@
       "ruamel.yaml": "python3-ruamel.yaml",
       "pymysql": "python3-pymysql",
       "psycopg2": "python3-psycopg2",
-      "packaging.version": "python3-packaging"
+      "packaging.version": "python3-packaging",
+      "typing_extensions": "python3-typing-extensions"
     }
   },
   "centos 8": {
@@ -119,7 +126,8 @@
       "ruamel.yaml": "python3-ruamel-yaml",
       "certifi": "python3-certifi",
       "pymysql": "python3-PyMySQL",
-      "psycopg2": "python3-psycopg2"
+      "psycopg2": "python3-psycopg2",
+      "typing_extensions": "python3-typing-extensions"
     }
   },
   "suse 15": {
