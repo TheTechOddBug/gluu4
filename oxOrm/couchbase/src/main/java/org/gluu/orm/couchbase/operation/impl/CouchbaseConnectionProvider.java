@@ -243,8 +243,8 @@ public class CouchbaseConnectionProvider {
     public boolean isConnected() {
         boolean isConnected = isConnectedInternall();
         if (!isConnected) {
-            LOG.warn("Connection is not healthy");
             int failureRetryWindowTimeSeconds = StringHelper.toInteger(props.getProperty("connection.failure-retry-window-time"), -1);
+            LOG.warn("Connection is not healthy, connection.failure-retry-window-time: {}", failureRetryWindowTimeSeconds);
             if (failureRetryWindowTimeSeconds == -1) {
                 // No retry window configured, return false immediately
                 return false;
