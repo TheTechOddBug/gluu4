@@ -126,7 +126,9 @@ class BaseInstaller:
     def set_systemd_ulimits(self, service):
         umilit_file = '/etc/systemd/system/{}.service.d/override.conf'.format(service)
         if not os.path.exists(umilit_file):
-            os.makedirs(os.path.dirname(umilit_file))
+            ulimit_dir_name = os.path.dirname(umilit_file)
+            if not os.path.exists(ulimit_dir_name):
+                os.makedirs(ulimit_dir_name)
             self.writeFile(umilit_file, '[Service]\nLimitNOFILE=262144\n')
 
 

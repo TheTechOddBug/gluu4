@@ -19,10 +19,6 @@ from urllib.parse import urlparse, urljoin
 from urllib.error import HTTPError, URLError
 from tempfile import TemporaryDirectory
 
-sys.path.append('/usr/lib/python{}.{}/gluu-packaged'.format(sys.version_info.major, sys.version_info.minor))
-
-sys.path.append('/usr/lib/python{}.{}/gluu-packaged'.format(sys.version_info.major, sys.version_info.minor))
-
 parser = argparse.ArgumentParser(description="This script downloads Gluu Server components and fires setup")
 parser.add_argument('-a', help=argparse.SUPPRESS, action='store_true')
 parser.add_argument('-u', help="Use downloaded components", action='store_true')
@@ -162,7 +158,7 @@ with open(os_release_fn) as f:
 
 cmdline = False
 
-if os_type in ('red', 'centos'):
+if os_type in ('red', 'centos', 'rocky'):
     package_installer = 'yum'
 elif os_type in ('ubuntu', 'debian'):
     package_installer = 'apt'
@@ -172,11 +168,12 @@ else:
     print("Unsopported OS. Exiting ...")
     sys.exit()
 
+
 if os_type == 'debian':
     path_list = [ '/usr/local/sbin', '/usr/sbin', '/sbin', '/usr/local/bin', '/usr/bin', '/bin' ]
     os.environ['PATH'] = os.pathsep.join(path_list) + os.pathsep + os.environ['PATH']
 
-print("OS type was determined as {}.".format(os_type))
+print(f"OS type was determined as {os_type}-{os_version}.")
 
 try:
     locale.setlocale(locale.LC_ALL, '')
@@ -189,35 +186,39 @@ if not argsp.uninstall:
 
     try:
         import ldap3
-    except:
+    except ModuleNotFoundError:
         missing_packages.append('python3-ldap3')
 
     try:
         import six
-    except:
+    except ModuleNotFoundError:
         missing_packages.append('python3-six')
 
     try:
         import ruamel.yaml
-    except:
-        if os_type in ('red', 'centos'):
+    except ModuleNotFoundError:
+        if os_type in ('red', 'centos', 'rocky'):
             missing_packages.append('python3-ruamel-yaml')
         else:
             missing_packages.append('python3-ruamel.yaml')
 
-
     try:
         import pymysql
-    except:
-        if os_type in ('red', 'centos', 'suse'):
+    except ModuleNotFoundError:
+        if os_type in ('red', 'centos', 'suse', 'rocky'):
             missing_packages.append('python3-PyMySQL')
         else:
             missing_packages.append('python3-pymysql')
 
-    try:
+    try :
         import psycopg2
-    except:
+    except ModuleNotFoundError:
         missing_packages.append('python3-psycopg2')
+
+    try:
+        import setuptools
+    except ModuleNotFoundError:
+        missing_packages.append('python3-setuptools')
 
     if not shutil.which('unzip'):
         missing_packages.append('unzip')
@@ -230,14 +231,14 @@ if not argsp.uninstall:
 
     if missing_packages:
         packages_str = ' '.join(missing_packages)
-        if os_type+os_version in ('centos9'):
+        if os_type+os_version in ('centos9', 'red10', 'rocky10'):
             packages_str = packages_str.replace('python3-', 'python-')
         if not argsp.n:
             result = input("Missing package(s): {0}. Install now? (Y|n): ".format(packages_str))
             if result.strip() and result.strip().lower()[0] == 'n':
                 sys.exit("Can't continue without installing these packages. Exiting ...")
 
-        if os_type in ('red', 'centos'):
+        if os_type in ('red', 'centos', 'rocky'):
             print("Installing epel-release")
             cmd = '{} install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-{}.noarch.rpm'.format(package_installer, os_version)
             os.system(cmd)

@@ -76,14 +76,14 @@ deb_sysd_clone = os_name.startswith(('ubuntu', 'debian'))
 
 
 # Determine service path
-if (os_type in ('centos', 'red', 'fedora', 'suse') and os_initdaemon == 'systemd') or deb_sysd_clone:
+if (os_type in ('centos', 'red', 'rocky', 'fedora', 'suse') and os_initdaemon == 'systemd') or deb_sysd_clone:
     service_path = shutil.which('systemctl')
 elif os_type in ['debian', 'ubuntu']:
     service_path = '/usr/sbin/service'
 else:
     service_path = '/sbin/service'
 
-if os_type in ('centos', 'red', 'fedora', 'suse'):
+if os_type in ('centos', 'red', 'rocky', 'fedora', 'suse'):
     clone_type = 'rpm'
     httpd_name = 'httpd'
 else:
@@ -91,7 +91,7 @@ else:
     httpd_name = 'apache2'
 
 def get_os_description():
-    desc_dict = { 'suse': 'SUSE', 'red': 'RHEL', 'ubuntu': 'Ubuntu', 'deb': 'Debian', 'centos': 'CentOS', 'fedora': 'Fedora' }
+    desc_dict = { 'suse': 'SUSE', 'red': 'RHEL', 'ubuntu': 'Ubuntu', 'deb': 'Debian', 'centos': 'CentOS', 'fedora': 'Fedora', 'rocky': 'Rocky Linux'}
     descs = desc_dict.get(os_type, os_type)
     descs += ' ' + os_version
     fipsl = subprocess.getoutput("sysctl crypto.fips_enabled").strip().split()
@@ -172,7 +172,13 @@ def get_os_package_list():
     package_list_fn = os.path.join(paths.DATA_DIR, 'package_list.json')
     with open(package_list_fn) as f:
         packages = json.load(f)
-        return packages
+    for osn in packages.copy():
+        aliases = packages[osn].pop('aliases', None) or []
+        for alias in aliases:
+            if alias in packages and alias != osn:
+                raise ValueError(f"Duplicate package_list alias/key detected: {alias}")
+            packages[alias] = copy.deepcopy(packages[osn])
+    return packages
 
 def check_os_supported():
     return os_type + ' '+ os_version in get_os_package_list()

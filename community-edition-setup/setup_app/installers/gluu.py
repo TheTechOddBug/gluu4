@@ -332,7 +332,7 @@ class GluuInstaller(BaseInstaller, SetupUtils):
                 self.copyFile("%s/hostname" % Config.outputFolder, Config.etc_hostname)
                 self.run(['/bin/chmod', '-f', '644', Config.etc_hostname])
 
-            if Config.os_type in ['centos', 'red', 'fedora']:
+            if Config.os_type in ['centos', 'red', 'fedora', 'rocky']:
                 self.copyFile("%s/network" % Config.outputFolder, Config.network)
 
             self.run(['/bin/hostname', Config.hostname])

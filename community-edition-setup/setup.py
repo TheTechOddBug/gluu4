@@ -14,8 +14,6 @@ import shutil
 import traceback
 import code
 
-sys.path.append('/usr/lib/python{}.{}/gluu-packaged'.format(sys.version_info.major, sys.version_info.minor))
-
 from queue import Queue
 
 os.environ['LC_ALL'] = 'C'

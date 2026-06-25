@@ -608,6 +608,9 @@ class PropertiesUtils(SetupUtils):
             if 'couchbase' in self.getBackendTypes():
                 backend_list.insert(2, BackendStrings.LOCAL_COUCHBASE)
 
+        if base.os_type == 'suse' and BackendStrings.LOCAL_MYSQL in backend_list:
+            backend_list.remove(BackendStrings.LOCAL_MYSQL)
+
         return backend_list
 
     def prompt_for_backend(self):
