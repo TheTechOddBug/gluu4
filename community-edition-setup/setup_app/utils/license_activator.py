@@ -17,9 +17,6 @@ class LicenseError(Exception):
     """Exception raised if there is an issue with SSA."""
     pass
 
-LICENSER = 'https://cloud-dev.gluu.cloud'
-SSA_VALIDATION_URL = 'https://account-dev.gluu.cloud/jans-auth/restv1/jwks'
-
 class LicenseActivator:
 
     def __init__(self):
@@ -43,6 +40,12 @@ class LicenseActivator:
         if not (self.decoded_payload.get('software_id') and self.decoded_payload.get('org_id') and self.decoded_payload.get('fqdn') and self.decoded_payload.get('iss')):
             raise LicenseError("At least one of the fields software_id, org_id, fqdn or iss is missing in SSA payload")
 
+        issuer = self.decoded_payload.get('iss')
+        if issuer is None:
+            raise LicenseError("SSA is missing iss claim.")
+
+        Config.SSA_VALIDATION_URL = f'{issuer}/jans-auth/restv1/jwks'
+        Config.LICENSER = issuer.replace('account', 'cloud')
 
     def decode_jwt_payload(self, token=None):
 
@@ -76,13 +79,13 @@ class LicenseActivator:
 
     def validate_ssa(self, ssa=None):
 
-        logIt(f"Validating SSA from {SSA_VALIDATION_URL}")
+        logIt(f"Validating SSA from {Config.SSA_VALIDATION_URL}")
 
         if not ssa:
             ssa = self.ssa
 
-        jwks_client = jwt.PyJWKClient(SSA_VALIDATION_URL)
-        parsed_uri = urlparse(SSA_VALIDATION_URL)
+        jwks_client = jwt.PyJWKClient(Config.SSA_VALIDATION_URL)
+        parsed_uri = urlparse(Config.SSA_VALIDATION_URL)
 
         try:
             signing_key = jwks_client.get_signing_key_from_jwt(ssa)
@@ -180,7 +183,7 @@ class LicenseActivator:
 
     def fetch_license(self):
         scope = 'https://jans.io/oauth/jans-auth-server/config/license'
-        url = urljoin(LICENSER, 'v1/license/fetch')
+        url = urljoin(Config.LICENSER, 'v1/license/fetch')
         logIt(f"Fetcing license from {url}")
         params = {
             'org_id': Config.org_id,
@@ -216,7 +219,7 @@ class LicenseActivator:
 
     def check_license(self, license_key):
         scope = 'https://jans.io/oauth/jans-auth-server/config/license'
-        url = urljoin(LICENSER, 'v1/license/check')
+        url = urljoin(Config.LICENSER, 'v1/license/check')
         logIt(f"Checking license from {url}")
         data = {
                 "licenseKey": license_key,
@@ -248,7 +251,7 @@ class LicenseActivator:
 
     def activate_license(self, license_key):
         scope = 'https://jans.io/oauth/jans-auth-server/config/license'
-        url = urljoin(LICENSER, 'v1/license/activation')
+        url = urljoin(Config.LICENSER, 'v1/license/activation')
         logIt(f"Activating license from {url}")
         data = {
                 "licenseKey": license_key,
