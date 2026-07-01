@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import com.couchbase.client.core.diagnostics.EndpointPingReport;
 import com.couchbase.client.core.diagnostics.PingResult;
 import com.couchbase.client.core.diagnostics.PingState;
+import com.couchbase.client.java.diagnostics.PingOptions;
 import com.couchbase.client.core.error.CouchbaseException;
 import com.couchbase.client.core.service.ServiceType;
 import com.couchbase.client.java.Bucket;
@@ -163,7 +164,7 @@ public class CouchbaseConnectionProvider {
 
             try {
                 open(waitUntilReadyTimeSeconds);
-                if (isConnectedInternall()) {
+                if (isConnectedInternall(-1)) {
                 	break;
                 } else {
                     LOG.info("Failed to connect to Couchbase");
@@ -241,7 +242,8 @@ public class CouchbaseConnectionProvider {
     }
 
     public boolean isConnected() {
-        boolean isConnected = isConnectedInternall();
+        int waitUntilReadyTimeSeconds = StringHelper.toInteger(props.getProperty("connection.wait-until-ready-time"), -1);
+        boolean isConnected = isConnectedInternall(waitUntilReadyTimeSeconds);
         if (!isConnected) {
             int failureRetryWindowTimeSeconds = StringHelper.toInteger(props.getProperty("connection.failure-retry-window-time"), -1);
             LOG.warn("Connection is not healthy, connection.failure-retry-window-time: {}", failureRetryWindowTimeSeconds);
@@ -279,15 +281,26 @@ public class CouchbaseConnectionProvider {
         return isConnected;
     }
 
-	private boolean isConnectedInternall() {
+	private boolean isConnectedInternall(int timeoutSeconds) {
 		if (cluster == null) {
             return false;
         }
 
         boolean isConnected = true;
+        long startTime = System.currentTimeMillis();
         try {
 	        for (BucketMapping bucketMapping : bucketToBaseNameMapping.values()) {
-                if (!isConnected(bucketMapping)) {
+                int remainingSeconds = timeoutSeconds;
+                if (timeoutSeconds > 0) {
+                    long elapsedSeconds = (System.currentTimeMillis() - startTime) / 1000;
+                    remainingSeconds = (int) (timeoutSeconds - elapsedSeconds);
+                    if (remainingSeconds <= 0) {
+                        LOG.error("Probe time budget exhausted after {}s", timeoutSeconds);
+                        isConnected = false;
+                        break;
+                    }
+                }
+                if (!isConnected(bucketMapping, remainingSeconds)) {
                     LOG.error("Bucket '{}' is in invalid state", bucketMapping.getBucketName());
                     isConnected = false;
                     break;
@@ -301,11 +314,15 @@ public class CouchbaseConnectionProvider {
         return isConnected;
 	}
 
-    private boolean isConnected(BucketMapping bucketMapping) {
+    private boolean isConnected(BucketMapping bucketMapping, int timeoutSeconds) {
         Bucket bucket = bucketMapping.getBucket();
 
         BucketManager bucketManager = this.cluster.buckets();
-        BucketSettings bucketSettings = bucketManager.getBucket(bucket.name(), GetBucketOptions.getBucketOptions().timeout(Duration.ofSeconds(5)));
+        GetBucketOptions getBucketOptions = GetBucketOptions.getBucketOptions();
+        if (timeoutSeconds > 0) {
+            getBucketOptions.timeout(Duration.ofSeconds(timeoutSeconds));
+        }
+        BucketSettings bucketSettings = bucketManager.getBucket(bucket.name(), getBucketOptions);
 
         boolean result = true;
         if (com.couchbase.client.java.manager.bucket.BucketType.COUCHBASE == bucketSettings.bucketType()) {
@@ -324,7 +341,11 @@ public class CouchbaseConnectionProvider {
         }
 
         if (result) {
-            PingResult pingResult = bucket.ping();
+            PingOptions pingOptions = PingOptions.pingOptions();
+            if (timeoutSeconds > 0) {
+                pingOptions.timeout(Duration.ofSeconds(timeoutSeconds));
+            }
+            PingResult pingResult = bucket.ping(pingOptions);
             for (Entry<ServiceType, List<EndpointPingReport>> pingResultEntry : pingResult.endpoints().entrySet()) {
                 for (EndpointPingReport endpointPingReport : pingResultEntry.getValue()) {
                     if (PingState.OK != endpointPingReport.state()) {
