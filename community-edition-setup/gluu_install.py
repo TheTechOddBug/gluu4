@@ -13,11 +13,15 @@ import locale
 import re
 import shlex
 import subprocess
+import configparser
 from pathlib import Path
 from urllib import request
 from urllib.parse import urlparse, urljoin
 from urllib.error import HTTPError, URLError
 from tempfile import TemporaryDirectory
+
+my_dir = Path(__file__).resolve().parent
+ini_fn = my_dir.joinpath('gluu_install.ini')
 
 parser = argparse.ArgumentParser(description="This script downloads Gluu Server components and fires setup")
 parser.add_argument('-a', help=argparse.SUPPRESS, action='store_true')
@@ -50,8 +54,34 @@ parser.add_argument('--passport-version', help="Gluu CE Passport version")
 parser.add_argument('-c', help="Don't download files that exists on disk", action='store_true')
 parser.add_argument('-app-info', help="Use specified app info file instead of downloading form github")
 
+arg_list = None
 
-argsp = parser.parse_args()
+if ini_fn.is_file():
+    print(f"Found ini file {ini_fn}")
+    config = configparser.ConfigParser(interpolation=None)
+    config.optionxform = str
+    ini_fn_posix = ini_fn.as_posix()
+    try:
+        config.read(ini_fn_posix)
+    except configparser.Error as e:
+        print(f"An error ocurred while parsing ini file: {e}")
+        sys.exit(1)
+
+    if 'args' in config:
+        args_obj = config['args']
+        arg_list = []
+        for argkey, argval in args_obj.items():
+            arg_list.append(argkey)
+            if argval:
+                arg_list.append(argval)
+        arg_list += sys.argv[1:]
+
+    if 'envs' in config:
+        env_obj = config['envs']
+        for envkey, envval in env_obj.items():
+            os.environ[envkey] = envval
+
+argsp = parser.parse_args(arg_list)
 
 if '-a' in sys.argv and argsp.k:
     import ssl

@@ -1,0 +1,14 @@
+[args]
+;provide arguments here.  key without values are considered as flags
+-a =
+-n =
+-u =
+-profile = CE
+-maven-user = <maven-user>
+-maven-password = <maven-password>
+--args = -org-name="<org-name>" ip-address="<ip-address>" -email="<admin-email>" -ldap-admin-password="<ldap-admin-password>" -u -ssa="/path/to/ssa.jwt"
+
+[envs]
+;provide environmental variables here.
+toc_jwt = /path/to/toc.jwt
+
