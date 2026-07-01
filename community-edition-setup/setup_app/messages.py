@@ -159,3 +159,5 @@ class msg:
     checking_license = "Checking License"
     activating_license = "Activating License"
     license_activated = "License was activated"
+    license_expired = "The licence is expired or disabled"
+    license_was_activated = "The license has been activated previously"

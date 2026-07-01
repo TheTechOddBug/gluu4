@@ -216,7 +216,10 @@ class LicenseActivationForm(GluuSetupForm):
 
 
     def do_beforeEditing(self):
-        pass
+        if Config.get('ssa'):
+            if os.path.exists(Config.ssa):
+                Config.ssa = self.parentApp.jettyInstaller.readFile(Config.ssa)
+            self.ssa_widget.value = Config.ssa
 
 
     def license_background_worker(self):
@@ -251,22 +254,34 @@ class LicenseActivationForm(GluuSetupForm):
         self.license_worker_data['status'] = msg.checking_license
         time.sleep(1)
         try:
-            license_activator.check_license(license_key)
+            check_result = license_activator.check_license(license_key)
         except LicenseError as e:
             self.license_worker_data['error'] = e
             return
 
 
-        self.license_worker_data['status'] = msg.activating_license
-        time.sleep(1)
-        try:
-            license_activator.activate_license(license_key)
-        except LicenseError as e:
-            self.license_worker_data['error'] = e
+        if check_result['isUsable'] == False:
+            self.license_worker_data['status'] = msg.license_expired
             return
 
-        self.license_worker_data['status'] = msg.license_activated
-        time.sleep(1)
+        if check_result['isUsable'] and check_result['active']:
+            self.license_worker_data['status'] = msg.license_was_activated
+            time.sleep(1)
+            self.license_worker_data['done'] = True
+            return
+
+        if not check_result['active']:
+
+            self.license_worker_data['status'] = msg.activating_license
+            time.sleep(1)
+            try:
+                activate_result = license_activator.activate_license(license_key)
+            except LicenseError as e:
+                self.license_worker_data['error'] = e
+                return
+
+            self.license_worker_data['status'] = msg.license_activated
+            time.sleep(1)
 
         self.license_worker_data['done'] = True
 

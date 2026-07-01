@@ -837,17 +837,30 @@ class PropertiesUtils(SetupUtils):
 
         print(msg.checking_license)
         try:
-            license_activator.check_license(license_key)
+            check_result = license_activator.check_license(license_key)
         except LicenseError as e:
             print(e)
             sys.exit(1)
 
-        print(msg.activating_license)
-        try:
-            license_activator.activate_license(license_key)
-        except LicenseError as e:
-            print(e)
+
+        if check_result['isUsable'] == False:
+            print(msg.license_expired)
             sys.exit(1)
+
+        if check_result['isUsable'] and check_result['active']:
+            print(msg.license_was_activated)
+            return
+
+        if not check_result['active']:
+
+            print(msg.activating_license)
+            try:
+                activate_result = license_activator.activate_license(license_key)
+            except LicenseError as e:
+                print(e)
+                sys.exit(1)
+
+            print(msg.license_activated)
 
 
     def prompt_for_ssa(self):

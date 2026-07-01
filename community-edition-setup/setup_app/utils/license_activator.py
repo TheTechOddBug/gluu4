@@ -237,7 +237,7 @@ class LicenseActivator:
                     )
         except Exception as e:
             raise LicenseError(f"Error while checking license from {url}: {e}") from e
-        if response.status_code not in (200, 201):
+        if response.status_code not in (200, 201, 403):
             raise LicenseError(f"Server {url} returned error wile checking license. Status code: {response.status_code}. Response text: {response.text}")
 
         try:
@@ -245,8 +245,16 @@ class LicenseActivator:
         except json.JSONDecodeError as e:
             raise LicenseError(f"Server {url} did not return valid json data: {e}") from e
 
+        ret_val = {}
 
-        return result
+        if response.status_code == 403:
+            if result.get('message') == 'The license is not active.':
+                ret_val['active'] = False
+
+        for retkey in ('isUsable', 'active'):
+            ret_val[retkey] = result.get(retkey)
+
+        return ret_val
 
 
     def activate_license(self, license_key):
