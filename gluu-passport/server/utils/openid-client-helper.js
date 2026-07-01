@@ -37,7 +37,7 @@ async function getIssuer (providerOptions) {
     return await Issuer.discover(providerOptions.issuer)
   } catch (e) {
     logger.log('debug', e.message)
-    logger.log('debug', `Failed to fetch config from ${providerOptions.issuer}/.well-known/openid-configuration OpenID Connect Discovery endpoint, Going for manual setup`)
+    logger.log('warn', `Failed to fetch config from ${providerOptions.issuer}/.well-known/openid-configuration OpenID Connect Discovery endpoint, Going for manual setup`)
     return new Issuer(providerOptions)
   }
 }
