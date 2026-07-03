@@ -132,7 +132,8 @@
       "pymysql": "python3-pymysql",
       "distutils.util": "python3-distutils",
       "curses": "python3-curses",
-      "psycopg2": "python3-psycopg2"
+      "psycopg2": "python3-psycopg2",
+      "six": "python3-six"
     }
   }
 }
